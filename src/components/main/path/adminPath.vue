@@ -105,11 +105,11 @@
   <!-- Main Content -->
   <div class="flex flex-col items-center py-10">
     <div v-if="data.length || ServiceData.length" class="w-full gap-2 flex justify-end px-6">
-      <button v-if="ServiceData.length" @click="showModalfiles = true"
+      <button v-if="data.length == 0" @click="showModalfiles = true"
         class="text-lg font-medium py-2 px-4 bg-lime-500 hover:bg-lime-600 rounded-lg">
         {{ $t('create') }}
       </button>
-      <button v-if="ServiceData.length == 0" @click="toggleModal"
+      <button v-if="data.length" @click="toggleModal"
         class="text-lg font-medium py-2 px-4 bg-lime-500 hover:bg-lime-600 rounded-lg">
         {{ $t("bolim_yaratish") }}
       </button>
