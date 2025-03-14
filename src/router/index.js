@@ -2,11 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import { isAuthenticated, getRoleFromToken } from "@/auth/auth";
 
 const routes = [
-    {
-        path: "/edit/:id/:id2?",
-        name: "editFile",
-        component: () => import("@/components/main/file/file.vue"),
-    },
+    { path: "/edit/:id/:id2?", name: "editFile", component: () => import("@/components/main/file/file.vue"), },
     { path: "/CommonerLogin", name: "CommonerLogin", component: () => import("@/components/filePage/fileLogin.vue") },
     { path: "/fileProfile/:id", name: "fileProfile", component: () => import("@/components/filePage/fileProfile.vue") },
     { path: "/", name: "home", component: () => import("@/views/Home.vue") },
@@ -20,7 +16,6 @@ const routes = [
     { path: "/screen", name: "screen", component: () => import("@/components/filePage/dakument.vue") },
     { path: "/servise/:id", name: "screen", component: () => import("@/components/main/servise/servise.vue") },
     { path: "/:catchAll(.*)", component: () => import("@/components/error.vue"), props: { errorCode: 404 } },
-
     {
         path: "/admin", component: () => import("@/components/Templates/AdminTemplate.vue"),
         children: [
@@ -55,11 +50,12 @@ const routes = [
             { path: "/companyFile", component: () => import("@/components/company/filePage.vue") },
             { path: "/companyFile-view/:id", component: () => import("@/components/company/fileView.vue") },
         ],
+        meta: { requiresAuth: true, allowedRoles: ["admin", "manager", "yurist", "bigAdmin"] },
     },
 ];
 
 const router = createRouter({
-    history: createWebHistory("/"), // BASE_URL noto‘g‘ri bo‘lsa, "/" qo‘yish
+    history: createWebHistory("/"),
     routes,
 });
 
