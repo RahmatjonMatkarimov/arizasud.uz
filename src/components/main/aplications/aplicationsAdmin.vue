@@ -2,7 +2,7 @@
   <div v-if="showModal"
     class="fixed inset-0 z-50 w-full h-full flex items-center bg-black bg-opacity-50 justify-center">
     <div
-      class="absolute h-64 w-96 bg-slate-800 flex flex-col opacity-[90%] items-center justify-center p-10 rounded-[15px]">
+      class="absolute h-64 w-96 bg-slate-500 flex flex-col opacity-[90%] items-center justify-center p-10 rounded-[15px]">
       <img @click="toggleModal" class="w-14 -mr-[290px] absolute -mt-44" src="../../../../public/reject.png" alt="" />
       <div>
         <form @submit.prevent="uploadCourt">
@@ -11,7 +11,7 @@
               id="name" required />
           </div>
           <div class="my-3">
-            <input @change="onFileChange" type="file" id="file" accept="image/*" required />
+            <input @change="onFileChange" type="file" id="file" accept="image/*"  />
           </div>
           <button class="w-full rounded-[30px] bg-lime-600 hover:bg-lime-900 text-[20px] py-2" type="submit">
             {{ $t('yuklash') }}
@@ -26,7 +26,7 @@
   <div v-if="showModalfiles"
     class="fixed inset-0 z-50 w-full h-full flex items-center bg-black bg-opacity-50 justify-center">
     <div
-      class="absolute h-64 w-96 bg-slate-800 flex flex-col opacity-[90%] items-center justify-center p-10 rounded-[15px]">
+      class="absolute h-64 w-96 bg-slate-500 flex flex-col opacity-[90%] items-center justify-center p-10 rounded-[15px]">
       <img @click="toggleFilesModal" class="w-14 -mr-[290px] absolute -mt-44" src="../../../../public/reject.png"
         alt="" />
       <div>
@@ -36,7 +36,7 @@
               id="name" required />
           </div>
           <div class="my-3">
-            <input @change="onFileChange" type="file" id="file" required />
+            <input @change="onFileChange" type="file" id="file"  />
           </div>
           <button class="w-full rounded-[30px] bg-lime-600 hover:bg-lime-900 text-[20px] py-2" type="submit">
             {{ $t('yuklash') }}
@@ -75,8 +75,8 @@
 
   <div v-if="PutModal" class="fixed inset-0 z-50 w-full h-full flex items-center bg-black bg-opacity-50 justify-center">
     <div
-      class="absolute h-64 w-96 bg-slate-800 flex flex-col opacity-[90%] items-center justify-center p-10 rounded-[15px]">
-      <img @click="Modal" class="w-14 -mr-[290px] absolute -mt-44" src="../../../../public/reject.png" alt="" />
+      class="absolute h-64 w-96 bg-slate-500 flex flex-col opacity-[90%] items-center justify-center p-10 rounded-[15px]">
+      <img @click="Modal" class="w-10 right-1 absolute top-1" src="../../../../public/reject.png" alt="" />
       <div>
         <form @submit.prevent="updateCourt">
           <div>
@@ -84,7 +84,7 @@
               id="name" required />
           </div>
           <div>
-            <input @change="onFileChange" type="file" id="file" accept="image/*" required />
+            <input @change="onFileChange" type="file" id="file" accept="image/*" />
           </div>
           <button class="w-full rounded-[30px] bg-lime-600 hover:bg-lime-900 text-[20px] py-2" type="submit">
             {{ $t('yuklash') }}
@@ -426,9 +426,10 @@ const updateCourt = async () => {
   const formData = new FormData();
   formData.append("name", courtName.value);
   formData.append("file", file.value);
+  formData.append("servicesId", parseInt(id1.value));
 
   try {
-    const response = await axios.patch(`${URL}/applications/${PutId.value}`, formData, {
+    const response = await axios.put(`${URL}/applications/${PutId.value}`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
