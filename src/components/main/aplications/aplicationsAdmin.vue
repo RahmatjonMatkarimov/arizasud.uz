@@ -170,7 +170,7 @@
               src="../../../../public/ellipsis.png" alt="Options" />
             <div class="flex items-center gap-4">
               <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="w-14 h-14 rounded-md" />
-              <h3 class="text-lg font-medium text-center text-black capitalize">{{ item.translatedName }}</h3>
+              <h3 class="text-lg font-medium text-center text-black first-letter:uppercase">{{ item.translatedName }}</h3>
             </div>
           </div>
           <div v-if="dat === 'datalotin'" v-for="item in data" :key="item.id" @click="goToPath(item.id)"
@@ -179,7 +179,7 @@
               src="../../../../public/ellipsis.png" alt="Options" />
             <div class="flex items-center gap-4">
               <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="w-14 h-14 rounded-md" />
-              <h3 class="text-lg font-medium text-center text-black capitalize">{{ item.name }}</h3>
+              <h3 class="text-lg font-medium text-center text-black first-letter:uppercase">{{ item.name }}</h3>
             </div>
           </div>
         </div>

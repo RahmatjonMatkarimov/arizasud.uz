@@ -16,7 +16,6 @@ const fetchItems = async () => {
   loading.value = true;
   try {
     const res = await axios.get(`${URL}/${data}/archived`);
-    console.log(res);
     
     items.value = res.data;
   } catch (error) {
@@ -38,9 +37,9 @@ const toggleSelection = (id) => {
     selectedItems.value.push(id);
   }
 };
-
 const deleteSelectedItems = async () => {
   if (selectedItems.value.length === 0) return;
+console.log(selectedItems.value);
 
   try {
     await axios.delete(`${URL}/${data}/archived`, {
@@ -54,11 +53,12 @@ const deleteSelectedItems = async () => {
     console.error('Xatolik:', error);
   }
 };
+console.log(items);
 
 const updateItem = async (id) => {
   try {
-    const res = await axios.put(`${URL}/${data}/archived/${id}`, {
-      type: "active"
+    const res = await axios.patch(`${URL}/${data}/archived/${id}`, {
+      status: "active"
     });
 
     const index = items.value.findIndex(item => item.id === id);

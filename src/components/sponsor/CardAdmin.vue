@@ -205,8 +205,9 @@ const getData = async () => {
         .map(item => ({
           ...item,
           translatedName: translateText(item.name)
-        }));
-      data.value = result; di
+        }))
+        .filter((item) => item.status === "active");;
+      data.value = result.filter((item) => item.status === "active").sort((a, b) => a.id - b.id);
     } else {
       console.error("Ma'lumotlarni olishda xatolik:", response.statusText);
     }
@@ -218,24 +219,27 @@ const getData = async () => {
 };
 
 const removeSelectedItems = async () => {
-  if (!Id.value) return;
+  if (!PutId.value) return; // `Id` o'rniga `PutId` ishlatamiz
   isLoading.value = true;
-
   try {
-    const response = await fetch(`${URL}/partners/${Id.value}`, {
+    const response = await fetch(`${URL}/partners/${PutId.value}`, {
       method: "DELETE",
     });
 
     if (response.ok) {
-      asd.value = false;
-      await getData();
+      asd.value = false; // Modalni yopamiz
+      await getData(); // Ma'lumotlarni yangilaymiz
+      successMessage.value = "Muvaffaqiyatli o'chirildi!";
+      errorMessage.value = "";
     } else {
       console.error("O'chirishda xatolik:", response.statusText);
+      errorMessage.value = "O'chirishda xatolik yuz berdi!";
     }
   } catch (error) {
     console.error("Xatolik:", error);
+    errorMessage.value = "Xatolik yuz berdi: " + error.message;
   } finally {
-    isLoading.value = false; // 🔹 Yuklanish tugaganini belgilash
+    isLoading.value = false; // Yuklanish holatini o'chiramiz
   }
 };
 
