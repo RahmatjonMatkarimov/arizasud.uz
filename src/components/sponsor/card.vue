@@ -59,8 +59,10 @@ const getData = async () => {
     if (response.ok) {
       const result = await response.json();
       const sortedItems = result.sort((a, b) => a.id - b.id);
-      datakril.value = sortedItems.map(item => ({ ...item, translatedName: translateText(item.name) }));
-      data.value = sortedItems;
+      datakril.value = sortedItems
+        .filter((item) => item.status === "active")
+        .map(item => ({ ...item, translatedName: translateText(item.name) }));
+      data.value = sortedItems.filter((item) => item.status === "active").sort((a, b) => a.id - b.id);
     }
   } catch (error) {
     console.error("Xatolik:", error);
