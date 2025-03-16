@@ -128,8 +128,8 @@
 import { inject, ref } from "vue";
 import { URL } from "../../auth/url.js";
 import axios from "axios";
-import router from "@/router/index.js";
-
+import { useRouter } from "vue-router";
+const router = useRouter()
 const data = ref([]);
 const showModal = ref(false);
 const showModalfile = ref(false);
@@ -283,10 +283,10 @@ function resetForm() {
 const getData = async () => {
     try {
         const response = await fetch(`${URL}/enterprise`);
-
         if (response.ok) {
-            data.value = await response.json();
-            console.log(data.value);
+            const res = await response.json();
+            const fileteradData = res.filter(item => item.status === "active");
+            data.value = fileteradData
         }
     } catch (error) {
         console.error("Xatolik:", error);

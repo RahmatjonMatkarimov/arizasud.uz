@@ -3,143 +3,124 @@
     <div v-if="qwe" class="fixed z-50 inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div class="bg-white p-6 rounded-lg w-11/12 max-w-md">
         <div class="flex justify-end">
-          <img @click="qwe = false" class="w-8 -m-4 cursor-pointer absolute " src="../../../public/reject.png"
-            alt="Close" />
+          <img @click="qwe = false" class="w-8 -m-4 cursor-pointer absolute" src="../../../public/reject.png"
+            :alt="$t('createModal.closeAlt')" />
         </div>
-        <h2 class="text-xl font-semibold text-black mb-4">Yangi Admin qo‘shish</h2>
-        <input v-model="name" class="w-full text-black p-2 mb-3 border rounded-lg" placeholder="Ism" />
-        <input v-model="surname" class="w-full text-black p-2 mb-3 border rounded-lg" placeholder="Familiya" />
-        <input v-model="fatherName" class="w-full text-black p-2 mb-3 border rounded-lg" placeholder="Otasining ismi" />
-        <input v-model="passport" class="w-full text-black p-2 mb-3 border rounded-lg"
-          placeholder="Passport Seriya Raqami" />
-        <input v-model="jshhr" class="w-full text-black p-2 mb-3 border rounded-lg" placeholder="JSHHR" />
-        <input v-model="phone" class="w-full text-black p-2 mb-3 border rounded-lg" placeholder="Telefon Raqami" />
-        <input v-model="birthday" type="date" class="w-full text-black p-2 mb-3 border rounded-lg"
-          placeholder="Tog'ilgan kun" />
-        <input v-model="role" class="w-full p-2 mb-3 border text-black rounded-lg" placeholder="Lavozimi" />
-        <input v-model="username" class="w-full text-black p-2 mb-3 border rounded-lg" placeholder="login" />
+        <input v-model="name" class="w-full text-black p-2 mb-3 border rounded-lg" :placeholder="$t('createModal.namePlaceholder')" />
+        <input v-model="surname" class="w-full text-black p-2 mb-3 border rounded-lg" :placeholder="$t('createModal.surnamePlaceholder')" />
+        <input v-model="fatherName" class="w-full text-black p-2 mb-3 border rounded-lg" :placeholder="$t('createModal.fatherNamePlaceholder')" />
+        <input v-model="passport" class="w-full text-black p-2 mb-3 border rounded-lg" :placeholder="$t('createModal.passportPlaceholder')" />
+        <input v-model="jshhr" class="w-full text-black p-2 mb-3 border rounded-lg" :placeholder="$t('createModal.jshhrPlaceholder')" />
+        <input v-model="phone" class="w-full text-black p-2 mb-3 border rounded-lg" :placeholder="$t('createModal.phonePlaceholder')" />
+        <input v-model="birthday" type="date" class="w-full text-black p-2 mb-3 border rounded-lg" :placeholder="$t('createModal.birthdayPlaceholder')" />
+        <input v-model="role" class="w-full p-2 mb-3 border text-black rounded-lg" :placeholder="$t('createModal.rolePlaceholder')" />
+        <input v-model="username" class="w-full text-black p-2 mb-3 border rounded-lg" :placeholder="$t('createModal.usernamePlaceholder')" />
         <div class="relative">
-          <input v-model="password1" :type="showPassword ? 'text' : 'password'"
-            class="w-full text-black p-2 mb-3 border rounded-lg pr-10" placeholder="Parol" />
-          <button type="button" @click="showPassword = !showPassword"
-            class="absolute inset-y-0 right-3 flex items-center">
-            <img :src="showPassword ? '/eyes.png' : '/eye.png'" alt="Ko'rinishni almashtirish" class="w-5 h-5" />
+          <input v-model="password1" :type="showPassword ? 'text' : 'password'" class="w-full text-black p-2 mb-3 border rounded-lg pr-10" :placeholder="$t('createModal.passwordPlaceholder')" />
+          <button type="button" @click="showPassword = !showPassword" class="absolute inset-y-0 right-3 flex items-center">
+            <img :src="showPassword ? '/eyes.png' : '/eye.png'" :alt="$t('createModal.toggleVisibilityAlt')" class="w-5 h-5" />
           </button>
         </div>
-
         <div class="relative">
-          <input v-model="password2" :type="showPassword1 ? 'text' : 'password'"
-            class="w-full text-black p-2 mb-3 border rounded-lg pr-10" placeholder="Parolni takrorlang" />
-          <button type="button" @click="showPassword1 = !showPassword1"
-            class="absolute inset-y-0 right-3 flex items-center">
-            <img :src="showPassword1 ? '/eyes.png' : '/eye.png'" alt="Ko'rinishni almashtirish" class="w-5 h-5" />
+          <input v-model="password2" :type="showPassword1 ? 'text' : 'password'" class="w-full text-black p-2 mb-3 border rounded-lg pr-10" :placeholder="$t('createModal.confirmPasswordPlaceholder')" />
+          <button type="button" @click="showPassword1 = !showPassword1" class="absolute inset-y-0 right-3 flex items-center">
+            <img :src="showPassword1 ? '/eyes.png' : '/eye.png'" :alt="$t('createModal.toggleVisibilityAlt')" class="w-5 h-5" />
           </button>
         </div>
-
-        <!-- Image Upload Field -->
         <input type="file" @change="handleImageUpload" class="w-full text-black p-2 mb-3 border rounded-lg" />
-
         <p class="text-red-600 text-sm">{{ err }}</p>
-        <button @click="post"
-          class="bg-green-600 text-white px-4 py-2 rounded-lg mt-3 w-full hover:bg-green-800 transition">
-          Yaratish
+        <button @click="post" class="bg-green-600 text-white px-4 py-2 rounded-lg mt-3 w-full hover:bg-green-800 transition">
+          {{ $t('createModal.createButton') }}
         </button>
       </div>
     </div>
     <div v-if="PutModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div class="bg-white p-6 rounded-lg w-11/12 max-w-md">
         <div class="flex justify-end">
-          <img @click="PutModal = false" class="w-8 -m-4 cursor-pointer absolute " src="../../../public/reject.png"
-            alt="Close" />
+          <img @click="PutModal = false" class="w-8 -m-4 cursor-pointer absolute" src="../../../public/reject.png"
+            :alt="$t('createModal.closeAlt')" />
         </div>
-        <h2 class="text-xl font-semibold text-black mb-4">Adminni yangilash</h2>
-        <input v-model="updatedName" class="w-full p-2 mb-3 border text-black rounded-lg" placeholder="ism" />
-        <input v-model="updatedSurname" class="w-full p-2 mb-3 border text-black rounded-lg" placeholder="familiya" />
-        <input v-model="updatedFatherName" class="w-full p-2 mb-3 border text-black rounded-lg"
-          placeholder="otasining ismi" />
-        <input v-model="updatedPassport" class="w-full p-2 mb-3 border text-black rounded-lg"
-          placeholder="passport seriya raqami" />
-        <input v-model="updatedJshhr" class="w-full p-2 mb-3 border text-black rounded-lg" placeholder="JSHHR" />
-        <input v-model="updatedPhone" class="w-full p-2 mb-3 border text-black rounded-lg"
-          placeholder="telefon raqami" />
-        <input v-model="updatedBirthday" type="date" class="w-full text-black p-2 mb-3 border rounded-lg"
-          placeholder="Tog'ilgan kun" />
-        <input v-model="updatedrole" class="w-full p-2 mb-3 border text-black rounded-lg" placeholder="Lavozimi" />
-        <input v-model="updatedUsername" class="w-full p-2 mb-3 border text-black rounded-lg" placeholder="login" />
-
-        <!-- Image Upload Field for Edit -->
+        <input v-model="updatedName" class="w-full p-2 mb-3 border text-black rounded-lg" :placeholder="$t('createModal.namePlaceholder')" />
+        <input v-model="updatedSurname" class="w-full p-2 mb-3 border text-black rounded-lg" :placeholder="$t('createModal.surnamePlaceholder')" />
+        <input v-model="updatedFatherName" class="w-full p-2 mb-3 border text-black rounded-lg" :placeholder="$t('createModal.fatherNamePlaceholder')" />
+        <input v-model="updatedPassport" class="w-full p-2 mb-3 border text-black rounded-lg" :placeholder="$t('createModal.passportPlaceholder')" />
+        <input v-model="updatedJshhr" class="w-full p-2 mb-3 border text-black rounded-lg" :placeholder="$t('createModal.jshhrPlaceholder')" />
+        <input v-model="updatedPhone" class="w-full p-2 mb-3 border text-black rounded-lg" :placeholder="$t('createModal.phonePlaceholder')" />
+        <input v-model="updatedBirthday" type="date" class="w-full text-black p-2 mb-3 border rounded-lg" :placeholder="$t('createModal.birthdayPlaceholder')" />
+        <input v-model="updatedrole" class="w-full p-2 mb-3 border text-black rounded-lg" :placeholder="$t('createModal.rolePlaceholder')" />
+        <input v-model="updatedUsername" class="w-full p-2 mb-3 border text-black rounded-lg" :placeholder="$t('createModal.usernamePlaceholder')" />
         <input type="file" @change="handleImageUploadUpdate" class="w-full text-black p-2 mb-3 border rounded-lg" />
-        <button @click="updateAdmin"
-          class="bg-blue-600 text-white px-4 py-2 rounded-lg mt-3 w-full hover:bg-blue-800 transition">
-          Ma'lumotlarni yangilash
+        <button @click="updateAdmin" class="bg-blue-600 text-white px-4 py-2 rounded-lg mt-3 w-full hover:bg-blue-800 transition">
+          {{ $t('editModal.updateButton') }}
         </button>
       </div>
     </div>
     <div v-if="asds" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div class="bg-white p-6 rounded-lg w-11/12 max-w-md">
         <div class="flex justify-end">
-          <img @click="asds = false" class="w-8 -m-4 cursor-pointer absolute " src="../../../public/reject.png"
-            alt="Close" />
+          <img @click="asds = false" class="w-8 -m-4 cursor-pointer absolute" src="../../../public/reject.png"
+            :alt="$t('createModal.closeAlt')" />
         </div>
-        <h2 class="text-xl font-semibold text-black mb-4">Parolni yangilash</h2>
-        <input v-model="updatednewPassword1" class="w-full p-2 mb-3 border text-black rounded-lg" placeholder="yangi parol" />
-        <input v-model="updatednewPassword2" class="w-full p-2 mb-3 border text-black rounded-lg"
-          placeholder="yangi parolni takrorlang" />
+        <h2 class="text-xl font-semibold text-black mb-4">{{ $t('passwordModal.title') }}</h2>
+        <input v-model="updatednewPassword1" class="w-full p-2 mb-3 border text-black rounded-lg" :placeholder="$t('passwordModal.newPasswordPlaceholder')" />
+        <input v-model="updatednewPassword2" class="w-full p-2 mb-3 border text-black rounded-lg" :placeholder="$t('passwordModal.confirmNewPasswordPlaceholder')" />
         <p class="text-red-600 text-sm">{{ err }}</p>
-
-        <button @click="updatepassword"
-          class="bg-blue-600 text-white px-4 py-2 rounded-lg mt-3 w-full hover:bg-blue-800 transition">
-          Parolni yangilash
+        <button @click="updatepassword" class="bg-blue-600 text-white px-4 py-2 rounded-lg mt-3 w-full hover:bg-blue-800 transition">
+          {{ $t('passwordModal.updateButton') }}
         </button>
       </div>
     </div>
     <div v-if="asd" class="fixed inset-0 flex items-center z-20 justify-center bg-black bg-opacity-50">
       <div class="bg-white p-6 rounded-lg w-11/12 max-w-sm text-center">
-        <h2 class="text-lg text-black font-semibold">Haqiqatan ham o‘chirishni xohlaysizmi?</h2>
+        <h2 class="text-lg text-black font-semibold">{{ $t('deleteModal.confirmMessage') }}</h2>
         <div class="flex justify-center items-center gap-4 mt-4">
           <button @click="removeAdmin" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition">
-            ❌ O'chirish
+            {{ $t('deleteModal.deleteButton') }}
           </button>
           <button @click="asd = false" class="bg-gray-400 px-4 py-2 rounded-lg hover:bg-gray-600 transition">
-            Bekor qilish
+            {{ $t('deleteModal.cancelButton') }}
           </button>
         </div>
       </div>
     </div>
-    <div class="flex justify-center mb-16  items-center">
-      <h1 style="text-shadow: 0 0 5px #fff,0 0 10px #fff;"
-        class="text-black text-[40px] font-bold text-center bg-lime-500 border-[3px] border-black rounded-lg py-2 px-[100px]">
-        Mudirlar ro'yxati <span v-if="Count" class="border-b-4 px-1 border-black text-black">{{ Count }}</span> </h1>
+    <div class="flex justify-center mb-16 items-center">
+      <h1 style="text-shadow: 0 0 5px #fff,0 0 10px #fff;" class="text-black text-[40px] font-bold text-center bg-lime-500 border-[3px] border-black rounded-lg py-2 px-[100px]">
+        {{ $t('adminList.title1') }} <span v-if="Count" class="border-b-4 px-1 border-black text-black">{{ Count }}</span>
+      </h1>
     </div>
     <div class="flex justify-end w-full max-w-4xl">
-      <button @click="qwe = true"
-        class="bg-blue-600 hover:bg-blue-800 text-white px-6 py-2 rounded-full text-lg transition">
-        ➕ Admin yaratish
+      <button @click="qwe = true" class="bg-blue-600 hover:bg-blue-800 text-white px-6 py-2 rounded-full text-lg transition">
+        {{ $t('createAdminButton') }}
       </button>
     </div>
     <div class="w-full flex flex-wrap justify-center gap-4 mt-8">
-      <div v-for="item in data" :key="item.id"
-        class="relative w-[700px] flex flex-col md:flex-row items-center justify-between p-4 bg-white shadow-md rounded-lg border border-gray-200">
+      <div v-for="item in data" :key="item.id" class="relative w-[700px] flex flex-col md:flex-row items-center justify-between p-4 bg-white shadow-md rounded-lg border border-gray-200">
         <div @click="path(item.id)" class="relative flex flex-col md:flex-row items-center justify-between p-4 w-full">
           <div class="w-16 h-16 flex-shrink-0 rounded-full overflow-hidden border border-gray-300">
             <img :src="getImageUrl(item.img)" class="w-full h-full object-cover" alt="Admin Image" />
           </div>
           <div class="ml-4 flex-grow">
-            <h1 class="text-2xl font-semibold text-gray-700">FIO: {{ item.surname }} {{ item.name }} {{ item.dadname }}
+            <h1 class="text-2xl font-semibold text-gray-700">
+              {{ $t('adminCard.fioLabel') }} 
+              {{ dat === 'datakril' ? translateText(item.surname) : item.surname }} 
+              {{ dat === 'datakril' ? translateText(item.name) : item.name }} 
+              {{ dat === 'datakril' ? translateText(item.dadname) : item.dadname }}
             </h1>
-            <h1 class="text-lg text-gray-500">Login: {{ item.username }}</h1>
+            <h1 class="text-lg text-gray-500">
+              {{ $t('adminCard.loginLabel') }} 
+              {{ dat === 'datakril' ? translateText(item.username) : item.username }}
+            </h1>
             <div class="mb-4 relative text-gray-700 flex w-fit break-words">
-              <span class="font-medium text-gray-700">Fuqaroning lavozimi :</span>
+              <span class="font-medium text-gray-700">{{ $t('adminCard.roleLabel') }}</span>
               <span class="block group truncate text-gray-700 max-w-[450px] ml-2 cursor-pointer">
-                {{ item.lavozimi }}
-                <span
-                  class="absolute left-0 top-full mt-1 w-auto max-w-[550px] bg-gray-800 text-white text-sm px-2 py-1 rounded hidden group-hover:block">
-                  {{ item.lavozimi }}
+                {{ dat === 'datakril' ? translateText(item.lavozimi) : item.lavozimi }}
+                <span class="absolute left-0 top-full mt-1 w-auto max-w-[550px] bg-gray-800 text-white text-sm px-2 py-1 rounded hidden group-hover:block">
+                  {{ dat === 'datakril' ? translateText(item.lavozimi) : item.lavozimi }}
                 </span>
               </span>
             </div>
             <div class="flex items-center">
-              <span class="mr-2 text-sm text-gray-500">Holati:</span>
+              <span class="mr-2 text-sm text-gray-500">{{ $t('adminCard.statusLabel') }}</span>
               <span :class="getAdminStatus(item).color">
                 {{ getAdminStatus(item).status }}
               </span>
@@ -149,22 +130,17 @@
             </div>
           </div>
         </div>
-        <!-- Tahrirlash va o'chirish tugmalari birinchi koddan -->
         <div class="relative">
-          <button @click="toggleModal(item.id)" class="text-gray-500 z-30  hover:text-gray-700 text-2xl p-2">⋮</button>
-          <div v-if="modalOpen === item.id"
-            class="absolute right-0 mt-2 w-56 bg-white shadow-lg rounded-md border border-gray-200 z-10">
-            <button @click="openEditModal(item)"
-              class="block w-full px-4  py-2 text-left text-gray-700 hover:bg-gray-100">
-              ✏️ Tahrirlash
+          <button @click="toggleModal(item.id)" class="text-gray-500 z-30 hover:text-gray-700 text-2xl p-2">⋮</button>
+          <div v-if="modalOpen === item.id" class="absolute right-0 mt-2 w-56 bg-white shadow-lg rounded-md border border-gray-200 z-10">
+            <button @click="openEditModal(item)" class="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100">
+              {{ $t('adminCard.editButton') }}
             </button>
-            <button @click="openDeleteModal(item.id)"
-              class="w-full px-4 py-2 flex items-center text-left text-red-600 hover:bg-red-100">
-              <h1 class="text-red-600 text-[30px] mr-1">🗑</h1> O'chirish
+            <button @click="openDeleteModal(item.id)" class="w-full px-4 py-2 flex items-center text-left text-red-600 hover:bg-red-100">
+              <h1 class="text-red-600 text-[30px] mr-1">🗑</h1> {{ $t('adminCard.deleteButton') }}
             </button>
-            <button @click="openPassModal(item)"
-              class="block w-full  px-4 py-2 text-left text-lime-600 hover:bg-red-100">
-             🔑 Parolni oʼzgartirish
+            <button @click="openPassModal(item)" class="block w-full px-4 py-2 text-left text-lime-600 hover:bg-red-100">
+              {{ $t('adminCard.changePasswordButton') }}
             </button>
           </div>
         </div>
@@ -174,14 +150,16 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, onUnmounted } from "vue";
+import { ref, computed, watch, onMounted, onUnmounted, inject } from "vue";
 import axios from "axios";
 import { formatDistanceToNow } from "date-fns";
 import { uz } from "date-fns/locale";
 import { URL } from "@/auth/url.js";
 import { io } from "socket.io-client";
 import { useRouter } from "vue-router";
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const socket = io(URL);
 const data = ref([]);
 const onlineAdmins = ref([]);
@@ -215,12 +193,33 @@ const updatedJshhr = ref("");
 const updatedPhone = ref("");
 const updatedBirthday = ref("");
 const updatedImage = ref(null);
-const updatedPassword = ref("")
-const updatednewPassword1 = ref("")
-const updatednewPassword2 = ref("")
+const updatedPassword = ref("");
+const updatednewPassword1 = ref("");
+const updatednewPassword2 = ref("");
 const Count = ref(null);
-const asds = ref(false)
-const router = useRouter()
+const asds = ref(false);
+const router = useRouter();
+
+// Inject dat
+const dat = inject('dat');
+
+const translitMap = {
+  "ch": "ч", "sh": "ш", "yo": "ё", "yu": "ю", "ya": "я", "ye": "е", "o'": "ў", "g'": "ғ",
+  "a": "а", "b": "б", "d": "д", "e": "э", "f": "ф", "g": "г", "h": "ҳ", "i": "и", "j": "ж",
+  "k": "к", "l": "л", "m": "м", "n": "н", "o": "о", "p": "п", "q": "қ", "r": "р", "s": "с",
+  "t": "т", "u": "у", "v": "в", "x": "х", "y": "й", "z": "з", "'": "ў"
+};
+
+const translateText = (text) => {
+  if (!text) return ''; // Handle null or undefined text
+  let translated = text.toLowerCase();
+  for (const key in translitMap) {
+    const regex = new RegExp(key, "g");
+    translated = translated.replace(regex, translitMap[key]);
+  }
+  return translated;
+};
+
 const path = (id) => {
   router.push(`/profile/${id}`);
 };
@@ -264,7 +263,6 @@ const openPassModal = (item) => {
   asds.value = true;
 };
 
-
 const getData = async () => {
   try {
     const token = localStorage.getItem("token");
@@ -291,17 +289,17 @@ const getData = async () => {
 
 const getAdminStatus = (admin) => {
   if (onlineAdmins.value.includes(admin.id.toString())) {
-    return { status: "Onlayn", color: "text-green-500" };
+    return { status: t('adminCard.onlineStatus'), color: "text-green-500" };
   } else if (admin.lastSeen) {
     return {
-      status: ` ${formatDistanceToNow(new Date(admin.lastSeen), {
+      status: `${formatDistanceToNow(new Date(admin.lastSeen), {
         addSuffix: true,
         locale: uz,
       })} tarmoqda edi`,
       color: "text-red-500",
     };
   } else {
-    return { status: "Oflayn", color: "text-gray-500" };
+    return { status: t('adminCard.offlineStatus'), color: "text-gray-500" };
   }
 };
 
@@ -346,6 +344,7 @@ const updateAdmin = async () => {
     console.error("Xatolik:", error);
   }
 };
+
 const updatepassword = async () => {
   if (updatednewPassword1.value !== updatednewPassword2.value) {
     err.value = "Parollar bir xil emas!";
@@ -356,13 +355,13 @@ const updatepassword = async () => {
     const token = localStorage.getItem("token");
 
     await axios.put(
-        `${URL}/manager/${selectedId.value}/password`,
-        {
-          newPassword: updatednewPassword2.value, 
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` }, 
-        }
+      `${URL}/manager/${selectedId.value}/password`,
+      {
+        newPassword: updatednewPassword2.value,
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
     );
 
     getData();
@@ -373,6 +372,7 @@ const updatepassword = async () => {
     console.error("Xatolik:", error);
   }
 };
+
 const post = async () => {
   if (password1.value !== password2.value) {
     err.value = "Parollar bir xil emas!";

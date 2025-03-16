@@ -1,4 +1,12 @@
   <template>
+    <marquee direction="right">
+      Bu tizim vaqtincha faol emas. Tez orada ishga tushadi. &nbsp&nbsp;
+      Bu tizim vaqtincha faol emas. Tez orada ishga tushadi. &nbsp&nbsp;
+      Bu tizim vaqtincha faol emas. Tez orada ishga tushadi. &nbsp&nbsp;
+      Bu tizim vaqtincha faol emas. Tez orada ishga tushadi. &nbsp&nbsp;
+      Bu tizim vaqtincha faol emas. Tez orada ishga tushadi.
+    </marquee>
+
     <div
       class="flex mt-10 md:mt-12 justify-between text-white items-center px-3 w-full h-[70px] md:h-[150px] lg:h-[200px] opacity-[88%] relative bg-[#0033FF]">
       <div id="particles-js" class="absolute top-0 left-0 w-full h-full"></div>
@@ -29,7 +37,8 @@
         <!-- Search Results -->
         <div v-if="searchQuery && filteredData.length"
           class="absolute z-50 bg-white max-h-[500px] text-black mt-2 overflow-y-auto rounded shadow-lg">
-          <div @click="goToPath(item)" v-for="item in filteredData" :key="item.id" class="p-2 text-black cursor-pointer">
+          <div @click="goToPath(item)" v-for="item in filteredData" :key="item.id"
+            class="p-2 text-black cursor-pointer">
             {{ item.name }}
           </div>
         </div>

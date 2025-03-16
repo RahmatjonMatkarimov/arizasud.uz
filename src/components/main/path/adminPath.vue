@@ -87,9 +87,9 @@
     <div class="absolute w-[400px] bg-gray-300 flex flex-col items-center justify-center p-6 sm:p-10 rounded-lg">
       <img @click="func(null)" class="w-10 absolute top-4 right-4 cursor-pointer" src="../../../../public/reject.png"
         alt="Close" />
-      <div class="mt-4 flex flex-col w-full items-center">
+      <div class="mt-4 flex flex-col gap-2 w-full items-center">
         <button @click="Modal"
-          class="w-full py-4 px-6 mb-4 text-lg font-medium text-black bg-lime-500 rounded-lg hover:bg-lime-600">
+          class="w-full py-4 px-6 text-lg font-medium text-black bg-lime-500 rounded-lg hover:bg-lime-600">
           <img class="w-6 sm:w-8 inline-block mr-2" src="../../../../public/pen.png" alt="Edit" />
           {{ $t('tahrirlash') }}
         </button>
@@ -98,6 +98,18 @@
           <img class="w-6 sm:w-8 inline-block mr-2" src="../../../../public/remove.png" alt="Delete" />
           {{ $t('remove') }}
         </button>
+        <div
+          class="flex py-4 rounded-lg h-[70px] items-center text-black w-full min-w-[250px] duration-500 justify-between px-10 bg-gray-400 hover:red-700">
+          <h2>Ishga tushirish</h2>
+          <div class="flex gap-1">
+            <h1>On</h1>
+            <label class="switch">
+              <input type="checkbox" v-model="workStatus" @change="updateWorkStatus">
+              <span class="slider round"></span>
+            </label>
+            <h1>Off</h1>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -164,20 +176,28 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <div v-if="dat === 'datalotin'" v-for="item in data" :key="item.id" @click="goToPath(item.id)"
             class="relative bg-white border-4 border-blue-800 rounded-lg p-6">
-            <img @click.stop="func(item.id)" class="absolute top-2 right-2 w-6 h-6 cursor-pointer" src="/ellipsis.png"
+            <img @click.stop="func(item.id)" class="absolute z-40 top-2 right-2 w-6 h-6 cursor-pointer" src="/ellipsis.png"
               alt="Options" />
             <div class="flex items-center gap-4">
               <img v-if="item.img" :src="getImageUrl(item.img)" alt="Court Image" class="w-14 h-14 rounded-md" />
               <h3 class="text-lg font-medium text-center text-black">{{ item.name }}</h3>
             </div>
+            <div v-if="item.workStatus"
+              class="bg-blue-200 flex justify-center items-end animate-pulse rounded-[5px] inset-0 w-full absolute h-full">
+              <b class="text-black font-bold text-[20px]">{{ $t('tez_kunda') }}</b>
+            </div>
           </div>
           <div v-if="dat === 'datakril'" v-for="item in data" :key="item.id" @click="goToPath(item.id)"
             class="relative bg-white border-4 border-blue-800 rounded-lg p-6">
-            <img @click.stop="func(item.id)" class="absolute top-2 right-2 w-6 h-6 cursor-pointer" src="/ellipsis.png"
+            <img @click.stop="func(item.id)" class="absolute z-40 top-2 right-2 w-6 h-6 cursor-pointer" src="/ellipsis.png"
               alt="Options" />
-            <div class="flex itmes-center gap-4">
+            <div class="flex items-center gap-4">
               <img v-if="item.img" :src="getImageUrl(item.img)" alt="Court Image" class="w-14 h-14 rounded-md" />
               <h3 class="text-lg font-medium text-center text-black">{{ translateText(item.name) }}</h3>
+            </div>
+            <div v-if="item.workStatus"
+              class="bg-blue-200 flex justify-center items-end animate-pulse rounded-[5px] inset-0 w-full absolute h-full">
+              <b class="text-black font-bold text-[20px]">{{ $t('tez_kunda') }}</b>
             </div>
           </div>
         </div>
@@ -218,6 +238,7 @@ const courtName = ref("");
 const file = ref(null);
 const successMessage = ref("");
 const errorMessage = ref("");
+const workStatus = ref(false); // Boolean for workStatus toggle
 
 const translitMap = {
   "ch": "ч", "sh": "ш", "yo": "ё", "yu": "ю", "ya": "я", "ye": "е", "oʻ": "ў", "g‘": "ғ",
@@ -250,9 +271,13 @@ const func = (id) => {
 
   if (id) {
     const selectedItem = data.value.find(item => item.id === id);
-    if (selectedItem) courtName.value = selectedItem.name;
+    if (selectedItem) {
+      courtName.value = selectedItem.name;
+      workStatus.value = selectedItem.workStatus; // Set the switch state
+    }
   } else {
     courtName.value = "";
+    workStatus.value = false;
   }
 };
 
@@ -276,7 +301,6 @@ const getData = async () => {
       .sort((a, b) => a.id - b.id);
     ServiceData.value = result.files || [];
     console.log(result);
-
   } catch (error) {
     console.error("Error fetching data:", error);
     errorMessage.value = "Ma'lumotlarni yuklashda xatolik yuz berdi";
@@ -334,32 +358,6 @@ const updatefileCourt = async () => {
   }
 };
 
-const uploadCourt = async () => {
-  if (!courtName.value || !file.value) {
-    errorMessage.value = "Iltimos, barcha maydonlarni to'ldiring!";
-    return;
-  }
-
-  const formData = new FormData();
-  formData.append("name", courtName.value);
-  formData.append("file", file.value);
-  formData.append("courtsId", parseInt(id1.value));
-
-  try {
-    await axios.post(`${URL}/services`, formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-
-    successMessage.value = "Sud muvaffaqiyatli qo'shildi!";
-    errorMessage.value = "";
-    resetForm();
-    showModal.value = false;
-    await getData();
-  } catch (error) {
-    errorMessage.value = error.response?.data?.message || "Qo'shishda xatolik!";
-  }
-};
-
 const updateCourt = async () => {
   if (!courtName.value) {
     errorMessage.value = "Sud nomini kiriting!";
@@ -383,6 +381,28 @@ const updateCourt = async () => {
     await getData();
   } catch (error) {
     errorMessage.value = error.response?.data?.message || "Yangilashda xatolik!";
+  }
+};
+
+const updateWorkStatus = async () => {
+  if (!selectedId.value) return;
+
+  const payload = {
+    workStatus: workStatus.value, // Boolean true/false
+    courtsId: parseInt(id1.value),
+  };
+
+  try {
+    await axios.put(`${URL}/services/${selectedId.value}`, payload, {
+      headers: { "Content-Type": "application/json" },
+    });
+
+    successMessage.value = "Ishga tushirish holati muvaffaqiyatli yangilandi!";
+    errorMessage.value = "";
+    await getData(); // Refresh data to reflect changes
+  } catch (error) {
+    errorMessage.value = error.response?.data?.message || "Holadni yangilashda xatolik!";
+    console.error("Update workStatus error:", error);
   }
 };
 
@@ -431,3 +451,50 @@ onMounted(() => {
   getData();
 });
 </script>
+
+<style scoped>
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 25px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 20px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 19px;
+  width: 19px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked+.slider {
+  background-color: #09FF52;
+}
+
+input:checked+.slider:before {
+  transform: translateX(24px);
+}
+</style>

@@ -11,18 +11,18 @@
           {{ $t('sud') }}
         </b>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div v-if="dat === 'datakril'" v-for="item in datakril" :key="item.id" @click="goToPath(item.id)"
-            class="hover:bg-lime-500 duration-500 active:duration-500 bg-white border-4 border-blue-800 rounded-lg p-6">
+          <div v-for="item in data" :key="item.id" @click="goToPath(item.id)"
+            class="hover:bg-lime-500 relative duration-500 active:duration-500 bg-white border-4 border-blue-800 rounded-lg p-6">
             <div class="flex items-center gap-4">
               <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="w-14 h-14 rounded-md" />
-              <h3 class="md:text-lg font-medium  text-center text-black capitalize">{{ item.translatedName }}</h3>
+              <h3 v-if="dat === 'datalotin'" class="md:text-lg font-medium  text-center text-black capitalize">{{
+                item.name }}</h3>
+              <h3 v-if="dat === 'datakril'" class="md:text-lg font-medium  text-center text-black capitalize">{{
+                translateText(item.name) }}</h3>
             </div>
-          </div>
-          <div v-if="dat === 'datalotin'" v-for="item in data" :key="item.id" @click="goToPath(item.id)"
-            class="hover:bg-lime-500 duration-500 active:duration-500 bg-white border-4 border-blue-800 rounded-lg p-6">
-            <div class="flex items-center gap-4">
-              <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="w-14 h-14 rounded-md" />
-              <h3 class="md:text-lg font-medium  text-center text-black capitalize">{{ item.name }}</h3>
+            <div v-if="item.workStatus"
+              class="bg-blue-200 flex justify-center items-end animate-pulse rounded-[5px] inset-0 w-full absolute h-full">
+              <b class="text-black font-bold text-[20px]">{{ $t('tez_kunda') }}</b>
             </div>
           </div>
         </div>

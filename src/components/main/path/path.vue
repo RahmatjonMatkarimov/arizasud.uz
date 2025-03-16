@@ -1,7 +1,8 @@
 <template>
   <Header />
   <div v-if="data.length == 0" class="text-black flex flex-col justify-center mt-16 items-center">
-    <div class="rounded-[20px] xl:max-w-[80rem] w-full 2xl:max-w-[90rem] p-10 mb-16 opacity-[98%] shadow-2xl bg-gray-300 ">
+    <div
+      class="rounded-[20px] xl:max-w-[80rem] w-full 2xl:max-w-[90rem] p-10 mb-16 opacity-[98%] shadow-2xl bg-gray-300 ">
       <div v-if="dat == 'datakril'" v-for="(item, index) in ServiceData" :key="item.id"
         class="flex items-center h-[70px] text-xl justify-between mb-1 p-2 mt-[14px] shadow-2xl rounded-[10px] hover:bg-lime-500 duration-300 border-blue-700 border-2 bg-white cursor-pointer">
         <b class="text-[20px] text-black w-[35px] text-center">{{ index + 1 }}</b>
@@ -32,12 +33,20 @@
               <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="w-14 h-14 rounded-md" />
               <h3 class="md:text-lg font-medium text-center text-black capitalize">{{ translateText(item.name) }}</h3>
             </div>
+            <div v-if="item.workStatus"
+              class="bg-blue-200 flex justify-center items-end animate-pulse rounded-[5px] inset-0 w-full absolute h-full">
+              <b class="text-black font-bold text-[20px]">{{ $t('tez_kunda') }}</b>
+            </div>
           </div>
           <div v-if="dat === 'datalotin'" v-for="item in data" :key="item.id" @click="goToPath(item.id)"
             class="relative hover:bg-lime-500 duration-500 bg-white border-4 border-blue-800 rounded-lg p-6">
             <div class="flex items-center gap-4">
               <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="w-14 h-14 rounded-md" />
               <h3 class="md:text-lg font-medium text-center text-black capitalize">{{ item.name }}</h3>
+            </div>
+            <div v-if="item.workStatus"
+              class="bg-blue-200 flex justify-center items-end animate-pulse rounded-[5px] inset-0 w-full absolute h-full">
+              <b class="text-black font-bold text-[20px]">{{ $t('tez_kunda') }}</b>
             </div>
           </div>
         </div>

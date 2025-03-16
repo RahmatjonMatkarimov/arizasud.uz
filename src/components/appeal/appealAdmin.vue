@@ -198,14 +198,14 @@ const getData = async () => {
     if (response.ok) {
       const result = await response.json();
       datakril.value = result
-      .filter(item => item.statu=='active')
+      .filter(item => item.status=='active')
         .sort((a, b) => a.id - b.id)
         .map(item => ({
           ...item,
           translatedName: translateText(item.name) 
         }));
         data.value = result
-        .filter(item => item.statu=='active')
+        .filter(item => item.status=='active')
         .sort((a, b) => a.id - b.id)
         ;
     } else {

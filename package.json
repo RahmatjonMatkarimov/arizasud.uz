@@ -7,7 +7,11 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "serve": "vue-cli-service serve --port 5000"
+    "serve": "vue-cli-service serve --port 5000",
+    "map": "set NODE_PATH=./src && node src/scripts/generate-sitemap.js"
+  },
+  "_moduleAliases": {
+    "@": "./src"
   },
   "dependencies": {
     "@ffmpeg/ffmpeg": "^0.12.15",
@@ -24,6 +28,7 @@
     "docxtemplater": "^3.57.2",
     "file-saver": "^2.0.5",
     "framer-motion": "^12.4.2",
+    "fs": "^0.0.1-security",
     "html-docx-js": "^0.3.1",
     "html-to-docx": "^1.8.0",
     "html2pdf.js": "^0.10.3",
@@ -32,14 +37,17 @@
     "jwt-decode": "^3.1.2",
     "mammoth": "^1.9.0",
     "mitt": "^3.0.1",
+    "module-alias": "^2.2.3",
     "moment": "^2.30.1",
     "particles.js": "^2.0.0",
+    "path": "^0.12.7",
     "pdfjs-dist": "^4.10.38",
     "peerjs": "^1.5.4",
     "pizzip": "^3.1.7",
     "router": "^1.3.8",
     "sanitize-html": "^2.14.0",
     "simple-peer": "^9.11.1",
+    "sitemap": "^8.0.0",
     "socket.io-client": "^4.8.1",
     "vue": "^3.5.13",
     "vue-i18n": "^11.0.1",

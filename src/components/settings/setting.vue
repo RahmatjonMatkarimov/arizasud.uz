@@ -1,20 +1,4 @@
 <template>
-  <!-- <div v-if="qwe" class="fixed z-50 inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <div class="bg-blue-600 p-6 rounded-lg w-11/12 max-w-md">
-      <div v-for="item in admins" :key="item.id" class="flex items-center border-b-2 mb-2 justify-between">
-        <h1 class="text-[20px]">{{ item.name }} {{ item.surname }}</h1>
-        <input type="radio" name="admin" :value="item.id" @change="handleCheckbox(item.id)"
-          :checked="selectedAdminId === item.id" class="rounded-md" />
-      </div>
-      <button @click="qwe = false" class="mt-4 px-4 py-2 bg-white mr-2 text-black rounded">Bekor qilish</button>
-      <button @click="addUserToAllowed" class="mt-4 px-4 py-2 bg-white text-black rounded">Yuborish</button>
-    </div>
-  </div>
-
-  <div class=" flex justify-end">
-    <button class="border text-black m-2 py-2 px-5 rounded-lg bg-[#09FF52]" @click="qwe = true">Admin qo'shish</button>
-  </div> -->
-
   <div>
     <ul>
       <li v-for="admin in admins" :key="admin.id" class="flex items-center justify-between my-2 bg-[#223B9E] p-4 rounded-md">

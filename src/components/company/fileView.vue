@@ -5,7 +5,8 @@
             <div class="flex flex-col gap-4">
                 <input v-model="selectedName" type="text" class="w-full p-3 rounded-lg bg-gray-700 text-white border border-gray-600 
                     focus:outline-none focus:border-blue-500 transition-colors" :placeholder="$t('bolimname')">
-                <input type="file" id="fileInput" @change="handleFileChange" class="w-full text-gray-300 py-2">
+                <input type="file" id="fileInput" @change="handleFileChange" accept=".pdf,.doc,.docx"
+                    class="w-full text-gray-300 py-2">
                 <div class="flex justify-center gap-4 mt-4">
                     <button @click="back()" class="px-6 py-2 rounded-lg font-medium bg-gray-600 text-white 
                         hover:bg-gray-700 transition-all duration-300">
@@ -96,9 +97,8 @@
 import { ref, onMounted, inject } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { URL } from "../../auth/url.js";
-import axios from "axios"; // Ensure axios is installed: npm install axios
+import axios from "axios";
 
-// Define reactive refs
 const ServiceId = ref(null);
 const ServiceData = ref([]);
 const selectedFile = ref(null);
@@ -110,7 +110,7 @@ const editingFileId = ref(null);
 const route = useRoute();
 const router = useRouter();
 const numericId = ref(parseInt(route.params.id));
-const dat = inject('dat', 'default'); // Provide default value to avoid undefined
+const dat = inject('dat', 'default');
 const translitMap = {
     "ch": "ч", "sh": "ш", "yo": "ё", "yu": "ю", "ya": "я", "ye": "е", "oʻ": "ў", "g‘": "ғ",
     "a": "а", "b": "б", "d": "д", "e": "э", "f": "ф", "g": "г", "h": "ҳ", "i": "и", "j": "ж",
@@ -120,11 +120,9 @@ const translitMap = {
 const showPdfModal = ref(false);
 const pdfUrl = ref('');
 const isFullScreen = ref(false);
-const selectedFileId = ref(null); // For signing
-const isLoading = ref(false);    // Loading state
+const selectedFileId = ref(null);
+const isLoading = ref(false);
 
-
-// Transliterate text
 const translateText = (text) => {
     if (!text) return '';
     let translated = text.toLowerCase();
@@ -134,33 +132,61 @@ const translateText = (text) => {
     return translated;
 };
 
-// Fetch initial data
 onMounted(async () => {
     ServiceId.value = numericId.value;
     await getCourtsData();
 });
-const type = ref('')
+
+const type = ref('');
 
 const getCourtsData = async () => {
     try {
         const response = await fetch(`${URL}/enterprise/${ServiceId.value}`);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        const data = await response.json();
-        ServiceData.value = data.files;
-        type.value = data.sign;
+        const res = await response.json();
+
+        // Agar res obyekt bo'lsa, files massivini olish
+        if (!res.files || !Array.isArray(res.files)) {
+            console.error("Files massivi topilmadi yoki massiv emas:", res);
+            throw new Error("Serverdan kutilgan files massivi topilmadi!");
+        }
+
+        // status === "active" bo'lgan fayllarni filter qilish
+        const filteredFiles = res.files.filter(file => file.status === "active");
+
+        // ServiceData ga filtered fayllarni yuklash
+        ServiceData.value = filteredFiles;
+
+        // sign ni olish
+        type.value = res.sign || '';
     } catch (error) {
         console.error("Xatolik yuz berdi:", error.message);
-        alert("Ma'lumotni olishda xatolik yuz berdi!");
+        alert("Ma'lumotni olishda xatolik yuz berdi: " + error.message);
     }
 };
 
-// Handle file selection
 const handleFileChange = (event) => {
-    selectedFile.value = event.target.files[0];
+    const file = event.target.files[0];
+    if (file) {
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+        const allowedExtensions = ['doc', 'docx', 'pdf'];
+
+        if (allowedExtensions.includes(fileExtension)) {
+            selectedFile.value = file;
+        } else {
+            alert("Faqat PDF yoki Word fayllarni yuklash mumkin (.pdf, .doc, .docx).");
+            event.target.value = '';
+            selectedFile.value = null;
+        }
+    }
 };
 
-// Upload new file
 const uploadFile = async () => {
+    if (!selectedFile.value) {
+        alert("Iltimos, fayl tanlang!");
+        return;
+    }
+
     const formData = new FormData();
     formData.append("file", selectedFile.value);
     formData.append("enterpriseId", numericId.value);
@@ -184,7 +210,6 @@ const uploadFile = async () => {
     }
 };
 
-// Edit file
 const editFile = (item) => {
     isEditing.value = true;
     editingFileId.value = item.id;
@@ -193,15 +218,14 @@ const editFile = (item) => {
     togle.value = true;
 };
 
-// Update file
 const updateFile = async () => {
-    try {
-        const formData = new FormData();
-        formData.append("name", selectedName.value);
-        if (selectedFile.value) {
-            formData.append("file", selectedFile.value);
-        }
+    const formData = new FormData();
+    formData.append("name", selectedName.value);
+    if (selectedFile.value) {
+        formData.append("file", selectedFile.value);
+    }
 
+    try {
         const response = await fetch(`${URL}/enterprise-file/${editingFileId.value}`, {
             method: "PUT",
             body: formData,
@@ -236,6 +260,7 @@ const func = (id) => {
     numericId.value = id;
     asd.value = id !== null;
 };
+
 const removeSelectedItems = async () => {
     try {
         const response = await fetch(`${URL}/enterprise-file/${numericId.value}`, {
@@ -261,14 +286,14 @@ const goToCard = (id) => {
     const file = ServiceData.value.find(item => item.id === id);
     if (file && file.filePath) {
         selectedFileId.value = id;
-        const BASE_URL = `${URL}`; // Example: Assuming files are served from /uploads
+        const BASE_URL = `${URL}`;
         pdfUrl.value = `${BASE_URL}${file.filePath}`;
         showPdfModal.value = true;
     } else {
         alert("Fayl topilmadi yoki filePath mavjud emas!");
     }
 };
-// Sign the file
+
 const updateEFile = async () => {
     if (!selectedFileId.value) {
         alert("Fayl tanlanmagan!");
@@ -281,7 +306,7 @@ const updateEFile = async () => {
         if (response.status === 200) {
             const baseUrl = pdfUrl.value.split('?')[0];
             pdfUrl.value = `${baseUrl}?t=${new Date().getTime()}`;
-            await getCourtsData(); // Refresh file list
+            await getCourtsData();
         }
     } catch (error) {
         console.error("Imzolashda xatolik:", error);

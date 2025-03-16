@@ -67,7 +67,7 @@ const getData = async () => {
     const response = await fetch(`${URL}/appeal`);
     if (response.ok) {
       const result = await response.json();
-      const activeItems = result.filter(item => item.statu === 'active').sort((a, b) => a.id - b.id);
+      const activeItems = result.filter(item => item.status === 'active').sort((a, b) => a.id - b.id);
       datakril.value = activeItems.map(item => ({ ...item, translatedName: translateText(item.name) }));
       data.value = activeItems;
     }

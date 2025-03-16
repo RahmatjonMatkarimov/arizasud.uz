@@ -30,6 +30,10 @@
       class="relative hover:bg-lime-500 duration-500 bg-white w-[200px] border-4 border-blue-800 rounded-lg p-6">
       <h3 class="text-lg font-medium text-center text-black capitalize">Xabarlar</h3>
     </div>
+    <div @click="goToPath('appeal')"
+      class="relative hover:bg-lime-500 duration-500 bg-white w-[200px] border-4 border-blue-800 rounded-lg p-6">
+      <h3 class="text-lg font-medium text-center text-black capitalize">interaktif xizmatlar</h3>
+    </div>
     <div @click="goToPath('files')"
       class="relative hover:bg-lime-500 duration-500 bg-white w-[200px] border-4 border-blue-800 rounded-lg p-6">
       <h3 class="text-lg font-medium text-center text-black capitalize">Filelar</h3>

@@ -11,7 +11,7 @@
               id="name" required />
           </div>
           <div class="my-3">
-            <input @change="onFileChange" type="file" id="file" accept="image/*"  />
+            <input @change="onFileChange" type="file" id="file" accept="image/*" />
           </div>
           <button class="w-full rounded-[30px] bg-lime-600 hover:bg-lime-900 text-[20px] py-2" type="submit">
             {{ $t('yuklash') }}
@@ -36,7 +36,7 @@
               id="name" required />
           </div>
           <div class="my-3">
-            <input @change="onFileChange" type="file" id="file"  />
+            <input @change="onFileChange" type="file" id="file" />
           </div>
           <button class="w-full rounded-[30px] bg-lime-600 hover:bg-lime-900 text-[20px] py-2" type="submit">
             {{ $t('yuklash') }}
@@ -98,9 +98,9 @@
 
   <div v-if="asd" class="fixed inset-0 z-50 w-full h-full flex items-center bg-black bg-opacity-50 justify-center">
     <div class="absolute w-96 bg-[#D9D9D9] flex flex-col items-center justify-center p-10 rounded-[15px]">
-      <img @click="func(null)" class="w-14 -mr-[300px] absolute -mt-44" src="../../../../public/reject.png" alt="" />
+      <img @click="func(null)" class="w-10 top-2 right-2 absolute" src="../../../../public/reject.png" alt="" />
       <div class="mt-4 flex flex-col justify-center items-center">
-        <div class="flex flex-col justify-between h-40 items-center">
+        <div v-if="selectedItem" class="flex flex-col gap-1 w-[300px] justify-between items-center">
           <button @click="Modal"
             class="py-4 rounded-[15px] h-[70px] items-center text-black w-full min-w-[250px] flex duration-500 text-[20px] px-10 bg-[#15FF09] hover:bg-lime-600">
             <img class="w-8 mr-5" src="../../../../public/pen.png" alt="">
@@ -111,6 +111,17 @@
             <img class="w-10 mr-5" src="../../../../public/remove.png" alt="">
             {{ $t('remove') }}
           </button>
+          <div class="flex py-4 rounded-[15px] h-[70px] items-center text-black w-full min-w-[250px] duration-500 justify-between px-10 bg-gray-400 hover:bg-gray-500">
+            <h2>Ishga tushirish</h2>
+            <div class="flex gap-1 items-center">
+              <h1>On</h1>
+              <label class="switch">
+                <input type="checkbox" v-model="selectedItem.workStatus" @change="updateWorkStatus(Id.value)">
+                <span class="slider round"></span>
+              </label>
+              <h1>Off</h1>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -166,20 +177,29 @@
         <div class="grid grid-cols-1 justify-center items-center sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <div v-if="dat === 'datakril'" v-for="item in datakril" :key="item.id" @click="goToPath(item.id)"
             class="relative hover:bg-lime-500 h-full flex items-center duration-500 active:duration-500 bg-white border-4 border-blue-800 rounded-lg p-6">
-            <img @click.stop="func(item)" class="absolute top-1 right-2 w-6 h-6 cursor-pointer"
+            <img @click.stop="func(item)" class="absolute z-40 top-1 right-2 w-6 h-6 cursor-pointer"
               src="../../../../public/ellipsis.png" alt="Options" />
             <div class="flex items-center gap-4">
               <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="w-14 h-14 rounded-md" />
-              <h3 class="text-lg font-medium text-center text-black first-letter:uppercase">{{ item.translatedName }}</h3>
+              <h3 class="text-lg font-medium text-center text-black first-letter:uppercase">{{ item.translatedName }}
+              </h3>
+            </div>
+            <div v-if="item.workStatus"
+              class="bg-blue-200 flex justify-center items-end animate-pulse rounded-[5px] inset-0 w-full absolute h-full">
+              <b class="text-black font-bold text-[20px]">{{ $t('tez_kunda') }}</b>
             </div>
           </div>
           <div v-if="dat === 'datalotin'" v-for="item in data" :key="item.id" @click="goToPath(item.id)"
             class="relative h-full flex items-center hover:bg-lime-500 duration-500 active:duration-500 bg-white border-4 border-blue-800 rounded-lg p-6">
-            <img @click.stop="func(item)" class="absolute top-1 right-2 w-6 h-6 cursor-pointer"
+            <img @click.stop="func(item)" class="absolute z-40 top-1 right-2 w-6 h-6 cursor-pointer"
               src="../../../../public/ellipsis.png" alt="Options" />
             <div class="flex items-center gap-4">
               <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="w-14 h-14 rounded-md" />
               <h3 class="text-lg font-medium text-center text-black first-letter:uppercase">{{ item.name }}</h3>
+            </div>
+            <div v-if="item.workStatus"
+              class="bg-blue-200 flex justify-center items-end animate-pulse rounded-[5px] inset-0 w-full absolute h-full">
+              <b class="text-black font-bold text-[20px]">{{ $t('tez_kunda') }}</b>
             </div>
           </div>
         </div>
@@ -189,7 +209,7 @@
 </template>
 
 <script setup>
-import { inject, watch } from "vue";
+import { inject, watch, computed } from "vue";
 import { ref } from "vue";
 import { URL } from "../../../auth/url.js";
 import axios from "axios";
@@ -199,7 +219,7 @@ import { useRouter } from "vue-router";
 const PutId = ref(null);
 const PutModal = ref(false);
 const PutfileModal = ref(false);
-const fileModal = ref(false); // Fayl modalini boshqarish uchun yangi ref
+const fileModal = ref(false);
 const data = ref([]);
 const showModal = ref(false);
 const showModalfiles = ref(false);
@@ -209,12 +229,17 @@ const successMessage = ref("");
 const errorMessage = ref("");
 const asd = ref(false);
 const Id = ref(null);
-const selectedFileId = ref(null); // Tanlangan fayl ID si uchun
+const selectedFileId = ref(null);
 const imageBaseUrl = `${URL}/upload`;
 const router = useRouter();
 const route = useRoute();
 const id1 = ref(route.params.id);
 const ServiceData = ref([]);
+
+// Computed property to get the selected item
+const selectedItem = computed(() => {
+  return data.value.find(item => item.id === Id.value) || null;
+});
 
 const toggleModal = () => {
   showModal.value = !showModal.value;
@@ -231,7 +256,7 @@ const Modal = () => {
 
 const Modalfile = (id) => {
   selectedFileId.value = id;
-  fileModal.value = true; // Fayl tahrirlash/o‘chirish modalini ochish
+  fileModal.value = true;
 };
 
 const func = (item) => {
@@ -239,6 +264,10 @@ const func = (item) => {
     PutId.value = item.id;
     Id.value = item.id;
     courtName.value = item.name;
+  } else {
+    PutId.value = null;
+    Id.value = null;
+    courtName.value = "";
   }
   asd.value = !asd.value;
 };
@@ -387,10 +416,10 @@ const removefileItems = async (id) => {
     });
 
     if (response.ok) {
-      fileModal.value = false; // Modalni yopish
+      fileModal.value = false;
       successMessage.value = "Fayl muvaffaqiyatli o‘chirildi!";
       errorMessage.value = "";
-      await getData(); // Ma'lumotlarni yangilash
+      await getData();
     } else {
       console.error("O‘chirishda xatolik:", response.statusText);
       errorMessage.value = "Faylni o‘chirishda xatolik yuz berdi!";
@@ -446,6 +475,32 @@ const updateCourt = async () => {
   }
 };
 
+const updateWorkStatus = async (id) => {
+  if (!id) return;
+
+  try {
+    const item = data.value.find(item => item.id === id);
+    if (!item) return;
+
+    const formData = new FormData();
+    formData.append("workStatus", item.workStatus);
+
+    const response = await axios.put(`${URL}/applications/${id}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    if (response.status === 200) {
+      successMessage.value = "Status muvaffaqiyatli yangilandi!";
+      errorMessage.value = "";
+      await getData();
+    }
+  } catch (error) {
+    errorMessage.value = "Statusni yangilashda xatolik yuz berdi: " + error.message;
+    const item = data.value.find(item => item.id === id);
+    if (item) item.workStatus = !item.workStatus; // Revert on error
+  }
+};
+
 watch([showModal, PutModal, asd, fileModal], ([modalOpen, putModalOpen, asdOpen, fileModalOpen]) => {
   if (modalOpen || putModalOpen || asdOpen || fileModalOpen) {
     document.body.style.overflow = "hidden";
@@ -458,4 +513,49 @@ getData();
 const getImageUrl = (filename) => `${imageBaseUrl}/${filename}`;
 </script>
 
-<style scoped></style>
+<style scoped>
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 25px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 20px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 19px;
+  width: 19px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked+.slider {
+  background-color: #09FF52;
+}
+
+input:checked+.slider:before {
+  transform: translateX(24px);
+}
+</style>

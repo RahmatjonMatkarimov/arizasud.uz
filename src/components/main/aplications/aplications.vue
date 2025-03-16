@@ -40,6 +40,10 @@
               <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="w-14 rounded-md" />
               <h3 class="md:text-lg font-medium text-center text-black capitalize">{{ item.name }}</h3>
             </div>
+            <div v-if="item.workStatus"
+              class="bg-blue-200 flex justify-center items-end animate-pulse rounded-[5px] inset-0 w-full absolute h-full">
+              <b class="text-black font-bold text-[20px]">{{ $t('tez_kunda') }}</b>
+            </div>
           </div>
         </div>
       </div>

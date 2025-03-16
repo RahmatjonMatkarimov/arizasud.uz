@@ -56,6 +56,6 @@ defineExpose({ fetchData });
   padding: 0;
   box-sizing: border-box;
   color: white;
-  font-family: 'Times New Roman Custom';
+  font-family: Cambria;
 }
 </style>

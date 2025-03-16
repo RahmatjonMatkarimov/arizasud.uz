@@ -57,7 +57,7 @@ console.log(items);
 
 const updateItem = async (id) => {
   try {
-    const res = await axios.patch(`${URL}/${data}/archived/${id}`, {
+    const res = await axios.put(`${URL}/${data}/archived/${id}`, {
       status: "active"
     });
 
