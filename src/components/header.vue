@@ -14,8 +14,7 @@
         <div class="flex justify-center relative sm:ml-2 sm:mx-10 mt-2 z-10">
           <img src="/logo.png" class="w-[100px] md:w-[250px] lg:w-[300px]" alt="Logo" />
         </div>
-        <b class="lg:text-[18px] hidden lg:block 2xl:text-[23px] text-[10px] w-[80%] md:w-[60%] lg:w-[35%] z-0 uppercase"
-          style="text-shadow: 2px 2px 50px white;">
+        <b class="lg:text-[18px] hidden lg:block 2xl:text-[23px] text-[10px] w-[80%] md:w-[60%] lg:w-[35%] z-0 uppercase">
           {{ $t('header') }}
         </b>
       </div>

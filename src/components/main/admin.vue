@@ -69,12 +69,11 @@
       </button>
     </div>
     <div class="flex flex-col items-center mt-6 px-4">
-      <h1 class="text-2xl sm:text-4xl font-bold text-center text-blue-800 mb-6"
-        style="text-shadow: 10px 10px 30px black;">
+      <h1 class="text-2xl sm:text-4xl font-bold text-center text-blue-800 mb-6">
         {{ $t('murojaat') }}
       </h1>
       <div class="w-full bg-gray-200 rounded-lg p-6 sm:p-10">
-        <b style="text-shadow: 10px 10px 30px black;"
+        <b
           class="text-xl sm:text-2xl block font-extrabold text-blue-800 text-center mb-6">
           {{ $t('sud') }}
         </b>
