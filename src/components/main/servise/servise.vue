@@ -106,7 +106,7 @@ const getFolderContents = async (folderId) => {
     const response = await fetch(`${URL}/folders/${folderId}`);
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const data = await response.json();
-    folderContents.value[folderId] = data.files.map((item) => ({ ...item, isFolder: false }));
+    folderContents.value[folderId] = data.files.map((item) => ({ ...item, isFolder: false })).filter(item => item.status === 'active');
   } catch (error) {
     console.error("Error fetching folder contents:", error.message);
   }

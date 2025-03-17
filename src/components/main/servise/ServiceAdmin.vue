@@ -75,7 +75,10 @@
             class="text-black text-[40px] max-w-[500px] w-full font-bold text-center bg-lime-500 border-[3px] border-black rounded-lg py-2 px-[100px]">
             {{ item.name }}
           </h1>
-        </div>
+          <div class="-ml-5 mt-2">
+            <img @click.stop="func(item.id)" class="w-4 h-4 cursor-pointer" src="/reject.png" alt="O‘chirish" />
+          </div>
+          </div>
         <div v-if="item.isFolder"
           class="w-full max-w-[80rem] p-10 mb-16 bg-gray-300 rounded-[20px] shadow-2xl opacity-[98%]">
           <div v-if="!item.isFolder" @click="toggleFolder(item)"
@@ -188,7 +191,7 @@ const getFolderContents = async (folderId) => {
     const response = await fetch(`${URL}/folders/${folderId}`);
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const data = await response.json();
-    folderContents.value[folderId] = data.files.map(item => ({ ...item, isFolder: false }));
+    folderContents.value[folderId] = data.files.map(item => ({ ...item, isFolder: false })).filter(item => item.status === 'active');
   } catch (error) {
     console.error("Error fetching folder contents:", error.message);
     alert("Error fetching folder contents!");
