@@ -1,12 +1,11 @@
   <template>
-    <marquee direction="right">
-      Bu tizim vaqtincha faol emas. Tez orada ishga tushadi. &nbsp&nbsp;
-      Bu tizim vaqtincha faol emas. Tez orada ishga tushadi. &nbsp&nbsp;
-      Bu tizim vaqtincha faol emas. Tez orada ishga tushadi. &nbsp&nbsp;
-      Bu tizim vaqtincha faol emas. Tez orada ishga tushadi. &nbsp&nbsp;
-      Bu tizim vaqtincha faol emas. Tez orada ishga tushadi.
-    </marquee>
-
+      <div class="marquee-container">
+        <span class="marquee-text">
+          Tizim hozircha sinov tariqasida ishga tushirilgan bo‘lib, hozircha to‘liq fa'oliyat ko‘rsatmayapti.
+          &nbsp&nbsp&nbsp&nbsp&nbsp
+          Tizim hozircha sinov tariqasida ishga tushirilgan bo‘lib, hozircha to‘liq fa'oliyat ko‘rsatmayapti.
+        </span>
+      </div>
     <div
       class="flex mt-10 md:mt-12 justify-between text-white items-center px-3 w-full h-[70px] md:h-[150px] lg:h-[200px] opacity-[88%] relative bg-[#0033FF]">
       <div id="particles-js" class="absolute top-0 left-0 w-full h-full"></div>
@@ -14,20 +13,21 @@
         <div class="flex justify-center relative sm:ml-2 sm:mx-10 mt-2 z-10">
           <img src="/logo.png" class="w-[100px] md:w-[250px] lg:w-[300px]" alt="Logo" />
         </div>
-        <b class="lg:text-[18px] hidden lg:block 2xl:text-[23px] text-[10px] w-[80%] md:w-[60%] lg:w-[35%] z-0 uppercase">
+        <b
+          class="lg:text-[18px] hidden lg:block 2xl:text-[23px] text-[10px] w-[80%] md:w-[60%] lg:w-[35%] z-0 uppercase">
           {{ $t('header') }}
         </b>
       </div>
-      <div class="lg:mr-[140px]">
+      <div class="flex mr-2 flex-col mt-10 items-end">
         <div>
           <span v-for="(lang, index) in languages" :key="index" @click="changeLanguage(lang.code)"
-            class="mx-1 text-[13px] lg:text-[22px] hover:text-gray-300 duration-500 relative z-50 cursor-pointer">
+            class="mx-1 text-[13px] lg:text-[30px] hover:text-gray-300 duration-500 relative z-50 cursor-pointer">
             {{ lang.label }}
           </span>
         </div>
-        <div class="flex mt-2 border-b-2 justify-center items-center">
+        <div class="flex mt-2 xl:w-[400px] border-b-2 justify-center items-center">
           <input type="search" v-model="searchQuery" @input="searchItems"
-            class="bg-opacity-0 bg-[#0033FF] text-[10px] text-ellipsis w-full relative z-50 outline-none"
+            class="bg-opacity-0 bg-[#0033FF] text-[10px] lg:text-[20px] text-ellipsis w-full relative z-50 outline-none"
             :placeholder="$t('qidiruv')">
           <label>
             <img src="/loupe.png" class="w-5" alt="Search">
@@ -179,5 +179,36 @@ provide('filteredData', filteredData);
 b {
   color: white;
   font-weight: bold;
+}
+
+.marquee-container {
+  max-width: 100h;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.marquee-text {
+  display: inline-block;
+  animation: marquee 50s linear infinite;
+  color: red;
+  position: absolute;
+  font-size: 30px;
+  font-weight: bold;
+  overflow: hidden;
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
+}
+
+.marquee-text::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
 }
 </style>

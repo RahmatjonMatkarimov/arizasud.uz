@@ -374,6 +374,8 @@ const getData = async () => {
         .filter((item) => item.status === "active")
         .sort((a, b) => a.id - b.id);
       ServiceData.value = result.files.sort((a, b) => a.id - b.id);
+      console.log(data.value);
+      
     } else {
       console.error("Kutilmagan formatda ma'lumot keldi:", result);
     }

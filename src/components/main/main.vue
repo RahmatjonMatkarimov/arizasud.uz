@@ -1,6 +1,6 @@
 <template>
-  <div class="flex text-white flex-col items-center pb-10">
-    <div class="flex flex-col items-center mt-6 px-4">
+  <div class="flex text-white w-full flex-col items-center pb-10">
+    <div class="flex flex-col items-center w-full mt-6 px-4">
       <h1 class="text-2xl sm:text-4xl font-bold text-center text-blue-800 mb-6">
         {{ $t('murojaat') }}
       </h1>
@@ -11,7 +11,7 @@
         </b>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <div v-for="item in data" :key="item.id" @click="goToPath(item.id)"
-            class="hover:bg-lime-500 relative w-[580px] duration-500 active:duration-500 bg-white border-4 border-blue-800 rounded-lg p-6">
+            class="hover:bg-lime-500 relative duration-500 active:duration-500 bg-white border-4 border-blue-800 rounded-lg p-6">
             <div class="flex items-center justify-center gap-4">
               <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="w-14 h-14 rounded-md" />
               <h3 v-if="dat === 'datalotin'" class="md:text-lg font-bold  text-center text-black capitalize">{{
