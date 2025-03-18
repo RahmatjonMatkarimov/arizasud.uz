@@ -9,7 +9,6 @@
         <input v-model="searchQuery" type="text" :placeholder="$t('qidiruv')"
           class="mb-4 border-2 p-2 rounded-lg text-black " />
       </div>
-      console.log(fileResponse);
       <button v-if="data === 'yurist' || data === 'bigAdmin'" @click="toggleDeleteMode"
         class="bg-blue-500 text-white mb-4 mr-2 px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition">
         {{ deleteMode ? $t('cancel_delete') : $t('enable_delete') }}

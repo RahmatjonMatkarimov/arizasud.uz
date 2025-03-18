@@ -3,43 +3,42 @@
     <div class="absolute flex flex-col items-center justify-center p-10 bg-gray-900 rounded-[15px] opacity-[90%]">
       <div class="file-upload-container">
         <div class="file-upload-area">
-          <input type="text" class="w-full p-2 my-2 text-black rounded-[25px] bg-gray-200" placeholder="Nomi"
+          <input type="text" class="w-full p-2 my-2 text-black rounded-[25px] bg-gray-200" :placeholder="$t('filename')"
             v-model="selectedName" />
           <input v-if="!isFolderCreation" type="file" id="fileInput" @change="handleFileChange" />
           <label v-if="!currentFolderId" class="flex items-center mt-4 text-white">
             <input type="checkbox" v-model="isFolderCreation" class="mr-2" :disabled="hasFilesAtRoot" />
-            Fayl o‘rniga papka yaratish
+            {{ $t('bolim_yaratish') }}
           </label>
           <div class="flex gap-5 mt-4">
             <button @click="back()" class="px-9 py-[10px] text-white bg-gray-600 rounded-[5px] hover:bg-gray-700">
-              Bekor qilish
+              {{ $t('Bekor_qilish') }}
             </button>
             <button v-if="!isFolderCreation" @click="isEditing ? updateFile() : uploadFile()"
               class="px-9 py-[10px] text-white bg-[#2196f3] border-none rounded-[5px] cursor-pointer hover:bg-[#1e88e5]"
               :disabled="hasFoldersAtRoot && !currentFolderId">
-              Yuklash
+              {{ $t('yuklash') }}
             </button>
             <button v-if="isFolderCreation" @click="isEditing ? updateFolder() : createFolder()"
               class="px-9 py-[10px] text-white bg-[#2196f3] border-none rounded-[5px] cursor-pointer hover:bg-[#1e88e5]"
               :disabled="hasFilesAtRoot">
-              {{ isEditing ? 'Yangilash' : 'Papka yaratish' }}
+              {{ isEditing ? $t('editModal.updateButton') : $t('bolim_yaratish') }}
             </button>
           </div>
         </div>
       </div>
     </div>
   </div>
-
   <div v-if="asd" class="fixed inset-0 z-50 flex items-center justify-center w-full h-full bg-black bg-opacity-50">
     <div class="absolute flex flex-col items-center justify-center p-10 bg-gray-900 rounded-[15px] opacity-[90%]">
       <div class="flex justify-evenly w-[300px] mt-4">
         <button @click="removeSelectedItems"
           class="px-7 py-2 text-white duration-500 bg-teal-500 rounded-[25px] hover:bg-teal-600">
-          O‘chirish
+          {{ $t('remove') }}
         </button>
         <button @click="func(null)"
           class="px-6 py-2 text-white duration-500 bg-red-600 rounded-[25px] hover:bg-red-700">
-          Bekor qilish
+          {{ $t('Bekor_qilish') }}
         </button>
       </div>
     </div>
@@ -47,7 +46,7 @@
   <div class="flex justify-end">
     <button @click="promptForFolderOrFile" id="add"
       class="px-4 py-2 mr-6 text-[20px] text-white duration-500 bg-teal-500 rounded-[25px] hover:bg-teal-600">
-      Yaratish
+      {{ $t('create') }}
     </button>
   </div>
   <div class="flex flex-col items-center justify-center mt-16 text-black">
@@ -61,22 +60,21 @@
             {{ dat === 'datakril' ? translateText(item.name) : item.name }}
           </h1>
           <div class="flex gap-2">
-            <img @click.stop="editFile(item)" class="w-4 h-4 cursor-pointer" src="/pen.png" alt="Tahrirlash" />
-            <img @click.stop="func(item.id)" class="w-4 h-4 cursor-pointer" src="/reject.png" alt="O‘chirish" />
+            <img @click.stop="editFile(item)" class="w-4 h-4 cursor-pointer" src="/pen.png" :alt="$t('tahrirlash')" />
+            <img @click.stop="func(item.id)" class="w-4 h-4 cursor-pointer" src="/reject.png" :alt="$t('remove')" />
           </div>
         </div>
       </div>
     </div>
-
     <div class="w-full max-w-[80rem]">
       <div v-for="(item, index) in ServiceData" :key="item.id" class="mb-1">
         <div v-if="item.isFolder" class="flex mb-5 justify-center">
           <h1 style="text-shadow: 0 0 5px #fff,0 0 10px #fff;"
             class="text-black text-[20px] lg:text-[30px] xl:text-[40px] max-w-[9000px] font-bold text-center bg-lime-500 border-[3px] border-black rounded-lg py-2 px-[100px]">
-            {{ item.name }}
+            {{ dat === 'datakril' ? translateText(item.name) : item.name }}
           </h1>
           <div class="-ml-5 mt-2">
-            <img @click.stop="func(item.id)" class="w-4 h-4 cursor-pointer" src="/reject.png" alt="O‘chirish" />
+            <img @click.stop="func(item.id)" class="w-4 h-4 cursor-pointer" src="/reject.png" :alt="$t('remove')" />
           </div>
         </div>
         <div v-if="item.isFolder"
@@ -89,15 +87,15 @@
               {{ dat === 'datakril' ? translateText(item.name) : item.name }}
             </h1>
             <div class="flex gap-2">
-              <img @click.stop="editFile(item)" class="w-4 h-4 cursor-pointer" src="/pen.png" alt="Tahrirlash" />
-              <img @click.stop="func(item.id)" class="w-4 h-4 cursor-pointer" src="/reject.png" alt="O‘chirish" />
+              <img @click.stop="editFile(item)" class="w-4 h-4 cursor-pointer" src="/pen.png" :alt="$t('tahrirlash')" />
+              <img @click.stop="func(item.id)" class="w-4 h-4 cursor-pointer" src="/reject.png" :alt="$t('remove')" />
             </div>
           </div>
 
           <div v-if="item.isFolder" class="mt-2 ml-10">
             <button @click="promptForFileInFolder(item.id)"
               class="px-3 py-1 mb-2 text-[16px] text-white duration-500 bg-blue-500 rounded-[25px] hover:bg-blue-600">
-              Fayl qo‘shish
+              {{ $t('create') }}
             </button>
             <div v-for="(file, fileIndex) in folderContents[item.id]" :key="file.id"
               class="flex items- my-1 justify-between items-center min-h-[50px] p-2 text-lg bg-white border border-blue-500 rounded-[10px] shadow-md cursor-pointer hover:bg-lime-500 duration-300">
@@ -107,8 +105,9 @@
                 {{ dat === 'datakril' ? translateText(file.name) : file.name }}
               </h1>
               <div class="flex gap-2">
-                <img @click.stop="editFile(file)" class="w-4 h-4 cursor-pointer" src="/pen.png" alt="Tahrirlash" />
-                <img @click.stop="func(file.id)" class="w-4 h-4 cursor-pointer" src="/reject.png" alt="O‘chirish" />
+                <img @click.stop="editFile(file)" class="w-4 h-4 cursor-pointer" src="/pen.png"
+                  :alt="$t('tahrirlash')" />
+                <img @click.stop="func(file.id)" class="w-4 h-4 cursor-pointer" src="/reject.png" :alt="$t('remove')" />
               </div>
             </div>
           </div>
@@ -121,8 +120,9 @@
 <script setup>
 import { ref, onMounted, inject, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useI18n } from 'vue-i18n'; 
 import { URL } from "../../../auth/url.js";
-
+const { t } = useI18n();
 const ServiceId = ref(null);
 const ServiceData = ref([]);
 const selectedFile = ref(null);

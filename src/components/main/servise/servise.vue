@@ -6,7 +6,7 @@
           class="flex items-center justify-between h-[70px] p-2 mt-[14px] text-xl bg-white border-2 border-blue-700 rounded-[10px] shadow-2xl cursor-pointer hover:bg-lime-500 duration-300"
           @click="item.isFolder ? toggleFolder(item) : goToCard(item.id)">
           <b class="w-[35px] text-[20px] text-black text-center">{{ index + 1 }}</b>
-          <img :src="item.isFolder ? '/folder.png' : '/word.png'" width="25px" class="mr-5" alt="" />
+          <img :src="item.isFolder ? '/folder.png' : '/word.png'" width="25px" class="mr-5" :alt="$t('file')" />
           <h1 class="flex-1 text-black">
             {{ dat === 'datakril' ? translateText(item.name) : item.name }}
           </h1>
@@ -29,7 +29,7 @@
               class="flex items-center justify-between my-1 min-h-[50px] p-2 text-lg bg-white border border-blue-500 rounded-[10px] shadow-md cursor-pointer hover:bg-lime-500 duration-300"
               @click="goToCard(file.id)">
               <b class="w-[35px] text-[18px] text-black text-center">{{ fileIndex + 1 }}</b>
-              <img src="/word.png" width="20px" class="mr-5" alt="" />
+              <img src="/word.png" width="20px" class="mr-5" :alt="$t('word')" />
               <h1 class="flex-1 text-black">
                 {{ dat === 'datakril' ? translateText(file.name) : file.name }}
               </h1>
@@ -44,8 +44,9 @@
 <script setup>
 import { ref, onMounted, inject } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useI18n } from 'vue-i18n'; 
 import { URL } from "../../../auth/url.js";
-
+const { t } = useI18n();
 const ServiceId = ref(null);
 const ServiceData = ref([]);
 const folderContents = ref({});

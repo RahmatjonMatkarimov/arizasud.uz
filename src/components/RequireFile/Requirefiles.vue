@@ -29,7 +29,6 @@
           </span>
           <button v-if="file.statusReason" @click="qwenn(file.statusReason)"
             class="hidden group-hover:block py-2 px-4 bg-red-500">{{ $t('sababni') }}</button>
-
           <label v-if="deleteMode" class="flex items-center cursor-pointer space-x-2">
             <input type="checkbox" v-model="selectedFiles" :value="file.id" class="peer hidden">
             <div

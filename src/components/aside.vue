@@ -56,7 +56,7 @@ const menuItems = [
   { to: "/payments", label: "Tizim toʻlovlari", condition: true },
   { to: "/smile", label: "Stikker qoʻshish", condition: true },
   { to: "/companyFile", label: "Kampaniya Filelaari", condition: true },
-  { to: "/commaners", label: "Yaratilgan Filelarni roʻyxati", condition: true },
+  { to: "/commaners", label: "Tizimdagi foydalanuvchilar roʻyxati", condition: true },
   { to: "/archive", label: "Arxiv", condition: true },
 ];
 
