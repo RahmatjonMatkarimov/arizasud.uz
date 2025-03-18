@@ -49,6 +49,7 @@ const menuItems = [
   { to: "/operators", label: "ishchilarni hujjatini yaratuvchi devonxona mudiri", condition: () => data.value?.call_centres },
   { to: "/yurists", label: "Yurist-ekspert yaratish boʻlimi", condition: () => data.value?.yurists },
   { to: "/admins", label: "Ishchi hodimlarni yaratish ( Admin yaratish )", condition: () => data.value?.admins },
+  { to: "/remindersAdmin", label: "Ishchilarni bajargan ishlari", condition: () => data.value?.admins },
   { to: "/admin", label: "Sud hujjatlarini yozish", condition: true },
   { to: "/appealAdmin", label: "Interaktiv xizmatlar roʻyxati", condition: true },
   { to: "/partners", label: "Hamkorlar roʻyxati", condition: true },

@@ -10,8 +10,9 @@
   </div>
 
   <div
-    class="bg-blue-600 hidden md:flex fixed right-0 z-50 top-[45%] p-[10px] rounded-tl-xl rounded-bl-xl flex-col gap-6">
+    class="bg-blue-600 hidden md:flex fixed right-0 z-50 top-[40%] p-[10px] rounded-tl-xl rounded-bl-xl flex-col gap-6">
     <img src="../public/telephone.png" alt="Telephone" class="cursor-pointer w-10" />
+    <img @click="goToPath()" src="../public/consult.png" alt="Keyboard" class="cursor-pointer w-10" />
     <img src="../public/keyboard.png" alt="Keyboard" class="cursor-pointer w-10" />
   </div>
 
@@ -24,12 +25,21 @@ import { ref, provide, watchEffect, onMounted } from 'vue';
 import axios from 'axios';
 import ErrorComponent from '@/components/error.vue';
 import { URL } from './auth/url';
+import { useRouter } from 'vue-router';
 
 const errorCode = ref(null);
 const isLoading = ref(false);
+const router = useRouter()
 
 // Global provide qilish
 provide('isLoading', isLoading);
+
+function goToPath() {
+router.push('/ticket')
+}
+function goToPath1() {
+router.push('/reminders')
+}
 
 const fetchData = async (url) => {
   isLoading.value = true;

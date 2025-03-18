@@ -14,6 +14,8 @@ const routes = [
     { path: "/appeals", name: "appeals", component: () => import("@/components/appeal/appeal.vue") },
     { path: "/aplications/:id", name: "aplications", component: () => import("@/components/main/aplications/aplications.vue") },
     { path: "/screen", name: "screen", component: () => import("@/components/filePage/dakument.vue") },
+    { path: "/ticket", name: "ticket", component: () => import("@/components/ticket/ticket.vue") },
+    { path: "/reminders", name: "reminders", component: () => import("@/components/reminders/reminders.vue") },
     { path: "/servise/:id", name: "screen", component: () => import("@/components/main/servise/servise.vue") },
     { path: "/:catchAll(.*)", component: () => import("@/components/error.vue"), props: { errorCode: 404 } },
     {
@@ -50,6 +52,8 @@ const routes = [
             { path: "/companyFile", component: () => import("@/components/company/filePage.vue") },
             { path: "/commaners", component: () => import("@/components/main/file/all.vue") },
             { path: "/companyFile-view/:id", component: () => import("@/components/company/fileView.vue") },
+            { path: "/remindersAdmin", component: () => import("@/components/reminders/remindersAdmin.vue") },
+            { path: "/profileUser/:id", component: () => import("@/components/ProfilePage/ProfileUser.vue") },
         ],
         meta: { requiresAuth: true, allowedRoles: ["admin", "manager", "yurist", "bigAdmin"] },
     },

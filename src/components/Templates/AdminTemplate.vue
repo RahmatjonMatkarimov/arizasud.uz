@@ -3,10 +3,11 @@
     <div class="w-full fixed mb-32 top-0 z-20 mx-auto">
       <div v-if="dat === 'datakril'" class="bg-blue-800 flex h-[200px] p-2">
         <div class="flex items-start gap-6 mb-8">
-          <div>
-            <div class="w-44 h-44 border-2 border-profile-blue rounded-lg overflow-hidden">
+          <div @click="router.push(`/profileUser/${userInfoLotin.id}`)" class="flex gap-2 flex-col justify-center items-center">
+            <div class="w-36 h-36 border-2 border-profile-blue rounded-lg overflow-hidden">
               <img :src="getImageUrl(userInfoLotin.img)" alt="Profile Image" />
             </div>
+            <h1 class="font-bold">{{ userInfo.name }} {{ userInfo.surname }}</h1>
           </div>
           <div class="flex-1 w-[300px] bg-profile-blue m-2 text-white rounded-lg">
             <div class="mb-4 relative  w-full flex border p-4 rounded-lg break-words">
@@ -31,37 +32,16 @@
                 </div>
               </div>
             </div>
-
           </div>
         </div>
         <div class=" flex flex-col flex-wrap">
-          <h1 class="p-2 pr-10 m-2 rounded capitalize border">{{ $t('foydalanuvchi_ismi') }}: {{ userInfo.name }}
-            {{ userInfo.surname }}
-            {{ userInfo.dadname }}</h1>
-          <h1 class="p-2 pr-10 m-2 capitalize rounded border">{{ $t('foydalanuvchi_telefon') }}: +998-{{
-            formatPhoneNumber(userInfoLotin.phone)
-            }}</h1>
-          <h1 class="p-2 pr-10 m-2 rounded capitalize border">{{ $t('foydalanuvchi_jshir') }}:
-            {{ userInfoLotin.uniqueCode }}</h1>
-          <h1 class="p-2 pr-10 m-2 rounded capitalize border">{{ $t('id_karta_raqami') }}: {{
-            userInfoLotin.userCode
-            }}</h1>
-          <h1 class="p-2 pr-10 m-2 rounded capitalize border">{{ $t('tugilgan_kuni') }}: {{ formattedBirthday }}</h1>
+          <button @click="router.push('reminders')"
+            class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
+            {{ $t('hisobot') }}
+          </button>
           <button @click="go(userInfoLotin.id)"
             class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
             {{ $t('ish_haqqi_kalkulyatori') }}
-          </button>
-          <button @click="go3(userInfo.id)"
-            class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
-            {{ $t('hodim_vazifalari') }}
-          </button>
-          <button @click="go2(userInfo.id)"
-            class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
-            {{ $t('hodim_majburiyatlari') }}
-          </button>
-          <button @click="go1(userInfo.id)"
-            class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
-            {{ $t('hodim_malumotlari') }}
           </button>
           <a href="https://www.zoom.com/uz" target="_blank"
             class="border bg-lime-600 py-2 px-6 m-2 text-center text-black rounded hover:bg-lime-700 duration-500 capitalize">
@@ -118,10 +98,11 @@
       </div>
       <div v-if="dat === 'datalotin'" class="bg-blue-800 flex h-[200px] p-2">
         <div class="flex items-start gap-6 mb-8">
-          <div>
-            <div class="w-44 h-44 border-2 border-profile-blue rounded-lg overflow-hidden">
+          <div @click="router.push(`/profileUser/${userInfoLotin.id}`)" class="flex gap-2 flex-col justify-center items-center">
+            <div class="w-36 h-36 border-2 border-profile-blue rounded-lg overflow-hidden">
               <img :src="getImageUrl(userInfoLotin.img)" alt="Profile Image" />
             </div>
+            <h1 class="font-bold">{{ userInfoLotin.name }} {{ userInfoLotin.surname }}</h1>
           </div>
           <div class="flex-1 w-[300px] bg-profile-blue m-2 text-white rounded-lg">
             <div class="mb-4 relative  w-full flex border p-4 rounded-lg break-words">
@@ -149,33 +130,13 @@
           </div>
         </div>
         <div class=" flex flex-col flex-wrap">
-          <h1 class="p-2 pr-10 m-2 rounded capitalize border">{{ $t('foydalanuvchi_ismi') }}: {{ userInfoLotin.name }}
-            {{ userInfoLotin.surname }}
-            {{ userInfoLotin.dadname }}</h1>
-          <h1 class="p-2 pr-10 m-2 capitalize rounded border">{{ $t('foydalanuvchi_telefon') }}: +998-{{
-            formatPhoneNumber(userInfoLotin.phone)
-            }}</h1>
-          <h1 class="p-2 pr-10 m-2 rounded capitalize border">{{ $t('foydalanuvchi_jshir') }}:
-            {{ userInfoLotin.uniqueCode }}</h1>
-          <h1 class="p-2 pr-10 m-2 rounded capitalize border">{{ $t('id_karta_raqami') }}: {{
-            userInfoLotin.userCode
-            }}</h1>
-          <h1 class="p-2 pr-10 m-2 rounded capitalize border">{{ $t('tugilgan_kuni') }}: {{ formattedBirthday }}</h1>
+          <button @click="router.push('reminders')"
+            class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
+            {{ $t('hisobot') }}
+          </button>
           <button @click="go(userInfoLotin.id)"
             class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
             {{ $t('ish_haqqi_kalkulyatori') }}
-          </button>
-          <button @click="go3(userInfo.id)"
-            class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
-            {{ $t('hodim_vazifalari') }}
-          </button>
-          <button @click="go2(userInfo.id)"
-            class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
-            {{ $t('hodim_majburiyatlari') }}
-          </button>
-          <button @click="go1(userInfo.id)"
-            class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
-            {{ $t('hodim_malumotlari') }}
           </button>
           <a href="https://www.zoom.com/uz" target="_blank"
             class="border bg-lime-600 py-2 px-6 m-2 text-center text-black rounded hover:bg-lime-700 duration-500 capitalize">
