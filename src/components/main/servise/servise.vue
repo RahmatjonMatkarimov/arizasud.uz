@@ -1,6 +1,5 @@
 <template>
   <div class="flex flex-col items-center justify-center mt-16 text-black">
-    <!-- Root-level files (if no folders exist) -->
     <div v-if="!isFolders" class="w-full max-w-[80rem] p-10 mb-16 bg-gray-300 rounded-[20px] shadow-2xl opacity-[98%]">
       <div v-for="(item, index) in ServiceData" :key="item.id" class="mb-1">
         <div
@@ -15,12 +14,11 @@
       </div>
     </div>
 
-    <!-- Folders and their contents -->
     <div class="w-full max-w-[80rem]">
       <div v-for="(item, index) in ServiceData" :key="item.id" class="mb-1">
         <div v-if="item.isFolder" class="flex mb-5 justify-center">
           <h1 style="text-shadow: 0 0 5px #fff, 0 0 10px #fff;"
-            class="text-black text-[40px] max-w-[500px] w-full font-bold text-center bg-lime-500 border-[3px] border-black rounded-lg py-2 px-[100px]">
+            class="text-black text-[20px] lg:text-[30px] xl:text-[40px] max-w-[9000px] font-bold text-center bg-lime-500 border-[3px] border-black rounded-lg py-2 px-[100px]">
             {{ item.name }}
           </h1>
         </div>
@@ -28,7 +26,7 @@
           class="w-full max-w-[80rem] p-10 mb-16 bg-gray-300 rounded-[20px] shadow-2xl opacity-[98%]">
           <div class="mt-2 ml-10">
             <div v-for="(file, fileIndex) in folderContents[item.id]" :key="file.id"
-              class="flex items-center justify-between h-[50px] p-2 text-lg bg-white border border-blue-500 rounded-[10px] shadow-md cursor-pointer hover:bg-lime-300 duration-300"
+              class="flex items-center justify-between my-1 h-[50px] p-2 text-lg bg-white border border-blue-500 rounded-[10px] shadow-md cursor-pointer hover:bg-lime-500 duration-300"
               @click="goToCard(file.id)">
               <b class="w-[35px] text-[18px] text-black text-center">{{ fileIndex + 1 }}</b>
               <img src="/word.png" width="20px" class="mr-5" alt="" />

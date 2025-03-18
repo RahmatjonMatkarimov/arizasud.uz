@@ -48,6 +48,7 @@ const routes = [
             { path: "/smile", component: () => import("@/components/Message/CreateSmile.vue") },
             { path: "/all", component: () => import("@/components/admins/alladmins.vue") },
             { path: "/companyFile", component: () => import("@/components/company/filePage.vue") },
+            { path: "/commaners", component: () => import("@/components/main/file/all.vue") },
             { path: "/companyFile-view/:id", component: () => import("@/components/company/fileView.vue") },
         ],
         meta: { requiresAuth: true, allowedRoles: ["admin", "manager", "yurist", "bigAdmin"] },

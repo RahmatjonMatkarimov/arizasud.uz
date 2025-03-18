@@ -72,13 +72,13 @@
       <div v-for="(item, index) in ServiceData" :key="item.id" class="mb-1">
         <div v-if="item.isFolder" class="flex mb-5 justify-center">
           <h1 style="text-shadow: 0 0 5px #fff,0 0 10px #fff;"
-            class="text-black text-[40px] max-w-[500px] w-full font-bold text-center bg-lime-500 border-[3px] border-black rounded-lg py-2 px-[100px]">
+            class="text-black text-[20px] lg:text-[30px] xl:text-[40px] max-w-[9000px] font-bold text-center bg-lime-500 border-[3px] border-black rounded-lg py-2 px-[100px]">
             {{ item.name }}
           </h1>
           <div class="-ml-5 mt-2">
             <img @click.stop="func(item.id)" class="w-4 h-4 cursor-pointer" src="/reject.png" alt="O‘chirish" />
           </div>
-          </div>
+        </div>
         <div v-if="item.isFolder"
           class="w-full max-w-[80rem] p-10 mb-16 bg-gray-300 rounded-[20px] shadow-2xl opacity-[98%]">
           <div v-if="!item.isFolder" @click="toggleFolder(item)"
@@ -100,7 +100,7 @@
               Fayl qo‘shish
             </button>
             <div v-for="(file, fileIndex) in folderContents[item.id]" :key="file.id"
-              class="flex items-center justify-between h-[50px] p-2 text-lg bg-white border border-blue-500 rounded-[10px] shadow-md cursor-pointer hover:bg-lime-300 duration-300">
+              class="flex items- my-1 justify-between items-center h-[50px] p-2 text-lg bg-white border border-blue-500 rounded-[10px] shadow-md cursor-pointer hover:bg-lime-500 duration-300">
               <b class="w-[35px] text-[18px] text-black text-center">{{ fileIndex + 1 }}</b>
               <img src="/word.png" width="20px" class="mr-5" alt="" />
               <h1 class="flex-1 text-black" @click="goToCard(file.id)">
