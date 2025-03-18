@@ -83,7 +83,7 @@
         </div>
       </div>
     </div>
-    <div class="flex justify-center mb-16 items-center">
+    <div class=" recrystallization justify-center mb-16 items-center">
       <h1 style="text-shadow: 0 0 5px #fff,0 0 10px #fff;" class="text-black text-[40px] font-bold text-center bg-lime-500 border-[3px] border-black rounded-lg py-2 px-[100px]">
         {{ $t('adminList.title1') }} <span v-if="Count" class="border-b-4 px-1 border-black text-black">{{ Count }}</span>
       </h1>
@@ -150,7 +150,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, onUnmounted, inject } from "vue";
+import { ref, watch, onMounted, onUnmounted, inject } from "vue";
 import axios from "axios";
 import { formatDistanceToNow } from "date-fns";
 import { uz } from "date-fns/locale";
@@ -200,7 +200,6 @@ const Count = ref(null);
 const asds = ref(false);
 const router = useRouter();
 
-// Inject dat
 const dat = inject('dat');
 
 const translitMap = {
@@ -211,7 +210,7 @@ const translitMap = {
 };
 
 const translateText = (text) => {
-  if (!text) return ''; // Handle null or undefined text
+  if (!text) return '';
   let translated = text.toLowerCase();
   for (const key in translitMap) {
     const regex = new RegExp(key, "g");
@@ -275,22 +274,35 @@ const getData = async () => {
       .sort((a, b) => a.id - b.id);
     Count.value = data.value.length;
 
-    onlineAdmins.value = data.value
-      .filter(admin => {
-        const lastSeenTime = new Date(admin.lastSeen).getTime();
-        const currentTime = new Date().getTime();
-        return (currentTime - lastSeenTime) < 5 * 60 * 1000;
-      })
-      .map(admin => admin.id.toString());
+    checkOnlineStatus(); // Update online status after fetching data
   } catch (error) {
     console.error("Xatolik:", error);
   }
 };
 
+const checkIsOnline = (adminId) => {
+  const admin = data.value.find(item => item.id === adminId);
+  if (!admin || !admin.lastSeen) return false;
+
+  const lastSeenTime = new Date(admin.lastSeen).getTime();
+  const currentTime = new Date().getTime();
+  const timeDifference = (currentTime - lastSeenTime) / (1000 * 60); // Convert to minutes
+
+  return timeDifference < 5; // Online if less than 5 minutes
+};
+
 const getAdminStatus = (admin) => {
-  if (onlineAdmins.value.includes(admin.id.toString())) {
+  if (!admin.lastSeen) {
+    return { status: t('adminCard.offlineStatus'), color: "text-gray-500" };
+  }
+
+  const lastSeenTime = new Date(admin.lastSeen).getTime();
+  const currentTime = new Date().getTime();
+  const timeDifference = (currentTime - lastSeenTime) / (1000 * 60); // Convert to minutes
+
+  if (timeDifference < 5) {
     return { status: t('adminCard.onlineStatus'), color: "text-green-500" };
-  } else if (admin.lastSeen) {
+  } else {
     return {
       status: `${formatDistanceToNow(new Date(admin.lastSeen), {
         addSuffix: true,
@@ -298,21 +310,23 @@ const getAdminStatus = (admin) => {
       })} tarmoqda edi`,
       color: "text-red-500",
     };
-  } else {
-    return { status: t('adminCard.offlineStatus'), color: "text-gray-500" };
   }
 };
 
-const checkOnlineStatus = (onlineAdminIds) => {
-  onlineAdmins.value = onlineAdminIds.map((id) => id.toString());
+const checkOnlineStatus = () => {
+  onlineAdmins.value = data.value
+    .filter(admin => {
+      if (!admin.lastSeen) return false;
+      const lastSeenTime = new Date(admin.lastSeen).getTime();
+      const currentTime = new Date().getTime();
+      const timeDifference = (currentTime - lastSeenTime) / (1000 * 60);
+      return timeDifference < 5;
+    })
+    .map(admin => admin.id.toString());
 };
 
 const getImageUrl = (img) => {
   return img ? `${URL}/upload/${img}` : "/default-avatar.png";
-};
-
-const checkIsOnline = (adminId) => {
-  return onlineAdmins.value.includes(adminId.toString());
 };
 
 const updateAdmin = async () => {
@@ -399,7 +413,7 @@ const post = async () => {
 
   try {
     const token = localStorage.getItem("token");
-    const response = await axios.post(`${URL}/manager`, formData, {
+    await axios.post(`${URL}/manager`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "multipart/form-data",
@@ -421,7 +435,7 @@ const removeAdmin = async () => {
 
   try {
     const token = localStorage.getItem("token");
-    const response = await axios.delete(`${URL}/manager/${selectedId.value}`, {
+    await axios.delete(`${URL}/manager/${selectedId.value}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -448,15 +462,18 @@ onMounted(() => {
     socket.emit("getOnlineAdmins");
   });
 
-  socket.on("onlineAdmins", (onlineAdminIds) => {
-    checkOnlineStatus(onlineAdminIds);
+  socket.on("onlineAdmins", () => {
+    checkOnlineStatus();
   });
 
-  socket.on("adminOnlineUpdate", checkOnlineStatus);
+  socket.on("adminOnlineUpdate", () => {
+    checkOnlineStatus();
+  });
 
   const interval = setInterval(() => {
-    data.value = [...data.value];
-  }, 60000);
+    checkOnlineStatus(); // Periodically check online status
+    data.value = [...data.value]; // Trigger reactivity
+  }, 60000); // Update every minute
 
   watch([qwe, PutModal, asds, asd], ([modalOpen, asds, asdOpen, deleteModalOpen]) => {
     if (modalOpen || deleteModalOpen || asds || asdOpen) {

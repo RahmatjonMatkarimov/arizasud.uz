@@ -8,7 +8,15 @@
   <div class="flex gap-7 justify-center flex-wrap">
     <div @click="goToPath('courts')"
       class="relative hover:bg-lime-500 duration-500 bg-white w-[200px] border-4 border-blue-800 rounded-lg p-6">
-      <h3 class="text-lg font-medium text-center text-black capitalize">courts</h3>
+      <h3 class="text-lg font-medium text-center text-black capitalize">sudlar</h3>
+    </div>
+    <div @click="goToPath('applications')"
+      class="relative hover:bg-lime-500 duration-500 bg-white w-[200px] border-4 border-blue-800 rounded-lg p-6">
+      <h3 class="text-lg font-medium text-center text-black capitalize">applications</h3>
+    </div>
+    <div @click="goToPath('services')"
+      class="relative hover:bg-lime-500 duration-500 bg-white w-[200px] border-4 border-blue-800 rounded-lg p-6">
+      <h3 class="text-lg font-medium text-center text-black capitalize">services</h3>
     </div>
     <div @click="goToPath('admin')"
       class="relative hover:bg-lime-500 duration-500 bg-white w-[200px] border-4 border-blue-800 rounded-lg p-6">
