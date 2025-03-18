@@ -26,7 +26,7 @@
           class="w-full max-w-[80rem] p-10 mb-16 bg-gray-300 rounded-[20px] shadow-2xl opacity-[98%]">
           <div class="mt-2 ml-10">
             <div v-for="(file, fileIndex) in folderContents[item.id]" :key="file.id"
-              class="flex items-center justify-between my-1 h-[50px] p-2 text-lg bg-white border border-blue-500 rounded-[10px] shadow-md cursor-pointer hover:bg-lime-500 duration-300"
+              class="flex items-center justify-between my-1 min-h-[50px] p-2 text-lg bg-white border border-blue-500 rounded-[10px] shadow-md cursor-pointer hover:bg-lime-500 duration-300"
               @click="goToCard(file.id)">
               <b class="w-[35px] text-[18px] text-black text-center">{{ fileIndex + 1 }}</b>
               <img src="/word.png" width="20px" class="mr-5" alt="" />

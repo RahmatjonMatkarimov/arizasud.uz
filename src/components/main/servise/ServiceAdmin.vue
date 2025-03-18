@@ -100,7 +100,7 @@
               Fayl qo‘shish
             </button>
             <div v-for="(file, fileIndex) in folderContents[item.id]" :key="file.id"
-              class="flex items- my-1 justify-between items-center h-[50px] p-2 text-lg bg-white border border-blue-500 rounded-[10px] shadow-md cursor-pointer hover:bg-lime-500 duration-300">
+              class="flex items- my-1 justify-between items-center min-h-[50px] p-2 text-lg bg-white border border-blue-500 rounded-[10px] shadow-md cursor-pointer hover:bg-lime-500 duration-300">
               <b class="w-[35px] text-[18px] text-black text-center">{{ fileIndex + 1 }}</b>
               <img src="/word.png" width="20px" class="mr-5" alt="" />
               <h1 class="flex-1 text-black" @click="goToCard(file.id)">
