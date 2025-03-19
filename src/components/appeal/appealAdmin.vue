@@ -30,7 +30,7 @@
     <!-- Modal for Edit/Delete -->
     <div v-if="asd" class="fixed inset-0 z-50 w-full h-full flex items-center bg-black bg-opacity-50 justify-center">
       <div class="absolute w-96 bg-[#D9D9D9] flex flex-col items-center justify-center p-10 rounded-[15px]">
-        <img @click="func(null)" class="w-14 -mr-[300px] absolute -mt-44" src="../../../public/reject.png" alt="" />
+        <img @click="asd = false" class="w-14 -mr-[300px] absolute -mt-44" src="../../../public/reject.png" alt="" />
         <div class="mt-4 flex flex-col justify-center items-center">
           <div class="flex flex-col justify-between h-40 items-center">
             <button @click="Modal"
@@ -89,7 +89,7 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <div v-if="dat === 'datakril'" v-for="item in datakril" :key="item.id"
               class="relative bg-white border-4 hover:bg-lime-500 duration-500 border-blue-800 rounded-lg p-6">
-              <img @click.stop="func(item.id)" class="absolute top-2 right-2 w-6 h-6 cursor-pointer"
+              <img @click.stop="func(item)" class="absolute top-2 right-2 w-6 h-6 cursor-pointer"
                 src="../../../public/ellipsis.png" alt="Options" />
               <div class="flex items-center gap-4">
                 <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="w-14 h-14 rounded-md" />
@@ -98,7 +98,7 @@
             </div>
             <div v-if="dat === 'datalotin'" v-for="item in data" :key="item.id"
               class="relative bg-white border-4 hover:bg-lime-500 duration-500 border-blue-800 rounded-lg p-6">
-              <img @click.stop="func(item.id)" class="absolute top-2 right-2 w-6 h-6 cursor-pointer"
+              <img @click.stop="func(item)" class="absolute top-2 right-2 w-6 h-6 cursor-pointer"
                 src="../../../public/ellipsis.png" alt="Options" />
               <div class="flex items-center gap-4">
                 <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="w-14 h-14 rounded-md" />
@@ -134,8 +134,10 @@ const Modal = () => {
   PutModal.value = !PutModal.value;
   asd.value = !asd.value
 };
-const func = (id) => {
-  PutId.value = id;
+const func = (item) => {
+  PutId.value = item.id;
+  url.value = item.url
+  courtName.value = item.name
   asd.value = !asd.value;
 };
 
@@ -206,8 +208,7 @@ const getData = async () => {
         }));
         data.value = result
         .filter(item => item.status=='active')
-        .sort((a, b) => a.id - b.id)
-        ;
+        .sort((a, b) => a.id - b.id);
     } else {
       console.error("Ma'lumotlarni olishda xatolik:", response.statusText);
     }

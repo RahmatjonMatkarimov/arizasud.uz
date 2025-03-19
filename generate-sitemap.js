@@ -1,9 +1,9 @@
-import { SitemapStream, streamToPromise } from 'sitemap';
-import { createWriteStream } from 'fs';
-import router from '../../src/router/index';
+const { SitemapStream, streamToPromise } = require('sitemap');
+const { createWriteStream } = require('fs');
+const router = require('./src/router/index').default;
 
 // Sitemap stream yaratamiz
-const sitemap = new SitemapStream({ hostname: 'https://arizasud.uz' }); // Saytingiz URL’ini o‘zgartiring
+const sitemap = new SitemapStream({ hostname: 'https://arizasud.uz' });
 
 // Router’dan marshrutlarni olamiz
 const routes = router.options.routes;

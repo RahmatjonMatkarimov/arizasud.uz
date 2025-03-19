@@ -1,7 +1,6 @@
 <!-- DailyWorkLog.vue -->
 <template>
     <div class="worklog-manager">
-        <!-- Work Log Creation Form -->
         <div class="worklog-form-container">
             <div class="worklog-form-header">
                 <h2>Kunlik Bajarilgan Ishlarni Kiritish</h2>
@@ -10,12 +9,8 @@
             <form @submit.prevent="createWorkLog" class="worklog-form">
                 <div class="form-group">
                     <label for="comment">Bajarilgan Ish Tavsifi</label>
-                    <textarea class="text-black"
-                        v-model="state.newWorkLog.comment"
-                        id="comment"
-                        placeholder="Bugun qilgan ishlaringizni yozing..."
-                        required
-                    ></textarea>
+                    <textarea class="text-black" v-model="state.newWorkLog.comment" id="comment"
+                        placeholder="Bugun qilgan ishlaringizni yozing..." required></textarea>
                 </div>
                 <button type="submit" :disabled="state.isSubmitting" class="submit-btn">
                     <span v-if="state.isSubmitting">Saqlanmoqda...</span>
@@ -24,7 +19,6 @@
             </form>
         </div>
 
-        <!-- Work Log List -->
         <div class="worklog-list-container">
             <div class="worklog-list-header">
                 <h2>Kunlik Ishlar Ro'yxati</h2>
@@ -40,7 +34,8 @@
                             <p class="worklog-text">{{ workLog.comment }}</p>
                             <div class="worklog-meta">
                                 <span class="text-[#172029]">Qayd etilgan: {{ formatDate(workLog.createdAt) }}</span>
-                                <span class="text-[#172029]">Foydalanuvchi: {{ workLog.user?.name || 'Foydalanuvchi ' + workLog.userId }}</span>
+                                <span class="text-[#172029]">Foydalanuvchi: {{ workLog.user?.name || 'Foydalanuvchi ' +
+                                    workLog.userId }}</span>
                             </div>
                         </div>
                         <div class="worklog-actions">
@@ -48,9 +43,9 @@
                             <button @click="deleteWorkLog(workLog.id)" class="delete-btn">O'chirish</button>
                         </div>
                     </div>
-                    <!-- Edit Form -->
                     <div v-else class="edit-form">
-                        <textarea class="text-black" v-model="state.editedComment" required placeholder="Ish tavsifini yangilang..."></textarea>
+                        <textarea class="text-black" v-model="state.editedComment" required
+                            placeholder="Ish tavsifini yangilang..."></textarea>
                         <div class="edit-actions">
                             <button @click="updateWorkLog(workLog.id)" class="save-btn">Saqlash</button>
                             <button @click="cancelEditing" class="cancel-btn">Bekor Qilish</button>
@@ -66,6 +61,7 @@
 import { reactive, onMounted } from 'vue'
 import axios from 'axios'
 import { URL } from '@/auth/url'
+import translateText from '@/auth/Translate'
 
 export default {
     name: 'DailyWorkLog',

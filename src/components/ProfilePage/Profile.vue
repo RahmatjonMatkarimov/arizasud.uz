@@ -1,11 +1,12 @@
 <script setup>
-import { ref, onMounted, onUnmounted, computed } from 'vue';
+import { ref, onMounted, onUnmounted, computed, inject } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
 import { io } from 'socket.io-client';
 import { formatDistanceToNow, differenceInMinutes } from 'date-fns';
 import { uz } from 'date-fns/locale';
 import { URL } from '@/auth/url.js';
+import translateText from '@/auth/Translate';
 
 const userInfo = ref(null);
 const loading = ref(true);
@@ -15,6 +16,7 @@ const router = useRouter();
 const id = ref(route.params.id);
 const onlineAdmins = ref([]);
 const socket = io(URL);
+const dat = inject('dat')
 
 const fetchUserData = async () => {
   try {
@@ -101,8 +103,12 @@ onUnmounted(() => {
 
         <div class="flex-1 bg-profile-blue text-white p-5 rounded-lg">
           <div class="mb-4">
-            <span class="font-medium">Fuqaroning lavozimi :</span>
-            <span class="ml-2">{{ userInfo.lavozimi }}</span>
+            <span class="font-medium">
+              {{ dat === 'datakril' ? translateText('Fuqaroning lavozimi :') : 'Fuqaroning lavozimi :' }}
+            </span>
+            <span class="ml-2">
+              {{ dat === 'datakril' ? translateText(userInfo.lavozimi) : userInfo.lavozimi }}
+            </span>
           </div>
           <div class="flex items-center">
             <span :class="adminStatus.color">
@@ -114,33 +120,43 @@ onUnmounted(() => {
       </div>
 
       <div class="space-y-3">
-        <div 
-          v-for="(value, key) in {
-            'Ism va familya': userInfo.name,
-            'Passport raqami': userInfo.userCode,
-            'Fuqaroning JSHSHIR raqami': userInfo.uniqueCode,
-            'Fuqaroning logini': userInfo.username,
-            'Fuqaroning mobil telefon raqami': userInfo.phone
-          }" 
-          :key="key" 
-          class="flex p-3 hover:bg-lime-500 group duration-500 border rounded-md"
-        >
-          <span class="group-hover:text-black mr-3 text-[20px] font-medium duration-500">{{ key }} :</span>
-          <span class="flex-1 group-hover:text-black text-[20px] duration-500">{{ value }}</span>
+        <div v-for="(value, key) in {
+          'FIO': `${userInfo.name} ${userInfo.surname} ${userInfo.dadname}`,
+          'Passport raqami': userInfo.userCode,
+          'Fuqaroning JSHSHIR raqami': userInfo.uniqueCode,
+          'Fuqaroning logini': userInfo.username,
+          'Fuqaroning mobil telefon raqami': userInfo.phone
+        }" :key="key" class="flex p-3 hover:bg-lime-500 group duration-500 border rounded-md">
+          <div v-if="dat === 'datalotin'">
+            <span class="group-hover:text-black mr-3 text-[20px] font-medium duration-500">
+              {{ key }}:
+            </span>
+            <span class="flex-1 group-hover:text-black text-[20px] duration-500">
+              {{ value }}
+            </span>
+          </div>
+          <div v-if="dat === 'datakril'">
+            <span class="group-hover:text-black mr-3 text-[20px] font-medium duration-500">
+              {{ translateText(key) }}:
+            </span>
+            <span class="flex-1 group-hover:text-black text-[20px] duration-500">
+              {{ translateText(value) }}
+            </span>
+          </div>
         </div>
-        <button @click="router.push(`/AdminCon/${id}`)" class="border hover:bg-lime-500 hover:text-black duration-500 flex justify-center gap-4 text-[20px] w-full py-2 rounded-md">
-          Tizimga kirish huquqini berish
-          <img src="../../../public/settings.png" width="34px" alt="settings"/>
-          <img src="../../../public/settings3.png" width="34px" alt="settings"/>
+        <button @click="router.push(`/AdminCon/${id}`)"
+          class="border hover:bg-lime-500 hover:text-black duration-500 flex justify-center gap-4 text-[20px] w-full py-2 rounded-md">
+          {{ dat === 'datakril' ? translateText('Tizimga kirish huquqini berish') : 'Tizimga kirish huquqini berish' }}
+          <img src="../../../public/settings.png" width="34px" alt="settings" />
+          <img src="../../../public/settings3.png" width="34px" alt="settings" />
         </button>
-        <button @click="router.push(`/tasks/${id}`)" class="border hover:bg-lime-500 duration-500 hover:text-black text-[20px] w-full py-2 rounded-md">
-          Hodim Vazifalari
-        </button>
-        <button @click="router.push(`/obligations/${id}`)" class="border hover:bg-lime-500 duration-500 hover:text-black text-[20px] w-full py-2 rounded-md">
-          Hodim Majburiyatlari
-        </button>
-        <button @click="router.push(`/info/${id}`)" class="border hover:bg-lime-500 duration-500 hover:text-black text-[20px] w-full py-2 rounded-md">
-          Hodim Ma'lumotlari
+        <button v-for="route in [
+          { path: `/info/${id}`, text: 'Hodim Vazifalari' },
+          { path: `/tasks/${id}`, text: 'Hodim Ma\'lumotlari' },
+          { path: `/obligations/${id}`, text: 'Hodim Majburiyatlari' }
+        ]" :key="route.path" @click="router.push(route.path)"
+          class="border hover:bg-lime-500 duration-500 hover:text-black text-[20px] w-full py-2 rounded-md">
+          {{ dat === 'datakril' ? translateText(route.text) : route.text }}
         </button>
       </div>
     </div>
