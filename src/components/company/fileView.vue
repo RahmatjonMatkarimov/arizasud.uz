@@ -44,7 +44,7 @@
         <div class="bg-white p-4 rounded-lg shadow-lg w-full max-w-4xl flex flex-col items-end transition-all duration-300"
             :class="{ 'w-screen h-screen max-w-none rounded-none': isFullScreen }">
             <div class="flex space-x-2 mb-4">
-                <button v-if="type === `true`" @click="updateEFile()"
+                <button v-if="type === true" @click="updateEFile()"
                     class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition"
                     :disabled="isLoading">
                     {{ isLoading ? 'Imzolash jarayonda...' : $t('Imzolash') }}

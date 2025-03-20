@@ -47,7 +47,7 @@
         <div class="flex gap-2">
           <h1>On</h1>
           <label class="switch">
-            <input type="checkbox" :checked="data.workDone" @change="() => togglePermission('workDone')">
+            <input type="checkbox" :checked="data.ticket" @change="() => togglePermission('ticket')">
             <span class="slider round"></span>
           </label>
           <h1>Off</h1>
@@ -114,7 +114,7 @@ const fetchPermissions = async () => {
     if (response.data.length > 0) {
       data.value = response.data[0];
     } else {
-      data.value = { admins: false, yurists: false, call_centres: false, userFiles: false };
+      data.value = { admins: false, yurists: false, call_centres: false, workDone: false, ticket: false, companyDocs: false, userFiles: false };
     }
   } catch (error) {
     console.error('Failed to fetch permissions:', error);

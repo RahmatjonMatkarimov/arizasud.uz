@@ -47,6 +47,18 @@
             class="border bg-lime-600 py-2 px-6 m-2 text-center text-black rounded hover:bg-lime-700 duration-500 capitalize">
             {{ $t('zoom_boglanish') }}
           </a>
+          <button @click="go2(userInfoLotin.id)"
+            class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
+            {{ $t('hodim_majburiyatlari') }}
+          </button>
+          <button @click="go3(userInfoLotin.id)"
+            class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
+            {{ $t('hodim_vazifalari') }}
+          </button>
+          <button v-if="data.ticket" @click="router.push('/ticketAdmin')"
+            class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
+            {{ $t('taklif_va_shikoyat') }}
+          </button>
           <div @click="gonotif(userInfo.id)"
             class="relative bg-lime-600 hover:bg-lime-700 duration-500 flex border items-center capitalize px-6 m-2 rounded">
             <img class="w-10 -ml-4 mr-9" src="../../../public/chat.png" alt="">

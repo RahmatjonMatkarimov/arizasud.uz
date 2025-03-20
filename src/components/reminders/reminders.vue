@@ -44,7 +44,7 @@
                                     <span class="text-[#172029]">{{ dat === 'datakril' ? translateText('Қайд этилган:') : 'Qayd etilgan:' }} {{ formatDate(workLog.createdAt) }}</span>
                                 </div>
                             </div>
-                            <div class="worklog-actions">
+                            <div v-if="!workLog.isActive" class="worklog-actions">
                                 <button @click="startEditing(workLog)" class="edit-btn">
                                     {{ dat === 'datakril' ? translateText('Таҳрирлаш') : 'Tahrirlash' }}
                                 </button>
