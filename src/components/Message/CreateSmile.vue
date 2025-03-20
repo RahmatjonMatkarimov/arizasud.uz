@@ -106,7 +106,7 @@ onMounted(fetchSmileys);
 
 <template>
   <div
-    class="p-6 max-w-3xl mx-auto bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl shadow-lg text-white space-y-4">
+    class="p-6 mt-3 max-w-3xl mx-auto bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl shadow-lg text-white space-y-4">
     <h2 v-if="dat === 'datalotin'" class="text-2xl font-bold text-center">😊 Smile qo'shish</h2>
     <h3 v-if="dat === 'datakril'" class="text-2xl font-bold text-center">😊 {{ translateText('Smile qo\'shish') }}:</h3>
 

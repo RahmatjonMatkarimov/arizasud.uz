@@ -23,7 +23,7 @@
         <p v-if="errorMessage" class="text-red-500 mt-4">{{ errorMessage }}</p>
       </div>
     </div>
-    <div class="w-full flex justify-end px-6">
+    <div class="w-full flex justify-end mt-2 px-6">
       <button @click="toggleModal" class="text-lg font-medium py-2 px-4 bg-lime-500 hover:bg-lime-600 rounded-lg">
         Add +
       </button>

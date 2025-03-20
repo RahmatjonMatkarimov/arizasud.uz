@@ -5,58 +5,35 @@
       O'chirilgan elementlar</h1>
   </div>
 
-  <div class="flex gap-7 justify-center flex-wrap">
-    <div @click="goToPath('courts')"
-      class="relative hover:bg-lime-500 duration-500 bg-white w-[200px] border-4 border-blue-800 rounded-lg p-6">
-      <h3 class="text-lg font-medium text-center text-black capitalize">sudlar</h3>
-    </div>
-    <div @click="goToPath('applications')"
-      class="relative hover:bg-lime-500 duration-500 bg-white w-[200px] border-4 border-blue-800 rounded-lg p-6">
-      <h3 class="text-lg font-medium text-center text-black capitalize">applications</h3>
-    </div>
-    <div @click="goToPath('services')"
-      class="relative hover:bg-lime-500 duration-500 bg-white w-[200px] border-4 border-blue-800 rounded-lg p-6">
-      <h3 class="text-lg font-medium text-center text-black capitalize">services</h3>
-    </div>
-    <div @click="goToPath('admin')"
-      class="relative hover:bg-lime-500 duration-500 bg-white w-[200px] border-4 border-blue-800 rounded-lg p-6">
-      <h3 class="text-lg font-medium text-center text-black capitalize">Adminlar</h3>
-    </div>
-    <div @click="goToPath('yurist')"
-      class="relative hover:bg-lime-500 duration-500 bg-white w-[200px] border-4 border-blue-800 rounded-lg p-6">
-      <h3 class="text-lg font-medium text-center text-black capitalize">Yuristlar</h3>
-    </div>
-    <div @click="goToPath('coll_center')"
-      class="relative hover:bg-lime-500 duration-500 bg-white w-[200px] border-4 border-blue-800 rounded-lg p-6">
-      <h3 class="text-lg font-medium text-center text-black capitalize">Devonxona Mudirlari</h3>
-    </div>
-    <div @click="goToPath('partners')"
-      class="relative hover:bg-lime-500 duration-500 bg-white w-[200px] border-4 border-blue-800 rounded-lg p-6">
-      <h3 class="text-lg font-medium text-center text-black capitalize">Hamkorlar</h3>
-    </div>
-    <div @click="goToPath('courts')"
-      class="relative hover:bg-lime-500 duration-500 bg-white w-[200px] border-4 border-blue-800 rounded-lg p-6">
-      <h3 class="text-lg font-medium text-center text-black capitalize">Xabarlar</h3>
-    </div>
-    <div @click="goToPath('appeal')"
-      class="relative hover:bg-lime-500 duration-500 bg-white w-[200px] border-4 border-blue-800 rounded-lg p-6">
-      <h3 class="text-lg font-medium text-center text-black capitalize">interaktif xizmatlar</h3>
-    </div>
-    <div @click="goToPath('files')"
-      class="relative hover:bg-lime-500 duration-500 bg-white w-[200px] border-4 border-blue-800 rounded-lg p-6">
-      <h3 class="text-lg font-medium text-center text-black capitalize">Filelar</h3>
-    </div>
-    <div @click="goToPath('signingFiles')"
-      class="relative hover:bg-lime-500 duration-500 bg-white w-[200px] border-4 border-blue-800 rounded-lg p-6">
-      <h3 class="text-lg font-medium text-center text-black capitalize">imzolangan va imzolanmagan filelar</h3>
+  <div class="flex gap-5 justify-center flex-wrap">
+    <div v-for="item in sections" :key="item.path" @click="goToPath(item.path)"
+      class="hover:bg-lime-500 duration-300 bg-white w-64 flex justify-center items-center border-4 border-blue-800 rounded-lg p-4 cursor-pointer">
+      <h3 class="text-lg font-medium text-center text-black capitalize">{{ dat === 'datakril' ? translateText(item.title)
+        : item.title }}</h3>
     </div>
   </div>
 </template>
+
 <script setup>
 import { useRouter } from 'vue-router';
+import translateText from '@/auth/Translate';
+import { inject } from 'vue';
+const router = useRouter();
+const dat = inject('dat')
+const sections = [
+  { path: 'courts', title: '1-bolim' },
+  { path: 'services', title: '2-bolim' },
+  { path: 'applications', title: '3-bolim' },
+  { path: 'admin', title: 'Adminlar' },
+  { path: 'yurist', title: 'Yuristlar' },
+  { path: 'coll_center', title: 'Devonxona Mudirlari' },
+  { path: 'partners', title: 'Hamkorlar' },
+  { path: 'appeal', title: 'Interaktif xizmatlar' },
+  { path: 'files', title: 'Filelar' },
+  { path: 'signingFiles', title: 'Imzolangan va imzolanmagan filelar' },
+];
 
-const router = useRouter()
-function goToPath(data) {
-  router.push(`/archiveBody/${data}`)
+function goToPath(path) {
+  router.push(`/archiveBody/${path}`);
 }
 </script>

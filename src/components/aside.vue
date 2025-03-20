@@ -38,10 +38,10 @@ const menuItems = [
   { to: "/admin", label: "Sud hujjatlarini yozish", condition: true },
   { to: "/appealAdmin", label: "Interaktiv xizmatlar roʻyxati", condition: true },
   { to: "/partners", label: "Hamkorlar roʻyxati", condition: true },
-  { to: "/Requirefiles", label: "Imzolanishi kerak boʻlgan filelar", condition: () => data.value?.userFiles },
+  { to: "/Requirefiles", label: "Imzolanishi kerak boʻlgan fayllar", condition: () => data.value?.userFiles },
   { to: "/payments", label: "Tizim toʻlovlari", condition: true },
   { to: "/smile", label: "Stikker qoʻshish", condition: true },
-  { to: "/companyFile", label: "Kampaniya Filelaari", condition: () => data.value?.companyDocs },
+  { to: "/companyFile", label: "Kampaniya fayllari", condition: () => data.value?.companyDocs },
   { to: "/commaners", label: "Tizimdagi foydalanuvchilar roʻyxati", condition: true },
   { to: "/archive", label: "Arxiv", condition: true },
 ];

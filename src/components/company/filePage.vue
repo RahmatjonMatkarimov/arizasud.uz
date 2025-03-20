@@ -103,7 +103,7 @@
                 </div>
               </div>
               <div class="flex items-center space-x-4" @click="Navigate(item.id)">
-                <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image"
+                <img  src="../.././../public/folder.ico" alt="Image"
                   class="w-16 h-16 object-cover rounded-md" />
                 <h1 v-if="dat === 'datalotin'"
                   class="text-white text-xl font-medium truncate flex-1 text-center">
