@@ -1,54 +1,70 @@
 <!-- DailyWorkLog.vue -->
 <template>
-    <div class="worklog-manager">
-        <div class="worklog-form-container">
-            <div class="worklog-form-header">
-                <h2>Kunlik Bajarilgan Ishlarni Kiritish</h2>
-                <span class="subtitle">Bugun qilgan ishlaringizni qayd eting</span>
-            </div>
-            <form @submit.prevent="createWorkLog" class="worklog-form">
-                <div class="form-group">
-                    <label for="comment">Bajarilgan Ish Tavsifi</label>
-                    <textarea class="text-black" v-model="state.newWorkLog.comment" id="comment"
-                        placeholder="Bugun qilgan ishlaringizni yozing..." required></textarea>
+    <div class="container">
+        <div class="worklog-manager">
+            <div class="worklog-form-container">
+                <div class="worklog-form-header">
+                    <h2 v-if="dat === 'datalotin'">Kunlik Bajarilgan Ishlarni Kiritish</h2>
+                    <h2 v-if="dat === 'datakril'">{{ translateText("Кунлик Бажарилган Ишларни Киритиш") }}</h2>
+                    <span v-if="dat === 'datalotin'" class="subtitle">Bugun qilgan ishlaringizni qayd eting</span>
+                    <span v-if="dat === 'datakril'" class="subtitle">{{ translateText("Бугун қилган ишларингизни қайд этинг") }}</span>
                 </div>
-                <button type="submit" :disabled="state.isSubmitting" class="submit-btn">
-                    <span v-if="state.isSubmitting">Saqlanmoqda...</span>
-                    <span v-else>Ishni Saqlash</span>
-                </button>
-            </form>
-        </div>
+                <form @submit.prevent="createWorkLog" class="worklog-form">
+                    <div class="form-group">
+                        <label v-if="dat === 'datalotin'" for="comment">Bajarilgan Ish Tavsifi</label>
+                        <label v-if="dat === 'datakril'" for="comment">{{ translateText("Бажарилган Иш Тавсифи") }}</label>
+                        <textarea class="text-black" v-model="state.newWorkLog.comment" id="comment"
+                            :placeholder="dat === 'datakril' ? translateText('Бугун қилган ишларингизни ёзинг...') : 'Bugun qilgan ishlaringizni yozing...'"
+                            required></textarea>
+                    </div>
+                    <button type="submit" :disabled="state.isSubmitting" class="submit-btn">
+                        <span v-if="state.isSubmitting && dat === 'datalotin'">Saqlanmoqda...</span>
+                        <span v-if="state.isSubmitting && dat === 'datakril'">{{ translateText("Сақланмоқда...") }}</span>
+                        <span v-if="!state.isSubmitting && dat === 'datalotin'">Ishni Saqlash</span>
+                        <span v-if="!state.isSubmitting && dat === 'datakril'">{{ translateText("Ишни Сақлаш") }}</span>
+                    </button>
+                </form>
+            </div>
 
-        <div class="worklog-list-container">
-            <div class="worklog-list-header">
-                <h2>Kunlik Ishlar Ro'yxati</h2>
-                <span class="log-count">{{ state.workLogs.length }} ta ish qayd etilgan</span>
-            </div>
-            <div v-if="state.workLogs.length === 0" class="no-logs">
-                <p>Hali bajarilgan ishlar qayd etilmagan</p>
-            </div>
-            <div v-else class="worklog-grid">
-                <div v-for="workLog in state.workLogs" :key="workLog.id" class="worklog-card">
-                    <div v-if="state.editingWorkLogId !== workLog.id" class="worklog-view">
-                        <div class="worklog-content">
-                            <p class="worklog-text">{{ workLog.comment }}</p>
-                            <div class="worklog-meta">
-                                <span class="text-[#172029]">Qayd etilgan: {{ formatDate(workLog.createdAt) }}</span>
-                                <span class="text-[#172029]">Foydalanuvchi: {{ workLog.user?.name || 'Foydalanuvchi ' +
-                                    workLog.userId }}</span>
+            <div class="worklog-list-container">
+                <div class="worklog-list-header">
+                    <h2>{{ dat === 'datakril' ? translateText("Кунлик Ишлар Рўйхати") : 'Kunlik Ishlar Ro\'yxati' }}</h2>
+                    <span class="log-count">{{ state.workLogs.length }} {{ dat === 'datakril' ? translateText('та иш қайд этилган') : 'ta ish qayd etilgan' }}</span>
+                </div>
+                <div v-if="state.workLogs.length === 0" class="worklog-card">
+                    <p>{{ dat === 'datakril' ? translateText('Ҳали бажарилган ишлар қайд этилмаган') : 'Hali bajarilgan ishlar qayd etilmagan' }}</p>
+                </div>
+                <div v-else class="worklog-grid">
+                    <div v-for="workLog in state.workLogs" :key="workLog.id" class="worklog-card">
+                        <div v-if="state.editingWorkLogId !== workLog.id" class="worklog-view">
+                            
+                            <div class="worklog-content flex items-center gap-5">
+                                <img class="w-[60px] border" :src="'https://backend.arizasud.uz/upload/' + workLog.user.img" alt="">
+                                <div class="worklog-meta">
+                                    <p class="worklog-text">{{ dat === 'datakril' ? translateText(workLog.comment) : workLog.comment }}</p>
+                                    <span class="text-[#172029]">{{ dat === 'datakril' ? translateText('Қайд этилган:') : 'Qayd etilgan:' }} {{ formatDate(workLog.createdAt) }}</span>
+                                </div>
+                            </div>
+                            <div class="worklog-actions">
+                                <button @click="startEditing(workLog)" class="edit-btn">
+                                    {{ dat === 'datakril' ? translateText('Таҳрирлаш') : 'Tahrirlash' }}
+                                </button>
+                                <button @click="deleteWorkLog(workLog.id)" class="delete-btn">
+                                    {{ dat === 'datakril' ? translateText('Ўчириш') : 'O\'chirish' }}
+                                </button>
                             </div>
                         </div>
-                        <div class="worklog-actions">
-                            <button @click="startEditing(workLog)" class="edit-btn">Tahrirlash</button>
-                            <button @click="deleteWorkLog(workLog.id)" class="delete-btn">O'chirish</button>
-                        </div>
-                    </div>
-                    <div v-else class="edit-form">
-                        <textarea class="text-black" v-model="state.editedComment" required
-                            placeholder="Ish tavsifini yangilang..."></textarea>
-                        <div class="edit-actions">
-                            <button @click="updateWorkLog(workLog.id)" class="save-btn">Saqlash</button>
-                            <button @click="cancelEditing" class="cancel-btn">Bekor Qilish</button>
+                        <div v-else class="edit-form">
+                            <textarea class="text-black" v-model="state.editedComment" required
+                                :placeholder="dat === 'datakril' ? translateText('Иш тавсифини янгилаг...') : 'Ish tavsifini yangilang...'"></textarea>
+                            <div class="edit-actions">
+                                <button @click="updateWorkLog(workLog.id)" class="save-btn">
+                                    {{ dat === 'datakril' ? translateText('Сақлаш') : 'Saqlash' }}
+                                </button>
+                                <button @click="cancelEditing" class="cancel-btn">
+                                    {{ dat === 'datakril' ? translateText('Бекор Қилиш') : 'Bekor Qilish' }}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -58,15 +74,16 @@
 </template>
 
 <script>
-import { reactive, onMounted } from 'vue'
-import axios from 'axios'
-import { URL } from '@/auth/url'
-import translateText from '@/auth/Translate'
+import { reactive, onMounted, ref, onUnmounted, inject } from 'vue';
+import axios from 'axios';
+import { URL } from '@/auth/url';
+import translateText from '@/auth/Translate';
 
 export default {
     name: 'DailyWorkLog',
     setup() {
-        const userId = parseInt(localStorage.getItem('id')) || null
+        const userId = parseInt(localStorage.getItem('id')) || null;
+        const dat = inject('dat');
 
         const state = reactive({
             workLogs: [],
@@ -78,131 +95,156 @@ export default {
             editingWorkLogId: null,
             editedComment: '',
             editedUserId: userId
-        })
+        });
 
-        const API_URL = URL + '/reminders'
+        const API_URL = URL + '/reminders';
 
         const fetchWorkLogs = async () => {
             try {
-                const response = await axios.get(`${URL}/admin/${userId}/reminders`)
-                state.workLogs = response.data
+                const response = await axios.get(`${URL}/admin/${userId}/reminder`);
+                state.workLogs = response.data.Reminder;
+                console.log('Fetched work logs:', state.workLogs);
             } catch (error) {
-                console.error('Ishlar ro\'yxatini olishda xatolik:', error)
+                console.error(dat.value === 'datakril' ? 'Ишлар рўйхатини олишда хатолик:' : 'Ishlar ro\'yxatini olishda xatolik:', error);
             }
-        }
+        };
 
         const createWorkLog = async () => {
             if (!state.newWorkLog.comment.trim() || !state.newWorkLog.userId) {
-                alert('Foydalanuvchi ID topilmadi yoki tavsif bo\'sh')
-                return
+                alert(dat.value === 'datakril' ? 'Фойдаланувчи ID топилмади ёки тавсиф бўш' : 'Foydalanuvchi ID topilmadi yoki tavsif bo\'sh');
+                return;
             }
-            state.isSubmitting = true
+            state.isSubmitting = true;
             try {
                 const response = await axios.post(API_URL, {
                     comment: state.newWorkLog.comment,
                     userId: state.newWorkLog.userId
-                })
-                state.workLogs.unshift(response.data)
-                state.newWorkLog.comment = ''
+                });
+                state.workLogs.unshift(response.data);
+                state.newWorkLog.comment = '';
             } catch (error) {
-                console.error('Ish qayd etishda xatolik:', error)
+                console.error(dat.value === 'datakril' ? 'Иш қайд этишда хатолик:' : 'Ish qayd etishda xatolik:', error);
             } finally {
-                state.isSubmitting = false
+                state.isSubmitting = false;
             }
-        }
+        };
 
         const startEditing = (workLog) => {
-            state.editingWorkLogId = workLog.id
-            state.editedComment = workLog.comment
-            state.editedUserId = workLog.userId
-        }
+            state.editingWorkLogId = workLog.id;
+            state.editedComment = workLog.comment;
+            state.editedUserId = workLog.userId;
+        };
 
         const updateWorkLog = async (workLogId) => {
             if (!state.editedUserId) {
-                alert('Foydalanuvchi ID topilmadi')
-                return
+                alert(dat.value === 'datakril' ? 'Фойдаланувчи ID топилмади' : 'Foydalanuvchi ID topilmadi');
+                return;
             }
             try {
                 const response = await axios.put(`${API_URL}/${workLogId}`, {
                     comment: state.editedComment,
                     userId: state.editedUserId
-                })
-                const index = state.workLogs.findIndex(r => r.id === workLogId)
-                state.workLogs[index] = response.data
-                state.editingWorkLogId = null
-                state.editedComment = ''
+                });
+                const index = state.workLogs.findIndex(r => r.id === workLogId);
+                state.workLogs[index] = response.data;
+                state.editingWorkLogId = null;
+                state.editedComment = '';
             } catch (error) {
-                console.error('Ishni yangilashda xatolik:', error)
+                console.error(dat.value === 'datakril' ? 'Ишни янгилашда хатолик:' : 'Ishni yangilashda xatolik:', error);
             }
-        }
+        };
 
         const deleteWorkLog = async (workLogId) => {
-            if (!confirm('Bu ish qaydnomasini o\'chirishga ishonchingiz komilmi?')) return
+            if (!confirm(dat.value === 'datakril' ? 'Бу иш қайдномасини ўчиришга ишончингиз комилми?' : 'Bu ish qaydnomasini o\'chirishga ishonchingiz komilmi?')) return;
             try {
-                await axios.delete(`${API_URL}/${workLogId}`)
-                state.workLogs = state.workLogs.filter(r => r.id !== workLogId)
+                await axios.delete(`${API_URL}/${workLogId}`);
+                state.workLogs = state.workLogs.filter(r => r.id !== workLogId);
             } catch (error) {
-                console.error('Ishni o\'chirishda xatolik:', error)
+                console.error(dat.value === 'datakril' ? 'Ишни ўчиришда хатолик:' : 'Ishni o\'chirishda xatolik:', error);
             }
-        }
+        };
 
         const cancelEditing = () => {
-            state.editingWorkLogId = null
-            state.editedComment = ''
-        }
+            state.editingWorkLogId = null;
+            state.editedComment = '';
+        };
 
         const formatDate = (dateString) => {
-            return new Date(dateString).toLocaleString('uz-UZ')
-        }
+            return new Date(dateString).toLocaleString('uz-UZ');
+        };
 
         onMounted(() => {
             if (!userId) {
-                console.warn('localStorage\'da foydalanuvchi ID topilmadi')
+                console.warn(dat.value === 'datakril' ? 'localStorage\'да фойдаланувчи ID топилмади' : 'localStorage\'da foydalanuvchi ID topilmadi');
             }
-            fetchWorkLogs()
-        })
+            fetchWorkLogs();
+        });
+
 
         return {
             state,
+            dat,
             createWorkLog,
             startEditing,
             updateWorkLog,
             deleteWorkLog,
             cancelEditing,
-            formatDate
-        }
+            formatDate,
+            translateText
+        };
     }
 }
 </script>
 
 <style scoped>
+/* Stil qismi o'zgarmagan holda qoldiriladi, chunki u birinchisidagi kabi ishlaydi */
+.container {
+    background-color: #3486eb;
+    padding: 30px 0px;
+}
+
 .worklog-manager {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 30px;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .worklog-form-container {
-    background: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
     padding: 20px;
-    margin-bottom: 30px;
-}
-
-.worklog-form-header {
+    border-radius: 8px;
+    backdrop-filter: blur(5px);
     margin-bottom: 20px;
 }
 
+.worklog-form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #7f9cf5;
+}
+
 .worklog-form-header h2 {
-    color: #2c3e50;
     margin: 0;
     font-size: 24px;
+    font-weight: 600;
+    background: linear-gradient(to right, #3498db, #8e44ad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .subtitle {
-    color: #7f8c8d;
     font-size: 14px;
+    color: #6366f1;
+    background: #e0e7ff;
+    padding: 4px 10px;
+    border-radius: 12px;
 }
 
 .worklog-form .form-group {
@@ -233,16 +275,17 @@ export default {
 }
 
 .submit-btn {
-    background: #3498db;
+    background: #4a91e8;
     color: white;
     padding: 10px 20px;
     font-size: 16px;
     font-weight: 500;
+    border-radius: 6px;
     transition: background 0.3s;
 }
 
 .submit-btn:hover:not(:disabled) {
-    background: #2980b9;
+    background: #036ff2;
 }
 
 .submit-btn:disabled {
@@ -251,10 +294,11 @@ export default {
 }
 
 .worklog-list-container {
-    background: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
     padding: 20px;
+    border-radius: 8px;
+    backdrop-filter: blur(5px);
 }
 
 .worklog-list-header {
@@ -262,23 +306,25 @@ export default {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #7f9cf5;
 }
 
 .worklog-list-header h2 {
-    color: #2c3e50;
     margin: 0;
-    font-size: 22px;
+    font-size: 24px;
+    font-weight: 600;
+    background: linear-gradient(to right, #3498db, #8e44ad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .log-count {
-    color: #7f8c8d;
     font-size: 14px;
-}
-
-.no-logs {
-    text-align: center;
-    padding: 20px;
-    color: #7f8c8d;
+    color: #6366f1;
+    background: #e0e7ff;
+    padding: 4px 10px;
+    border-radius: 12px;
 }
 
 .worklog-grid {
@@ -287,20 +333,24 @@ export default {
 }
 
 .worklog-card {
-    background: #f9f9f9;
-    border-radius: 6px;
+    border: none;
     padding: 15px;
-    transition: transform 0.2s;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background-color: #4a91e8;
 }
 
 .worklog-card:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    background-color: #036ff2;
 }
 
 .worklog-view {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
 }
 
 .worklog-content {
@@ -308,21 +358,24 @@ export default {
 }
 
 .worklog-text {
-    margin: 0 0 10px 0;
-    color: #2c3e50;
-    font-weight: bold;
-    font-size: 15px;
+    margin: 0 0 12px 0;
+    color: #ffffff;
+    font-size: 16px;
     line-height: 1.5;
+    font-weight: 500;
 }
 
 .worklog-meta {
-    color: #7f8c8d;
     font-size: 13px;
+    color: #475569;
 }
 
 .worklog-meta span {
-    display: block;
-    margin: 5px 0;
+    margin: 6px 0;
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: rgba(241, 245, 249, 0.7);
+    color: #ffffff;
 }
 
 .worklog-actions {
@@ -330,11 +383,28 @@ export default {
     gap: 10px;
 }
 
+  .worklog-content img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #60a5fa;
+    padding: 2px;
+    background: #fff;
+  }
+  
+  .worklog-content img:hover {
+    width: 100px;
+    height: 100px;
+    transition: 500ms ease all;
+  }
+
 .edit-btn {
     background: #f1c40f;
     color: #2c3e50;
     padding: 6px 12px;
     font-size: 13px;
+    border-radius: 6px;
 }
 
 .delete-btn {
@@ -342,6 +412,7 @@ export default {
     color: white;
     padding: 6px 12px;
     font-size: 13px;
+    border-radius: 6px;
 }
 
 .edit-form textarea {
@@ -369,6 +440,7 @@ export default {
     color: white;
     padding: 8px 16px;
     font-size: 13px;
+    border-radius: 6px;
 }
 
 .cancel-btn {
@@ -376,6 +448,7 @@ export default {
     color: white;
     padding: 8px 16px;
     font-size: 13px;
+    border-radius: 6px;
 }
 
 button:hover:not(:disabled) {

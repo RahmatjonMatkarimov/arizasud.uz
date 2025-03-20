@@ -45,14 +45,14 @@
   </div>
   <div class="flex justify-end">
     <button @click="promptForFolderOrFile" id="add"
-      class="px-4 py-2 mr-6 text-[20px] text-white duration-500 bg-teal-500 rounded-[25px] hover:bg-teal-600">
+      class="px-4 py-2 mr-6 my-2 text-[20px] text-white duration-500 bg-teal-500 rounded-[25px] hover:bg-teal-600">
       {{ $t('create') }}
     </button>
   </div>
   <div class="flex flex-col items-center justify-center mt-16 text-black">
-    <div v-if="!isFolders" class="w-full max-w-[80rem] p-10 mb-16 bg-gray-300 rounded-[20px] shadow-2xl opacity-[98%]">
+    <div v-if="isFolders==false" class="w-full max-w-[80rem] p-10 mb-16 bg-gray-300 rounded-[20px] shadow-2xl opacity-[98%]">
       <div v-for="(item, index) in ServiceData" :key="item.id" class="mb-1">
-        <div @click="toggleFolder(item)"
+        <div v-if="!item.isFolder" @click="toggleFolder(item)"
           class="flex items-center justify-between h-[70px] p-2 mt-[14px] text-xl bg-white border-2 border-blue-700 rounded-[10px] shadow-2xl cursor-pointer hover:bg-lime-500 duration-300">
           <b class="w-[35px] text-[20px] text-black text-center">{{ index + 1 }}</b>
           <img :src="item.isFolder ? '/folder.png' : '/word.png'" width="25px" class="mr-5" alt="" />
@@ -79,19 +79,6 @@
         </div>
         <div v-if="item.isFolder"
           class="w-full max-w-[80rem] p-10 mb-16 bg-gray-300 rounded-[20px] shadow-2xl opacity-[98%]">
-          <div v-if="!item.isFolder" @click="toggleFolder(item)"
-            class="flex items-center justify-between h-[70px] p-2 mt-[14px] text-xl bg-white border-2 border-blue-700 rounded-[10px] shadow-2xl cursor-pointer hover:bg-lime-500 duration-300">
-            <b class="w-[35px] text-[20px] text-black text-center">{{ index + 1 }}</b>
-            <img :src="item.isFolder ? '/folder.png' : '/word.png'" width="25px" class="mr-5" alt="" />
-            <h1 class="flex-1 text-black" @click.stop="item.isFolder ? null : goToCard(item.id)">
-              {{ dat === 'datakril' ? translateText(item.name) : item.name }}
-            </h1>
-            <div class="flex gap-2">
-              <img @click.stop="editFile(item)" class="w-4 h-4 cursor-pointer" src="/pen.png" :alt="$t('tahrirlash')" />
-              <img @click.stop="func(item.id)" class="w-4 h-4 cursor-pointer" src="/reject.png" :alt="$t('remove')" />
-            </div>
-          </div>
-
           <div v-if="item.isFolder" class="mt-2 ml-10">
             <button @click="promptForFileInFolder(item.id)"
               class="px-3 py-1 mb-2 text-[16px] text-white duration-500 bg-blue-500 rounded-[25px] hover:bg-blue-600">
@@ -120,7 +107,7 @@
 <script setup>
 import { ref, onMounted, inject, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { useI18n } from 'vue-i18n'; 
+import { useI18n } from 'vue-i18n';
 import { URL } from "../../../auth/url.js";
 const { t } = useI18n();
 const ServiceId = ref(null);
@@ -174,6 +161,7 @@ const getCourtsData = async () => {
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const data = await response.json();
     isFolders.value = data.isFolder
+    console.log(data)
     ServiceData.value = [
       ...(data.files || []).map(item => ({ ...item, isFolder: false })),
       ...(data.folders || []).map(item => ({ ...item, isFolder: true })),

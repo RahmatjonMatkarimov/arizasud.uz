@@ -36,6 +36,7 @@
     "jspdf": "^3.0.0",
     "jszip": "^3.10.1",
     "jwt-decode": "^3.1.2",
+    "lucide-vue-next": "^0.483.0",
     "mammoth": "^1.9.0",
     "mitt": "^3.0.1",
     "module-alias": "^2.2.3",

@@ -3,7 +3,7 @@ import { ref, onMounted, computed, inject } from "vue";
 import axios from "axios";
 import { URL } from "@/auth/url.js";
 import { useRoute } from "vue-router";
-
+import translateText from "@/auth/Translate";
 const isLoading = inject("isLoading"); // Global yuklanish holatini olish
 
 const route = useRoute();
@@ -11,21 +11,6 @@ const id = localStorage.getItem("id");
 const newId = parseInt(id);
 const data = ref({});
 
-const translitMap = {
-  "ch": "ч", "sh": "ш", "yo": "ё", "yu": "ю", "ya": "я", "ye": "е", "oʻ": "ў", "g‘": "ғ",
-  "a": "а", "b": "б", "d": "д", "e": "э", "f": "ф", "g": "г", "h": "ҳ", "i": "и", "j": "ж",
-  "k": "к", "l": "л", "m": "м", "n": "н", "o": "о", "p": "п", "q": "қ", "r": "р", "s": "с",
-  "t": "т", "u": "у", "v": "в", "x": "х", "y": "й", "z": "з", "'": "ъ"
-};
-
-const translateText = (text) => {
-  if (!text) return '';
-  let translated = text.toLowerCase();
-  for (const key in translitMap) {
-    translated = translated.replace(new RegExp(key, "g"), translitMap[key]);
-  }
-  return translated;
-};
 
 const fetchAdminData = async () => {
   isLoading.value = true; // Yuklanishni boshlash
@@ -49,14 +34,14 @@ const menuItems = [
   { to: "/operators", label: "ishchilarni hujjatini yaratuvchi devonxona mudiri", condition: () => data.value?.call_centres },
   { to: "/yurists", label: "Yurist-ekspert yaratish boʻlimi", condition: () => data.value?.yurists },
   { to: "/admins", label: "Ishchi hodimlarni yaratish ( Admin yaratish )", condition: () => data.value?.admins },
-  { to: "/remindersAdmin", label: "Ishchilarni bajargan ishlari", condition: () => data.value?.admins },
+  { to: "/remindersAdmin", label: "Ishchilarni bajargan ishlari", condition: () => data.value?.workDone },
   { to: "/admin", label: "Sud hujjatlarini yozish", condition: true },
   { to: "/appealAdmin", label: "Interaktiv xizmatlar roʻyxati", condition: true },
   { to: "/partners", label: "Hamkorlar roʻyxati", condition: true },
   { to: "/Requirefiles", label: "Imzolanishi kerak boʻlgan filelar", condition: () => data.value?.userFiles },
   { to: "/payments", label: "Tizim toʻlovlari", condition: true },
   { to: "/smile", label: "Stikker qoʻshish", condition: true },
-  { to: "/companyFile", label: "Kampaniya Filelaari", condition: true },
+  { to: "/companyFile", label: "Kampaniya Filelaari", condition: () => data.value?.companyDocs },
   { to: "/commaners", label: "Tizimdagi foydalanuvchilar roʻyxati", condition: true },
   { to: "/archive", label: "Arxiv", condition: true },
 ];

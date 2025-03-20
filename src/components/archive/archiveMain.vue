@@ -1,5 +1,5 @@
 <template>
-  <div class="flex mb-10 justify-center items-center">
+  <div class="flex my-10 justify-center items-center">
     <h1 style="text-shadow: 0 0 5px #fff,0 0 10px #fff;"
       class="text-black text-[40px] font-bold text-center bg-lime-500 border-[3px] border-black rounded-lg py-2 px-[100px]">
       O'chirilgan elementlar</h1>
@@ -28,7 +28,7 @@
     </div>
     <div @click="goToPath('coll_center')"
       class="relative hover:bg-lime-500 duration-500 bg-white w-[200px] border-4 border-blue-800 rounded-lg p-6">
-      <h3 class="text-lg font-medium text-center text-black capitalize">Operatorlar</h3>
+      <h3 class="text-lg font-medium text-center text-black capitalize">Devonxona Mudirlari</h3>
     </div>
     <div @click="goToPath('partners')"
       class="relative hover:bg-lime-500 duration-500 bg-white w-[200px] border-4 border-blue-800 rounded-lg p-6">

@@ -341,7 +341,7 @@ const deleteSelectedFiles = async () => {
   isLoading.value = true;
 
   try {
-    await axios.delete(`${API_URL}/archived`, { data: { ids: selectedFiles.value } });
+    await axios.delete(`${API_URL}/delete`, { data: { ids: selectedFiles.value } });
     selectedFiles.value = [];
     deleteMode.value = false;
     fetchFiles();

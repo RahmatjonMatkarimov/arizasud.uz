@@ -44,7 +44,7 @@
   "interaktiv": "Sud tizimiga aloqador interaktiv xizmatlar",
   "bolim": "Siz o'zingizga kerak bo'lgan bo'limni tanlang!",
   "hamkor": "Bizning hamkorlarimiz",
-  "fuqaro_lavozimi": "Fuqaroning lavozimi",
+  "fuqaro_lavozimi": "Lavozimi",
   "tizim_holati": "Tizimdagi holati",
   "foydalanuvchi_ismi": "Foydalanuvchining ismi",
   "foydalanuvchi_telefon": "Foydalanuvchining telefon raqami",
@@ -91,5 +91,6 @@
   "sozlash": "ko'rish huquqini sozlash",
   "imzo": "bu imzolanadigan filelar yuklanadimi?",
   "bolim_yaratish": "bo‘lim yaratish",
+  "taklif_va_shikoyat": "Taklif va shikoyatlar",
   "hisobot": "Har kuni bajarilgan ishlarning hisobotini yozish bo‘limi"
 }

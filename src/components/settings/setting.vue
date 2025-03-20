@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="p-[10px]">
     <ul>
       <li v-for="admin in admins" :key="admin.id" class="flex items-center justify-between my-2 bg-[#223B9E] p-4 rounded-md">
         <div class="flex gap-4">

@@ -16,7 +16,6 @@ const fetchItems = async () => {
   loading.value = true;
   try {
     const res = await axios.get(`${URL}/${data}/archived`);
-    
     items.value = res.data;
   } catch (error) {
     console.error('Xatolik:', error);

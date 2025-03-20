@@ -224,7 +224,6 @@ const translateText = (text) => {
   return translated
 }
 const getdata = async () => {
-  isLoading.value = true;
 
   try {
     const managerID = ref(parseInt(localStorage.getItem("id")))
@@ -233,25 +232,19 @@ const getdata = async () => {
 
   } catch (error) {
     console.error('Fayllarni olishda xatolik:', error)
-  } finally {
-    isLoading.value = false; // 🔹 Yuklanish tugaganini belgilash
   }
 }
 const fetchFiles = async () => {
-  isLoading.value = true;
 
   try {
     const response = await axios.get(`${API_URL}/${userID.value}`)
     files.value = response.data.userFiles.filter(item => item.type == 'obligations')
   } catch (error) {
     console.error('Fayllarni olishda xatolik:', error)
-  } finally {
-    isLoading.value = false; // 🔹 Yuklanish tugaganini belgilash
   }
 }
 fetchFiles()
 const uploadFile = async () => {
-  isLoading.value = true;
 
   if (!newFile.value || !fileName.value) return
   const formData = new FormData()
@@ -270,8 +263,6 @@ const uploadFile = async () => {
     fetchFiles()
   } catch (error) {
     console.error('Fayl yuklashda xatolik:', error)
-  } finally {
-    isLoading.value = false; // 🔹 Yuklanish tugaganini belgilash
   }
 }
 const updateFile = async () => {
@@ -288,7 +279,6 @@ const updateFile = async () => {
 
 
 const updateeFile = async (status) => {
-  isLoading.value = true;
 
   try {
     await axios.put(`${API_URL}/${selectedFileId.value}/status`, {
@@ -304,24 +294,19 @@ const updateeFile = async (status) => {
     fetchFiles();
   } catch (error) {
     console.error('Faylni yangilashda xatolik:', error);
-  } finally {
-    isLoading.value = false; // 🔹 Yuklanish tugaganini belgilash
   }
 };
 
 const deleteSelectedFiles = async () => {
-  isLoading.value = true;
 
   if (selectedFiles.value.length === 0) return;
   try {
-    await axios.delete(`${API_URL}/archived`, { data: { ids: selectedFiles.value } });
+    await axios.delete(`${API_URL}/delete`, { data: { ids: selectedFiles.value } });
     selectedFiles.value = [];
     deleteMode.value = false;
     fetchFiles();
   } catch (error) {
     console.error('Fayllarni o‘chirishda xatolik:', error);
-  } finally {
-    isLoading.value = false; // 🔹 Yuklanish tugaganini belgilash
   }
 };
 

@@ -7,7 +7,7 @@
             <div class="w-36 h-36 border-2 border-profile-blue rounded-lg overflow-hidden">
               <img :src="getImageUrl(userInfoLotin.img)" alt="Profile Image" />
             </div>
-            <h1 class="font-bold">{{ userInfo.name }} {{ userInfo.surname }}</h1>
+            <h1 class="font-bold border-2 border-profile-blue rounded-lg overflow-hidden px-2">{{ userInfo.name }} {{ userInfo.surname }}</h1>
           </div>
           <div class="flex-1 w-[300px] bg-profile-blue m-2 text-white rounded-lg">
             <div class="mb-4 relative  w-full flex border p-4 rounded-lg break-words">
@@ -35,7 +35,7 @@
           </div>
         </div>
         <div class=" flex flex-col flex-wrap">
-          <button @click="router.push('reminders')"
+          <button @click="router.push('/reminders')"
             class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
             {{ $t('hisobot') }}
           </button>
@@ -102,7 +102,7 @@
             <div class="w-36 h-36 border-2 border-profile-blue rounded-lg overflow-hidden">
               <img :src="getImageUrl(userInfoLotin.img)" alt="Profile Image" />
             </div>
-            <h1 class="font-bold">{{ userInfoLotin.name }} {{ userInfoLotin.surname }}</h1>
+            <h1 class="font-bold border-2 border-profile-blue rounded-lg overflow-hidden px-2">{{ userInfoLotin.name }} {{ userInfoLotin.surname }}</h1>
           </div>
           <div class="flex-1 w-[300px] bg-profile-blue m-2 text-white rounded-lg">
             <div class="mb-4 relative  w-full flex border p-4 rounded-lg break-words">
@@ -130,7 +130,7 @@
           </div>
         </div>
         <div class=" flex flex-col flex-wrap">
-          <button @click="router.push('reminders')"
+          <button @click="router.push('/reminders')"
             class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
             {{ $t('hisobot') }}
           </button>
@@ -142,6 +142,18 @@
             class="border bg-lime-600 py-2 px-6 m-2 text-center text-black rounded hover:bg-lime-700 duration-500 capitalize">
             {{ $t('zoom_boglanish') }}
           </a>
+          <button @click="go2(userInfoLotin.id)"
+            class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
+            {{ $t('hodim_majburiyatlari') }}
+          </button>
+          <button @click="go3(userInfoLotin.id)"
+            class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
+            {{ $t('hodim_vazifalari') }}
+          </button>
+          <button v-if="data.ticket" @click="router.push('/ticketAdmin')"
+            class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
+            {{ $t('taklif_va_shikoyat') }}
+          </button>
           <div @click="gonotif(userInfo.id)"
             class="relative bg-lime-600 hover:bg-lime-700 duration-500 flex border items-center capitalize px-6 m-2 rounded">
             <img class="w-10 -ml-4 mr-9" src="../../../public/chat.png" alt="">
@@ -194,7 +206,7 @@
     </div>
     <div class="flex">
       <Aside class="fixed left-0 top-0 h-full w-64" />
-      <main class="flex-1 ml-[420px] p-4 mt-64">
+      <main class="flex-1 ml-[420px]  mt-[200px]">
         <router-view />
       </main>
     </div>
@@ -209,6 +221,7 @@ import { URL } from "@/auth/url.js";
 import { io } from "socket.io-client";
 import { useI18n } from "vue-i18n";
 import { provide } from "vue";
+import translateText from "@/auth/Translate";
 
 const { locale } = useI18n();
 const isOpen = ref(false);
@@ -217,6 +230,23 @@ const selectedLabel = ref("Uz");
 const dat = ref("datalotin");
 provide("dat", dat);
 const isLoading = inject('isLoading');
+
+const ids = localStorage.getItem("id");
+const newIds = parseInt(ids);
+const data = ref({});
+const fetchAdminData = async () => {
+  isLoading.value = true; // Yuklanishni boshlash
+  try {
+    const response = await axios.get(`${URL}/${localStorage.getItem("role")}/${newIds}`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    data.value = response.data.permissions[response.data.permissions.length - 1];
+  } catch (error) {
+    console.error("Xatolik yuz berdi:", error);
+  } finally {
+    isLoading.value = false; // Yuklanish tugashi
+  }
+};
 
 const toggleDropdown = () => {
   isOpen.value = !isOpen.value;
@@ -245,30 +275,6 @@ const messageCount = ref(parseInt(localStorage.getItem('messageCount')) || 0);
 watch(messageCount, (newVal) => {
   localStorage.setItem('messageCount', newVal);
 });
-const translitMap = {
-  "ch": "ч", "sh": "ш", "yo": "ё", "yu": "ю", "ya": "я", "ye": "е", "oʻ": "ў", "g‘": "ғ",
-  "a": "а", "b": "б", "d": "д", "e": "э", "f": "ф", "g": "г", "h": "ҳ", "i": "и", "j": "ж",
-  "k": "к", "l": "л", "m": "м", "n": "н", "o": "о", "p": "п", "q": "қ", "r": "р", "s": "с",
-  "t": "т", "u": "у", "v": "в", "x": "х", "y": "й", "z": "з", "'": "ъ"
-};
-
-const translateText = (text) => {
-  if (!text) return "";
-  let translated = text.toLowerCase();
-  for (const key in translitMap) {
-    const regex = new RegExp(key, "g");
-    translated = translated.replace(regex, translitMap[key]);
-  }
-  return translated;
-};
-
-
-const formatPhoneNumber = (phoneNumber) => {
-  if (!phoneNumber) return "";
-  const cleaned = ("" + phoneNumber).replace(/\D/g, "");
-  const match = cleaned.match(/^(\d{2})(\d{3})(\d{2})(\d{2})$/);
-  return match ? `${match[1]}-${match[2]}-${match[3]}-${match[4]}` : phoneNumber;
-};
 
 const getImageUrl = (img) => {
   return img ? `${URL}/upload/${img}` : "/default-avatar.png";
@@ -358,6 +364,7 @@ const checkOnlineStatus = (onlineAdmins) => {
 
 onMounted(() => {
   getData();
+  fetchAdminData()
   socket.emit("joinUser", id);
 
   socket.on("adminOnlineUpdate", checkOnlineStatus);

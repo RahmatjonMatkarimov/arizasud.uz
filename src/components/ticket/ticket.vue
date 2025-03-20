@@ -1,203 +1,213 @@
-<!-- SupportTicketManager.vue -->
 <template>
-    <div class="support-ticket-manager">
-        <div class="ticket-form-container">
-            <div class="ticket-form-header">
-                <h2>Yangi Qo'llab-quvvatlash So'rovini Yuborish</h2>
-                <span class="subtitle">Biz sizga yordam berish uchun shu yerdamiz</span>
+    <div class="container">
+        <Header></Header>
+        <div class="flex flex-col justify-center items-center">
+        <div class="support-ticket-manager mt-10">
+          <div class="ticket-form-container">
+            <div class=" relative ticket-form-header">
+              <h2 v-if="dat === 'datalotin'">Shikoyat va e’tirozlaringizni, shuningdek, qo‘shimcha takliflaringizni yozib qoldiring.</h2>
+              <h2 v-if="dat === 'datakril'">{{ translateText("Shikoyat va e’tirozlaringizni, shuningdek, qo‘shimcha takliflaringizni yozib qoldiring.") }}</h2>
+              <div class="absolute bottom-1 right-1 justify-end">
+                <span v-if="dat==='datalotin'" class="subtitle">Biz sizga yordam berish uchun shu yerdamiz</span>
+                <span v-if="dat==='datakril'" class="subtitle">{{ translateText("Biz sizga yordam berish uchun shu yerdamiz") }}</span>
+              </div>
             </div>
             <form @submit.prevent="createTicket" class="ticket-form">
-                <div class="form-group">
-                    <label for="comment">Muammoingizni Tasvirlab Bering</label>
-                    <textarea class="text-black" v-model="state.newTicket.comment" id="comment"
-                        placeholder="Iltimos, muammoingiz haqida batafsil ma'lumot bering..." required></textarea>
-                </div>
-                <button type="submit" :disabled="state.isSubmitting" class="submit-btn">
-                    <span v-if="state.isSubmitting">Yuborilmoqda...</span>
-                    <span v-else>So'rovni Yuborish</span>
-                </button>
+              <div class="form-group">
+                <label v-if="dat==='datalotin'" for="comment">Muammoingizni Tasvirlab Bering</label>
+                <label v-if="dat==='datakril'" for="comment">{{ translateText("Muammoingizni Tasvirlab Bering") }}</label>
+                <textarea
+                  class="text-black"
+                  v-model="state.newTicket.comment"
+                  id="comment"
+                  :placeholder="dat === 'datakril' ? translateText('Iltimos, muammoingiz haqida batafsil ma\'lumot bering...') : 'Iltimos, muammoingiz haqida batafsil ma\'lumot bering...'"
+                  required
+                ></textarea>
+              </div>
+              <button v-if="dat==='datalotin'" type="submit" :disabled="state.isSubmitting" class="submit-btn">
+                {{ state.isSubmitting ? 'Yuborilmoqda...' : 'So\'rovni Yuborish' }}
+              </button>
+              <button v-if="dat==='datakril'" type="submit" :disabled="state.isSubmitting" class="submit-btn">
+                {{ state.isSubmitting ? translateText('Yuborilmoqda...') : translateText('So\'rovni Yuborish') }}
+              </button>
             </form>
+          </div>
         </div>
-        <div class="ticket-list-container">
-            <div class="ticket-list-header">
-                <h2>Sizning Qo'llab-quvvatlash So'rovlaringiz</h2>
-                <span class="ticket-count">{{ state.tickets.length }} ta so'rov</span>
-            </div>
-            <div v-if="state.tickets.length === 0" class="no-tickets">
-                <p>Hali qo'llab-quvvatlash so'rovlari yo'q</p>
-            </div>
-            <div v-else class="ticket-grid">
-                <div v-for="ticket in state.tickets" :key="ticket.id" class="ticket-card">
-                    <div v-if="state.editingTicketId !== ticket.id" class="ticket-view">
-                        <div class="ticket-content">
-                            <p class="ticket-text">{{ ticket.comment }}</p>
-                            <div>
-                                <span class="ticket-meta">Yuborilgan: {{ formatDate(ticket.createdAt) }}</span>
-                            </div>
-                        </div>
-                        <div class="ticket-actions">
-                            <button @click="startEditing(ticket)" class="edit-btn">Tahrirlash</button>
-                            <button @click="deleteTicket(ticket.id)" class="delete-btn">O'chirish</button>
-                        </div>
-                    </div>
-                    <!-- Edit Form -->
-                    <div v-else class="edit-form">
-                        <textarea class="text-black" v-model="state.editedComment" required
-                            placeholder="Muammoingizni yangilang..."></textarea>
-                        <div class="edit-actions">
-                            <button @click="updateTicket(ticket.id)" class="save-btn">Saqlash</button>
-                            <button @click="cancelEditing" class="cancel-btn">Bekor Qilish</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
-</template>
-
-<script>
-import { reactive, onMounted } from 'vue'
-import axios from 'axios'
-import { URL } from '@/auth/url'
-
-export default {
-    name: 'SupportTicketManager',
-    setup() {
-        const state = reactive({
-            tickets: [],
-            newTicket: {
-                comment: ''
-            },
-            isSubmitting: false,
-            editingTicketId: null,
-            editedComment: ''
-        })
-
-        const API_URL = URL + '/ticket'
-
-        const fetchTickets = async () => {
-            try {
-                const response = await axios.get(API_URL)
-                state.tickets = response.data
-            } catch (error) {
-                console.error('So\'rovlarni olishda xatolik:', error)
-            }
-        }
-
-        const createTicket = async () => {
-            if (!state.newTicket.comment.trim()) return
-            state.isSubmitting = true
-            try {
-                const response = await axios.post(API_URL, {
-                    comment: state.newTicket.comment
-                })
-                state.tickets.unshift(response.data)
-                state.newTicket.comment = ''
-            } catch (error) {
-                console.error('So\'rov yaratishda xatolik:', error)
-            } finally {
-                state.isSubmitting = false
-            }
-        }
-
-        const startEditing = (ticket) => {
-            state.editingTicketId = ticket.id
-            state.editedComment = ticket.comment
-        }
-
-        const updateTicket = async (ticketId) => {
-            try {
-                const response = await axios.put(`${API_URL}/${ticketId}`, {
-                    comment: state.editedComment
-                })
-                const index = state.tickets.findIndex(t => t.id === ticketId)
-                state.tickets[index] = response.data
-                state.editingTicketId = null
-                state.editedComment = ''
-            } catch (error) {
-                console.error('So\'rovni yangilashda xatolik:', error)
-            }
-        }
-
-        const deleteTicket = async (ticketId) => {
-            if (!confirm('Bu qo\'llab-quvvatlash so\'rovini o\'chirishga ishonchingiz komilmi?')) return
-            try {
-                await axios.delete(`${API_URL}/${ticketId}`)
-                state.tickets = state.tickets.filter(t => t.id !== ticketId)
-            } catch (error) {
-                console.error('So\'rovni o\'chirishda xatolik:', error)
-            }
-        }
-
-        const cancelEditing = () => {
-            state.editingTicketId = null
-            state.editedComment = ''
-        }
-
-        const formatDate = (dateString) => {
-            return new Date(dateString).toLocaleString('uz-UZ')
-        }
-
-        onMounted(() => {
-            fetchTickets()
-        })
-
-        return {
-            state,
-            createTicket,
-            startEditing,
-            updateTicket,
-            deleteTicket,
-            cancelEditing,
-            formatDate
-        }
+  </template>
+  
+  <script setup>
+  import { reactive, onMounted, ref, onUnmounted } from 'vue'
+  import axios from 'axios'
+  import { URL } from '@/auth/url'
+  import translateText from '@/auth/Translate'
+  import Header from '../header.vue'
+  
+  const dat = ref(localStorage.getItem('til') || 'datalotin');
+  const checkLanguageChange = () => {
+    const currentLang = localStorage.getItem('til') || 'datalotin';
+    if (currentLang !== dat.value) {
+      dat.value = currentLang;
     }
-}
-</script>
-
-<style scoped>
-.support-ticket-manager {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 30px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.ticket-form-container {
-    background: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  };
+  
+  const state = reactive({
+    tickets: [],
+    newTicket: { comment: '' },
+    isSubmitting: false,
+    editingTicketId: null,
+    editedComment: ''
+  })
+  
+  const API_URL = URL + '/ticket'
+  
+  const fetchTickets = async () => {
+    try {
+      const response = await axios.get(API_URL)
+      state.tickets = response.data
+    } catch (error) {
+      console.error('So\'rovlarni olishda xatolik:', error)
+    }
+  }
+  
+  const createTicket = async () => {
+    if (!state.newTicket.comment.trim()) return
+    state.isSubmitting = true
+    try {
+      const response = await axios.post(API_URL, {
+        comment: state.newTicket.comment
+      })
+      state.tickets.unshift(response.data)
+      state.newTicket.comment = ''
+    } catch (error) {
+      console.error('So\'rov yaratishda xatolik:', error)
+    } finally {
+      state.isSubmitting = false
+    }
+  }
+  
+  const deleteTicket = async (ticketId) => {
+    try {
+      await axios.delete(`${API_URL}/${ticketId}`)
+      state.tickets = state.tickets.filter(ticket => ticket.id !== ticketId)
+    } catch (error) {
+      console.error('Error deleting ticket:', error)
+    }
+  }
+  
+  const startEditing = (ticket) => {
+    state.editingTicketId = ticket.id
+    state.editedComment = ticket.comment
+  }
+  
+  const saveEdit = async (ticket) => {
+    try {
+      const response = await axios.put(`${API_URL}/${ticket.id}`, {
+        comment: state.editedComment
+      })
+      const index = state.tickets.findIndex(t => t.id === ticket.id)
+      state.tickets[index] = response.data
+      state.editingTicketId = null
+      state.editedComment = ''
+    } catch (error) {
+      console.error('Error updating ticket:', error)
+    }
+  }
+  
+  const cancelEdit = () => {
+    state.editingTicketId = null
+    state.editedComment = ''
+  }
+  
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    }).replace(',', '')
+  }
+  
+  let intervalId = null;
+  onMounted(() => {
+    fetchTickets()
+    intervalId = setInterval(checkLanguageChange, 0);
+  })
+  onUnmounted(() => {
+    if (intervalId) clearInterval(intervalId);
+  });
+  </script>
+  
+  <style lang="scss" scoped>
+  .container {
+    min-height: 100vh;
+    min-width: 100%;
+    background: #1a2a44;
+  }
+  
+  .support-ticket-manager {
+    width: 100%;
+    max-width: 800px;
     padding: 20px;
-    margin-bottom: 30px;
-}
-
-.ticket-form-header {
+    background: #f5f7fa;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .ticket-form-container {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
     margin-bottom: 20px;
-}
-
-.ticket-form-header h2 {
-    color: #2c3e50;
-    margin: 0;
-    font-size: 24px;
-}
-
-.subtitle {
-    color: #7f8c8d;
-    font-size: 14px;
-}
-
-.ticket-form .form-group {
+  }
+  
+  .ticket-form-header {
     margin-bottom: 20px;
-}
-
-.ticket-form label {
-    display: block;
-    margin-bottom: 8px;
-    color: #34495e;
-    font-weight: 500;
-}
-
-.ticket-form textarea {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dfe6e9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  
+    h2 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #34495e;
+      margin: 0;
+    }
+  }
+  
+  .subtitle {
+    display: inline-block;
+    font-size: 15px;
+    color: #6366f1;
+    background: #e0e7ff;
+    padding: 4px 12px;
+    border-radius: 12px;
+  }
+  
+  .ticket-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  
+    label {
+      color: #34495e;
+      font-weight: 500;
+    }
+  }
+  
+  .ticket-form textarea,
+  .edit-form textarea {
     width: 100%;
     min-height: 120px;
     padding: 12px;
@@ -206,155 +216,202 @@ export default {
     resize: vertical;
     font-size: 14px;
     transition: border-color 0.3s;
-}
-
-.ticket-form textarea:focus {
-    border-color: #3498db;
-    outline: none;
-}
-
-.submit-btn {
-    background: #3498db;
-    color: white;
-    padding: 10px 20px;
-    font-size: 16px;
+    background: white;
+  
+    &:focus {
+      border-color: #3498db;
+      outline: none;
+    }
+  }
+  
+  .submit-btn {
+    align-self: flex-start;
+    background: #d3d3d3;
+    color: #34495e;
+    padding: 10px 24px;
+    border-radius: 6px;
     font-weight: 500;
     transition: background 0.3s;
-}
-
-.submit-btn:hover:not(:disabled) {
-    background: #2980b9;
-}
-
-.submit-btn:disabled {
-    background: #bdc3c7;
-    cursor: not-allowed;
-}
-
-.ticket-list-container {
+    border: none;
+  
+    &:hover:not(:disabled) {
+      background: #c0c0c0;
+    }
+  
+    &:disabled {
+      background: #bdc3c7;
+      cursor: not-allowed;
+    }
+  }
+  
+  .ticket-list-container {
     background: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
-}
-
-.ticket-list-header {
+    border-radius: 8px;
+  }
+  
+  .ticket-list-header {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dfe6e9;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-}
-
-.ticket-list-header h2 {
-    color: #2c3e50;
-    margin: 0;
-    font-size: 22px;
-}
-
-.ticket-count {
-    color: #7f8c8d;
+  
+    h2 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #34495e;
+      margin: 0;
+    }
+  }
+  
+  .ticket-count {
     font-size: 14px;
-}
-
-.no-tickets {
-    text-align: center;
-    padding: 20px;
-    color: #7f8c8d;
-}
-
-.ticket-grid {
+    color: #6366f1;
+    background: #e0e7ff;
+    padding: 4px 12px;
+    border-radius: 12px;
+  }
+  
+  .ticket-grid {
     display: grid;
     gap: 15px;
-}
-
-.ticket-card {
-    background: #f9f9f9;
-    border-radius: 6px;
+  }
+  
+  .ticket-card {
     padding: 15px;
-    transition: transform 0.2s;
-}
-
-.ticket-card:hover {
+    border-radius: 8px;
+    background-color: #2c3e50;
+    transition: all 0.2s ease;
+  }
+  
+  .ticket-card:hover {
     transform: translateY(-2px);
-}
-
-.ticket-view {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: #34495e;
+  }
+  
+  .empty-state {
+    background-color: transparent;
+    text-align: center;
+    padding: 20px;
+  
+    p {
+      color: #34495e;
+    }
+  }
+  
+  .ticket-view {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-}
-
-.ticket-content {
+    gap: 15px;
+  }
+  
+  .ticket-content {
     flex: 1;
-}
-
-.ticket-text {
-    margin: 0 0 10px 0;
-    color: #2c3e50;
-    font-weight: bold;
-    font-size: 15px;
+  }
+  
+  .ticket-text {
+    color: #ffffff;
+    margin-bottom: 10px;
     line-height: 1.5;
-}
-
-.ticket-meta {
-    color: #7f8c8d;
-    font-size: 13px;
-}
-
-.ticket-actions {
-    display: flex;
-    gap: 10px;
-}
-
-.edit-btn {
-    background: #f1c40f;
-    color: #2c3e50;
-    padding: 6px 12px;
-    font-size: 13px;
-}
-
-.delete-btn {
-    background: #e74c3c;
-    color: white;
-    padding: 6px 12px;
-    font-size: 13px;
-}
-
-.edit-form textarea {
-    width: 100%;
-    min-height: 100px;
-    padding: 10px;
-    border: 1px solid #dfe6e9;
-    border-radius: 6px;
-    margin-bottom: 15px;
     font-size: 14px;
-}
-
-.edit-form textarea:focus {
-    border-color: #3498db;
-    outline: none;
-}
-
-.edit-actions {
+  }
+  
+  .ticket-meta span {
+    display: inline-block;
+    font-size: 13px;
+    color: #ffffff;
+    background: rgba(241, 245, 249, 0.7);
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+  
+  .ticket-actions,
+  .edit-actions {
     display: flex;
     gap: 10px;
-}
-
-.save-btn {
-    background: #2ecc71;
-    color: white;
-    padding: 8px 16px;
-    font-size: 13px;
-}
-
-.cancel-btn {
+  }
+  
+  .edit-btn {
     background: #95a5a6;
-    color: white;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    border: none;
+  
+    &:hover {
+      background: #7f8c8d;
+      transform: translateY(-1px);
+    }
+  }
+  
+  .delete-btn {
+    background: #e74c3c;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    border: none;
+  
+    &:hover {
+      background: #c0392b;
+      transform: translateY(-1px);
+    }
+  }
+  
+  .edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .save-btn {
+    background: #2ecc71;
+    color: #ffffff;
     padding: 8px 16px;
-    font-size: 13px;
-}
-
-button:hover:not(:disabled) {
-    opacity: 0.9;
-}
-</style>
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    border: none;
+  
+    &:hover {
+      background: #27ae60;
+      transform: translateY(-1px);
+    }
+  }
+  
+  .cancel-btn {
+    background: #95a5a6;
+    color: #ffffff;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    border: none;
+  
+    &:hover {
+      background: #7f8c8d;
+      transform: translateY(-1px);
+    }
+  }
+  
+  button {
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  
+    &:hover:not(:disabled) {
+      opacity: 0.9;
+    }
+  
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+  </style>

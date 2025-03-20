@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="p-[10px]">
     <ul>
       <li class="flex mb-2 items-center justify-between bg-[#223B9E] p-4 rounded-md">
         <div class="flex gap-4">
@@ -29,7 +29,7 @@
       </li>
       <li class="flex mb-2 items-center justify-between bg-[#223B9E] p-4 rounded-md">
         <div class="flex gap-4">
-          <h1>Mudirlar ro'yxatini ko'rish uchun ruxsat</h1>
+          <h1>Devonxona Mudirlar ro'yxatini ko'rish uchun ruxsat</h1>
         </div>
         <div class="flex gap-2">
           <h1>On</h1>
@@ -42,7 +42,33 @@
       </li>
       <li class="flex mb-2 items-center justify-between bg-[#223B9E] p-4 rounded-md">
         <div class="flex gap-4">
-          <h1>Filelar ro'yxatini ko'rish uchun ruxsat</h1>
+          <h1>Ishchilarni bajargan ishlarini ro'yxatini ko'rish uchun ruxsat</h1>
+        </div>
+        <div class="flex gap-2">
+          <h1>On</h1>
+          <label class="switch">
+            <input type="checkbox" :checked="data.workDone" @change="() => togglePermission('workDone')">
+            <span class="slider round"></span>
+          </label>
+          <h1>Off</h1>
+        </div>
+      </li>
+      <li class="flex mb-2 items-center justify-between bg-[#223B9E] p-4 rounded-md">
+        <div class="flex gap-4">
+          <h1>Kampaniya fayllarini ro'yxatini ko'rish uchun ruxsat</h1>
+        </div>
+        <div class="flex gap-2">
+          <h1>On</h1>
+          <label class="switch">
+            <input type="checkbox" :checked="data.workDone" @change="() => togglePermission('workDone')">
+            <span class="slider round"></span>
+          </label>
+          <h1>Off</h1>
+        </div>
+      </li>
+      <li class="flex mb-2 items-center justify-between bg-[#223B9E] p-4 rounded-md">
+        <div class="flex gap-4">
+          <h1>imzolanadigan fayllar ro'yxatini ko'rish uchun ruxsat</h1>
         </div>
         <div class="flex gap-2">
           <h1>On</h1>
@@ -71,12 +97,15 @@ const data = ref({
   admins: false,
   yurists: false,
   call_centres: false,
-  userFiles: false
+  userFiles: false,
+  workDone: false,
+  companyDocs: false,
+  ticket: false
 });
 
 const fetchPermissions = async () => {
-    isLoading.value = true;
-    try {
+  isLoading.value = true;
+  try {
     const token = localStorage.getItem("token");
     const response = await axios.get(`${URL}/permissions/user/${newId}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -95,8 +124,8 @@ const fetchPermissions = async () => {
 };
 
 const togglePermission = async (permission) => {
-    isLoading.value = true;
-    try {
+  isLoading.value = true;
+  try {
     const updatedValue = !data.value[permission];
 
     const response = await axios.put(`${URL}/permissions/${newId}`,
