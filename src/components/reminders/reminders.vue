@@ -37,7 +37,6 @@
                 <div v-else class="worklog-grid">
                     <div v-for="workLog in state.workLogs" :key="workLog.id" class="worklog-card">
                         <div v-if="state.editingWorkLogId !== workLog.id" class="worklog-view">
-                            
                             <div class="worklog-content flex items-center gap-5">
                                 <img class="w-[60px] border" :src="'https://backend.arizasud.uz/upload/' + workLog.user.img" alt="">
                                 <div class="worklog-meta">
@@ -180,7 +179,6 @@ export default {
             fetchWorkLogs();
         });
 
-
         return {
             state,
             dat,
@@ -197,9 +195,10 @@ export default {
 </script>
 
 <style scoped>
-/* Stil qismi o'zgarmagan holda qoldiriladi, chunki u birinchisidagi kabi ishlaydi */
 .container {
-    background-color: #3486eb;
+    min-height: 100vh;
+    min-width: 100%;
+    background: #1a2a44;
     padding: 30px 0px;
 }
 
@@ -207,17 +206,15 @@ export default {
     max-width: 800px;
     margin: 20px auto;
     padding: 20px;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: #f5f7fa;
     border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .worklog-form-container {
-    background: rgba(255, 255, 255, 0.95);
-    border: none;
+    background: #ffffff;
     padding: 20px;
     border-radius: 8px;
-    backdrop-filter: blur(5px);
     margin-bottom: 20px;
 }
 
@@ -226,34 +223,38 @@ export default {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #7f9cf5;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dfe6e9;
 }
 
 .worklog-form-header h2 {
-    margin: 0;
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 600;
-    background: linear-gradient(to right, #3498db, #8e44ad);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #34495e;
+    margin: 0;
 }
 
 .subtitle {
-    font-size: 14px;
+    font-size: 15px;
     color: #6366f1;
     background: #e0e7ff;
-    padding: 4px 10px;
+    padding: 4px 12px;
     border-radius: 12px;
 }
 
-.worklog-form .form-group {
-    margin-bottom: 20px;
+.worklog-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-.worklog-form label {
-    display: block;
-    margin-bottom: 8px;
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
     color: #34495e;
     font-weight: 500;
 }
@@ -267,6 +268,7 @@ export default {
     resize: vertical;
     font-size: 14px;
     transition: border-color 0.3s;
+    background: white;
 }
 
 .worklog-form textarea:focus {
@@ -275,17 +277,18 @@ export default {
 }
 
 .submit-btn {
-    background: #4a91e8;
-    color: white;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: 500;
+    align-self: flex-start;
+    background: #d3d3d3;
+    color: #34495e;
+    padding: 10px 24px;
     border-radius: 6px;
+    font-weight: 500;
     transition: background 0.3s;
+    border: none;
 }
 
 .submit-btn:hover:not(:disabled) {
-    background: #036ff2;
+    background: #c0c0c0;
 }
 
 .submit-btn:disabled {
@@ -294,36 +297,32 @@ export default {
 }
 
 .worklog-list-container {
-    background: rgba(255, 255, 255, 0.95);
-    border: none;
+    background: #ffffff;
     padding: 20px;
     border-radius: 8px;
-    backdrop-filter: blur(5px);
 }
 
 .worklog-list-header {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dfe6e9;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #7f9cf5;
 }
 
 .worklog-list-header h2 {
-    margin: 0;
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 600;
-    background: linear-gradient(to right, #3498db, #8e44ad);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #34495e;
+    margin: 0;
 }
 
 .log-count {
     font-size: 14px;
     color: #6366f1;
     background: #e0e7ff;
-    padding: 4px 10px;
+    padding: 4px 12px;
     border-radius: 12px;
 }
 
@@ -333,24 +332,22 @@ export default {
 }
 
 .worklog-card {
-    border: none;
     padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    background-color: #4a91e8;
+    border-radius: 8px;
+    background-color: #2c3e50;
+    transition: all 0.2s ease;
 }
 
 .worklog-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    background-color: #036ff2;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: #34495e;
 }
 
 .worklog-view {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    gap: 15px;
 }
 
 .worklog-content {
@@ -358,71 +355,87 @@ export default {
 }
 
 .worklog-text {
-    margin: 0 0 12px 0;
     color: #ffffff;
-    font-size: 16px;
+    margin-bottom: 10px;
     line-height: 1.5;
-    font-weight: 500;
-}
-
-.worklog-meta {
-    font-size: 13px;
-    color: #475569;
+    font-size: 14px;
 }
 
 .worklog-meta span {
-    margin: 6px 0;
+    display: inline-block;
+    font-size: 13px;
+    color: #ffffff;
+    background: rgba(241, 245, 249, 0.7);
     padding: 4px 8px;
     border-radius: 6px;
-    background: rgba(241, 245, 249, 0.7);
-    color: #ffffff;
 }
 
-.worklog-actions {
+.worklog-actions,
+.edit-actions {
     display: flex;
     gap: 10px;
 }
 
-  .worklog-content img {
+.worklog-content img {
     width: 60px;
     height: 60px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #60a5fa;
+    border: 2px solid #3498db;
     padding: 2px;
     background: #fff;
-  }
-  
-  .worklog-content img:hover {
+}
+
+.worklog-content img:hover {
     width: 100px;
     height: 100px;
     transition: 500ms ease all;
-  }
+}
 
 .edit-btn {
-    background: #f1c40f;
-    color: #2c3e50;
+    background: #95a5a6;
+    color: #ffffff;
     padding: 6px 12px;
-    font-size: 13px;
     border-radius: 6px;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.edit-btn:hover {
+    background: #7f8c8d;
+    transform: translateY(-1px);
 }
 
 .delete-btn {
     background: #e74c3c;
-    color: white;
+    color: #ffffff;
     padding: 6px 12px;
-    font-size: 13px;
     border-radius: 6px;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.delete-btn:hover {
+    background: #c0392b;
+    transform: translateY(-1px);
+}
+
+.edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .edit-form textarea {
     width: 100%;
-    min-height: 100px;
-    padding: 10px;
+    min-height: 120px;
+    padding: 12px;
     border: 1px solid #dfe6e9;
     border-radius: 6px;
-    margin-bottom: 15px;
+    resize: vertical;
     font-size: 14px;
+    transition: border-color 0.3s;
+    background: white;
 }
 
 .edit-form textarea:focus {
@@ -430,28 +443,50 @@ export default {
     outline: none;
 }
 
-.edit-actions {
-    display: flex;
-    gap: 10px;
-}
-
 .save-btn {
     background: #2ecc71;
-    color: white;
+    color: #ffffff;
     padding: 8px 16px;
-    font-size: 13px;
     border-radius: 6px;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.save-btn:hover {
+    background: #27ae60;
+    transform: translateY(-1px);
 }
 
 .cancel-btn {
     background: #95a5a6;
-    color: white;
+    color: #ffffff;
     padding: 8px 16px;
-    font-size: 13px;
     border-radius: 6px;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.cancel-btn:hover {
+    background: #7f8c8d;
+    transform: translateY(-1px);
+}
+
+button {
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
 }
 
 button:hover:not(:disabled) {
     opacity: 0.9;
+}
+
+button:disabled {
+    cursor: not-allowed;
 }
 </style>
