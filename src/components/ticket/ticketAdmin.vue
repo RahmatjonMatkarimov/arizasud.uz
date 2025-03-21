@@ -284,7 +284,7 @@ onUnmounted(() => {
 }
 
 .edit-form textarea {
-    width: 100%;
+    min-width: 100%;
     min-height: 120px;
     padding: 12px;
     border: 1px solid #dfe6e9;
