@@ -90,7 +90,9 @@
   "kabinetga_kirish": "Shaxsiy kabinetga kirish",
   "sozlash": "ko'rish huquqini sozlash",
   "imzo": "bu imzolanadigan filelar yuklanadimi?",
-  "bolim_yaratish": "bo‘lim yaratish",
+  "bolim_yaratish": "Bo‘lim yaratish",
   "taklif_va_shikoyat": "Taklif va shikoyatlar",
-  "hisobot": "Har kuni bajarilgan ishlarning hisobotini yozish bo‘limi"
+  "hisobot": "Har kuni bajarilgan ishlarning hisobotini yozish bo‘limi",
+  "nusxa": "Hujjatlaringizning nusxasini chiqarish uchun ularni skaner bo‘limiga joylashtiring va \"Nusxalash\" tugmasini bosing. Yoki arizasud.uz orqali qo‘ng‘iroq qilib, boshqalar bilan bog‘laning.",
+  "nusxa_olish":"Telefon orqali aloqa qilish va hujjatlarni nusxalash xizmati"
 }

@@ -28,14 +28,14 @@
         </h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-center items-center">
           <div v-if="dat === 'datakril'" v-for="item in datakril" :key="item.id" @click="goToPath(item.id)"
-            class="relative h-full flex items-center hover:bg-lime-500 duration-500 bg-white border-4 border-blue-800 rounded-lg p-6">
+            class="relative h-full flex items-center hover:bg-lime-500 duration-500 bg-white border-4 border-blue-800 rounded-lg p-[45px]">
             <div class="flex items-center gap-4">
               <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="w-14 rounded-md" />
               <h3 class="md:text-lg font-medium text-center text-black capitalize">{{ item.translatedName }}</h3>
             </div>
           </div>
           <div v-if="dat === 'datalotin'" v-for="item in data" :key="item.id" @click="goToPath(item.id)"
-            class="relative h-full flex items-center hover:bg-lime-500 duration-500 bg-white border-4 border-blue-800 rounded-lg p-6">
+            class="relative h-full flex items-center hover:bg-lime-500 duration-500 bg-white border-4 border-blue-800 rounded-lg p-[45px]">
             <div class="flex items-center gap-4">
               <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="w-14 rounded-md" />
               <h3 class="md:text-lg font-medium text-center text-black capitalize">{{ item.name }}</h3>

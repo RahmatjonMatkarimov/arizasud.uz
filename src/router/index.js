@@ -55,6 +55,7 @@ const routes = [
             { path: "/companyFile-view/:id", component: () => import("@/components/company/fileView.vue") },
             { path: "/remindersAdmin", component: () => import("@/components/reminders/remindersAdmin.vue") },
             { path: "/profileUser/:id", component: () => import("@/components/ProfilePage/ProfileUser.vue") },
+            { path: "/scanersAdmin", component: () => import("@/components/main/scaners/scanersAdmin.vue") },
         ],
         meta: { requiresAuth: true, allowedRoles: ["admin", "manager", "yurist", "bigAdmin"] },
     },
@@ -68,7 +69,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     if (to.meta.requiresAuth) {
         if (!isAuthenticated()) {
-            next({ name: "login" });
+            next({ name: "" });
         } else {
             const userRole = getRoleFromToken();
             if (to.meta.allowedRoles?.length && !to.meta.allowedRoles.includes(userRole)) {

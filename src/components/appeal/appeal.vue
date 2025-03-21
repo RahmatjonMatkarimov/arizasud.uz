@@ -11,7 +11,7 @@
         </b>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <div v-if="dat === 'datakril'" v-for="item in datakril" :key="item.id"
-            class="relative bg-white border-4 hover:bg-lime-500 duration-500 border-blue-800 rounded-lg p-6">
+            class="relative bg-white border-4 hover:bg-lime-500 duration-500 border-blue-800 rounded-lg p-[45px]">
             <div class="flex items-center gap-4">
               <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="w-14 h-14 rounded-md" />
               <h3 class="text-lg font-medium text-center text-black">{{ item.translatedName }}</h3>
@@ -22,7 +22,7 @@
             </div>
           </div>
           <div v-if="dat === 'datalotin'" v-for="item in data" :key="item.id"
-            class="relative bg-white border-4 hover:bg-lime-500 duration-500 border-blue-800 rounded-lg p-6">
+            class="relative bg-white border-4 hover:bg-lime-500 duration-500 border-blue-800 rounded-lg p-[45px]">
             <div class="flex items-center gap-4">
               <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="w-14 h-14 rounded-md" />
               <h3 class="text-lg font-medium text-center text-black">{{ item.name }}</h3>

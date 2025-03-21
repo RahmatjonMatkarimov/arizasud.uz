@@ -25,7 +25,7 @@
     </div>
     <div class="w-full flex justify-end mt-2 px-6">
       <button @click="toggleModal" class="text-lg font-medium py-2 px-4 bg-lime-500 hover:bg-lime-600 rounded-lg">
-        Add +
+        bolim yuklash
       </button>
     </div>
     <!-- Display Uploaded Items -->
@@ -35,29 +35,25 @@
           <b class="mb-10 block text-center text-[30px] sm:[35px] md:text-[40px] uppercase text-[#223B9E]">{{
             $t('hamkor') }}</b>
         </div>
-        <div class="my-16 flex justify-center flex-wrap gap-16">
-          <!-- Kirillcha ma'lumotlar -->
+        <div class="my-16 flex justify-center flex-wrap gap-4 max-w-[1600px] mx-auto">
           <div v-if="dat === 'datakril'" v-for="item in datakril" :key="item.id"
-            class="bg-white border-[#223B9E] border-[5px] break-words w-96 h-96 rounded-xl hover:-translate-y-3 duration-500 hover:shadow-[0px_0px_50px_5px_rgba(255,255,255,1)] p-6">
-            <div class="">
-              <div class="mb-5 flex justify-center mt-3">
-                <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="w-[150px]" />
-              </div>
-              <!-- Tarjima qilingan nomni ko'rsatish -->
-              <h3 class="text-lg font-medium text-center text-black">{{ item.translatedName }}</h3>
+            class="bg-white border-[#223B9E] flex flex-col justify-start items-center gap-2 border-[5px] break-words w-72 min-h-full rounded-xl relative hover:-translate-y-3 duration-500 hover:shadow-[0px_0px_50px_5px_rgba(255,255,255,1)] p-2">
+            <span @click.stop="func(item.id)" class="cursor-pointer w-6 h-6 absolute top-2 right-2">
+              <img width="20px" src="../../../public/ellipsis.png" alt="" />
+            </span>
+            <div class="flex justify-center items-center p-2 h-[160px]">
+              <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="size-fit w-[150px]" />
             </div>
+            <h3 class="text-lg font-medium text-center text-black">{{ item.translatedName }}</h3>
           </div>
           <div v-if="dat === 'datalotin'" v-for="item in data" :key="item.id"
-            class="bg-white border-[#223B9E] border-[5px] break-words w-96 h-96 rounded-xl hover:-translate-y-3 duration-500 hover:shadow-[0px_0px_50px_5px_rgba(255,255,255,1)] p-6">
-            <div class="flex justify-end -mr-3 -mt-4">
-              <span @click.stop="func(item.id)" class="cursor-pointer w-6 h-6 flex items-center justify-center">
-                <img width="20px" src="../../../public/ellipsis.png" alt="" />
-              </span>
+            class="bg-white border-[#223B9E] flex flex-col justify-start items-center gap-2 border-[5px] break-words w-72 min-h-full rounded-xl relative hover:-translate-y-3 duration-500 hover:shadow-[0px_0px_50px_5px_rgba(255,255,255,1)] p-2">
+            <span @click.stop="func(item.id)" class="cursor-pointer w-6 h-6 absolute top-2 right-2">
+              <img width="20px" src="../../../public/ellipsis.png" alt="" />
+            </span>
+            <div class="flex justify-center items-center p-2 h-[160px]">
+              <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="size-fit w-[150px]" />
             </div>
-            <div class="mb-5 flex justify-center mt-3">
-              <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="w-[150px]" />
-            </div>
-            <!-- Tarjima qilingan nomni ko'rsatish -->
             <h3 class="text-lg font-medium text-center text-black">{{ item.name }}</h3>
           </div>
         </div>
@@ -116,6 +112,7 @@
 import { inject, ref, watch } from "vue";
 import axios from "axios";
 import { URL } from "../../auth/url";
+import translateText from "@/auth/Translate";
 
 const PutId = ref(null);
 const PutModal = ref(false);
@@ -177,21 +174,7 @@ const uploadCourt = async () => {
 const datakril = ref([]);
 const dat = inject('dat');
 const isLoading = inject('isLoading');
-const translitMap = {
-  "ch": "ч", "sh": "ш", "yo": "ё", "yu": "ю", "ya": "я", "ye": "е", "oʻ": "ў", "g‘": "ғ",
-  "a": "а", "b": "б", "d": "д", "e": "э", "f": "ф", "g": "г", "h": "ҳ", "i": "и", "j": "ж",
-  "k": "к", "l": "л", "m": "м", "n": "н", "o": "о", "p": "п", "q": "қ", "r": "р", "s": "с",
-  "t": "т", "u": "у", "v": "в", "x": "х", "y": "й", "z": "з", "'": "ъ"
-};
 
-const translateText = (text) => {
-  let translated = text.toLowerCase();
-  for (const key in translitMap) {
-    const regex = new RegExp(key, "g");
-    translated = translated.replace(regex, translitMap[key]);
-  }
-  return translated;
-};
 
 const getData = async () => {
   isLoading.value = true;
