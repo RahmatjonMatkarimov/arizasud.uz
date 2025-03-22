@@ -16,6 +16,10 @@
                 <h3 v-if="dat === 'datalotin'" class="text-lg font-semibold text-gray-800 mb-2">{{ scanner.name }}</h3>
                 <h3 v-if="dat === 'datakril'" class="text-lg font-semibold text-gray-800 mb-2">{{
                     translateText(scanner.name) }}</h3>
+                <div v-if="scanner.isActive"
+                    class="bg-blue-200 flex justify-center items-end animate-pulse rounded-[5px] inset-0 w-full absolute h-full">
+                    <b class="text-black font-bold text-[20px]">{{ $t('tez_kunda') }}</b>
+                </div>
             </div>
         </div>
     </div>

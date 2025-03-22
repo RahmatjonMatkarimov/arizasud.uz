@@ -13,6 +13,11 @@
               <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="size-fit w-[150px]" />
             </div>
             <h3 class="text-lg mb-5 font-medium text-center text-black">{{ item.translatedName }}</h3>
+
+            <div v-if="item.isActive"
+              class="bg-blue-200 flex justify-center items-end animate-pulse rounded-[5px] inset-0 w-full absolute h-full">
+              <b class="text-black font-bold text-[20px]">{{ $t('tez_kunda') }}</b>
+            </div>
           </div>
           <div v-if="dat === 'datalotin'" v-for="item in data" :key="item.id"
             class="bg-white border-[#223B9E] flex flex-col justify-start items-center  gap-2 border-[5px] break-words w-72 min-h-full rounded-xl relative hover:-translate-y-3 duration-500 hover:shadow-[0px_0px_50px_5px_rgba(255,255,255,1)] p-2 ">
@@ -20,6 +25,11 @@
               <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="size-fit w-[150px]" />
             </div>
             <h3 class="text-lg mb-5 font-medium text-center text-black">{{ item.name }}</h3>
+
+            <div v-if="item.isActive"
+              class="bg-blue-200 flex justify-center items-end animate-pulse rounded-[5px] inset-0 w-full absolute h-full">
+              <b class="text-black font-bold text-[20px]">{{ $t('tez_kunda') }}</b>
+            </div>
           </div>
         </div>
       </div>

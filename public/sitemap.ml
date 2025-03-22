@@ -3,16 +3,31 @@
     <url>
         <loc>https://arizasud.uz/</loc>
         <lastmod>2025-03-19</lastmod>
+        <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
     <url>
         <loc>https://arizasud.uz/login</loc>
         <lastmod>2025-03-19</lastmod>
-        <priority>0.8</priority>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
         <loc>https://arizasud.uz/appeals</loc>
         <lastmod>2025-03-19</lastmod>
-        <priority>0.7</priority>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://arizasud.uz/register</loc>
+        <lastmod>2025-03-19</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://arizasud.uz/contact</loc>
+        <lastmod>2025-03-19</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.4</priority>
     </url>
 </urlset>
