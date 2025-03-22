@@ -80,6 +80,8 @@ async function getdata() {
         files.value = response.data.file || [];
         console.log('API Response:', response.data); // Debugging uchun
         list.value = [new Date(response.data.createdAt).toLocaleString()];
+        console.log(response);
+        
     } catch (error) {
         console.error('Ma\'lumot olishda xato:', error);
     }
