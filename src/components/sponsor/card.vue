@@ -37,7 +37,6 @@
           </div>
         </Slide>
       </Carousel>
-      <p v-else class="text-center text-gray-500">Ma'lumotlar yuklanmoqda...</p>
     </div>
   </div>
 </template>

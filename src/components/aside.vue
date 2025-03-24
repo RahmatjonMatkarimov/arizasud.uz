@@ -37,7 +37,7 @@ const menuItems = [
   { to: "/remindersAdmin", label: "Ishchilarni bajargan ishlari", condition: () => data.value?.workDone },
   { to: "/admin", label: "Sud hujjatlarini yozish", condition: true },
   { to: "/appealAdmin", label: "Interaktiv xizmatlar roʻyxati", condition: true },
-  { to: "/scanersAdmin", label: "yangi bolim roʻyxati", condition: true },
+  { to: "/scanersAdmin", label: "Tizimni nusxalash xizmatlari", condition: true },
   { to: "/partners", label: "Hamkorlar roʻyxati", condition: true },
   { to: "/Requirefiles", label: "Imzolanishi kerak boʻlgan fayllar", condition: () => data.value?.userFiles },
   { to: "/payments", label: "Tizim toʻlovlari", condition: true },

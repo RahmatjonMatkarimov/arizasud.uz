@@ -371,7 +371,7 @@ const func = (id) => {
 };
 
 const goToCard = (id) => {
-  router.push(`/edit/${id}`);
+  router.push(`/FileAdmin/${id}`);
 };
 </script>
 

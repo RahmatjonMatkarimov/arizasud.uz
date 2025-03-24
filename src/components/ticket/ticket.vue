@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <Header></Header>
     <div class="flex flex-col justify-center items-center">
+    <Header class="min-w-full"></Header>
       <div class="support-ticket-manager mt-10">
         <div class="ticket-form-container">
           <div class=" relative ticket-form-header">
@@ -29,7 +29,7 @@
                 {{ state.isSubmitting ? translateText('Yuborilmoqda...') : translateText('So\'rovni Yuborish') }}
               </button>
               <button @click="router.go(-1)" class="bg-blue-500 rounded-md px-8 py-2">
-                {{ dat === 'datakril' ? translateText('Orqaga') : 'Orqaga' }}
+                {{ dat === 'datakril' ? translateText('Orqaga qaytish') : 'Orqaga qaytish' }}
               </button>
             </div>
           </form>

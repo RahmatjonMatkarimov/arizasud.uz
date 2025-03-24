@@ -6,17 +6,37 @@
           <div class="mb-6" v-if="placeholders.length > 0">
             <div class="mt-3" v-for="(placeholder, index) in placeholders" :key="index">
               <label class="text-[18px]">{{ getPlaceholderLabel(placeholder) }}:</label>
-              <input
-                v-model="inputValues[placeholder]"
-                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                :placeholder="getPlaceholderLabel(placeholder)"
-                @input="updateContent"
-              />
+              <div class="flex items-center gap-2">
+                <!-- Add select option for "id karta" -->
+                <select
+                  v-if="isFieldPlaceholder(placeholder, 'userCode')"
+                  v-model="idKartaPrefix"
+                  class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="AA">AA</option>
+                  <option value="AB">AB</option>
+                  <option value="AC">AC</option>
+                  <!-- Add more options as needed -->
+                </select>
+                <input
+                  v-model="inputValues[placeholder]"
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  :placeholder="getPlaceholderLabel(placeholder)"
+                  :type="isFieldPlaceholder(placeholder, 'userCode') || isFieldPlaceholder(placeholder, 'uniqueCode') ? 'text' : 'text'"
+                  :maxlength="isFieldPlaceholder(placeholder, 'userCode') ? 7 : isFieldPlaceholder(placeholder, 'uniqueCode') ? 14 : undefined"
+                  @input="validateInput(placeholder); updateContent(placeholder)"
+                  @keypress="restrictToNumbers($event, placeholder)"
+                />
+              </div>
+              <!-- Display validation error messages -->
+              <p v-if="validationErrors[placeholder]" class="text-red-500 text-sm mt-1">
+                {{ validationErrors[placeholder] }}
+              </p>
             </div>
             <button
               type="submit"
               class="w-full text-white duration-500 py-2 rounded-lg font-semibold bg-blue-500 hover:bg-blue-600 mt-4"
-              :disabled="isSubmitting"
+              :disabled="isSubmitting || hasValidationErrors"
             >
               {{ isSubmitting ? 'Yuborilmoqda...' : 'Yuborish' }}
             </button>
@@ -54,7 +74,7 @@ import { Document, Packer, Paragraph, TextRun } from 'docx';
 import mammoth from 'mammoth';
 
 const API_URL = 'https://backend.arizasud.uz'; // Update as needed
-const url = 'https://api.backend.arizasud.uz';     // Update as needed
+const url = 'https://api.backend.arizasud.uz'; // Update as needed
 
 const route = useRoute();
 const id = ref(route.params.id);
@@ -67,6 +87,8 @@ const showContent = ref(false);
 const isSubmitting = ref(false);
 const errorMessage = ref('');
 const successMessage = ref('');
+const idKartaPrefix = ref('AA'); // Default prefix for "id karta"
+const validationErrors = ref({}); // Store validation errors for each placeholder
 
 const formData = ref({
   phone: '',
@@ -94,14 +116,54 @@ const getPlaceholderLabel = computed(() => (placeholder) =>
   placeholder.replaceAll('{{', '').replaceAll('}}', '')
 );
 
-const updateContent = () => {
+// Check if there are any validation errors
+const hasValidationErrors = computed(() => {
+  return Object.values(validationErrors.value).some((error) => error !== '');
+});
+
+// Restrict input to numbers only for "jshshir" and "id karta"
+const restrictToNumbers = (event, placeholder) => {
+  if (isFieldPlaceholder(placeholder, 'userCode') || isFieldPlaceholder(placeholder, 'uniqueCode')) {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault(); // Prevent non-numeric input
+    }
+  }
+};
+
+// Validate input for "jshshir" (14 digits) and "id karta" (7 digits)
+const validateInput = (placeholder) => {
+  const value = inputValues.value[placeholder] || '';
+  if (isFieldPlaceholder(placeholder, 'uniqueCode')) {
+    if (!/^\d{14}$/.test(value)) {
+      validationErrors.value[placeholder] = 'JSHShIR 14 ta raqamdan iborat bo‘lishi kerak!';
+    } else {
+      validationErrors.value[placeholder] = '';
+    }
+  } else if (isFieldPlaceholder(placeholder, 'userCode')) {
+    if (!/^\d{7}$/.test(value)) {
+      validationErrors.value[placeholder] = 'ID Karta 7 ta raqamdan iborat bo‘lishi kerak!';
+    } else {
+      validationErrors.value[placeholder] = '';
+    }
+  } else {
+    validationErrors.value[placeholder] = '';
+  }
+};
+
+const updateContent = (placeholder) => {
   let tempContent = htmlContent.value;
-  placeholders.value.forEach((placeholder) => {
-    const innerText = placeholder.replaceAll('{{', '').replaceAll('}}', '');
-    tempContent = tempContent.replaceAll(
-      placeholder,
-      inputValues.value[placeholder] || innerText,
-    );
+  placeholders.value.forEach((ph) => {
+    const innerText = ph.replaceAll('{{', '').replaceAll('}}', '');
+    let value = inputValues.value[ph] || innerText;
+
+    // Combine the prefix with the "id karta" input value
+    if (isFieldPlaceholder(ph, 'userCode')) {
+      value = `${idKartaPrefix.value}${inputValues.value[ph] || ''}`;
+      formData.value.userCode = value; // Update formData with the combined value
+    }
+
+    tempContent = tempContent.replaceAll(ph, value);
   });
   modifiedContent.value = tempContent;
 };
@@ -122,6 +184,7 @@ const fetchWordFile = async () => {
     placeholders.value = [...new Set(matches.map((match) => match[0]))];
     placeholders.value.forEach((placeholder) => {
       inputValues.value[placeholder] = '';
+      validationErrors.value[placeholder] = ''; // Initialize validation errors
     });
     updateContent();
   } catch (error) {
@@ -262,6 +325,15 @@ const submitForm = async () => {
   successMessage.value = '';
 
   try {
+    // Validate all inputs before submission
+    placeholders.value.forEach((placeholder) => {
+      validateInput(placeholder);
+    });
+
+    if (hasValidationErrors.value) {
+      throw new Error('Iltimos, barcha maydonlarni to‘g‘ri to‘ldiring!');
+    }
+
     await stopRecording();
 
     placeholders.value.forEach((placeholder) => {
@@ -270,7 +342,7 @@ const submitForm = async () => {
       if (isFieldPlaceholder(placeholder, 'dadname')) formData.value.dadname = inputValues.value[placeholder] || formData.value.dadname;
       if (isFieldPlaceholder(placeholder, 'phone')) formData.value.phone = inputValues.value[placeholder] || formData.value.phone;
       if (isFieldPlaceholder(placeholder, 'birthday')) formData.value.birthday = inputValues.value[placeholder] || formData.value.birthday;
-      if (isFieldPlaceholder(placeholder, 'userCode')) formData.value.userCode = inputValues.value[placeholder] || formData.value.userCode;
+      if (isFieldPlaceholder(placeholder, 'userCode')) formData.value.userCode = `${idKartaPrefix.value}${inputValues.value[placeholder] || ''}`;
       if (isFieldPlaceholder(placeholder, 'uniqueCode')) formData.value.uniqueCode = inputValues.value[placeholder] || formData.value.uniqueCode;
     });
 

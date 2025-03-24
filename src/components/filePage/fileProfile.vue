@@ -1,7 +1,7 @@
 <template>
     <div class="min-h-screen bg-gray-50 flex justify-center flex-col items-center p-6">
         <!-- Fayllar uchun HTML matnlari -->
-        <div v-if="filesHtml.length < 1" v-for="(html, index) in filesHtml" :key="index" v-html="html"
+        <div v-if="filesHtml.length < 2" v-for="(html, index) in filesHtml" :key="index" v-html="html"
             class="custom-html max-w-none bg-white p-4 shadow-lg rounded-lg"></div>
 
         <div v-if="filesHtml.length > 1">
@@ -10,7 +10,7 @@
                     <a :href="URL1 + item" class="text-black block text-[20px] bg-white px-4 py-2 rounded-lg">
                         <b class="text-black text-[22px] mr-2">{{ index + 1 }}</b>Fileni ko‘rish
                     </a>
-                    <button @click="downloadAsPdf(index)" class="ml-4 bg-blue-500 text-white px-4 py-2 rounded-lg">
+                    <button @click="downloadAsPdf(index)" class="ml-2 mt-2 bg-blue-500 text-white px-4 py-2 rounded-lg">
                         PDF sifatida yuklab olish
                     </button>
                 </li>
@@ -80,8 +80,6 @@ async function getdata() {
         files.value = response.data.file || [];
         console.log('API Response:', response.data); // Debugging uchun
         list.value = [new Date(response.data.createdAt).toLocaleString()];
-        console.log(response);
-        
     } catch (error) {
         console.error('Ma\'lumot olishda xato:', error);
     }
@@ -99,7 +97,7 @@ function parseHtmlToTextWithStyles(html) {
     while (scripts.length > 0) scripts[0].parentNode.removeChild(scripts[0]);
 
     const result = [];
-    
+
     function processNode(node, isBold = false, isItalic = false) {
         if (node.nodeType === Node.TEXT_NODE) {
             const text = node.textContent.trim();
@@ -145,12 +143,12 @@ function downloadAsPdf(index) {
     textWithStyles.forEach(({ text, bold, italic }) => {
         // Font stilini sozlaymiz
         doc.setFont('helvetica', italic ? 'italic' : 'normal', bold ? 'bold' : 'normal');
-        
+
         // Matnni qo‘shamiz (satr bo‘yicha avtomatik ko‘chirish)
         const lines = doc.splitTextToSize(text, 7.5); // Maksimal kenglik 7.5 dyuym
         doc.text(lines, 0.5, yPosition);
         yPosition += lines.length * 0.2; // Har bir satr uchun Y pozitsiyasini yangilaymiz (0.2 dyuym)
-        
+
         // Agar sahifa tugasa, yangi sahifa qo‘shamiz
         if (yPosition > 10) {
             doc.addPage();
@@ -169,7 +167,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.custom-html >>> * {
+.custom-html>>>* {
     color: black !important;
 }
 </style>

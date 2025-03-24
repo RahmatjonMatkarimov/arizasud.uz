@@ -1,14 +1,9 @@
 <template>
   <div>
-
-    <div class="flex justify-center mb-16  items-center">
+    <div class="flex justify-center mt-2 mb-16  items-center">
       <h1 style="text-shadow: 0 0 5px #fff,0 0 10px #fff;"
         class="text-black text-[40px] font-bold text-center bg-lime-500 border-[3px] border-black rounded-lg py-2 px-[100px]">
         {{ $t('hodim_malumotlari') }}</h1>
-      <button v-if="data === 'bigAdmin'" @click="showModal = true"
-        class="absolute bg-green-600 ml-[770px] text-white py-2 px-4 rounded-lg shadow-md hover:bg-lime-600 duration-300 transition">
-        {{ $t('create') }}
-      </button>
     </div>
     <div class="max-w-[95%] mx-auto p-6 bg-white rounded-xl shadow-lg mt-10">
       <div class="flex justify-end">

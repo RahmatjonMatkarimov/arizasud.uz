@@ -25,6 +25,7 @@ const routes = [
             { path: "/appealAdmin", component: () => import("@/components/appeal/appealAdmin.vue") },
             { path: "/partners", component: () => import("@/components/sponsor/CardAdmin.vue") },
             { path: "/admins", component: () => import("@/components/admins/AdminCreate.vue") },
+            { path: "/FileAdmin/:id", component: () => import("@/components/main/file/fileaDMIN.vue") },
             { path: "/yurists", component: () => import("@/components/admins/YuristCreate.vue") },
             { path: "/operators", component: () => import("@/components/admins/coll_centerCreate.vue") },
             { path: "/profile/:id", component: () => import("@/components/ProfilePage/Profile.vue") },
