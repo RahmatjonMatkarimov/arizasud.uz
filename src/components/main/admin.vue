@@ -79,7 +79,7 @@
         </b>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <div v-for="item in data" :key="item.id" @click="goToPath(item.id)"
-            class="relative hover:bg-lime-500 duration-500 w-[400px] bg-white border-4 border-blue-800 rounded-lg p-6">
+            class="relative hover:bg-lime-500 duration-500 w-full max-w-[400px] bg-white border-4 border-blue-800 rounded-lg p-6">
             <img @click.stop="func(item.id)" class="absolute z-40 top-2 right-2 w-6 h-6 cursor-pointer"
               src="../../../public/ellipsis.png" alt="Options" />
             <div class="flex items-center justify-center gap-4">
