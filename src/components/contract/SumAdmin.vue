@@ -1,33 +1,37 @@
 <template>
-    <div class="monthly-cost-container">
-        <h2>Monthly Cost Manager</h2>
-
-        <!-- Buttons to trigger modals for POST, and to fetch data with GET -->
-        <div class="action-buttons">
-            <button @click="openPostModal">Add New Record (POST)</button>
-            <button @click="fetchRecords">Fetch Records (GET)</button>
+    <div class="max-w-3xl mx-auto p-6 text-center">
+        <h2 class="text-2xl font-bold mb-6">Monthly Cost Records</h2>
+        <div class="mb-6 flex justify-end">
+            <button @click="openPostModal" class="px-4 py-2 bg-blue-500  text-white rounded hover:bg-blue-600">
+                Yangi narx qo'shish
+            </button>
         </div>
 
         <!-- Display GET results in a table -->
-        <div v-if="records.length" class="records-table">
-            <h3>Records:</h3>
-            <table>
+        <div v-if="records.length" class="overflow-x-auto">
+            <table class="w-full border-collapse border border-gray-300">
                 <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Sum 1</th>
-                        <th>Sum 2</th>
-                        <th>Actions</th>
+                    <tr class="bg-gray-100">
+                        <th class="border text-black border-gray-300 px-4 py-2"></th>
+                        <th class="border text-black border-gray-300 px-4 py-2">1-Narx</th>
+                        <th class="border text-black border-gray-300 px-4 py-2">2-Narx</th>
+                        <th class="border text-black border-gray-300 px-4 py-2">Sozlamalar</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="record in records" :key="record.id">
-                        <td>{{ record.id }}</td>
-                        <td>{{ record.sum1 }}</td>
-                        <td>{{ record.sum2 }}</td>
-                        <td>
-                            <button @click="openPutModal(record)">Edit (PUT)</button>
-                            <button @click="openDeleteModal(record.id)">Delete (DELETE)</button>
+                    <tr v-for="(record, index) in records" :key="record.id" class="hover:bg-gray-50">
+                        <td class="border text-black border-gray-300 px-4 py-2">{{ index + 1 }}</td>
+                        <td class="border text-black border-gray-300 px-4 py-2">{{ record.sum1 }}</td>
+                        <td class="border text-black border-gray-300 px-4 py-2">{{ record.sum2 }}</td>
+                        <td class="border text-black border-gray-300 px-4 py-2">
+                            <button @click="openPutModal(record)"
+                                class="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">
+                                Tahrirlash
+                            </button>
+                            <!-- <button @click="openDeleteModal(record.id)"
+                                class="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600">
+                                Delete
+                            </button> -->
                         </td>
                     </tr>
                 </tbody>
@@ -35,79 +39,91 @@
         </div>
 
         <!-- Display error for GET -->
-        <div v-if="getError" class="error">
+        <div v-if="getError" class="mt-4 text-red-500">
             <p>Error: {{ getError }}</p>
         </div>
 
         <!-- POST Modal -->
-        <div v-if="showPostModal" class="modal">
-            <div class="modal-content">
-                <h3>Add New Record</h3>
+        <div v-if="showPostModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div class="bg-white p-6 rounded shadow-lg w-80">
+                <h3 class="text-lg font-bold mb-4">Yangi narx yaratish</h3>
                 <form @submit.prevent="submitPost">
-                    <div class="form-group">
-                        <label for="post-sum1">Sum 1:</label>
-                        <input type="number" id="post-sum1" v-model.number="postForm.sum1" required
-                            placeholder="Enter first sum" />
+                    <div class="flex gap-2 justify-center items-center mb-4">
+                        <label class="block w-[100px] text-black font-medium">1-Narx:</label>
+                        <input type="number" v-model.number="postForm.sum1" required
+                            class="w-full text-black  p-2 border rounded" />
                     </div>
-                    <div class="form-group">
-                        <label for="post-sum2">Sum 2:</label>
-                        <input type="number" id="post-sum2" v-model.number="postForm.sum2" required
-                            placeholder="Enter second sum" />
+                    <div class="flex gap-2 justify-center items-center mb-4">
+
+                        <label class="block text-black w-[100px] font-medium">2-Narx:</label>
+                        <input type="number" v-model.number="postForm.sum2" required
+                            class="w-full text-black p-2 border rounded" />
                     </div>
-                    <div v-if="postError" class="error">
-                        <p>Error: {{ postError }}</p>
+                    <div v-if="postError" class="text-red-500 mb-4">
+                        <p>{{ postError }}</p>
                     </div>
-                    <div class="modal-buttons">
-                        <button type="submit" :disabled="loading">
-                            {{ loading ? 'Submitting...' : 'Submit' }}
+                    <div class="flex justify-between">
+                        <button type="submit" :disabled="loading"
+                            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                            {{ loading ? 'Yaratilmoqda...' : 'Yaratish' }}
                         </button>
-                        <button type="button" @click="closePostModal">Cancel</button>
+                        <button type="button" @click="closePostModal"
+                            class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+                            Bekor qilish
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
 
         <!-- PUT Modal -->
-        <div v-if="showPutModal" class="modal">
-            <div class="modal-content">
-                <h3>Edit Record</h3>
+        <div v-if="showPutModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div class="bg-white p-6 rounded shadow-lg w-80">
                 <form @submit.prevent="submitPut">
-                    <div class="form-group">
-                        <label for="put-sum1">Sum 1:</label>
-                        <input type="number" id="put-sum1" v-model.number="putForm.sum1" required
-                            placeholder="Enter first sum" />
+                    <div class="flex gap-2 justify-center items-center">
+                        <label class="block w-[100px] text-black font-medium">1-Narx:</label>
+                        <input type="number" v-model.number="putForm.sum1" required
+                            class="w-full mb-4 text-black p-2 border rounded" />
                     </div>
-                    <div class="form-group">
-                        <label for="put-sum2">Sum 2:</label>
-                        <input type="number" id="put-sum2" v-model.number="putForm.sum2" required
-                            placeholder="Enter second sum" />
+                    <div class="flex gap-2 justify-center items-center mb-4">
+                        <label class="block w-[100px] text-black font-medium">2-Narx:</label>
+                        <input type="number" v-model.number="putForm.sum2" required
+                            class="w-full mb-4 text-black p-2 border rounded" />
                     </div>
-                    <div v-if="putError" class="error">
-                        <p>Error: {{ putError }}</p>
+                    <div v-if="putError" class="text-red-500 mb-4">
+                        <p>{{ putError }}</p>
                     </div>
-                    <div class="modal-buttons">
-                        <button type="submit" :disabled="loading">
-                            {{ loading ? 'Updating...' : 'Update' }}
+                    <div class="flex justify-between">
+                        <button type="button" @click="closePutModal"
+                            class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+                            Bekor qilish
                         </button>
-                        <button type="button" @click="closePutModal">Cancel</button>
+                        <button type="submit" :disabled="loading"
+                            class="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">
+                            {{ loading ? 'Yangilanmoqda...' : 'Yangilash' }}
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
 
         <!-- DELETE Modal -->
-        <div v-if="showDeleteModal" class="modal">
-            <div class="modal-content">
-                <h3>Confirm Deletion</h3>
-                <p>Are you sure you want to delete this record?</p>
-                <div v-if="deleteError" class="error">
-                    <p>Error: {{ deleteError }}</p>
+        <div v-if="showDeleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div class="bg-white p-6 rounded shadow-lg w-80">
+                <h3 class="text-lg font-bold text-black mb-4">Confirm Deletion</h3>
+                <p class="mb-4 text-black">Are you sure you want to delete this record?</p>
+                <div v-if="deleteError" class="text-red-500 mb-4">
+                    <p>{{ deleteError }}</p>
                 </div>
-                <div class="modal-buttons">
-                    <button @click="submitDelete" :disabled="loading">
+                <div class="flex justify-between">
+                    <button @click="submitDelete" :disabled="loading"
+                        class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
                         {{ loading ? 'Deleting...' : 'Delete' }}
                     </button>
-                    <button type="button" @click="closeDeleteModal">Cancel</button>
+                    <button type="button" @click="closeDeleteModal"
+                        class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+                        Cancel
+                    </button>
                 </div>
             </div>
         </div>
@@ -115,7 +131,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { URL } from '../../auth/url.js';
 
@@ -244,132 +260,13 @@ const submitDelete = async () => {
         loading.value = false;
     }
 };
+
+// Automatically fetch records when the component is mounted
+onMounted(() => {
+    fetchRecords();
+});
 </script>
 
 <style scoped>
-* {
-    color: black;
-}
-
-.monthly-cost-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-}
-
-h2 {
-    text-align: center;
-}
-
-.action-buttons {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-button {
-    padding: 10px;
-    background-color: #007bff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    color: white;
-}
-
-button:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-}
-
-.records-table {
-    margin-top: 20px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-
-th,
-td {
-    border: 1px solid #ccc;
-    padding: 8px;
-    text-align: left;
-}
-
-th {
-    background-color: #f0f0f0;
-}
-
-td button {
-    margin-right: 5px;
-    padding: 5px 10px;
-    font-size: 14px;
-}
-
-.error {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #ffcccc;
-    border-radius: 4px;
-}
-
-/* Modal Styles */
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.modal-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    width: 400px;
-    max-width: 90%;
-}
-
-.modal-content h3 {
-    margin-top: 0;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
-
-.modal-buttons {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.modal-buttons button {
-    flex: 1;
-}
-
-.modal-buttons button:last-child {
-    background-color: #6c757d;
-}
+/* Remove all custom styles since Tailwind CSS is used */
 </style>

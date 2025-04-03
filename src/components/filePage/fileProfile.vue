@@ -77,6 +77,7 @@ async function getdata() {
     try {
         const response = await axios.get(`${API_URL}/commoners/${id.value}`);
         data.value = response.data;
+        console.log('Fetched data:', data.value); // Debugging uchun
         files.value = response.data.file || [];
         console.log('API Response:', response.data); // Debugging uchun
         list.value = [new Date(response.data.createdAt).toLocaleString()];
@@ -169,5 +170,65 @@ onMounted(() => {
 <style scoped>
 .custom-html>>>* {
     color: black !important;
+}
+</style>
+<style>
+@media print {
+    @page {
+        size: 58mm auto;
+        margin: 0;
+    }
+
+    html,
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        overflow: hidden !important;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+    }
+
+    body {
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 10px !important;
+        text-align: left;
+        line-height: 1.2 !important;
+        white-space: pre-wrap !important;
+        box-sizing: border-box;
+    }
+
+    h2 {
+        text-align: center;
+        font-size: 12px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    td {
+        padding: 0 !important;
+        vertical-align: top;
+    }
+
+    th {
+        text-align: center;
+    }
+
+    .hidden,
+    [hidden] {
+        display: none !important;
+    }
+
+    * {
+        box-sizing: border-box !important;
+    }
 }
 </style>

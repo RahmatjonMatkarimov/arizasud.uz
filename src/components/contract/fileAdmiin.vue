@@ -1,25 +1,28 @@
 <template>
     <div class="container mx-auto p-4">
-        <h2 class="text-2xl font-bold mb-4">API So‘rovlar</h2>
-        
         <div class="flex justify-end mb-4">
-            <button @click="openModal('post')" :disabled="isLoading" class="bg-blue-500 text-white px-4 py-2 rounded shadow disabled:opacity-50">
-                Yangi qo‘shish
+            <button @click="openModal('post')" :disabled="isLoading"
+                class="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50">
+                Yangi hujjat qo‘shish
             </button>
         </div>
 
         <!-- GET So‘rovi -->
         <div class="bg-white p-4 rounded shadow">
-            <h3 class="text-xl font-semibold mb-2">GET So‘rovi</h3>
+            <h3 class="text-xl font-semibold mb-2">Hujjatlari</h3>
             <div v-if="getResponse" class="space-y-2">
                 <div v-if="items.length > 0">
-                    <div v-for="item in items" :key="item.id" class="flex justify-between items-center p-2 border rounded">
-                        <h1 @click="router.push('/ContractAdmin/'+item.id)">{{ item.name }}</h1>
+                    <div v-for="item in items" :key="item.id"
+                        class="flex justify-between items-center mb-2 p-2 border rounded">
+                        <h1 @click="router.push('/ContractAdmin/' + item.id)"
+                            class="cursor-pointer text-blue-600 hover:underline">{{ item.name }}</h1>
                         <div class="space-x-2">
-                            <button @click="openPutModal(item)" :disabled="isLoading" class="bg-yellow-500 text-white px-3 py-1 rounded shadow disabled:opacity-50">
+                            <button @click="openPutModal(item)" :disabled="isLoading"
+                                class="bg-yellow-400 text-white px-3 py-1 rounded disabled:opacity-50">
                                 Yangilash
                             </button>
-                            <button @click="handleDelete(item.id)" :disabled="isLoading" class="bg-red-500 text-white px-3 py-1 rounded shadow disabled:opacity-50">
+                            <button @click="handleDelete(item.id)" :disabled="isLoading"
+                                class="bg-red-400 text-white px-3 py-1 rounded disabled:opacity-50">
                                 O‘chirish
                             </button>
                         </div>
@@ -35,27 +38,35 @@
         </div>
 
         <!-- Modal POST va PUT uchun -->
-        <div v-if="showModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div class="bg-white p-6 rounded shadow-lg w-96">
-                <h3 class="text-lg font-semibold mb-4">{{ modalTitle }}</h3>
+        <div v-if="showModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30">
+            <div class="bg-white p-4 rounded shadow-lg w-80">
+                <h3 class="text-lg font-semibold mb-4 text-center">{{ modalTitle }}</h3>
                 <form @submit.prevent="handleModalSubmit">
                     <div class="mb-4">
-                        <label for="name" class="block text-sm font-medium">Nomi:</label>
-                        <input type="text" id="name" v-model="name" required class="w-full p-2 border rounded">
+                        <label for="name" class="block text-sm font-medium mb-1">Nomi:</label>
+                        <input type="text" id="name" v-model="name" required
+                            class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     <div class="mb-4">
-                        <input type="file" id="file" ref="fileInput" @change="handleFileChange" :required="modalType === 'post'" class="w-full p-2 border rounded">
+                        <label for="file" class="block text-sm font-medium mb-1">Fayl:</label>
+                        <input type="file" id="file" ref="fileInput" @change="handleFileChange"
+                            :required="modalType === 'post'"
+                            class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     <div class="flex justify-end space-x-2">
-                        <button type="submit" :disabled="isLoading" class="bg-green-500 text-white px-4 py-2 rounded shadow disabled:opacity-50">
+                        <button type="submit" :disabled="isLoading"
+                            class="bg-green-500 text-white px-4 py-2 rounded disabled:opacity-50">
                             {{ isLoading ? 'Yuborilmoqda...' : 'Yuborish' }}
                         </button>
-                        <button type="button" @click="closeModal" :disabled="isLoading" class="bg-gray-400 text-white px-4 py-2 rounded shadow disabled:opacity-50">
+                        <button type="button" @click="closeModal" :disabled="isLoading"
+                            class="bg-gray-300 text-black px-4 py-2 rounded disabled:opacity-50">
                             Bekor qilish
                         </button>
                     </div>
                 </form>
-                <div v-if="modalResponse" :class="[modalResponseClass, {'bg-green-500': modalResponse === 'success', 'bg-red-500': modalResponse === 'error'}]" class="mt-4 p-2 rounded text-white">
+                <div v-if="modalResponse"
+                    :class="[modalResponseClass, { 'bg-green-500': modalResponse === 'success', 'bg-red-500': modalResponse === 'error' }]"
+                    class="mt-4 p-2 rounded text-white text-center">
                     {{ modalResponseMessage }}
                 </div>
             </div>
@@ -110,7 +121,7 @@ const handleGet = async () => {
 
 const openModal = (type) => {
     modalType.value = type;
-    modalTitle.value = type === 'post' ? 'POST So‘rovi' : 'PUT So‘rovi';
+    modalTitle.value = type === 'post' ? 'Qo\'shish' : 'Yangilash';
     showModal.value = true;
     name.value = '';
     file.value = null;
@@ -157,7 +168,7 @@ const handleModalSubmit = async () => {
         const formData = new FormData();
         formData.append('name', name.value);
         if (file.value) formData.append('file', file.value);
-        
+
         const url = modalType.value === 'post' ? `${URL}/contract-file` : `${URL}/contract-file/${selectedItem.value.id}`;
         const method = modalType.value === 'post' ? 'POST' : 'PUT';
 
@@ -181,6 +192,15 @@ const handleModalSubmit = async () => {
 onMounted(handleGet);
 </script>
 <style scoped>
-*{
+* {
     color: black;
-}</style>
+}
+
+button {
+    transition: background-color 0.3s ease;
+}
+
+button:hover:not(:disabled) {
+    filter: brightness(90%);
+}
+</style>
