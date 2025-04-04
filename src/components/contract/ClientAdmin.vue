@@ -315,33 +315,31 @@ const printReceipt = () => {
   const today = new Date();
   const formattedDate = `${today.getFullYear()}.${String(today.getMonth() + 1).padStart(2, "0")}.${String(today.getDate()).padStart(2, "0")}`;
 
-  const img = new Image();
-  img.src = "https://arizasud.uz/asd.jpg";
-  img.src1 = "https://arizasud.uz/https___arizasud.uz_.png";
-  img.style.display = "none";
-  document.body.appendChild(img);
+  const img1 = new Image();
+  const img2 = new Image();
+  img1.src = "https://arizasud.uz/asd.jpg";
+  img2.src = "https://arizasud.uz/https___arizasud.uz_.png";
 
   const receiptHTML = `
   <div style="font-size: 13px; width:100%; display:flex; flex-direction: column; justify-content: center; align-content:center; color: black;">
     <h1 style="text-align: center; font-size:15px; font-weight: bold; color: black; margin-top:20px;">To'lov cheki</h1>
-            <table style="width: 100%; border-collapse: collapse; color: black;">
-              <tr><td style="color: black;">Mijoz:</td><td style="color: black;">${formData.name} ${formData.surname} ${formData.dadname}</td></tr>
-              <tr><td style="color: black;">Telefon Raqami:</td><td style="color: black;">+${formData.phone || "Mavjud emas"}</td></tr>
-              <tr><td style="color: black;">Shartnoma idsi:</td><td style="color: black;">${formData.contractId || "Mavjud emas"}</td></tr>
-              <tr><td style="color: black;">To'langan:</td><td style="color: black;">${formatNumberWithDots(dataaa.price)} so'm</td></tr>
-              <tr><td style="color: black;">To'lanishi Kerak:</td><td style="color: black;">${formData.price <= 0 ? "To‘landi" : formatNumberWithDots(formData.price) + " so'm"}</td></tr>
-              <tr><td style="color: black;">Sana:</td><td style="color: black;">${formattedDate}</td></tr>
-              </table>
-              <p style="text-align: center; color: black;">Tel: +998 99 999 99 99</p>
-              <p style="text-align: center; font-size:10px; color: black;">"YURIST KONSUL KONSALTING" х/к</p>
-              <div style="display: flex; flex-direction:column; justify-content: center; align-items: center; margin-top: 20px;">
-                <img src="${img.src}" alt="" style="max-width: 90%; height: auto;">
-                <img src="${img.src1}" alt="" style="max-width: 90%; height: auto;">
-                </div>
-                </div>
+    <table style="width: 100%; border-collapse: collapse; color: black;">
+      <tr><td style="color: black;">Mijoz:</td><td style="color: black;">${formData.name} ${formData.surname} ${formData.dadname}</td></tr>
+      <tr><td style="color: black;">Telefon Raqami:</td><td style="color: black;">+${formData.phone || "Mavjud emas"}</td></tr>
+      <tr><td style="color: black;">Shartnoma idsi:</td><td style="color: black;">${formData.contractId || "Mavjud emas"}</td></tr>
+      <tr><td style="color: black;">To'langan:</td><td style="color: black;">${formatNumberWithDots(dataaa.price)} so'm</td></tr>
+      <tr><td style="color: black;">To'lanishi Kerak:</td><td style="color: black;">${formData.price <= 0 ? "To‘landi" : formatNumberWithDots(formData.price) + " so'm"}</td></tr>
+      <tr><td style="color: black;">Sana:</td><td style="color: black;">${formattedDate}</td></tr>
+    </table>
+    <p style="text-align: center; color: black;">Tel: +998 99 999 99 99</p>
+    <p style="text-align: center; font-size:10px; color: black;">"YURIST KONSUL KONSALTING" х/к</p>
+    <div style="display: flex; flex-direction:column; justify-content: center; align-items: center; margin-top: 20px;">
+      <img src="${img1.src}" alt="" style="max-width: 90%; height: auto;">
+      <img src="${img2.src}" alt="" style="max-width: 90%; height: auto;">
+    </div>
+  </div>
   `;
-  console.log("formData after saveAndGenerate:", formData);
-  console.log("dataaa after saveAndGenerate:", dataaa);
+
   const originalContent = document.body.innerHTML;
 
   const style = document.createElement("style");
@@ -359,19 +357,22 @@ const printReceipt = () => {
 
   document.body.innerHTML = receiptHTML;
 
-  img.onload = () => {
-    window.print();
-    document.body.innerHTML = originalContent;
-    document.head.removeChild(style);
-    window.location.reload();
+  let imagesLoaded = 0;
+  const checkImagesLoaded = () => {
+    imagesLoaded++;
+    if (imagesLoaded === 2) {
+      window.print();
+      document.body.innerHTML = originalContent;
+      document.head.removeChild(style);
+      window.location.reload();
+    }
   };
 
-  img.onerror = () => {
-    window.print();
-    document.body.innerHTML = originalContent;
-    document.head.removeChild(style);
-    window.location.reload();
-  };
+  img1.onload = checkImagesLoaded;
+  img2.onload = checkImagesLoaded;
+
+  img1.onerror = checkImagesLoaded;
+  img2.onerror = checkImagesLoaded;
 };
 
 

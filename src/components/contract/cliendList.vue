@@ -111,7 +111,6 @@ const closeModal = () => {
 };
 
 const printReceipt = () => {
-    // Preload the image
     const img = new Image();
     img.src = "https://arizasud.uz/asd.jpg";
     img.src1 = "https://arizasud.uz/https___arizasud.uz_.png";
