@@ -21,6 +21,7 @@
                         </button>
                     </div>
                 </div>
+                <p v-if="errorMessage" class="text-red-500 text-sm mb-4">{{ errorMessage }}</p>
                 <button type="submit"
                     class="w-full px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                     Kirish
@@ -39,8 +40,10 @@ const router = useRouter();
 const username = ref('');
 const password = ref('');
 const showPassword = ref(false);
+const errorMessage = ref('');
 
 const handleLogin = async () => {
+    errorMessage.value = ''; // Clear any previous error message
     if (username.value && password.value) {
         try {
             const response = await fetch(URL + '/client/login', {
@@ -68,10 +71,10 @@ const handleLogin = async () => {
             }
         } catch (error) {
             console.error('Error during login:', error);
-            alert('Login failed. Please try again.');
+            errorMessage.value = 'Kirish amalga oshmadi. Foydalanuvchi nomi yoki parolni tekshiring.';
         }
     } else {
-        alert('Please fill in both fields.');
+        errorMessage.value = 'Iltimos, barcha maydonlarni to‘ldiring.';
     }
 };
 </script>

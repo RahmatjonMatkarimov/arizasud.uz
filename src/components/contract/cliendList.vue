@@ -113,8 +113,8 @@ const closeModal = () => {
 const printReceipt = () => {
     // Preload the image
     const img = new Image();
-    img.src = "http://localhost:5001/asd.jpg";
-    img.src1 = "http://localhost:5001/https___arizasud.uz_.png";
+    img.src = "https://arizasud.uz/asd.jpg";
+    img.src1 = "https://arizasud.uz/https___arizasud.uz_.png";
     img.style.display = "none";
     document.body.appendChild(img);
 
@@ -263,8 +263,8 @@ const submitPayment = async () => {
             <p><strong>Sana:</strong> ${receiptData.value.date}</p>
           </div>
           <div class="receipt-images">
-            <img src="http://localhost:5001/asd.jpg" alt="Image 1">
-            <img src="http://localhost:5001/https___arizasud.uz_.png" alt="Image 2">
+            <img src="https://arizasud.uz/asd.jpg" alt="Image 1">
+            <img src="https://arizasud.uz/https___arizasud.uz_.png" alt="Image 2">
           </div>
           <div class="receipt-footer">
             "YURIST KONSUL KONSALTING"
