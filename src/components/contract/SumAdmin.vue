@@ -1,9 +1,9 @@
 <template>
     <div class="max-w-3xl mx-auto p-6 text-center">
-        <h2 class="text-2xl font-bold mb-6">Monthly Cost Records</h2>
+        <h2 class="text-2xl font-bold mb-6">{{ dat === 'datakril' ? translateText('Monthly Cost Records') : 'Monthly Cost Records' }}</h2>
         <div class="mb-6 flex justify-end">
-            <button @click="openPostModal" class="px-4 py-2 bg-blue-500  text-white rounded hover:bg-blue-600">
-                Yangi narx qo'shish
+            <button @click="openPostModal" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                {{ dat === 'datakril' ? translateText("Yangi narx qo'shish") : "Yangi narx qo'shish" }}
             </button>
         </div>
 
@@ -13,9 +13,9 @@
                 <thead>
                     <tr class="bg-gray-100">
                         <th class="border text-black border-gray-300 px-4 py-2"></th>
-                        <th class="border text-black border-gray-300 px-4 py-2">1-Narx</th>
-                        <th class="border text-black border-gray-300 px-4 py-2">2-Narx</th>
-                        <th class="border text-black border-gray-300 px-4 py-2">Sozlamalar</th>
+                        <th class="border text-black border-gray-300 px-4 py-2">{{ dat === 'datakril' ? translateText('1-Narx') : '1-Narx' }}</th>
+                        <th class="border text-black border-gray-300 px-4 py-2">{{ dat === 'datakril' ? translateText('2-Narx') : '2-Narx' }}</th>
+                        <th class="border text-black border-gray-300 px-4 py-2">{{ dat === 'datakril' ? translateText('Sozlamalar') : 'Sozlamalar' }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -26,7 +26,7 @@
                         <td class="border text-black border-gray-300 px-4 py-2">
                             <button @click="openPutModal(record)"
                                 class="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">
-                                Tahrirlash
+                                {{ dat === 'datakril' ? translateText('Tahrirlash') : 'Tahrirlash' }}
                             </button>
                             <!-- <button @click="openDeleteModal(record.id)"
                                 class="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600">
@@ -40,22 +40,21 @@
 
         <!-- Display error for GET -->
         <div v-if="getError" class="mt-4 text-red-500">
-            <p>Error: {{ getError }}</p>
+            <p>{{ dat === 'datakril' ? translateText(`Error: ${getError}`) : `Error: ${getError}` }}</p>
         </div>
 
         <!-- POST Modal -->
         <div v-if="showPostModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
             <div class="bg-white p-6 rounded shadow-lg w-80">
-                <h3 class="text-lg font-bold mb-4">Yangi narx yaratish</h3>
+                <h3 class="text-lg font-bold mb-4">{{ dat === 'datakril' ? translateText('Yangi narx yaratish') : 'Yangi narx yaratish' }}</h3>
                 <form @submit.prevent="submitPost">
                     <div class="flex gap-2 justify-center items-center mb-4">
-                        <label class="block w-[100px] text-black font-medium">1-Narx:</label>
+                        <label class="block w-[100px] text-black font-medium">{{ dat === 'datakril' ? translateText('1-Narx:') : '1-Narx:' }}</label>
                         <input type="number" v-model.number="postForm.sum1" required
                             class="w-full text-black  p-2 border rounded" />
                     </div>
                     <div class="flex gap-2 justify-center items-center mb-4">
-
-                        <label class="block text-black w-[100px] font-medium">2-Narx:</label>
+                        <label class="block text-black w-[100px] font-medium">{{ dat === 'datakril' ? translateText('2-Narx:') : '2-Narx:' }}</label>
                         <input type="number" v-model.number="postForm.sum2" required
                             class="w-full text-black p-2 border rounded" />
                     </div>
@@ -65,11 +64,11 @@
                     <div class="flex justify-between">
                         <button type="submit" :disabled="loading"
                             class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                            {{ loading ? 'Yaratilmoqda...' : 'Yaratish' }}
+                            {{ loading ? (dat === 'datakril' ? translateText('Yaratilmoqda...') : 'Yaratilmoqda...') : (dat === 'datakril' ? translateText('Yaratish') : 'Yaratish') }}
                         </button>
                         <button type="button" @click="closePostModal"
                             class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
-                            Bekor qilish
+                            {{ dat === 'datakril' ? translateText('Bekor qilish') : 'Bekor qilish' }}
                         </button>
                     </div>
                 </form>
@@ -81,12 +80,12 @@
             <div class="bg-white p-6 rounded shadow-lg w-80">
                 <form @submit.prevent="submitPut">
                     <div class="flex gap-2 justify-center items-center">
-                        <label class="block w-[100px] text-black font-medium">1-Narx:</label>
+                        <label class="block w-[100px] text-black font-medium">{{ dat === 'datakril' ? translateText('1-Narx:') : '1-Narx:' }}</label>
                         <input type="number" v-model.number="putForm.sum1" required
                             class="w-full mb-4 text-black p-2 border rounded" />
                     </div>
                     <div class="flex gap-2 justify-center items-center mb-4">
-                        <label class="block w-[100px] text-black font-medium">2-Narx:</label>
+                        <label class="block w-[100px] text-black font-medium">{{ dat === 'datakril' ? translateText('2-Narx:') : '2-Narx:' }}</label>
                         <input type="number" v-model.number="putForm.sum2" required
                             class="w-full mb-4 text-black p-2 border rounded" />
                     </div>
@@ -96,45 +95,45 @@
                     <div class="flex justify-between">
                         <button type="button" @click="closePutModal"
                             class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
-                            Bekor qilish
+                            {{ dat === 'datakril' ? translateText('Bekor qilish') : 'Bekor qilish' }}
                         </button>
                         <button type="submit" :disabled="loading"
                             class="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">
-                            {{ loading ? 'Yangilanmoqda...' : 'Yangilash' }}
+                            {{ loading ? (dat === 'datakril' ? translateText('Yangilanmoqda...') : 'Yangilanmoqda...') : (dat === 'datakril' ? translateText('Yangilash') : 'Yangilash') }}
                         </button>
                     </div>
                 </form>
             </div>
         </div>
 
-        <!-- DELETE Modal -->
-        <div v-if="showDeleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+
+        <!-- <div v-if="showDeleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
             <div class="bg-white p-6 rounded shadow-lg w-80">
-                <h3 class="text-lg font-bold text-black mb-4">Confirm Deletion</h3>
-                <p class="mb-4 text-black">Are you sure you want to delete this record?</p>
+                <h3 class="text-lg font-bold text-black mb-4">{{ dat === 'datakril' ? translateText('Confirm Deletion') : 'Confirm Deletion' }}</h3>
+                <p class="mb-4 text-black">{{ dat === 'datakril' ? translateText('Are you sure you want to delete this record?') : 'Are you sure you want to delete this record?' }}</p>
                 <div v-if="deleteError" class="text-red-500 mb-4">
                     <p>{{ deleteError }}</p>
                 </div>
                 <div class="flex justify-between">
                     <button @click="submitDelete" :disabled="loading"
                         class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
-                        {{ loading ? 'Deleting...' : 'Delete' }}
+                        {{ loading ? (dat === 'datakril' ? translateText('Deleting...') : 'Deleting...') : (dat === 'datakril' ? translateText('Delete') : 'Delete') }}
                     </button>
                     <button type="button" @click="closeDeleteModal"
                         class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
-                        Cancel
+                        {{ dat === 'datakril' ? translateText('Cancel') : 'Cancel' }}
                     </button>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, inject, onMounted } from 'vue';
 import axios from 'axios';
 import { URL } from '../../auth/url.js';
-
+import translateText from '@/auth/Translate.js';
 // Reactive state for records (GET), errors, and loading
 const records = ref([]);
 const getError = ref(null);
@@ -142,7 +141,7 @@ const postError = ref(null);
 const putError = ref(null);
 const deleteError = ref(null);
 const loading = ref(false);
-
+const dat = inject('dat');
 // Modal visibility states
 const showPostModal = ref(false);
 const showPutModal = ref(false);

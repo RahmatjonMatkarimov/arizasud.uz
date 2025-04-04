@@ -2,14 +2,20 @@
   <div class="container mx-auto p-4 bg-gray-300 rounded shadow">
     <div v-if="fields.length">
       <div v-for="(field, index) in uniqueFields" :key="index" class="mb-4">
-        <label class="block font-medium mb-1 text-black">{{ field.key }}</label>
-        <input v-model="fieldValues[index]" :placeholder="field.key" type="text" required
+        <label class="block font-medium mb-1 text-black">
+          {{ dat === "datakril" ? translateText(field.key) : field.key }}
+        </label>
+        <input v-model="fieldValues[index]" :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" type="text" required
           class="w-full p-2 border rounded focus:ring text-black focus:ring-blue-200" />
       </div>
 
       <div class="mt-4 flex justify-end">
-        <button @click="openCameraModal" class="btn btn-primary">Suratga Olish</button>
-        <button @click="saveAndGenerate" class="btn btn-secondary">Yuklash</button>
+        <button @click="openCameraModal" class="btn btn-primary">
+          {{ dat === "datakril" ? translateText("Suratga Olish") : "Suratga Olish" }}
+        </button>
+        <button @click="saveAndGenerate" class="btn btn-secondary">
+          {{ dat === "datakril" ? translateText("Yuklash") : "Yuklash" }}
+        </button>
       </div>
 
       <!-- Camera Modal -->
@@ -18,8 +24,12 @@
           <video ref="video" width="320" height="240" autoplay class="rounded border"></video>
           <canvas ref="canvas" width="320" height="240" class="hidden"></canvas>
           <div class="mt-4 flex justify-between">
-            <button @click="captureImage" class="btn btn-success">Suratga Olish</button>
-            <button @click="closeCameraModal" class="btn btn-danger">Yopish</button>
+            <button @click="captureImage" class="btn btn-success">
+              {{ dat === "datakril" ? translateText("Suratga Olish") : "Suratga Olish" }}
+            </button>
+            <button @click="closeCameraModal" class="btn btn-danger">
+              {{ dat === "datakril" ? translateText("Yopish") : "Yopish" }}
+            </button>
           </div>
         </div>
       </div>
@@ -27,7 +37,9 @@
       <!-- Warning Modal -->
       <div v-if="isWarningModalOpen" class="modal" @click.self="closeWarningModal">
         <div class="modal-content">
-          <p class="text-red-600 text-center">Iltimos, avval rasmga tushuring!</p>
+          <p class="text-red-600 text-center">
+            {{ dat === "datakril" ? translateText("Iltimos, avval rasmga tushuring!") : "Iltimos, avval rasmga tushuring!" }}
+          </p>
         </div>
       </div>
     </div>
@@ -35,17 +47,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted, reactive, onUnmounted, watch, nextTick } from "vue";
+import { ref, onMounted, reactive, onUnmounted, watch, nextTick, inject } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
 import { URL } from "../../auth/url.js";
 import axios from "axios";
 import { useRoute } from "vue-router";
-import { saveAs } from "file-saver";
-import { f } from "html2pdf.js";
-import { Origami } from "lucide-vue-next";
+import translateText from "@/auth/Translate.js";
 
+const dat = inject("dat");
 const route = useRoute();
 var UniqueID = null;
 var ClientData = '';

@@ -1,13 +1,14 @@
 <template>
     <div class="max-w-[900px] mx-auto mt-5">
         <div class="flex justify-between items-center mb-4">
-            <input v-model="searchQuery" type="text" :placeholder="$t('qidiruv')"
+            <input v-model="searchQuery" type="text" 
+                :placeholder="dat === 'datakril' ? translateText($t('qidiruv')) : $t('qidiruv')"
                 class="border p-2 rounded text-black focus:outline-none focus:ring focus:ring-blue-300" />
             <div v-if="showCheckboxes" class="flex items-center space-x-2">
                 <input type="checkbox" v-model="selectAll" @change="toggleSelectAll" class="hidden" id="selectAll" />
                 <label for="selectAll"
                     class="bg-white text-black border border-gray-300 px-3 py-1 rounded hover:bg-gray-100 cursor-pointer">
-                    {{ $t('Barchasini belgilash') }}
+                    {{ dat === 'datakril' ? translateText("Barchasini belgilash") : "Barchasini belgilash" }}
                 </label>
             </div>
         </div>
@@ -16,11 +17,11 @@
             <div class="flex space-x-2 mb-4">
                 <button @click="toggleCheckboxes"
                     class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300">
-                    {{ showCheckboxes ? $t('Bekor qilish') : $t('O\'chirish') }}
+                    {{ dat === 'datakril' ? translateText(showCheckboxes ? 'Bekor qilish' : 'O\'chirish') : (showCheckboxes ? 'Bekor qilish' : 'O\'chirish') }}
                 </button>
                 <button v-if="showCheckboxes" @click="deleteSelectedClients"
                     class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 focus:outline-none focus:ring focus:ring-red-300">
-                    Belgilanganlarni o'chirish
+                    {{ dat === 'datakril' ? translateText("Belgilanganlarni o'chirish") : "Belgilanganlarni o'chirish" }}
                 </button>
             </div>
             <div v-for="item in filteredData" :key="item.id" class="p-3">
@@ -31,17 +32,23 @@
                             class="form-checkbox h-4 w-4 text-blue-500 focus:ring focus:ring-blue-300" />
                         <h1 @click="router.push('/Check/' + item.id)"
                             class="text-gray-900 text-lg font-medium cursor-pointer">
-                            {{ item.name }} {{ item.surname }} {{ item.dadname }}
+                            {{ dat === 'datakril' 
+                                ? translateText(item.name) + ' ' + translateText(item.surname) + ' ' + translateText(item.dadname) 
+                                : item.name + ' ' + item.surname + ' ' + item.dadname }}
                         </h1>
                     </div>
                     <div class="flex items-center space-x-2">
                         <button @click="openModal(item)"
                             :class="item.price <= 0 ? 'hidden' : 'bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600'">
-                            Qarzlarni to'lash
+                            {{ dat === 'datakril' ? translateText("Qarzlarni to'lash") : "Qarzlarni to'lash" }}
                         </button>
                         <h1 :class="item.price <= 0 ? 'text-green-600 font-bold' : 'text-red-600 font-bold'">
-                            {{ item.price <= 0 ? "To'liq to'langan" : "To'liq to'lanmagan: " +
-                                formatNumberWithDots(item.price) + " so'm" }} </h1>
+                            {{ item.price <= 0 
+                                ? (dat === 'datakril' ? translateText("To'liq to'langan") : "To'liq to'langan") 
+                                : (dat === 'datakril' 
+                                    ? translateText("To'liq to'lanmagan: ") + formatNumberWithDots(item.price) + translateText(" so'm") 
+                                    : "To'liq to'lanmagan: " + formatNumberWithDots(item.price) + " so'm") }}
+                        </h1>
                     </div>
                 </div>
             </div>
@@ -50,18 +57,20 @@
 
     <div v-if="modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
         <div class="bg-white p-4 rounded shadow-lg w-80">
-            <h2 class="text-lg font-medium mb-4 text-center">Qarzni to'lash</h2>
+            <h2 class="text-lg font-medium mb-4 text-center">
+                {{ dat === 'datakril' ? translateText("Qarzni to'lash") : "Qarzni to'lash" }}
+            </h2>
             <input v-model="summa" type="number"
-                class="w-full p-2 border rounded mb-4 focus:outline-none focus:ring focus:ring-blue-300"
-                placeholder="To'langan summa" />
+                :placeholder="dat === 'datakril' ? translateText('To\'langan summa') : 'To\'langan summa'"
+                class="w-full p-2 border rounded mb-4 focus:outline-none focus:ring focus:ring-blue-300" />
             <div class="flex justify-end space-x-2">
                 <button @click="submitPayment"
                     class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300">
-                    To'lash
+                    {{ dat === 'datakril' ? translateText("To'lash") : "To'lash" }}
                 </button>
                 <button @click="closeModal"
                     class="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-gray-300">
-                    Yopish
+                    {{ dat === 'datakril' ? translateText("Yopish") : "Yopish" }}
                 </button>
             </div>
         </div>
@@ -69,11 +78,13 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed, onMounted, inject, watch } from "vue";
 import axios from "axios";
 import { URL } from "../../auth/url.js";
 import { useRouter } from "vue-router";
+import translateText from "@/auth/Translate.js";
 
+const dat = inject("dat");
 const router = useRouter();
 const data = ref([]);
 const modal = ref(false);
@@ -111,16 +122,14 @@ const closeModal = () => {
 };
 
 const printReceipt = () => {
-    const img = new Image();
-    img.src = "https://arizasud.uz/asd.jpg";
-    img.src1 = "https://arizasud.uz/https___arizasud.uz_.png";
-    img.style.display = "none";
-    document.body.appendChild(img);
+    const img1 = new Image();
+    const img2 = new Image();
+    img1.src = "https://arizasud.uz/asd.jpg";
+    img2.src = "https://arizasud.uz/https___arizasud.uz_.png";
 
     const receiptHTML = `
-  <div style="font-size: 13px; width:100%; display:flex; flex-direction: column; justify-content: center; align-content:center; color: black;">
-    <h1 style="text-align: center; font-size:15px; font-weight: bold; color: black; margin-top:20px;">To'lov cheki</h1>
-
+    <div style="font-size: 13px; width:100%; display:flex; flex-direction: column; justify-content: center; align-content:center; color: black;">
+        <h1 style="text-align: center; font-size:15px; font-weight: bold; color: black; margin-top:20px;">To'lov cheki</h1>
         <table style="width: 100%; border-collapse: collapse; color: black;">
             <tr><td style="color: black;">Mijoz:</td><td style="color: black;">${receiptData.value.name} ${receiptData.value.surname} ${receiptData.value.dadname}</td></tr>
             <tr><td style="color: black;">Telefon Raqami:</td><td style="color: black;">+${receiptData.value.phone || "Mavjud emas"}</td></tr>
@@ -128,45 +137,43 @@ const printReceipt = () => {
             <tr><td style="color: black;">To'langan:</td><td style="color: black;">${formatNumberWithDots(receiptData.value.paymentAmount)} so'm</td></tr>
             <tr><td style="color: black;">To'lanishi Kerak:</td><td style="color: black;">${receiptData.value.remainingDebt <= 0 ? "To‘landi" : formatNumberWithDots(receiptData.value.remainingDebt) + " so'm"}</td></tr>
             <tr><td style="color: black;">Sana:</td><td style="color: black;">${receiptData.value.date}</td></tr>
-            </table>
-            <p style="text-align: center; color: black;">Tel: +998 99 999 99 99</p>
-            <p style="text-align: center; font-size:10px; color: black;">"YURIST KONSUL KONSALTING" х/к</p>
-            <div style="display: flex; flex-direction:column; justify-content: center; align-items: center; margin-top: 20px;">
-                <img src="${img.src}" alt="" style="max-width: 90%; height: auto;">
-        <img src="${img.src1}" alt="" style="max-width: 90%; height: auto;">
-      </div>
+        </table>
+        <p style="text-align: center; color: black;">Tel: +998 99 999 99 99</p>
+        <p style="text-align: center; font-size:10px; color: black;">"YURIST KONSUL KONSALTING" х/к</p>
+        <div style="display: flex; flex-direction:column; justify-content: center; align-items: center; margin-top: 20px;">
+            <img src="${img1.src}" alt="" style="max-width: 90%; height: auto;">
+            <img src="${img2.src}" alt="" style="max-width: 90%; height: auto;">
         </div>
-        `;
+    </div>
+    `;
 
     const originalContent = document.body.innerHTML;
 
-    // Hide the header and footer (title and URL) during printing
     const style = document.createElement("style");
     style.innerHTML = `
         @media print {
-          @page {
-            margin: 0;
+            @page {
+                margin: 0;
             }
             body {
-              margin: 0;
-              }
-              }
-              `;
+                margin: 0;
+            }
+        }
+    `;
     document.head.appendChild(style);
 
     document.body.innerHTML = receiptHTML;
 
-    // Wait for the image to load before printing
-    img.onload = () => {
+    img1.onload = img2.onload = () => {
         window.print();
         document.body.innerHTML = originalContent;
         document.head.removeChild(style);
         window.location.reload();
     };
 
-    img.onerror = () => {
+    img1.onerror = img2.onerror = () => {
         console.error("Image failed to load");
-        window.print(); // Print anyway if the image fails
+        window.print();
         document.body.innerHTML = originalContent;
         document.head.removeChild(style);
         window.location.reload();
@@ -346,6 +353,7 @@ const filteredData = computed(() => {
             (item.surname && item.surname.toLowerCase().includes(query)) ||
             (item.dadname && item.dadname.toLowerCase().includes(query)) ||
             (item.phone && item.phone.toLowerCase().includes(query)) ||
+            (item.phone && item.contractId.toLowerCase().includes(query)) ||
             (item.price && item.price.toString().includes(query)) ||
             (item.uniqueCode && item.uniqueCode.toLowerCase().includes(query)) ||
             (item.userCode && item.userCode.toLowerCase().includes(query))

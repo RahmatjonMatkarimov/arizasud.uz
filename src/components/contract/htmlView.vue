@@ -13,15 +13,17 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, inject } from 'vue';
 import axios from 'axios';
 import { useRoute } from 'vue-router';
 import { URL } from '@/auth/url.js';
+import translateText from '@/auth/Translate';
 
 const route = useRoute();
 const id = route.params.id;
 const data = ref(); // Initialize with an empty check array
 const htmlContents = ref([]); // Store multiple HTML contents as an array
+const dat = inject('dat')
 
 const GetClient = async () => {
     try {

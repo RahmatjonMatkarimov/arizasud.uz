@@ -1,5 +1,5 @@
 <template>
-    <div class="flex items-center justify-center min-h-screen bg-gray-200">
+    <div class="flex items-center justify-center min-h-screen bg-gray-800">
         <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
             <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Kirish</h2>
             <form @submit.prevent="handleLogin">
@@ -34,7 +34,8 @@
 <script setup>
 import { URL } from '@/auth/url';
 import { useRouter } from 'vue-router';
-import { ref } from 'vue';
+import { ref, inject } from 'vue';
+import translateText from '@/auth/Translate';
 
 const router = useRouter();
 const username = ref('');
