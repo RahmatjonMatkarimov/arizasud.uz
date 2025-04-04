@@ -1,6 +1,14 @@
 <template>
     <div class="content-container">
         <button class="download-button mb-4" @click="downloadFile">Shartnomani yuklab olish</button>
+        <div class="html-container">
+            <div 
+                v-for="(content, index) in htmlContents" 
+                :key="index" 
+                class="text-black html-content" 
+                v-html="content">
+            </div>
+        </div>
     </div>
 </template>
 
@@ -9,11 +17,13 @@ import { ref, inject } from 'vue';
 import axios from 'axios';
 import { useRoute } from 'vue-router';
 import { URL } from '@/auth/url.js';
+import translateText from '@/auth/Translate';
 
 const route = useRoute();
 const id = route.params.id;
 const data = ref(); // Initialize with an empty check array
 const htmlContents = ref([]); // Store multiple HTML contents as an array
+const dat = inject('dat')
 
 const GetClient = async () => {
     try {
@@ -51,22 +61,23 @@ const GetClient = async () => {
 };
 
 const downloadFile = async () => {
-    if (htmlContents.value.length > 0) {
+    if (data.value?.file) {
         try {
-            const htmlContent = htmlContents.value[0]; // Get the first HTML content
-            const blob = new Blob([htmlContent], { type: 'text/html' });
-            const url = window.URL.createObjectURL(blob);
+            const response = await axios.get(`${URL}${data.value.file}`, {
+                responseType: 'blob', // Ensure the response is treated as a file
+            });
+            const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', 'file.html'); // Set a default file name
+            link.setAttribute('download', data.value.file.split('/').pop()); // Extract file name
             document.body.appendChild(link);
             link.click();
             link.remove();
         } catch (error) {
-            console.error("Error downloading HTML file:", error);
+            console.error("Error downloading file:", error);
         }
     } else {
-        console.warn("No HTML content available to download.");
+        console.warn("No file available to download.");
     }
 };
 
