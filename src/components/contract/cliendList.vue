@@ -25,7 +25,7 @@
             </div>
             <div v-for="item in filteredData" :key="item.id" class="p-3">
                 <div
-                    class="flex justify-between items-center p-4 border rounded-lg shadow bg-gray-100 hover:bg-gray-200 transition">
+                    class="flex justify-between items-center p-4 border rounded-lg shadow bg-gray-200 hover:bg-gray-300 transition">
                     <div class="flex items-center space-x-2">
                         <input v-if="showCheckboxes" type="checkbox" v-model="selectedClientIds" :value="item.id"
                             class="form-checkbox h-4 w-4 text-blue-500 focus:ring focus:ring-blue-300" />

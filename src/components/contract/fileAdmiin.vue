@@ -13,7 +13,7 @@
             <div v-if="getResponse" class="space-y-2">
                 <div v-if="items.length > 0">
                     <div v-for="item in items" :key="item.id"
-                        class="flex justify-between items-center mb-2 p-2 border rounded">
+                        class="flex justify-between items-center mb-2 p-2 border border-black border-opacity-[50%] rounded">
                         <h1 @click="router.push('/ContractAdmin/' + item.id)"
                             class="cursor-pointer text-blue-600 hover:underline">{{ item.name }}</h1>
                         <div class="space-x-2">

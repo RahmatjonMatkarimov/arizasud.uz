@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto p-4 bg-gray-100 rounded shadow">
+  <div class="container mx-auto p-4 bg-gray-300 rounded shadow">
     <div v-if="fields.length">
       <div v-for="(field, index) in uniqueFields" :key="index" class="mb-4">
         <label class="block font-medium mb-1 text-black">{{ field.key }}</label>

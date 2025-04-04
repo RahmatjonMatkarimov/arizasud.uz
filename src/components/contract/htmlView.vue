@@ -1,5 +1,15 @@
 <template>
-    <div class="text-black html-content" v-html="htmlContent"></div>
+    <div class="content-container">
+        <button class="download-button mb-4" @click="downloadFile">Shartnomani yuklab olish</button>
+        <div class="html-container">
+            <div 
+                v-for="(content, index) in htmlContents" 
+                :key="index" 
+                class="text-black html-content" 
+                v-html="content">
+            </div>
+        </div>
+    </div>
 </template>
 
 <script setup>
@@ -11,7 +21,7 @@ import { URL } from '@/auth/url.js';
 const route = useRoute();
 const id = route.params.id;
 const data = ref(); // Initialize with an empty check array
-const htmlContent = ref(''); // Store the HTML content as a string
+const htmlContents = ref([]); // Store multiple HTML contents as an array
 
 const GetClient = async () => {
     try {
@@ -23,28 +33,49 @@ const GetClient = async () => {
             const htmlFilePaths = data.value.check.filter(item => typeof item === 'string' && item.endsWith('.html'));
             if (htmlFilePaths.length > 0) {
                 try {
-                    const htmlContents = await Promise.all(
+                    const htmlContentsArray = await Promise.all(
                         htmlFilePaths.map(async (filePath) => {
                             const htmlResponse = await axios.get(`${URL}${filePath}`);
                             return htmlResponse.data; // Fetch and return the HTML content
                         })
                     );
-                    htmlContent.value = htmlContents.join('\n'); // Concatenate all HTML content
+                    htmlContents.value = htmlContentsArray; // Store all HTML contents in the array
                 } catch (htmlError) {
                     console.error("Error fetching HTML files:", htmlError);
-                    htmlContent.value = '<p>Error loading HTML content.</p>'; // Fallback HTML content
+                    htmlContents.value = ['<p>Error loading HTML content.</p>']; // Fallback HTML content
                 }
             } else {
                 console.warn("No valid HTML file paths found in the check array.");
-                htmlContent.value = '<p>No valid HTML content available.</p>'; // Fallback HTML content
+                htmlContents.value = ['<p>No valid HTML content available.</p>']; // Fallback HTML content
             }
         } else {
             console.warn("No valid 'check' array found in the response.");
-            htmlContent.value = '<p>No data available.</p>'; // Fallback HTML content
+            htmlContents.value = ['<p>No data available.</p>']; // Fallback HTML content
         }
     } catch (error) {
         console.error("Xatolik yuz berdi:", error);
-        htmlContent.value = '<p>Error loading content.</p>'; // Fallback HTML content in case of error
+        htmlContents.value = ['<p>Error loading content.</p>']; // Fallback HTML content in case of error
+    }
+};
+
+const downloadFile = async () => {
+    if (data.value?.file) {
+        try {
+            const response = await axios.get(`${URL}${data.value.file}`, {
+                responseType: 'blob', // Ensure the response is treated as a file
+            });
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', data.value.file.split('/').pop()); // Extract file name
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        } catch (error) {
+            console.error("Error downloading file:", error);
+        }
+    } else {
+        console.warn("No file available to download.");
     }
 };
 
@@ -52,6 +83,48 @@ GetClient();
 </script>
 
 <style scoped>
+.content-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    max-width: 900px;
+    margin: 20px auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.html-container {
+    display: flex;
+    gap: 20px; /* Add spacing between HTML files */
+    flex-wrap: wrap; /* Ensure responsiveness for smaller screens */
+}
+
+.html-content {
+    flex: 1; /* Allow equal space for each HTML file */
+    min-width: 300px; /* Set a minimum width for each content block */
+    margin-bottom: 20px;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.download-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.download-button:hover {
+    background-color: #0056b3;
+}
+
 .html-content ::v-deep * {
     color: black !important;
 }
