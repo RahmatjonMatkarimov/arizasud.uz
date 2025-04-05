@@ -7,7 +7,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
-         "pdfjs-dist/build/pdf.worker.mjs": "pdfjs-dist/build/pdf.worker.min.mjs"
+      'pdfjs-dist/build/pdf.worker.entry': 'pdfjs-dist/build/pdf.worker.min.mjs' // fallback alias (shart emas, lekin xavfsiz)
     },
   },
   base: '/',
@@ -16,17 +16,12 @@ export default defineConfig({
     assetsDir: 'assets',
     rollupOptions: {
       output: {
-        manualChunks: {
-          pdfjsWorker: ["pdfjs-dist/build/pdf.worker.entry"], // Separate chunk for the worker
-        },
+        // manualChunks optional here, can remove if not needed
       },
-      external: [
-        "pdfjs-dist/build/pdf.worker.min.js", // Externalize the PDF worker
-      ],
     },
   },
   optimizeDeps: {
-    include: ["pdfjs-dist/build/pdf.worker.entry"], // Ensure the worker is included in dependencies
+    include: ['pdfjs-dist/build/pdf.worker.min.mjs']
   },
   server: {
     host: '0.0.0.0',
