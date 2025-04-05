@@ -8,10 +8,7 @@ import * as pdfjsLib from "pdfjs-dist";
 import { URL } from "@/auth/url";
 
 // PDF worker setup
-pdfjsLib.GlobalWorkerOptions.workerSrc = /* @vite-ignore */ new URL(
-  "pdfjs-dist/build/pdf.worker.min.js",
-  import.meta.url
-).toString();
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
 
 const isLoading = inject("isLoading", ref(false));
 const route = useRoute();
