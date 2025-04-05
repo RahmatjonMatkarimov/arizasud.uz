@@ -3,10 +3,11 @@ import axios from "axios";
 import { ref, onMounted, inject } from "vue";
 import { useRoute } from "vue-router";
 import * as pdfjsLib from "pdfjs-dist";
+import workerSrc from "pdfjs-dist/build/pdf.worker.min?url";
 import { URL } from "@/auth/url";
 
 // PDF worker setup
-pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js"; // Use a reliable CDN
+pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
 
 const isLoading = inject("isLoading", ref(false));
 const route = useRoute();
@@ -23,11 +24,9 @@ const getData = async () => {
       ? res.data.file
       : `${URL}${res.data.file}`;
 
-    console.log("Resolved file URL:", fileUrl.value); // Debugging log
     await renderPdf(fileUrl.value);
   } catch (error) {
     console.error("Ma'lumot yuklashda xatolik:", error);
-    alert("Faylni yuklashda xatolik yuz berdi. Iltimos, qayta urinib ko'ring.");
   } finally {
     isLoading.value = false;
   }
@@ -36,8 +35,7 @@ const getData = async () => {
 // Render PDF pages
 const renderPdf = async (url) => {
   try {
-    console.log("Rendering PDF from URL:", url); // Debugging log
-    const loadingTask = pdfjsLib.getDocument({ url, disableWorker: true }); // Disable dynamic worker import
+    const loadingTask = pdfjsLib.getDocument(url);
     const pdf = await loadingTask.promise;
     pdfPages.value = [];
 
@@ -54,10 +52,8 @@ const renderPdf = async (url) => {
 
       pdfPages.value.push(canvas.toDataURL("image/png"));
     }
-    console.log("PDF rendering completed. Total pages:", pdfPages.value.length); // Debugging log
   } catch (error) {
     console.error("PDF yuklashda xatolik:", error);
-    alert("PDF faylni ochishda xatolik yuz berdi. Iltimos, faylni tekshiring.");
   }
 };
 
@@ -139,7 +135,7 @@ onMounted(() => {
         <img v-for="(page, index) in pdfPages" :key="index" :src="page" class="w-full rounded-lg mb-4 last:mb-0 shadow-md object-cover transition-transform duration-300 hover:scale-105" alt="PDF Page" />
       </div>
       <div v-else class="text-gray-500 text-base md:text-lg text-center italic">
-        Hech qanday sahifa topilmadi yoki faylni yuklashda xatolik yuz berdi.
+        Hech qanday sahifa topilmadi.
       </div>
     </main>
   </div>
