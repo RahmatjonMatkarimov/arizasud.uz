@@ -1,9 +1,11 @@
 <template>
-    <div class="max-w-[900px] mx-auto mt-5">
-        <div class="flex justify-between items-center mb-4">
+    <div class="max-w-[900px] mx-auto mt-5">"
+        <div class="flex justify-end">
             <input v-model="searchQuery" type="text" 
-                :placeholder="dat === 'datakril' ? translateText($t('qidiruv')) : $t('qidiruv')"
-                class="border p-2 rounded text-black focus:outline-none focus:ring focus:ring-blue-300" />
+            :placeholder="dat === 'datakril' ? translateText($t('qidiruv')) : $t('qidiruv')"
+            class="border p-2 rounded text-black focus:outline-none focus:ring focus:ring-blue-300" />
+        </div>
+        <div class="flex justify-between items-center mb-4">
             <div v-if="showCheckboxes" class="flex items-center space-x-2">
                 <input type="checkbox" v-model="selectAll" @change="toggleSelectAll" class="hidden" id="selectAll" />
                 <label for="selectAll"
@@ -34,7 +36,7 @@
                             class="text-gray-900 text-lg font-medium cursor-pointer">
                             {{ dat === 'datakril' 
                                 ? translateText(item.name) + ' ' + translateText(item.surname) + ' ' + translateText(item.dadname) 
-                                : item.name + ' ' + item.surname + ' ' + item.dadname }}
+                                : item.name + ' ' + item.surname + ' ' + item.dadname }}{{ item.ClientPayment[0] }}
                         </h1>
                     </div>
                     <div class="flex items-center space-x-2">
@@ -124,28 +126,50 @@ const closeModal = () => {
 const printReceipt = () => {
     const img1 = new Image();
     const img2 = new Image();
-    img1.src = "https://arizasud.uz/asd.jpg";
+    const img3 = new Image();
+    img1.src = "/asd.jpg";
     img2.src = "https://arizasud.uz/https___arizasud.uz_.png";
+    img3.src = "/telegram.png";
 
     const receiptHTML = `
-    <div style="font-size: 13px; width:100%; display:flex; flex-direction: column; justify-content: center; align-content:center; color: black;">
-        <h1 style="text-align: center; font-size:15px; font-weight: bold; color: black; margin-top:20px;">To'lov cheki</h1>
-        <table style="width: 100%; border-collapse: collapse; color: black;">
-            <tr><td style="color: black;">Mijoz:</td><td style="color: black;">${receiptData.value.name} ${receiptData.value.surname} ${receiptData.value.dadname}</td></tr>
-            <tr><td style="color: black;">Telefon Raqami:</td><td style="color: black;">+${receiptData.value.phone || "Mavjud emas"}</td></tr>
-            <tr><td style="color: black;">Shartnoma idsi:</td><td style="color: black;">${receiptData.value.uniqueCode || "Mavjud emas"}</td></tr>
-            <tr><td style="color: black;">To'langan:</td><td style="color: black;">${formatNumberWithDots(receiptData.value.paymentAmount)} so'm</td></tr>
-            <tr><td style="color: black;">To'lanishi Kerak:</td><td style="color: black;">${receiptData.value.remainingDebt <= 0 ? "To‘landi" : formatNumberWithDots(receiptData.value.remainingDebt) + " so'm"}</td></tr>
-            <tr><td style="color: black;">Sana:</td><td style="color: black;">${receiptData.value.date}</td></tr>
+    <div style="font-size: 12px; width:100%; display:flex; flex-direction: column; justify-content: center; align-content:center; color: black;">
+        <h1 style="text-align: center; font-size:15px; font-weight: bold; color: black; margin-top:18   px;">To'lov cheki</h1>
+        <table style="width: 100%; border-collapse: collapse; color: black; table-layout: fixed;">
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Mijoz:</td>
+                <td style="color: black; ">${receiptData.value.name} ${receiptData.value.surname} ${receiptData.value.dadname}</td>
+            </tr>
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Telefon Raqami:</td>
+                <td style="color: black; line-height: 1.2; ">${receiptData.value.phone || "Mavjud emas"}</td>
+            </tr>
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Shartnoma idsi: </td>
+                <td style="color: black; line-height: 1.2;">№${receiptData.value.uniqueCode || "Mavjud emas"}</td>
+            </tr>
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">To'langan:</td>
+                <td style="color: black; line-height: 1.2;">${formatNumberWithDots(receiptData.value.paymentAmount)} so'm</td>
+            </tr>
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Qoldiq qarz:</td>
+                <td style="color: black; line-height: 1.2; ">${receiptData.value.remainingDebt <= 0 ? "To‘landi" : formatNumberWithDots(receiptData.value.remainingDebt) + " so'm"}</td>
+            </tr>
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Sana:</td>
+                <td style="color: black; line-height: 1.2; ">${receiptData.value.date}</td>
+            </tr>
         </table>
-        <p style="text-align: center; color: black;">Tel: +998 99 999 99 99</p>
+        <p style="text-align: center; color: black; justify-content: center;gap:3px;  align-items: center; display:flex;  margin-top:10px;">
+            <img src="${img3.src}" alt="" style="max-width: 7%; height: auto;">
+            <span style="font-size: 10px; color: black;">Telegram: +998 99 106 70 35</span></p>
         <p style="text-align: center; font-size:10px; color: black;">"YURIST KONSUL KONSALTING" х/к</p>
         <div style="display: flex; flex-direction:column; justify-content: center; align-items: center; margin-top: 20px;">
             <img src="${img1.src}" alt="" style="max-width: 90%; height: auto;">
             <img src="${img2.src}" alt="" style="max-width: 90%; height: auto;">
         </div>
     </div>
-    `;
+    `
 
     const originalContent = document.body.innerHTML;
 
@@ -190,15 +214,24 @@ const submitPayment = async () => {
     }
 
     const newPrice = selectedItem.value.price - paymentAmount;
+    const remainingSum = selectedItem.value.remainingSum - paymentAmount;
 
     try {
-        await axios.post(`${URL}/client/update-price/${selectedItem.value.id}`, { price: newPrice });
+        await axios.post(`${URL}/client-pay`, { 
+            clientId: selectedItem.value.id,
+            TotalSum: selectedItem.value.TotalSum || 0, // Ensure TotalSum is defined
+            paidSum: (selectedItem.value.paidSum || 0) + paymentAmount, // Update paidSum
+            remainingSum: remainingSum >= 0 ? remainingSum : 0, // Ensure remainingSum is non-negative
+        });
+
         const index = data.value.findIndex((item) => item.id === selectedItem.value.id);
         if (index !== -1) {
             data.value[index].price = newPrice;
         }
 
         const currentDate = new Date();
+        const formattedDate = `${String(currentDate.getDate()).padStart(2, '0')}.${String(currentDate.getMonth() + 1).padStart(2, '0')}.${currentDate.getFullYear()}`;
+
         receiptData.value = {
             name: selectedItem.value.name,
             surname: selectedItem.value.surname,
@@ -207,95 +240,9 @@ const submitPayment = async () => {
             uniqueCode: selectedItem.value.contractId,
             paymentAmount: paymentAmount,
             remainingDebt: newPrice,
-            date: currentDate.toLocaleDateString("uz-UZ"),
+            date: formattedDate,
         };
 
-        const receiptHTML = `
-    <html>
-      <head>
-        <title>To'lov Cheki</title>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-            color: black;
-            margin: 0;
-            padding: 0;
-          }
-          .receipt-container {
-            width: 100%;
-            max-width: 400px;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-          }
-          .receipt-header {
-            text-align: center;
-            font-weight: bold;
-            margin-bottom: 20px;
-          }
-          .receipt-content p {
-            margin: 5px 0;
-          }
-          .receipt-footer {
-            text-align: right;
-            margin-top: 20px;
-            font-size: 12px;
-            color: gray;
-          }
-          .receipt-images {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-          }
-          .receipt-images img {
-            max-width: 90%;
-            height: auto;
-            margin-bottom: 10px;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="receipt-container">
-          <h2 class="receipt-header">To'lov Cheki</h2>
-          <div class="receipt-content">
-            <p><strong>Mijoz:</strong> ${receiptData.value.name} ${receiptData.value.surname} ${receiptData.value.dadname}</p>
-            <p><strong>Telefon:</strong> ${receiptData.value.phone || "Mavjud emas"}</p>
-            <p><strong>Shartnoma idsi:</strong> ${receiptData.value.uniqueCode || "Mavjud emas"}</p>
-            <p><strong>To'langan Summa:</strong> ${formatNumberWithDots(receiptData.value.remainingDebt)} so'm</p>
-            <p><strong>Qoldiq Qarz:</strong> ${formatNumberWithDots(receiptData.value.paymentAmount)} so'm</p>
-            <p><strong>Sana:</strong> ${receiptData.value.date}</p>
-          </div>
-          <div class="receipt-images">
-            <img src="https://arizasud.uz/asd.jpg" alt="Image 1">
-            <img src="https://arizasud.uz/https___arizasud.uz_.png" alt="Image 2">
-          </div>
-          <div class="receipt-footer">
-            "YURIST KONSUL KONSALTING"
-          </div>
-        </div>
-      </body>
-    </html>
-  `;
-
-        // Save receipt as an HTML file
-        const blob = new Blob([receiptHTML], { type: "text/html" });
-        const formData = new FormData();
-        formData.append("check", blob, "receipt.html");
-
-        // Send the file to the backend with the client's ID
-        await axios.post(`${URL}/client/add-check/${selectedItem.value.id}`, formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        });
-
-        // Print the receipt
-        const originalContent = document.body.innerHTML;
-        document.body.innerHTML = receiptHTML;
-        document.body.innerHTML = originalContent;
         printReceipt();
         closeModal();
         showReceipt.value = true;

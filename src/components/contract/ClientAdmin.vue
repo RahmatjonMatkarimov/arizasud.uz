@@ -5,8 +5,14 @@
         <label class="block font-medium mb-1 text-black">
           {{ dat === "datakril" ? translateText(field.key) : field.key }}
         </label>
-        <input v-model="fieldValues[index]" :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" type="text" required
-          class="w-full p-2 border rounded focus:ring text-black focus:ring-blue-200" />
+        <input v-model="fieldValues[index]" 
+          :type="getInputType(field.key)"
+          :maxlength="getMaxLength(field.key)"
+          :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" 
+          required
+          class="w-full p-2 border rounded focus:ring text-black focus:ring-blue-200"
+          @input="field.key === 'Fuqaroning telefon raqami ' ? formatPhoneNumber(field.key, index) : preventCyrillic(field.key, index)"
+          @focus="addPhonePrefix(field.key, index)" />
       </div>
 
       <div class="mt-4 flex justify-end">
@@ -58,14 +64,14 @@ import translateText from "@/auth/Translate.js";
 
 const dat = inject("dat");
 const route = useRoute();
-var UniqueID = null;
-var ClientData = '';
+let UniqueID = null;
+let ClientData = '';
 const id = route.params.id;
 const fields = ref([]);
 const uniqueFields = ref([]);
 const fieldValues = ref([]);
 const docxTemplate = ref(null);
-const isLoading = ref(true);
+const isLoading = ref(false);
 const errorMessage = ref("");
 const API_URL = URL + "/contract-file";
 const video = ref(null);
@@ -74,6 +80,7 @@ const isModalOpen = ref(false);
 const isWarningModalOpen = ref(false);
 const sum1 = ref("");
 const sum2 = ref("");
+const checkFile = ref(null); // Chek fayli uchun
 
 const formData = reactive({
   name: "",
@@ -83,7 +90,9 @@ const formData = reactive({
   uniqueCode: "",
   contractId: "",
   phone: "",
-  price: 0,
+  totalSum: 0, // Kichik harfga o‘zgartirildi
+  paidSum: 0,
+  remainingSum: 0,
   file: null,
   image: null,
 });
@@ -95,6 +104,7 @@ const GetClient = async () => {
     UniqueID = ClientData[ClientData.length - 1].id + 1;
   } catch (error) {
     errorMessage.value = "❌ Client ma'lumotlarini olishda xatolik!";
+    console.error("GetClient xatosi:", error.message);
   }
 };
 
@@ -112,7 +122,7 @@ const fetchDocx = async () => {
     const reader = new FileReader();
     reader.onload = function (e) {
       try {
-        const zip = new PizZip(e.target.result, { base64: false });
+        const zip = new PizZip(e.target.result);
         docxTemplate.value = new Docxtemplater(zip, {
           delimiters: { start: "{{", end: "}}" },
           paragraphLoop: true,
@@ -133,13 +143,13 @@ const fetchDocx = async () => {
         }
       } catch (zipError) {
         errorMessage.value = "❌ DOCX faylni ochishda xatolik!";
+        console.error("DOCX zip xatosi:", zipError);
       }
     };
     reader.readAsArrayBuffer(blob);
   } catch (error) {
     errorMessage.value = error.message || "❌ Faylni yuklashda xatolik!";
-  } finally {
-    isLoading.value = false;
+    console.error("fetchDocx xatosi:", error);
   }
 };
 
@@ -154,6 +164,7 @@ const startWebcam = async () => {
     video.value.srcObject = stream;
   } catch (error) {
     errorMessage.value = "❌ Kameraga kirishda xatolik! Iltimos, ruxsat bering.";
+    console.error("startWebcam xatosi:", error);
   }
 };
 
@@ -209,17 +220,17 @@ const resetForm = () => {
     userCode: "",
     uniqueCode: "",
     phone: "",
+    totalSum: 0,
+    paidSum: 0,
+    remainingSum: 0,
     contractId: "",
-    price: 0,
     file: null,
     image: null,
   });
 
   fieldValues.value = new Array(uniqueFields.value.length).fill("");
-
   dataaa.summa1 = null;
   dataaa.summa2 = null;
-  dataaa.price = null;
   generateUniqueCode();
 };
 
@@ -242,9 +253,9 @@ const saveAndGenerate = async () => {
       if (field.key === "Fuqaroning JSHSHIR raqami") formData.uniqueCode = fieldValues.value[index];
       if (field.key === "Fuqaroning ID karta raqami") formData.userCode = fieldValues.value[index];
       if (field.key === "Fuqaroning telefon raqami ") formData.phone = fieldValues.value[index];
-      if (field.key === "boshlag’ich summa") dataaa.price = +fieldValues.value[index];
-      if (field.key === "Konsalting narxi") dataaa.summa1 = fieldValues.value[index];
-      if (field.key === "Tushuntirish narxi") dataaa.summa2 = fieldValues.value[index];
+      if (field.key === "boshlag’ich summa") dataaa.price = Number(fieldValues.value[index]) || 0;
+      if (field.key === "Konsalting narxi") dataaa.summa1 = Number(fieldValues.value[index]) || 0;
+      if (field.key === "Tushuntirish narxi") dataaa.summa2 = Number(fieldValues.value[index]) || 0;
     });
 
     if (!docxTemplate.value) {
@@ -260,29 +271,26 @@ const saveAndGenerate = async () => {
     });
 
     const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, "0");
     const day = String(today.getDate()).padStart(2, "0");
-    const formattedDate = `${year}.${month}.${day}`;
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const year = today.getFullYear();
+    const formattedDate = `${day}.${month}.${year}`;
     data["Today Date"] = formattedDate;
 
     data["ID"] = UniqueID;
     formData.contractId = UniqueID;
 
-    const sum1Num = parseInt(sum1.value) || 0;
-    const sum2Num = parseInt(sum2.value) || 0;
-    const konsaltingNarxi = parseInt(dataaa.summa1) || 0;
-    const tushuntirishNarxi = parseInt(dataaa.summa2) || 0;
-    const boshlagichSumma = parseInt(dataaa.price) || 0;
+    const sum1Num = Number(sum1.value) || 0;
+    const sum2Num = Number(sum2.value) || 0;
+    const konsaltingNarxi = Number(dataaa.summa1) || 0;
+    const tushuntirishNarxi = Number(dataaa.summa2) || 0;
+    const boshlagichSumma = Number(dataaa.price) || 0;
 
     const umumiy = sum1Num + sum2Num + konsaltingNarxi + tushuntirishNarxi;
     const qarz = umumiy - boshlagichSumma;
-
-    if (qarz > 0) {
-      formData.price = qarz;
-    } else {
-      formData.price = 0;
-    }
+    formData.totalSum = umumiy;
+    formData.paidSum = boshlagichSumma;
+    formData.remainingSum = qarz > 0 ? qarz : 0;
 
     data["sum1"] = formatNumberWithDots(sum1Num);
     data["sum2"] = formatNumberWithDots(sum2Num);
@@ -298,9 +306,13 @@ const saveAndGenerate = async () => {
       type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     });
 
+    // Chekni generatsiya qilish
+    await generateCheckFile();
+
     await submitForm();
   } catch (error) {
-    errorMessage.value = "❌ Yuklashda xatolik yuz berdi!";
+    errorMessage.value = "❌ Yuklashda xatolik yuz berdi: " + error.message;
+    console.error("saveAndGenerate xatosi:", error);
   }
 };
 
@@ -315,6 +327,7 @@ const fetchRecords = async () => {
     errorMessage.value = "❌ Sum1 va Sum2 ma'lumotlarini olishda xatolik!";
     sum1.value = "0";
     sum2.value = "0";
+    console.error("fetchRecords xatosi:", err);
   }
 };
 
@@ -322,83 +335,20 @@ const closeWarningModal = () => {
   isWarningModalOpen.value = false;
 };
 
-const printReceipt = () => {
-  const today = new Date();
-  const formattedDate = `${today.getFullYear()}.${String(today.getMonth() + 1).padStart(2, "0")}.${String(today.getDate()).padStart(2, "0")}`;
-
+// Chekni HTML sifatida generatsiya qilish va fayl sifatida saqlash
+const generateCheckFile = async () => {
   const img1 = new Image();
   const img2 = new Image();
-  img1.src = "https://arizasud.uz/asd.jpg";
+  const img3 = new Image();
+  img1.src = "/asd.jpg";
   img2.src = "https://arizasud.uz/https___arizasud.uz_.png";
-
-  const receiptHTML = `
-  <div style="font-size: 13px; width:100%; display:flex; flex-direction: column; justify-content: center; align-content:center; color: black;">
-    <h1 style="text-align: center; font-size:15px; font-weight: bold; color: black; margin-top:20px;">To'lov cheki</h1>
-    <table style="width: 100%; border-collapse: collapse; color: black;">
-      <tr><td style="color: black;">Mijoz:</td><td style="color: black;">${formData.name} ${formData.surname} ${formData.dadname}</td></tr>
-      <tr><td style="color: black;">Telefon Raqami:</td><td style="color: black;">+${formData.phone || "Mavjud emas"}</td></tr>
-      <tr><td style="color: black;">Shartnoma idsi:</td><td style="color: black;">${formData.contractId || "Mavjud emas"}</td></tr>
-      <tr><td style="color: black;">To'langan:</td><td style="color: black;">${formatNumberWithDots(dataaa.price)} so'm</td></tr>
-      <tr><td style="color: black;">To'lanishi Kerak:</td><td style="color: black;">${formData.price <= 0 ? "To‘landi" : formatNumberWithDots(formData.price) + " so'm"}</td></tr>
-      <tr><td style="color: black;">Sana:</td><td style="color: black;">${formattedDate}</td></tr>
-    </table>
-    <p style="text-align: center; color: black;">Tel: +998 99 999 99 99</p>
-    <p style="text-align: center; font-size:10px; color: black;">"YURIST KONSUL KONSALTING" х/к</p>
-    <div style="display: flex; flex-direction:column; justify-content: center; align-items: center; margin-top: 20px;">
-      <img src="${img1.src}" alt="" style="max-width: 90%; height: auto;">
-      <img src="${img2.src}" alt="" style="max-width: 90%; height: auto;">
-    </div>
-  </div>
-  `;
-
-  const originalContent = document.body.innerHTML;
-
-  const style = document.createElement("style");
-  style.innerHTML = `
-    @media print {
-      @page {
-        margin: 0;
-      }
-      body {
-        margin: 0;
-      }
-    }
-  `;
-  document.head.appendChild(style);
-
-  document.body.innerHTML = receiptHTML;
-
-  let imagesLoaded = 0;
-  const checkImagesLoaded = () => {
-    imagesLoaded++;
-    if (imagesLoaded === 2) {
-      window.print();
-      document.body.innerHTML = originalContent;
-      document.head.removeChild(style);
-      window.location.reload();
-    }
-  };
-
-  img1.onload = checkImagesLoaded;
-  img2.onload = checkImagesLoaded;
-
-  img1.onerror = checkImagesLoaded;
-  img2.onerror = checkImagesLoaded;
-};
-
-
-const submitForm = async () => {
-  if (!formData.file) {
-    errorMessage.value = "❌ Fayl generatsiya qilinmagan! Avval saqlash va generatsiya qiling!";
-    return;
-  }
-  if (!formData.image) {
-    errorMessage.value = "❌ Surat olish shart! Avval suratga oling!";
-    return;
-  }
+  img3.src = "/telegram.png";
 
   const today = new Date();
-  const formattedDate = `${today.getFullYear()}.${String(today.getMonth() + 1).padStart(2, "0")}.${String(today.getDate()).padStart(2, "0")}`;
+  const day = String(today.getDate()).padStart(2, "0");
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const year = today.getFullYear();
+  const formattedDate = `${day}.${month}.${year}`;
 
   const receiptHTML = `
     <html>
@@ -469,31 +419,189 @@ const submitForm = async () => {
       </body>
     </html>
   `;
-  const receiptBlob = new Blob([receiptHTML], { type: "text/html" });
-  const receiptFile = new File([receiptBlob], "receipt.html", { type: "text/html" });
+
+  // HTML ni Blob sifatida yaratish
+  const blob = new Blob([receiptHTML], { type: "text/html" });
+  checkFile.value = new File([blob], `receipt-${formData.contractId}.html`, { type: "text/html" });
+};
+
+const printReceipt = () => {
+  // Bu funksiya endi faqat chekni chop etish uchun ishlatiladi
+  const img1 = new Image();
+  const img2 = new Image();
+  const img3 = new Image();
+  img1.src = "/asd.jpg";
+  img2.src = "https://arizasud.uz/https___arizasud.uz_.png";
+  img3.src = "/telegram.png";
+
+  const today = new Date();
+  const day = String(today.getDate()).padStart(2, "0");
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const year = today.getFullYear();
+  const formattedDate = `${day}.${month}.${year}`;
+
+  const receiptHTML = `
+    <div style="font-size: 12px; width:100%; display:flex; flex-direction: column; justify-content: center; align-content:center; color: black;">
+        <h1 style="text-align: center; font-size:15px; font-weight: bold; color: black; margin-top:18px;">To'lov cheki</h1>
+        <table style="width: 100%; border-collapse: collapse; color: black; table-layout: fixed;">
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Mijoz:</td>
+                <td style="color: black;">${formData.name} ${formData.surname} ${formData.dadname}</td>
+            </tr>
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Telefon Raqami:</td>
+                <td style="color: black; line-height: 1.2;">${formData.phone || "Mavjud emas"}</td>
+            </tr>
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Shartnoma idsi:</td>
+                <td style="color: black; line-height: 1.2;">№${formData.contractId || "Mavjud emas"}</td>
+            </tr>
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">To'langan:</td>
+                <td style="color: black; line-height: 1.2;">${formatNumberWithDots(dataaa.price)} so'm</td>
+            </tr>
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Qoldiq qarz:</td>
+                <td style="color: black; line-height: 1.2;">${formData.remainingSum <= 0 ? "To‘landi" : formatNumberWithDots(formData.remainingSum) + " so'm"}</td>
+            </tr>
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Sana:</td>
+                <td style="color: black; line-height: 1.2;">${formattedDate}</td>
+            </tr>
+        </table>
+        <p style="text-align: center; color: black; justify-content: center; gap:3px; align-items: center; display:flex; margin-top:10px;">
+            <img src="${img3.src}" alt="" style="max-width: 7%; height: auto;">
+            <span style="font-size: 10px; color: black;">Telegram: +998 99 106 70 35</span>
+        </p>
+        <p style="text-align: center; font-size:10px; color: black;">"YURIST KONSUL KONSALTING" х/к</p>
+        <div style="display: flex; flex-direction:column; justify-content: center; align-items: center; margin-top: 20px;">
+            <img src="${img1.src}" alt="" style="max-width: 90%; height: auto;">
+            <img src="${img2.src}" alt="" style="max-width: 90%; height: auto;">
+        </div>
+    </div>
+  `;
+
+  const originalContent = document.body.innerHTML;
+  const style = document.createElement("style");
+  style.innerHTML = `
+    @media print {
+      @page { margin: 0; }
+      body { margin: 0; }
+    }
+  `;
+  document.head.appendChild(style);
+
+  document.body.innerHTML = receiptHTML;
+
+  img1.onload = img2.onload = img3.onload = () => {
+    window.print();
+    document.body.innerHTML = originalContent;
+    document.head.removeChild(style);
+    window.location.reload();
+  };
+
+  img1.onerror = img2.onerror = img3.onerror = () => {
+    console.error("Image failed to load");
+    window.print();
+    document.body.innerHTML = originalContent;
+    document.head.removeChild(style);
+    window.location.reload();
+  };
+};
+
+const submitForm = async () => {
+  if (!formData.file) {
+    errorMessage.value = "❌ Fayl generatsiya qilinmagan! Avval saqlash va generatsiya qiling!";
+    return;
+  }
+  if (!formData.image) {
+    errorMessage.value = "❌ Surat olish shart! Avval suratga oling!";
+    return;
+  }
+  if (!checkFile.value) {
+    errorMessage.value = "❌ Chek fayli generatsiya qilinmagan!";
+    return;
+  }
 
   isLoading.value = true;
   errorMessage.value = "";
 
+  // FormData tayyorlash - Alohida maydonlar sifatida
   const formDataToSend = new FormData();
-  Object.entries(formData).forEach(([key, value]) => {
-    if (value !== null && value !== "") formDataToSend.append(key, value);
-  });
+  formDataToSend.append("name", formData.name || "");
+  formDataToSend.append("surname", formData.surname || "");
+  formDataToSend.append("dadname", formData.dadname || "");
+  formDataToSend.append("userCode", formData.userCode || "");
+  formDataToSend.append("uniqueCode", formData.uniqueCode || "");
+  formDataToSend.append("contractId", String(formData.contractId) || "");
+  formDataToSend.append("phone", formData.phone || "");
+  formDataToSend.append("totalSum", String(formData.totalSum) || "0"); // Kichik harf
+  formDataToSend.append("paidSum", String(formData.paidSum) || "0");
+  formDataToSend.append("remainingSum", String(formData.remainingSum) || "0");
+  formDataToSend.append("file", formData.file);
+  formDataToSend.append("image", formData.image);
+  formDataToSend.append("check", checkFile.value); // Chek fayli qo‘shildi
 
-  formDataToSend.append("check", receiptFile);
+  // Ma'lumotlarni log qilish
+  console.log("Yuborilayotgan ma'lumotlar:");
+  for (let [key, value] of formDataToSend.entries()) {
+    console.log(`Key: ${key}, Value: ${value}`);
+  }
 
   try {
     const config = { headers: { "Content-Type": "multipart/form-data" } };
-    const response = await axios.post(API_URL1, formDataToSend, config);
     printReceipt();
     resetForm();
     await GetClient();
   } catch (error) {
-    errorMessage.value = error.response?.data?.message || "❌ Ma'lumotlarni yuborishda xatolik!";
+    const errorDetails = error.response?.data || error.message;
+    console.error("❌ Xatolik detallari:", errorDetails);
+    errorMessage.value = `❌ Xatolik: ${errorDetails.message || error.message}`;
   } finally {
     isLoading.value = false;
   }
 };
+
+const getInputType = (key) => {
+  const lowerKey = key.toLowerCase();
+  if (['konsalting narxi', 'tushuntirish narxi', 'boshlag’ich summa'].some(k => lowerKey.includes(k))) {
+    return 'number';
+  }
+  if (lowerKey.includes('tug’ilgan sanasi')) {
+    return 'date';
+  }
+  if (key === 'Fuqaroning JSHSHIR raqami') {
+    return 'number';
+  }
+  return 'text';
+};
+
+const getMaxLength = (key) => {
+  if (key === "Fuqaroning JSHSHIR raqami") return 14; // Use strict equality without trimming
+  if (key === "Fuqaroning telefon raqami ") return 19;
+  return undefined;
+};
+
+const preventCyrillic = (key, index) => {
+  if (key === "Fuqaroning ID karta raqami") {
+    fieldValues.value[index] = fieldValues.value[index].replace(/[а-яА-ЯёЁ]/g, "");
+  }
+};
+
+const addPhonePrefix = (key, index) => {
+  if (key === "Fuqaroning telefon raqami " && !fieldValues.value[index].startsWith("+998")) {
+    fieldValues.value[index] = "+998 ";
+  }
+};
+
+const formatPhoneNumber = (key, index) => {
+  if (key === "Fuqaroning telefon raqami ") {
+    let rawNumber = fieldValues.value[index].replace(/[^\d]/g, ""); // Remove non-numeric characters except "+"
+    const formatted = `+998 ${rawNumber.slice(3, 5)} ${rawNumber.slice(5, 8)} ${rawNumber.slice(8, 10)} ${rawNumber.slice(10, 12)}`.trim();
+    fieldValues.value[index] = formatted;
+  }
+};
+
 watch(
   () => fields.value.length,
   async (newLength) => {
@@ -521,9 +629,11 @@ onUnmounted(() => {
 
 .btn {
   padding: 8px 16px;
-  border: none; margin: 2px;
+  border: none;
+  margin: 2px;
   border-radius: 4px;
   cursor: pointer;
+  color: white;
 }
 
 .btn-primary {
@@ -536,12 +646,10 @@ onUnmounted(() => {
 
 .btn-success {
   background-color: #28a745;
-
 }
 
 .btn-danger {
   background-color: #dc3545;
-
 }
 
 .btn:hover {
@@ -562,5 +670,9 @@ onUnmounted(() => {
   padding: 16px;
   border-radius: 8px;
   text-align: center;
+}
+
+.hidden {
+  display: none;
 }
 </style>
