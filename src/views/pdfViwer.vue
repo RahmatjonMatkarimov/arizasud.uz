@@ -1,13 +1,14 @@
 <script setup>
-import axios from "axios";
 import { ref, onMounted, inject } from "vue";
 import { useRoute } from "vue-router";
-import * as pdfjsLib from "pdfjs-dist";
-import workerSrc from "pdfjs-dist/build/pdf.worker.min?url";
-import { URL } from "@/auth/url";
+import axios from "axios";
 
-// PDF worker setup
-pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
+// pdfjs-dist importlari
+import * as pdfjsLib from "pdfjs-dist/build/pdf";
+import pdfWorker from "pdfjs-dist/build/pdf.worker.entry"; // Bu worker entry point
+
+// PDF.js worker sozlash
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
 const isLoading = inject("isLoading", ref(false));
 const route = useRoute();
@@ -31,7 +32,6 @@ const getData = async () => {
   }
 };
 
-// Render PDF pages
 const renderPdf = async (url) => {
   try {
     const loadingTask = pdfjsLib.getDocument(url);
@@ -48,7 +48,6 @@ const renderPdf = async (url) => {
       canvas.height = viewport.height;
 
       await page.render({ canvasContext: context, viewport }).promise;
-
       pdfPages.value.push(canvas.toDataURL("image/png"));
     }
   } catch (error) {
@@ -56,52 +55,6 @@ const renderPdf = async (url) => {
   }
 };
 
-// Download PDF function
-const downloadPdf = () => {
-  if (fileUrl.value) {
-    const link = document.createElement("a");
-    link.href = fileUrl.value;
-    link.download = `document_${fileId}.pdf`; // Default filename
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
-};
-
-const loadParticlesScript = () => {
-  return new Promise((resolve, reject) => {
-    const script = document.createElement("script");
-    script.src = "https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js";
-    script.onload = resolve;
-    script.onerror = reject;
-    document.body.appendChild(script);
-  });
-};
-
-onMounted(async () => {
-  try {
-    await loadParticlesScript();
-    particlesJS("particles-js", {
-      particles: {
-        number: { value: 100, density: { enable: true, value_area: 800 } },
-        color: { value: "#ffffff" },
-        shape: { type: "circle", stroke: { width: 0, color: "#000000" } },
-        opacity: { value: 0.7, random: true, anim: { enable: true, speed: 1, opacity_min: 0.3, sync: false } },
-        size: { value: 4, random: true, anim: { enable: true, speed: 20, size_min: 0.1, sync: false } },
-        line_linked: { enable: true, distance: 150, color: "#ffffff", opacity: 0.3, width: 2 },
-        move: { enable: true, speed: 3, direction: "none", random: false, straight: false, out_mode: "out", attract: { enable: false } },
-      },
-      interactivity: {
-        detect_on: "canvas",
-        events: { onhover: { enable: true, mode: "grab" }, onclick: { enable: true, mode: "push" }, resize: true },
-        modes: { grab: { distance: 200, line_linked: { opacity: 5 } }, bubble: { distance: 400, size: 40, duration: 2, opacity: 8, speed: 3 }, repulse: { distance: 150, duration: 0.4 }, push: { particles_nb: 4 }, remove: { particles_nb: 2 } },
-      },
-      retina_detect: true,
-    });
-  } catch (error) {
-    console.error("Particles.js skriptini yuklashda xato:", error);
-  }
-});
 onMounted(() => {
   getData();
 });
