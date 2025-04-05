@@ -3,11 +3,15 @@ import axios from "axios";
 import { ref, onMounted, inject } from "vue";
 import { useRoute } from "vue-router";
 import * as pdfjsLib from "pdfjs-dist";
-import pdfjsWorker from "pdfjs-dist/build/pdf.worker.min.js"; // Use the minified worker file
+// Remove the direct import of pdf.worker.min.js
+// import pdfjsWorker from "pdfjs-dist/build/pdf.worker.min.js"; 
 import { URL } from "@/auth/url";
 
 // PDF worker setup
-pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+  "pdfjs-dist/build/pdf.worker.min.js",
+  import.meta.url
+).toString();
 
 const isLoading = inject("isLoading", ref(false));
 const route = useRoute();

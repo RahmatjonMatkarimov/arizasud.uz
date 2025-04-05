@@ -20,6 +20,9 @@ export default defineConfig({
           pdfjsWorker: ["pdfjs-dist/build/pdf.worker.entry"], // Separate chunk for the worker
         },
       },
+      external: [
+        "pdfjs-dist/build/pdf.worker.min.js", // Externalize the PDF worker
+      ],
     },
   },
   optimizeDeps: {
