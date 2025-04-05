@@ -8,7 +8,7 @@ import * as pdfjsLib from "pdfjs-dist";
 import { URL } from "@/auth/url";
 
 // PDF worker setup
-pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+pdfjsLib.GlobalWorkerOptions.workerSrc = /* @vite-ignore */ new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
   import.meta.url
 ).toString();
