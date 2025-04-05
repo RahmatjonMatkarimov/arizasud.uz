@@ -1,11 +1,10 @@
 <template>
     <div class="max-w-3xl mx-auto p-6 text-center">
-        <h2 class="text-2xl font-bold mb-6">{{ dat === 'datakril' ? translateText('Monthly Cost Records') : 'Monthly Cost Records' }}</h2>
-        <div class="mb-6 flex justify-end">
+        <!-- <div class="mb-6 flex justify-end">
             <button @click="openPostModal" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
                 {{ dat === 'datakril' ? translateText("Yangi narx qo'shish") : "Yangi narx qo'shish" }}
             </button>
-        </div>
+        </div> -->
 
         <!-- Display GET results in a table -->
         <div v-if="records.length" class="overflow-x-auto">
@@ -15,7 +14,7 @@
                         <th class="border text-black border-gray-300 px-4 py-2"></th>
                         <th class="border text-black border-gray-300 px-4 py-2">{{ dat === 'datakril' ? translateText('1-Narx') : '1-Narx' }}</th>
                         <th class="border text-black border-gray-300 px-4 py-2">{{ dat === 'datakril' ? translateText('2-Narx') : '2-Narx' }}</th>
-                        <th class="border text-black border-gray-300 px-4 py-2">{{ dat === 'datakril' ? translateText('Sozlamalar') : 'Sozlamalar' }}</th>
+                        <th v-if="role === 'yurist' || role === 'bigAdmin'"  class="border text-black border-gray-300 px-4 py-2">{{ dat === 'datakril' ? translateText('Sozlamalar') : 'Sozlamalar' }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -23,7 +22,7 @@
                         <td class="border text-black border-gray-300 px-4 py-2">{{ index + 1 }}</td>
                         <td class="border text-black border-gray-300 px-4 py-2">{{ record.sum1 }}</td>
                         <td class="border text-black border-gray-300 px-4 py-2">{{ record.sum2 }}</td>
-                        <td class="border text-black border-gray-300 px-4 py-2">
+                        <td v-if="role === 'yurist' || role === 'bigAdmin'"  class="border text-black border-gray-300 px-4 py-2">
                             <button @click="openPutModal(record)"
                                 class="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">
                                 {{ dat === 'datakril' ? translateText('Tahrirlash') : 'Tahrirlash' }}
@@ -142,7 +141,7 @@ const putError = ref(null);
 const deleteError = ref(null);
 const loading = ref(false);
 const dat = inject('dat');
-// Modal visibility states
+const role = localStorage.getItem('role');
 const showPostModal = ref(false);
 const showPutModal = ref(false);
 const showDeleteModal = ref(false);

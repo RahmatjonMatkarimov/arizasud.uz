@@ -253,9 +253,9 @@ const saveAndGenerate = async () => {
       if (field.key === "Fuqaroning JSHSHIR raqami") formData.uniqueCode = fieldValues.value[index];
       if (field.key === "Fuqaroning ID karta raqami") formData.userCode = fieldValues.value[index];
       if (field.key === "Fuqaroning telefon raqami ") formData.phone = fieldValues.value[index];
-      if (field.key === "boshlag’ich summa") dataaa.price = Number(fieldValues.value[index]) || 0;
-      if (field.key === "Konsalting narxi") dataaa.summa1 = Number(fieldValues.value[index]) || 0;
-      if (field.key === "Tushuntirish narxi") dataaa.summa2 = Number(fieldValues.value[index]) || 0;
+      if (field.key === "Buyurtmachi murojaati") dataaa.price = Number(fieldValues.value[index]) || 0;
+      if (field.key === "Konsalting xizmat ko’rsatish narxi") dataaa.summa1 = Number(fieldValues.value[index]) || 0;
+      if (field.key === "Hujjatga tushuntirish berish narxi") dataaa.summa2 = Number(fieldValues.value[index]) || 0;
     });
 
     if (!docxTemplate.value) {
@@ -296,9 +296,9 @@ const saveAndGenerate = async () => {
     data["sum2"] = formatNumberWithDots(sum2Num);
     data["umumiy"] = formatNumberWithDots(umumiy);
     data["qarz"] = formatNumberWithDots(qarz);
-    data["Konsalting narxi"] = formatNumberWithDots(konsaltingNarxi);
-    data["Tushuntirish narxi"] = formatNumberWithDots(tushuntirishNarxi);
-    data["boshlag’ich summa"] = formatNumberWithDots(boshlagichSumma);
+    data["Konsalting xizmat ko’rsatish narxi"] = formatNumberWithDots(konsaltingNarxi);
+    data["Hujjatga tushuntirish berish narxi"] = formatNumberWithDots(tushuntirishNarxi);
+    data["Buyurtmachi murojaati"] = formatNumberWithDots(boshlagichSumma);
 
     docxTemplate.value.render(data);
     const output = docxTemplate.value.getZip().generate({ type: "blob" });
@@ -529,9 +529,9 @@ const submitForm = async () => {
   formDataToSend.append("uniqueCode", formData.uniqueCode || "");
   formDataToSend.append("contractId", String(formData.contractId) || "");
   formDataToSend.append("phone", formData.phone || "");
-  formDataToSend.append("totalSum", String(formData.totalSum) || "0");
-  formDataToSend.append("paidSum", String(formData.paidSum) || "0");
-  formDataToSend.append("remainingSum", String(formData.remainingSum) || "0");
+  formDataToSend.append("totalSum", formData.totalSum || 0); // Send as plain number
+  formDataToSend.append("paidSum", formData.paidSum || 0);   // Send as plain number
+  formDataToSend.append("remainingSum", formData.remainingSum || 0); // Send as plain number
   formDataToSend.append("file", formData.file);
   formDataToSend.append("image", formData.image);
   formDataToSend.append("check", checkFile.value);
@@ -561,7 +561,7 @@ const submitForm = async () => {
 
 const formatNumberFields = (key, index) => {
   const lowerKey = key.toLowerCase();
-  if (['konsalting narxi', 'tushuntirish narxi', 'boshlag’ich summa'].some(k => lowerKey.includes(k))) {
+  if (['Konsalting xizmat ko’rsatish narxi', 'Hujjatga tushuntirish berish narxi', 'Buyurtmachi murojaati'].some(k => lowerKey.includes(k))) {
     const rawValue = String(fieldValues.value[index] || "").replace(/[^\d]/g, ""); // Remove non-numeric characters
     fieldValues.value[index] = rawValue ? formatNumberWithDots(rawValue) : ""; // Format with dots
   }
@@ -569,7 +569,7 @@ const formatNumberFields = (key, index) => {
 
 const getInputType = (key) => {
   const lowerKey = key.toLowerCase();
-  if (['konsalting narxi', 'tushuntirish narxi', 'boshlag’ich summa'].some(k => lowerKey.includes(k))) {
+  if (['Konsalting xizmat ko’rsatish narxi', 'Hujjatga tushuntirish berish narxi', 'Buyurtmachi murojaati'].some(k => lowerKey.includes(k))) {
     return 'text'; // Use text type for formatted numbers
   }
   if (lowerKey.includes('tug’ilgan sanasi')) {

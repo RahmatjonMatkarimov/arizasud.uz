@@ -16,7 +16,7 @@
         </div>
 
         <div v-if="filteredData.length > 0">
-            <div class="flex space-x-2 mb-4">
+            <div v-if="role === 'yurist' || role === 'bigAdmin'" class="flex space-x-2 mb-4">
                 <button @click="toggleCheckboxes"
                     class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300">
                     {{ dat === 'datakril' ? translateText(showCheckboxes ? 'Bekor qilish' : 'O\'chirish') : (showCheckboxes ? 'Bekor qilish' : 'O\'chirish') }}
@@ -28,7 +28,7 @@
             </div>
             <div v-for="item in filteredData" :key="item.id" class="p-3">
                 <div
-                    class="flex justify-between items-center p-4 border rounded-lg shadow bg-gray-200 hover:bg-gray-300 transition">
+                    class="flex justify-between border-black items-center p-4 border rounded-lg shadow bg-gray-200 hover:bg-gray-300 transition">
                     <div class="flex items-center space-x-2">
                         <input v-if="showCheckboxes" type="checkbox" v-model="selectedClientIds" :value="item.id"
                             class="form-checkbox h-4 w-4 text-blue-500 focus:ring focus:ring-blue-300" />
@@ -36,26 +36,48 @@
                             class="text-gray-900 text-lg font-medium cursor-pointer">
                             {{ dat === 'datakril' 
                                 ? translateText(item.name) + ' ' + translateText(item.surname) + ' ' + translateText(item.dadname) 
-                                : item.name + ' ' + item.surname + ' ' + item.dadname }}{{ item.ClientPayment[0] }}
+                                : item.name + ' ' + item.surname + ' ' + item.dadname }}
                         </h1>
                     </div>
-                    <div class="flex items-center space-x-2">
-                        <button @click="openModal(item)"
-                            :class="item.price <= 0 ? 'hidden' : 'bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600'">
+                    <div class="flex justify-center gap-4 items-center"> 
+                        <div>
+
+                            <button @click="openModal(item)"
+                            :class="item.ClientPayment.some(payment => payment.remainingSum > 0) ? 'bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600' : 'hidden'">
                             {{ dat === 'datakril' ? translateText("Qarzlarni to'lash") : "Qarzlarni to'lash" }}
                         </button>
-                        <h1 :class="item.price <= 0 ? 'text-green-600 font-bold' : 'text-red-600 font-bold'">
-                            {{ item.price <= 0 
-                                ? (dat === 'datakril' ? translateText("To'liq to'langan") : "To'liq to'langan") 
-                                : (dat === 'datakril' 
-                                    ? translateText("To'liq to'lanmagan: ") + formatNumberWithDots(item.price) + translateText(" so'm") 
-                                    : "To'liq to'lanmagan: " + formatNumberWithDots(item.price) + " so'm") }}
-                        </h1>
+                    </div>
+                    <div class="flex flex-col space-y-2">
+                        <div v-for="payment in item.ClientPayment" :key="payment.id" class="text-sm text-gray-700">
+                            <h1 :class="payment.remainingSum <= 0 ? 'text-green-600 font-bold' : 'text-red-600 font-bold'">
+                                {{ payment.remainingSum <= 0 
+                                    ? (dat === 'datakril' ? translateText("To'liq to'langan") : "To'liq to'langan") 
+                                    : (dat === 'datakril' 
+                                    ? translateText("Qoldiq qarz: ") + formatNumberWithDots(payment.remainingSum) + translateText(" so'm") 
+                                    : "Qoldiq qarz: " + formatNumberWithDots(payment.remainingSum) + " so'm") }}
+                            </h1>
+                            <h1 class="text-gray-600">
+                                {{ dat === 'datakril' 
+                                    ? translateText("To'langan summa: ") + formatNumberWithDots(payment.paidSum) + translateText(" so'm") 
+                                    : "To'langan summa: " + formatNumberWithDots(payment.paidSum) + " so'm" }}
+                            </h1>
+                            <h1 class="text-gray-600">
+                                {{ dat === 'datakril' 
+                                    ? translateText("Umumiy summa: ") + formatNumberWithDots(payment.TotalSum) + translateText(" so'm") 
+                                    : "Umumiy summa: " + formatNumberWithDots(payment.TotalSum) + " so'm" }}
+                            </h1>
+                            <h1 class="text-gray-600">
+                                {{ dat === 'datakril' 
+                                    ? translateText("To'langan sana: ") + new Date(payment.createdAt).toLocaleDateString("uz-UZ") 
+                                    : "To'langan sana: " + new Date(payment.createdAt).toLocaleDateString("uz-UZ") }}
+                            </h1>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+        </div>
+</div>
 
     <div v-if="modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
         <div class="bg-white p-4 rounded shadow-lg w-80">
@@ -98,6 +120,7 @@ const receiptData = ref({});
 const selectedClientIds = ref([]);
 const selectAll = ref(false);
 const showCheckboxes = ref(false);
+const role = localStorage.getItem("role")
 
 const formatNumberWithDots = (number) => {
     return Number(number).toLocaleString("uz-UZ", { minimumFractionDigits: 0 }).replace(/,/g, ".");
@@ -213,21 +236,33 @@ const submitPayment = async () => {
         return;
     }
 
-    const newPrice = selectedItem.value.price - paymentAmount;
-    const remainingSum = selectedItem.value.remainingSum - paymentAmount;
+    // Find the specific payment object to update
+    const paymentToUpdate = selectedItem.value.ClientPayment.find(payment => payment.remainingSum > 0);
+    if (!paymentToUpdate) {
+        alert("To'lov uchun amal qiluvchi qarz topilmadi!");
+        return;
+    }
+
+    // Ensure the payment does not exceed the remaining debt
+    if (paymentAmount > paymentToUpdate.remainingSum) {
+        alert("To'lov miqdori qoldiq qarzdan oshib ketmoqda!");
+        return;
+    }
+
+    const updatedPaidSum = (paymentToUpdate.paidSum || 0) + paymentAmount;
+    const updatedRemainingSum = paymentToUpdate.remainingSum - paymentAmount;
 
     try {
         await axios.post(`${URL}/client-pay`, { 
             clientId: selectedItem.value.id,
-            TotalSum: selectedItem.value.TotalSum || 0, // Ensure TotalSum is defined
-            paidSum: (selectedItem.value.paidSum || 0) + paymentAmount, // Update paidSum
-            remainingSum: remainingSum >= 0 ? remainingSum : 0, // Ensure remainingSum is non-negative
+            TotalSum: paymentToUpdate.TotalSum || 0, // Ensure TotalSum is defined
+            paidSum: updatedPaidSum, // Update paidSum
+            remainingSum: updatedRemainingSum >= 0 ? updatedRemainingSum : 0, // Ensure remainingSum is non-negative
         });
 
-        const index = data.value.findIndex((item) => item.id === selectedItem.value.id);
-        if (index !== -1) {
-            data.value[index].price = newPrice;
-        }
+        // Update the local data for the specific payment
+        paymentToUpdate.paidSum = updatedPaidSum;
+        paymentToUpdate.remainingSum = updatedRemainingSum >= 0 ? updatedRemainingSum : 0;
 
         const currentDate = new Date();
         const formattedDate = `${String(currentDate.getDate()).padStart(2, '0')}.${String(currentDate.getMonth() + 1).padStart(2, '0')}.${currentDate.getFullYear()}`;
@@ -239,7 +274,7 @@ const submitPayment = async () => {
             phone: selectedItem.value.phone,
             uniqueCode: selectedItem.value.contractId,
             paymentAmount: paymentAmount,
-            remainingDebt: newPrice,
+            remainingDebt: updatedRemainingSum >= 0 ? updatedRemainingSum : 0,
             date: formattedDate,
         };
 

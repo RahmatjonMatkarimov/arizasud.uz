@@ -19,13 +19,18 @@ const getData = async () => {
   isLoading.value = true;
   try {
     const res = await axios.get(`${URL}/signingFiles/signing/${fileId}`);
+    console.log("Server response:", res.data); // Debugging log
+
     fileUrl.value = res.data.filePath.startsWith("http")
       ? res.data.filePath
       : `${URL}${res.data.filePath}`;
 
+    console.log("Constructed file URL:", fileUrl.value); // Debugging log
+
     await renderPdf(fileUrl.value);
   } catch (error) {
     console.error("Ma'lumot yuklashda xatolik:", error);
+    alert("Faylni yuklashda xatolik yuz berdi. Iltimos, keyinroq urinib ko'ring.");
   } finally {
     isLoading.value = false;
   }
@@ -34,6 +39,7 @@ const getData = async () => {
 // Render PDF pages
 const renderPdf = async (url) => {
   try {
+    console.log("Rendering PDF from URL:", url); // Debugging log
     const loadingTask = pdfjsLib.getDocument(url);
     const pdf = await loadingTask.promise;
     pdfPages.value = [];
@@ -53,6 +59,7 @@ const renderPdf = async (url) => {
     }
   } catch (error) {
     console.error("PDF yuklashda xatolik:", error);
+    alert("PDFni yuklashda xatolik yuz berdi. Iltimos, URLni tekshiring.");
   }
 };
 

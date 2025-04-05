@@ -63,7 +63,7 @@ const routes = [
             { path: "/FileAdmin", component: () => import("@/components/contract/fileAdmiin.vue") },
             { path: "/Sum", component: () => import("@/components/contract/SumAdmin.vue") },
             { path: "/CliendList", component: () => import("@/components/contract/cliendList.vue") },
-            { path: "/Check/:id", component: () => import("@/components/contract/htmlView.vue") },
+            { path: "/Check/:id", component: () => import("@/components/contract/fileOpen.vue") },
         ],
         meta: { requiresAuth: true, allowedRoles: ["admin", "manager", "yurist", "bigAdmin"] },
     },

@@ -8,19 +8,19 @@
         </div>
 
         <!-- GET So‘rovi -->
-        <div class="bg-white p-4 rounded shadow">
-            <h3 class="text-xl font-semibold mb-2">
-                {{ dat === 'datakril' ? translateText("Hujjatlari") : "Hujjatlari" }}
+        <div class="bg-gray-300 p-4 rounded-lg shadow">
+            <h3 class="text-xl sm:text-2xl block font-extrabold text-blue-800 text-center mb-6">
+                {{ dat === 'datakril' ? translateText("Shartnoma hujjatlari") : "Shartnoma hujjatlari" }}
             </h3>
             <div v-if="getResponse" class="space-y-2">
                 <div v-if="items.length > 0">
                     <div v-for="item in items" :key="item.id"
-                        class="flex justify-between items-center mb-2 p-2 border border-black border-opacity-[50%] rounded">
+                        class="flex justify-between items-center mb-2 p-2 border border-black bg-white border-opacity-[30%] rounded">
                         <h1 @click="router.push('/ContractAdmin/' + item.id)"
-                            class="cursor-pointer text-blue-600 hover:underline">
+                            class="cursor-pointer text-black hover:underline">
                             {{ dat === 'datakril' ? translateText(item.name) : item.name }}
                         </h1>
-                        <div class="space-x-2">
+                        <div v-if="role === 'yurist' || role === 'bigAdmin'" class="space-x-2">
                             <button @click="openPutModal(item)" :disabled="isLoading"
                                 class="bg-yellow-400 text-white px-3 py-1 rounded disabled:opacity-50">
                                 {{ dat === 'datakril' ? translateText("Yangilash") : "Yangilash" }}
@@ -44,28 +44,28 @@
         <!-- Modal POST va PUT uchun -->
         <div v-if="showModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30">
             <div class="bg-white p-4 rounded shadow-lg w-80">
-                <h3 class="text-lg font-semibold mb-4 text-center">
+                <h3 class="text-lg font-semibold text-black mb-4 text-center">
                     {{ dat === 'datakril' ? translateText(modalTitle) : modalTitle }}
                 </h3>
                 <form @submit.prevent="handleModalSubmit">
                     <div class="mb-4">
-                        <label for="name" class="block text-sm font-medium mb-1">
+                        <label for="name" class="block text-black text-sm font-medium mb-1">
                             {{ dat === 'datakril' ? translateText("Nomi:") : "Nomi:" }}
                         </label>
                         <input type="text" id="name" v-model="name" required
-                            class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            class="w-full p-2 border text-black border-black rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     <div class="mb-4">
-                        <label for="file" class="block text-sm font-medium mb-1">
+                        <label for="file" class="block text-sm text-black font-medium mb-1">
                             {{ dat === 'datakril' ? translateText("Fayl:") : "Fayl:" }}
                         </label>
                         <input type="file" id="file" ref="fileInput" @change="handleFileChange"
                             :required="modalType === 'post'"
-                            class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            class="w-full p-2 border rounded border-black text-black focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     <div class="flex justify-end space-x-2">
                         <button type="submit" :disabled="isLoading"
-                            class="bg-green-500 text-white px-4 py-2 rounded disabled:opacity-50">
+                            class="bg-green-500 text-black px-4 py-2 rounded disabled:opacity-50">
                             {{ isLoading ? (dat === 'datakril' ? translateText("Yuborilmoqda...") : "Yuborilmoqda...") : (dat === 'datakril' ? translateText("Yuborish") : "Yuborish") }}
                         </button>
                         <button type="button" @click="closeModal" :disabled="isLoading"
@@ -74,11 +74,6 @@
                         </button>
                     </div>
                 </form>
-                <div v-if="modalResponse"
-                    :class="[modalResponseClass, { 'bg-green-500': modalResponse === 'success', 'bg-red-500': modalResponse === 'error' }]"
-                    class="mt-4 p-2 rounded text-white text-center">
-                    {{ dat === 'datakril' ? translateText(modalResponseMessage) : modalResponseMessage }}
-                </div>
             </div>
         </div>
     </div>
@@ -104,6 +99,9 @@ const modalTitle = ref('');
 const modalResponse = ref(null);
 const dat = inject('dat');
 const modalResponseMessage = ref('');
+const role = localStorage.getItem('role');
+console.log(role);
+
 
 const handleFileChange = (event) => {
     file.value = event.target.files[0];
@@ -165,7 +163,6 @@ const handleDelete = async (id) => {
 
         if (response.ok) {
             items.value = items.value.filter(item => item.id !== id);
-            alert('Element muvaffaqiyatli o‘chirildi');
         } else {
             alert(`Xatolik: ${result.message || 'Nimadir xato ketdi'}`);
         }
@@ -191,14 +188,12 @@ const handleModalSubmit = async () => {
         const result = await response.json();
 
         if (response.ok) {
-            modalResponse.value = 'success';
             modalResponseMessage.value = `Muvaffaqiyat: ${JSON.stringify(result, null, 2)}`;
+            showModal.value = false;
             handleGet();
-        } else {
-            modalResponse.value = 'error';
         }
     } catch (error) {
-        modalResponse.value = 'error';
+       console.error('Xatolik:', error);
     } finally {
         isLoading.value = false;
     }
@@ -207,10 +202,6 @@ const handleModalSubmit = async () => {
 onMounted(handleGet);
 </script>
 <style scoped>
-* {
-    color: black;
-}
-
 button {
     transition: background-color 0.3s ease;
 }
