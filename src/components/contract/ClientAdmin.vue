@@ -11,7 +11,7 @@
           :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" 
           required
           class="w-full p-2 border rounded focus:ring text-black focus:ring-blue-200"
-          @input="field.key === 'Fuqaroning telefon raqami ' ? formatPhoneNumber(field.key, index) : preventCyrillic(field.key, index)"
+          @input="field.key === 'Fuqaroning telefon raqami ' ? formatPhoneNumber(field.key, index) : restrictToNumbers(field.key, index)"
           @focus="addPhonePrefix(field.key, index)" />
       </div>
 
@@ -90,7 +90,7 @@ const formData = reactive({
   uniqueCode: "",
   contractId: "",
   phone: "",
-  totalSum: 0, // Kichik harfga o‘zgartirildi
+  totalSum: 0,
   paidSum: 0,
   remainingSum: 0,
   file: null,
@@ -306,9 +306,7 @@ const saveAndGenerate = async () => {
       type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     });
 
-    // Chekni generatsiya qilish
     await generateCheckFile();
-
     await submitForm();
   } catch (error) {
     errorMessage.value = "❌ Yuklashda xatolik yuz berdi: " + error.message;
@@ -335,7 +333,6 @@ const closeWarningModal = () => {
   isWarningModalOpen.value = false;
 };
 
-// Chekni HTML sifatida generatsiya qilish va fayl sifatida saqlash
 const generateCheckFile = async () => {
   const img1 = new Image();
   const img2 = new Image();
@@ -405,7 +402,7 @@ const generateCheckFile = async () => {
             <p><strong>Telefon:</strong> ${formData.phone || "Mavjud emas"}</p>
             <p><strong>Shartnoma idsi:</strong> ${formData.contractId || "Mavjud emas"}</p>
             <p><strong>To'langan Summa:</strong> ${formatNumberWithDots(dataaa.price)} so'm</p>
-            <p><strong>Qoldiq Qarz:</strong> ${formatNumberWithDots(formData.price)} so'm</p>
+            <p><strong>Qoldiq Qarz:</strong> ${formatNumberWithDots(formData.remainingSum)} so'm</p>
             <p><strong>Sana:</strong>${formattedDate}</p>
           </div>
           <div class="receipt-images">
@@ -420,13 +417,11 @@ const generateCheckFile = async () => {
     </html>
   `;
 
-  // HTML ni Blob sifatida yaratish
   const blob = new Blob([receiptHTML], { type: "text/html" });
   checkFile.value = new File([blob], `receipt-${formData.contractId}.html`, { type: "text/html" });
 };
 
 const printReceipt = () => {
-  // Bu funksiya endi faqat chekni chop etish uchun ishlatiladi
   const img1 = new Image();
   const img2 = new Image();
   const img3 = new Image();
@@ -526,7 +521,6 @@ const submitForm = async () => {
   isLoading.value = true;
   errorMessage.value = "";
 
-  // FormData tayyorlash - Alohida maydonlar sifatida
   const formDataToSend = new FormData();
   formDataToSend.append("name", formData.name || "");
   formDataToSend.append("surname", formData.surname || "");
@@ -535,14 +529,13 @@ const submitForm = async () => {
   formDataToSend.append("uniqueCode", formData.uniqueCode || "");
   formDataToSend.append("contractId", String(formData.contractId) || "");
   formDataToSend.append("phone", formData.phone || "");
-  formDataToSend.append("totalSum", String(formData.totalSum) || "0"); // Kichik harf
+  formDataToSend.append("totalSum", String(formData.totalSum) || "0");
   formDataToSend.append("paidSum", String(formData.paidSum) || "0");
   formDataToSend.append("remainingSum", String(formData.remainingSum) || "0");
   formDataToSend.append("file", formData.file);
   formDataToSend.append("image", formData.image);
-  formDataToSend.append("check", checkFile.value); // Chek fayli qo‘shildi
+  formDataToSend.append("check", checkFile.value);
 
-  // Ma'lumotlarni log qilish
   console.log("Yuborilayotgan ma'lumotlar:");
   for (let [key, value] of formDataToSend.entries()) {
     console.log(`Key: ${key}, Value: ${value}`);
@@ -550,6 +543,10 @@ const submitForm = async () => {
 
   try {
     const config = { headers: { "Content-Type": "multipart/form-data" } };
+    const response = await axios.post(API_URL1, formDataToSend, config);
+    console.log("✅ Ma'lumotlar muvaffaqiyatli saqlandi:", response.data);
+    errorMessage.value = "✅ Muvaffaqiyatli saqlandi!";
+    isLoading.value = false;
     printReceipt();
     resetForm();
     await GetClient();
@@ -570,16 +567,22 @@ const getInputType = (key) => {
   if (lowerKey.includes('tug’ilgan sanasi')) {
     return 'date';
   }
-  if (key === 'Fuqaroning JSHSHIR raqami') {
-    return 'number';
-  }
-  return 'text';
+  return 'text'; // Default to text for all other fields, including JSHSHIR
 };
 
 const getMaxLength = (key) => {
-  if (key === "Fuqaroning JSHSHIR raqami") return 14; // Use strict equality without trimming
-  if (key === "Fuqaroning telefon raqami ") return 19;
+  if (key.trim() === "Fuqaroning JSHSHIR raqami") return 14;
+  if (key.trim() === "Fuqaroning telefon raqami ") return 19;
   return undefined;
+};
+
+const restrictToNumbers = (key, index) => {
+  if (key === "Fuqaroning JSHSHIR raqami") {
+    fieldValues.value[index] = fieldValues.value[index].replace(/[^0-9]/g, "");
+    if (fieldValues.value[index].length > 14) {
+      fieldValues.value[index] = fieldValues.value[index].slice(0, 14);
+    }
+  }
 };
 
 const preventCyrillic = (key, index) => {
@@ -596,7 +599,7 @@ const addPhonePrefix = (key, index) => {
 
 const formatPhoneNumber = (key, index) => {
   if (key === "Fuqaroning telefon raqami ") {
-    let rawNumber = fieldValues.value[index].replace(/[^\d]/g, ""); // Remove non-numeric characters except "+"
+    let rawNumber = fieldValues.value[index].replace(/[^\d]/g, "");
     const formatted = `+998 ${rawNumber.slice(3, 5)} ${rawNumber.slice(5, 8)} ${rawNumber.slice(8, 10)} ${rawNumber.slice(10, 12)}`.trim();
     fieldValues.value[index] = formatted;
   }
