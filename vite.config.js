@@ -14,6 +14,16 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          pdfjsWorker: ["pdfjs-dist/build/pdf.worker.entry"], // Separate chunk for the worker
+        },
+      },
+    },
+  },
+  optimizeDeps: {
+    include: ["pdfjs-dist/build/pdf.worker.entry"], // Ensure the worker is included in dependencies
   },
   server: {
     host: '0.0.0.0',

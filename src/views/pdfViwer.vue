@@ -3,7 +3,7 @@ import axios from "axios";
 import { ref, onMounted, inject } from "vue";
 import { useRoute } from "vue-router";
 import * as pdfjsLib from "pdfjs-dist";
-import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
+import pdfjsWorker from "pdfjs-dist/build/pdf.worker.min.js"; // Use the minified worker file
 import { URL } from "@/auth/url";
 
 // PDF worker setup
