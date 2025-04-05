@@ -3,11 +3,10 @@ import axios from "axios";
 import { ref, onMounted, inject } from "vue";
 import { useRoute } from "vue-router";
 import * as pdfjsLib from "pdfjs-dist";
-import workerSrc from "pdfjs-dist/build/pdf.worker.min?url";
 import { URL } from "@/auth/url";
 
 // PDF worker setup
-pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js"; // Use a reliable CDN
 
 const isLoading = inject("isLoading", ref(false));
 const route = useRoute();
@@ -38,7 +37,7 @@ const getData = async () => {
 const renderPdf = async (url) => {
   try {
     console.log("Rendering PDF from URL:", url); // Debugging log
-    const loadingTask = pdfjsLib.getDocument(url);
+    const loadingTask = pdfjsLib.getDocument({ url, disableWorker: true }); // Disable dynamic worker import
     const pdf = await loadingTask.promise;
     pdfPages.value = [];
 
