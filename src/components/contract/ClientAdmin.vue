@@ -11,7 +11,7 @@
           :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" 
           required
           class="w-full p-2 border rounded focus:ring text-black focus:ring-blue-200"
-          @input="field.key === 'Fuqaroning telefon raqami ' ? formatPhoneNumber(field.key, index) : restrictToNumbers(field.key, index)"
+          @input="field.key === 'Fuqaroning telefon raqami ' ? formatPhoneNumber(field.key, index) : restrictToNumbers(field.key, index); formatNumberFields(field.key, index)"
           @focus="addPhonePrefix(field.key, index)" />
       </div>
 
@@ -559,15 +559,23 @@ const submitForm = async () => {
   }
 };
 
+const formatNumberFields = (key, index) => {
+  const lowerKey = key.toLowerCase();
+  if (['konsalting narxi', 'tushuntirish narxi', 'boshlag’ich summa'].some(k => lowerKey.includes(k))) {
+    const rawValue = String(fieldValues.value[index] || "").replace(/[^\d]/g, ""); // Remove non-numeric characters
+    fieldValues.value[index] = rawValue ? formatNumberWithDots(rawValue) : ""; // Format with dots
+  }
+};
+
 const getInputType = (key) => {
   const lowerKey = key.toLowerCase();
   if (['konsalting narxi', 'tushuntirish narxi', 'boshlag’ich summa'].some(k => lowerKey.includes(k))) {
-    return 'number';
+    return 'text'; // Use text type for formatted numbers
   }
   if (lowerKey.includes('tug’ilgan sanasi')) {
     return 'date';
   }
-  return 'text'; // Default to text for all other fields, including JSHSHIR
+  return 'text'; // Default to text for all other fields
 };
 
 const getMaxLength = (key) => {
