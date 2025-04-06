@@ -54,7 +54,7 @@ const BASE_URL = 'https://backend.arizasud.uz'; // Replace with your actual API 
 const getData = async () => {
   isLoading.value = true;
   try {
-    const requestUrl = `${BASE_URL}/signingFiles/signing/${fileId}`;
+    const requestUrl = `${BASE_URL}/client/${fileId}`;
     console.log("Request URL:", requestUrl); // Debugging: Log the request URL
 
     const res = await axios.get(requestUrl, {
@@ -78,7 +78,8 @@ const getData = async () => {
       throw new Error("API response is missing filePath or invalid");
     }
 
-    fileUrl.value = res.data.filePath.startsWith("http")
+    // Correct the property access from 'filePath' to 'file'
+    fileUrl.value = res.data.file.startsWith("http")
       ? res.data.file
       : `${BASE_URL}${res.data.file}`;
 
