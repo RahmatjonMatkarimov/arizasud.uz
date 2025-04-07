@@ -1,24 +1,25 @@
 <template>
     <div class="content-container">
-        <button class="download-button mb-4" @click="downloadFile">Shartnomani yuklab olish</button>
         <div class="html-container">
-            <div 
-                v-for="(content, index) in htmlContents" 
-                :key="index" 
-                class="text-black html-content" 
-                v-html="content">
+            <div v-for="(content, index) in htmlContents" :key="index" class="text-black html-content" v-html="content">
             </div>
+        </div>
+        <button class="download-button mb-4" @click="downloadFile">Shartnomani yuklab olish</button>
+        <div v-for="(page, index) in pdfPages" :key="index" class="mb-4">
+            <img :src="page"
+                class="w-full rounded-lg shadow-md object-cover "
+                alt="PDF Page" />
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, inject } from 'vue';
+import { ref, inject, onMounted } from 'vue';
 import axios from 'axios';
 import { useRoute } from 'vue-router';
 import { URL } from '@/auth/url.js';
 import translateText from '@/auth/Translate';
-
+import * as pdfjsLib from "pdfjs-dist";
 const route = useRoute();
 const id = route.params.id;
 const data = ref(); // Initialize with an empty check array
@@ -81,7 +82,96 @@ const downloadFile = async () => {
     }
 };
 
-GetClient();
+// Explicitly set the worker source
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js"; // Updated to match API version
+
+const isLoading = ref(false);
+const fileId = route.params.id;
+const fileUrl = ref("");
+const pdfPages = ref([]);
+
+const BASE_URL = 'https://backend.arizasud.uz'; // Replace with your actual API base URL
+
+const getData = async () => {
+    isLoading.value = true;
+    try {
+        const requestUrl = `${BASE_URL}/client/${fileId}`;
+        console.log("Request URL:", requestUrl); // Debugging: Log the request URL
+
+        const res = await axios.get(requestUrl, {
+            validateStatus: (status) => status < 500, // Accept only non-server-error responses
+        });
+
+        console.log("Full API Response:", res); // Debugging: Log full response
+
+        // Check for HTTP status errors
+        if (res.status !== 200) {
+            console.error(`HTTP Error: ${res.status} - ${res.statusText}`);
+            throw new Error(`Failed to fetch data. HTTP Status: ${res.status}`);
+        }
+
+        // Validate API response format
+        if (!res.data || typeof res.data !== "object" || !res.data.file) {
+            if (typeof res.data === "string" && res.data.includes("<!DOCTYPE html>")) {
+                console.error("API returned an HTML document. Response:", res.data);
+                throw new Error("API response returned an HTML document instead of JSON. Check the API endpoint.");
+            }
+            throw new Error("API response is missing filePath or invalid");
+        }
+
+        // Correct the property access from 'filePath' to 'file'
+        fileUrl.value = res.data.file.startsWith("http")
+            ? res.data.file
+            : `${BASE_URL}${res.data.file}`;
+
+        console.log("File URL:", fileUrl.value); // Debugging: Check File URL
+
+        // PDF render qilish
+        await renderPdf(fileUrl.value);
+    } catch (error) {
+        console.error("Ma'lumot yuklashda xatolik:", error);
+        // Fallback: Display a user-friendly message
+        pdfPages.value = [];
+        alert("Xatolik yuz berdi. Iltimos, keyinroq qayta urinib ko'ring."); // Notify the user
+    } finally {
+        isLoading.value = false;
+    }
+};
+
+// Render PDF pages as images
+const renderPdf = async (url) => {
+    try {
+        const loadingTask = pdfjsLib.getDocument(url);
+        const pdf = await loadingTask.promise;
+        pdfPages.value = [];
+
+        for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const viewport = page.getViewport({ scale: 1.5 });
+
+            // Create a canvas element
+            const canvas = document.createElement("canvas");
+            const context = canvas.getContext("2d");
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+
+            // Render the page into the canvas
+            await page.render({ canvasContext: context, viewport }).promise;
+
+            // Convert canvas to image data URL
+            const imageDataUrl = canvas.toDataURL("image/png");
+            pdfPages.value.push(imageDataUrl);
+        }
+    } catch (error) {
+        console.error("PDF yuklashda xatolik:", error);
+    }
+};
+
+onMounted(() => {
+    getData();
+    GetClient();
+});
 </script>
 
 <style scoped>
@@ -97,13 +187,17 @@ GetClient();
 
 .html-container {
     display: flex;
-    gap: 20px; /* Add spacing between HTML files */
-    flex-wrap: wrap; /* Ensure responsiveness for smaller screens */
+    gap: 20px;
+    /* Add spacing between HTML files */
+    flex-wrap: wrap;
+    /* Ensure responsiveness for smaller screens */
 }
 
 .html-content {
-    flex: 1; /* Allow equal space for each HTML file */
-    min-width: 300px; /* Set a minimum width for each content block */
+    flex: 1;
+    /* Allow equal space for each HTML file */
+    min-width: 300px;
+    /* Set a minimum width for each content block */
     margin-bottom: 20px;
     font-size: 16px;
     line-height: 1.5;
@@ -129,5 +223,31 @@ GetClient();
 
 .html-content ::v-deep * {
     color: black !important;
+}
+
+.pdf-container {
+    width: 99%;
+    max-width: 800px;
+    overflow-y: auto;
+}
+
+.pdf-page {
+    width: 100%;
+    margin-bottom: 5px;
+    display: block;
+}
+
+#particles-js {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+}
+
+b {
+    color: white;
+    font-weight: bold;
 }
 </style>

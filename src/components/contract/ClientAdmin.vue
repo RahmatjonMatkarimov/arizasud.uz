@@ -1,18 +1,33 @@
 <template>
+<div v-if="isLoading" class="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 z-50">
+  <div class="spinner"></div>
+  <p class="loading-message">{{ loadingMessage }}</p>
+</div>
   <div class="container mx-auto p-4 bg-gray-300 rounded shadow">
-    <div v-if="fields.length">
+    <!-- Loading Spinner -->
+    <!-- Main Content -->
+    <div v-if="fields.length && !isLoading">
       <div v-for="(field, index) in uniqueFields" :key="index" class="mb-4">
-        <label class="block font-medium mb-1 text-black">
+        <label v-if="field.key !== 'adminName' && field.key !== 'adminSurname' && field.key !== 'documentId'" class="block font-medium mb-1 text-black">
           {{ dat === "datakril" ? translateText(field.key) : field.key }}
         </label>
-        <input v-model="fieldValues[index]" 
-          :type="getInputType(field.key)"
-          :maxlength="getMaxLength(field.key)"
-          :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" 
-          required
-          class="w-full p-2 border rounded focus:ring text-black focus:ring-blue-200"
-          @input="field.key === 'Fuqaroning telefon raqami ' ? formatPhoneNumber(field.key, index) : restrictToNumbers(field.key, index); formatNumberFields(field.key, index)"
-          @focus="addPhonePrefix(field.key, index)" />
+        <template v-if="field.key === 'Buyurtmachi'">
+          <select v-model="fieldValues[index]" required class="w-full p-2 border rounded focus:ring text-black focus:ring-blue-200">
+            <option value="" disabled>{{ dat === 'datakril' ? translateText('Tanlang') : 'Tanlang' }}</option>
+            <option value="Yuridik">{{ dat === 'datakril' ? translateText('Yuridik') : 'Yuridik' }}</option>
+            <option value="Jismoniy">{{ dat === 'datakril' ? translateText('Jismoniy') : 'Jismoniy' }}</option>
+          </select>
+        </template>
+        <template v-else-if="field.key !== 'adminName' && field.key !== 'adminSurname' && field.key !== 'documentId'">
+          <input v-model="fieldValues[index]" 
+            :type="getInputType(field.key)"
+            :maxlength="getMaxLength(field.key)"
+            :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" 
+            required
+            class="w-full p-2 border rounded focus:ring text-black focus:ring-blue-200"
+            @input="field.key === 'Fuqaroning telefon raqami ' ? formatPhoneNumber(field.key, index) : restrictToNumbers(field.key, index); formatNumberFields(field.key, index); preventCyrillic(field.key, index)"
+            @focus="addPhonePrefix(field.key, index)" />
+        </template>
       </div>
 
       <div class="mt-4 flex justify-end">
@@ -71,7 +86,6 @@ const fields = ref([]);
 const uniqueFields = ref([]);
 const fieldValues = ref([]);
 const docxTemplate = ref(null);
-const isLoading = ref(false);
 const errorMessage = ref("");
 const API_URL = URL + "/contract-file";
 const video = ref(null);
@@ -81,6 +95,25 @@ const isWarningModalOpen = ref(false);
 const sum1 = ref("");
 const sum2 = ref("");
 const checkFile = ref(null); // Chek fayli uchun
+const isLoading = ref(false);
+const loadingMessage = ref("Yuklanmoqda..."); 
+const Loading = inject('isLoading');
+const adminName = ref('')
+const adminSurname = ref('')
+// Default loading message
+
+const getAdmin = async () => {
+  Loading.value = true;
+  try {
+    const response = await axios.get(`${URL}/${localStorage.getItem('role')}/${localStorage.getItem('id')}`);
+    adminName.value = response.data.name;
+    adminSurname.value = response.data.surname;
+  } catch (error) {
+    console.error("getAdmin xatosi:", error);
+  } finally {
+    Loading.value = false;
+  }
+};
 
 const formData = reactive({
   name: "",
@@ -98,6 +131,7 @@ const formData = reactive({
 });
 
 const GetClient = async () => {
+  Loading.value = true;
   try {
     const response = await axios.get(URL + "/client");
     ClientData = response.data.sort((a, b) => a.id - b.id);
@@ -105,10 +139,13 @@ const GetClient = async () => {
   } catch (error) {
     errorMessage.value = "❌ Client ma'lumotlarini olishda xatolik!";
     console.error("GetClient xatosi:", error.message);
+  } finally {
+    Loading.value = false;
   }
 };
 
 const fetchDocx = async () => {
+  Loading.value = true;
   try {
     const response = await axios.get(`${API_URL}/${id}`);
     const fileUrl = URL + response.data.filePath;
@@ -150,6 +187,8 @@ const fetchDocx = async () => {
   } catch (error) {
     errorMessage.value = error.message || "❌ Faylni yuklashda xatolik!";
     console.error("fetchDocx xatosi:", error);
+  } finally {
+    Loading.value = false;
   }
 };
 
@@ -253,7 +292,7 @@ const saveAndGenerate = async () => {
       if (field.key === "Fuqaroning JSHSHIR raqami") formData.uniqueCode = fieldValues.value[index];
       if (field.key === "Fuqaroning ID karta raqami") formData.userCode = fieldValues.value[index];
       if (field.key === "Fuqaroning telefon raqami ") formData.phone = fieldValues.value[index];
-      if (field.key === "Buyurtmachi murojaati") dataaa.price = Number(fieldValues.value[index]) || 0;
+      if (field.key === "Buyurtmachini boshlang’ich to’lovi (avans)") dataaa.price = Number(fieldValues.value[index]) || 0;
       if (field.key === "Konsalting xizmat ko’rsatish narxi") dataaa.summa1 = Number(fieldValues.value[index]) || 0;
       if (field.key === "Hujjatga tushuntirish berish narxi") dataaa.summa2 = Number(fieldValues.value[index]) || 0;
     });
@@ -278,6 +317,7 @@ const saveAndGenerate = async () => {
     data["Today Date"] = formattedDate;
 
     data["ID"] = UniqueID;
+    data["documentId"] = UniqueID;
     formData.contractId = UniqueID;
 
     const sum1Num = Number(sum1.value) || 0;
@@ -298,7 +338,9 @@ const saveAndGenerate = async () => {
     data["qarz"] = formatNumberWithDots(qarz);
     data["Konsalting xizmat ko’rsatish narxi"] = formatNumberWithDots(konsaltingNarxi);
     data["Hujjatga tushuntirish berish narxi"] = formatNumberWithDots(tushuntirishNarxi);
-    data["Buyurtmachi murojaati"] = formatNumberWithDots(boshlagichSumma);
+    data["Buyurtmachini boshlang’ich to’lovi (avans)"] = formatNumberWithDots(boshlagichSumma);
+    data["adminName"] = adminName.value;
+    data["adminSurname"] = adminSurname.value;
 
     docxTemplate.value.render(data);
     const output = docxTemplate.value.getZip().generate({ type: "blob" });
@@ -317,6 +359,7 @@ const saveAndGenerate = async () => {
 const API_URL1 = `${URL}/client`;
 
 const fetchRecords = async () => {
+  Loading.value = true;
   try {
     const res = await axios.get(`${URL}/monthly-cost`);
     sum1.value = res.data[0].sum1;
@@ -326,6 +369,8 @@ const fetchRecords = async () => {
     sum1.value = "0";
     sum2.value = "0";
     console.error("fetchRecords xatosi:", err);
+  } finally {
+    Loading.value = false;
   }
 };
 
@@ -519,6 +564,7 @@ const submitForm = async () => {
   }
 
   isLoading.value = true;
+  loadingMessage.value = "Ma'lumotlar yuborilmoqda...";
   errorMessage.value = "";
 
   const formDataToSend = new FormData();
@@ -546,7 +592,6 @@ const submitForm = async () => {
     const response = await axios.post(API_URL1, formDataToSend, config);
     console.log("✅ Ma'lumotlar muvaffaqiyatli saqlandi:", response.data);
     errorMessage.value = "✅ Muvaffaqiyatli saqlandi!";
-    isLoading.value = false;
     printReceipt();
     resetForm();
     await GetClient();
@@ -561,7 +606,7 @@ const submitForm = async () => {
 
 const formatNumberFields = (key, index) => {
   const lowerKey = key.toLowerCase();
-  if (['Konsalting xizmat ko’rsatish narxi', 'Hujjatga tushuntirish berish narxi', 'Buyurtmachi murojaati'].some(k => lowerKey.includes(k))) {
+  if (['konsalting xizmat ko’rsatish narxi', 'hujjatga tushuntirish berish narxi', 'buyurtmachini boshlang’ich to’lovi (avans)'].some(k => lowerKey.includes(k))) {
     const rawValue = String(fieldValues.value[index] || "").replace(/[^\d]/g, ""); // Remove non-numeric characters
     fieldValues.value[index] = rawValue ? formatNumberWithDots(rawValue) : ""; // Format with dots
   }
@@ -569,7 +614,7 @@ const formatNumberFields = (key, index) => {
 
 const getInputType = (key) => {
   const lowerKey = key.toLowerCase();
-  if (['Konsalting xizmat ko’rsatish narxi', 'Hujjatga tushuntirish berish narxi', 'Buyurtmachi murojaati'].some(k => lowerKey.includes(k))) {
+  if (['Konsalting xizmat ko’rsatish narxi', 'Hujjatga tushuntirish berish narxi', 'Buyurtmachini boshlang’ich to’lovi (avans)'].some(k => lowerKey.includes(k))) {
     return 'text'; // Use text type for formatted numbers
   }
   if (lowerKey.includes('tug’ilgan sanasi')) {
@@ -581,6 +626,7 @@ const getInputType = (key) => {
 const getMaxLength = (key) => {
   if (key.trim() === "Fuqaroning JSHSHIR raqami") return 14;
   if (key.trim() === "Fuqaroning telefon raqami ") return 19;
+  if (key.trim() === "Fuqaroning ID karta raqami") return 9; // Set max length to 9
   return undefined;
 };
 
@@ -589,6 +635,12 @@ const restrictToNumbers = (key, index) => {
     fieldValues.value[index] = fieldValues.value[index].replace(/[^0-9]/g, "");
     if (fieldValues.value[index].length > 14) {
       fieldValues.value[index] = fieldValues.value[index].slice(0, 14);
+    }
+  }
+  if (key === "Fuqaroning ID karta raqami") {
+    fieldValues.value[index] = fieldValues.value[index].replace(/[^a-zA-Z0-9]/g, ""); // Allow only alphanumeric characters
+    if (fieldValues.value[index].length > 9) {
+      fieldValues.value[index] = fieldValues.value[index].slice(0, 9); // Limit to 9 characters
     }
   }
 };
@@ -626,6 +678,7 @@ onMounted(() => {
   fetchDocx();
   fetchRecords();
   GetClient();
+  getAdmin()
 });
 
 onUnmounted(() => {
@@ -636,6 +689,7 @@ onUnmounted(() => {
 <style scoped>
 .container {
   max-width: 600px;
+  position: relative;
 }
 
 .btn {
@@ -685,5 +739,30 @@ onUnmounted(() => {
 
 .hidden {
   display: none;
+}
+
+
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #ccc;
+  border-top-color: #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-message {
+  margin-top: 10px;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>

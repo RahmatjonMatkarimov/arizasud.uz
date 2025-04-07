@@ -1,6 +1,6 @@
 <template>
     <div class="container mx-auto p-4">
-        <div class="flex justify-end mb-4">
+        <div v-if="role === 'yurist' || role === 'bigAdmin'" class="flex justify-end mb-4">
             <button @click="openModal('post')" :disabled="isLoading"
                 class="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50">
                 {{ dat === 'datakril' ? translateText("Yangi hujjat qo'shish") : "Yangi hujjat qo'shish" }}

@@ -12,8 +12,8 @@
                 <thead>
                     <tr class="bg-gray-100">
                         <th class="border text-black border-gray-300 px-4 py-2"></th>
-                        <th class="border text-black border-gray-300 px-4 py-2">{{ dat === 'datakril' ? translateText('1-Narx') : '1-Narx' }}</th>
-                        <th class="border text-black border-gray-300 px-4 py-2">{{ dat === 'datakril' ? translateText('2-Narx') : '2-Narx' }}</th>
+                        <th class="border text-black border-gray-300 px-4 py-2">{{ dat === 'datakril' ? translateText('Lex.uz qonunchilik bazasidan foydalanish uchun') : 'Lex.uz qonunchilik bazasidan foydalanish uchun' }}</th>
+                        <th class="border text-black border-gray-300 px-4 py-2">{{ dat === 'datakril' ? translateText('QR-code xizmati uchun') : 'QR-code xizmati uchun' }}</th>
                         <th v-if="role === 'yurist' || role === 'bigAdmin'"  class="border text-black border-gray-300 px-4 py-2">{{ dat === 'datakril' ? translateText('Sozlamalar') : 'Sozlamalar' }}</th>
                     </tr>
                 </thead>
@@ -48,12 +48,12 @@
                 <h3 class="text-lg font-bold mb-4">{{ dat === 'datakril' ? translateText('Yangi narx yaratish') : 'Yangi narx yaratish' }}</h3>
                 <form @submit.prevent="submitPost">
                     <div class="flex gap-2 justify-center items-center mb-4">
-                        <label class="block w-[100px] text-black font-medium">{{ dat === 'datakril' ? translateText('1-Narx:') : '1-Narx:' }}</label>
+                        <label class="block w-[100px] text-black font-medium">{{ dat === 'datakril' ? translateText('lex.uz qonunchilik bazasidan foydalanish uchun:') : 'lex.uz qonunchilik bazasidan foydalanish uchun:' }}</label>
                         <input type="number" v-model.number="postForm.sum1" required
                             class="w-full text-black  p-2 border rounded" />
                     </div>
                     <div class="flex gap-2 justify-center items-center mb-4">
-                        <label class="block text-black w-[100px] font-medium">{{ dat === 'datakril' ? translateText('2-Narx:') : '2-Narx:' }}</label>
+                        <label class="block text-black w-[100px] font-medium">{{ dat === 'datakril' ? translateText('QR-code xizmati uchun:') : 'QR-code xizmati uchun:' }}</label>
                         <input type="number" v-model.number="postForm.sum2" required
                             class="w-full text-black p-2 border rounded" />
                     </div>
@@ -79,12 +79,12 @@
             <div class="bg-white p-6 rounded shadow-lg w-80">
                 <form @submit.prevent="submitPut">
                     <div class="flex gap-2 justify-center items-center">
-                        <label class="block w-[100px] text-black font-medium">{{ dat === 'datakril' ? translateText('1-Narx:') : '1-Narx:' }}</label>
+                        <label class="block w-[100px] text-black font-medium">{{ dat === 'datakril' ? translateText('lex.uz qonunchilik bazasidan foydalanish uchun:') : 'lex.uz qonunchilik bazasidan foydalanish uchun:' }}</label>
                         <input type="number" v-model.number="putForm.sum1" required
                             class="w-full mb-4 text-black p-2 border rounded" />
                     </div>
                     <div class="flex gap-2 justify-center items-center mb-4">
-                        <label class="block w-[100px] text-black font-medium">{{ dat === 'datakril' ? translateText('2-Narx:') : '2-Narx:' }}</label>
+                        <label class="block w-[100px] text-black font-medium">{{ dat === 'datakril' ? translateText('QR-code xizmati uchun:') : 'QR-code xizmati uchun:' }}</label>
                         <input type="number" v-model.number="putForm.sum2" required
                             class="w-full mb-4 text-black p-2 border rounded" />
                     </div>

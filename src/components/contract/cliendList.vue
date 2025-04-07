@@ -41,36 +41,46 @@
                     </div>
                     <div class="flex justify-center gap-4 items-center"> 
                         <div>
-
                             <button @click="openModal(item)"
                             :class="item.ClientPayment.some(payment => payment.remainingSum > 0) ? 'bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600' : 'hidden'">
                             {{ dat === 'datakril' ? translateText("Qarzlarni to'lash") : "Qarzlarni to'lash" }}
                         </button>
                     </div>
                     <div class="flex flex-col space-y-2">
-                        <div v-for="payment in item.ClientPayment" :key="payment.id" class="text-sm text-gray-700">
-                            <h1 :class="payment.remainingSum <= 0 ? 'text-green-600 font-bold' : 'text-red-600 font-bold'">
-                                {{ payment.remainingSum <= 0 
+                        <div v-if="item.ClientPayment.length > 0" class="text-sm text-gray-700">
+                            <h1 @click="item.showAllPayments = true" v-if="!item.showAllPayments"  :class="item.ClientPayment[item.ClientPayment.length - 1].remainingSum <= 0 ? 'text-green-600 font-bold' : 'text-red-600 font-bold'">
+                                {{ item.ClientPayment[item.ClientPayment.length - 1].remainingSum <= 0 
                                     ? (dat === 'datakril' ? translateText("To'liq to'langan") : "To'liq to'langan") 
                                     : (dat === 'datakril' 
-                                    ? translateText("Qoldiq qarz: ") + formatNumberWithDots(payment.remainingSum) + translateText(" so'm") 
-                                    : "Qoldiq qarz: " + formatNumberWithDots(payment.remainingSum) + " so'm") }}
+                                    ? translateText("Qoldiq qarz: ") + formatNumberWithDots(item.ClientPayment[item.ClientPayment.length - 1].remainingSum) + translateText(" so'm") 
+                                    : "Qoldiq qarz: " + formatNumberWithDots(item.ClientPayment[item.ClientPayment.length - 1].remainingSum) + " so'm") }}
                             </h1>
-                            <h1 class="text-gray-600">
-                                {{ dat === 'datakril' 
-                                    ? translateText("To'langan summa: ") + formatNumberWithDots(payment.paidSum) + translateText(" so'm") 
-                                    : "To'langan summa: " + formatNumberWithDots(payment.paidSum) + " so'm" }}
-                            </h1>
-                            <h1 class="text-gray-600">
-                                {{ dat === 'datakril' 
-                                    ? translateText("Umumiy summa: ") + formatNumberWithDots(payment.TotalSum) + translateText(" so'm") 
-                                    : "Umumiy summa: " + formatNumberWithDots(payment.TotalSum) + " so'm" }}
-                            </h1>
-                            <h1 class="text-gray-600">
-                                {{ dat === 'datakril' 
-                                    ? translateText("To'langan sana: ") + new Date(payment.createdAt).toLocaleDateString("uz-UZ") 
-                                    : "To'langan sana: " + new Date(payment.createdAt).toLocaleDateString("uz-UZ") }}
-                            </h1>
+                        </div>
+                        <div @click="item.showAllPayments = false" v-if="item.showAllPayments">
+                            <div v-for="payment in item.ClientPayment" :key="payment.id" class="text-sm text-gray-700">
+                                <h1 :class="payment.remainingSum <= 0 ? 'text-green-600 font-bold' : 'text-red-600 font-bold'">
+                                    {{ payment.remainingSum <= 0 
+                                        ? (dat === 'datakril' ? translateText("To'liq to'langan") : "To'liq to'langan") 
+                                        : (dat === 'datakril' 
+                                        ? translateText("Qoldiq qarz: ") + formatNumberWithDots(payment.remainingSum) + translateText(" so'm") 
+                                        : "Qoldiq qarz: " + formatNumberWithDots(payment.remainingSum) + " so'm") }}
+                                </h1>
+                                <h1 class="text-gray-600">
+                                    {{ dat === 'datakril' 
+                                        ? translateText("To'langan summa: ") + formatNumberWithDots(payment.paidSum) + translateText(" so'm") 
+                                        : "To'langan summa: " + formatNumberWithDots(payment.paidSum) + " so'm" }}
+                                </h1>
+                                <h1 class="text-gray-600">
+                                    {{ dat === 'datakril' 
+                                        ? translateText("Umumiy summa: ") + formatNumberWithDots(payment.TotalSum) + translateText(" so'm") 
+                                        : "Umumiy summa: " + formatNumberWithDots(payment.TotalSum) + " so'm" }}
+                                </h1>
+                                <h1 class="text-gray-600">
+                                    {{ dat === 'datakril' 
+                                        ? translateText("To'langan sana: ") + new Date(payment.createdAt).toLocaleDateString("uz-UZ") 
+                                        : "To'langan sana: " + new Date(payment.createdAt).toLocaleDateString("uz-UZ") }}
+                                </h1>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -227,6 +237,69 @@ const printReceipt = () => {
     };
 };
 
+const generateCheckFile = async () => {
+    const img1 = new Image();
+    const img2 = new Image();
+    const img3 = new Image();
+    img1.src = "/asd.jpg";
+    img2.src = "https://arizasud.uz/https___arizasud.uz_.png";
+    img3.src = "/telegram.png";
+
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, "0");
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const year = today.getFullYear();
+    const formattedDate = `${day}.${month}.${year}`;
+
+    const receiptHTML = `
+    <html>
+      <head>
+        <title>To'lov Cheki</title>
+        <style>
+          /* ...existing styles... */
+        </style>
+      </head>
+      <body>
+        <div class="receipt-container">
+          <h2 class="receipt-header">To'lov Cheki</h2>
+          <div class="receipt-content">
+            <p><strong>Mijoz:</strong> ${receiptData.value.name} ${receiptData.value.surname} ${receiptData.value.dadname}</p>
+            <p><strong>Telefon:</strong> ${receiptData.value.phone || "Mavjud emas"}</p>
+            <p><strong>Shartnoma idsi:</strong> ${receiptData.value.uniqueCode || "Mavjud emas"}</p>
+            <p><strong>To'langan Summa:</strong> ${formatNumberWithDots(receiptData.value.paymentAmount)} so'm</p>
+            <p><strong>Qoldiq Qarz:</strong> ${receiptData.value.remainingDebt <= 0 ? "To‘landi" : formatNumberWithDots(receiptData.value.remainingDebt) + " so'm"}</p>
+            <p><strong>Sana:</strong>${formattedDate}</p>
+          </div>
+          <div class="receipt-images">
+            <img src="https://arizasud.uz/asd.jpg" alt="Image 1">
+            <img src="https://arizasud.uz/https___arizasud.uz_.png" alt="Image 2">
+          </div>
+          <div class="receipt-footer">
+            "YURIST KONSUL KONSALTING"
+          </div>
+        </div>
+      </body>
+    </html>
+    `;
+
+    const blob = new Blob([receiptHTML], { type: "text/html" });
+    const checkFile = new File([blob], `receipt-${receiptData.value.uniqueCode}.html`, { type: "text/html" });
+
+    try {
+        const formData = new FormData();
+        formData.append("check", checkFile);
+
+        await axios.post(`${URL}/client/add-check/${selectedItem.value.id}`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+    } catch (error) {
+        console.error("Chekni yuborishda xatolik yuz berdi:", error);
+        alert("Xatolik yuz berdi: " + error.message);
+    }
+};
+
 const submitPayment = async () => {
     if (!selectedItem.value) return;
 
@@ -277,6 +350,9 @@ const submitPayment = async () => {
             remainingDebt: updatedRemainingSum >= 0 ? updatedRemainingSum : 0,
             date: formattedDate,
         };
+
+        // Generate and send the check file after successful payment
+        await generateCheckFile();
 
         printReceipt();
         closeModal();
