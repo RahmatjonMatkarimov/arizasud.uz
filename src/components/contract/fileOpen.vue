@@ -1,253 +1,138 @@
 <template>
+    <div class="flex flex-col pr-2 items-end">
+        <button @click="showModal = true" class="create-section-btn">Yangi bo'lim yaratish</button>
+    </div>
     <div class="content-container">
-        <div class="html-container">
-            <div v-for="(content, index) in htmlContents" :key="index" class="text-black html-content" v-html="content">
+        <div v-if="clientData" class="flex p-5">
+            <div v-for="(section, index) in clientData.ClientSection" :key="index" class="client-section">
+                <img @click="router.push('/lists/'+ section.id)" src="../../../public/folder.ico" alt="">
+                <h1 class="text-center">{{ section.name }}</h1>
             </div>
         </div>
-        <button class="download-button mb-4" @click="downloadFile">Shartnomani yuklab olish</button>
-        <div v-for="(page, index) in pdfPages" :key="index" class="mb-4">
-            <img :src="page"
-                class="w-full rounded-lg shadow-md object-cover "
-                alt="PDF Page" />
+        <p v-else>Loading client data...</p>
+    </div>
+
+    <!-- Modal for creating a new client section -->
+    <div v-if="showModal" class="modal-overlay">
+        <div class="modal">
+            <h3>Create New Section</h3>
+            <input v-model="newSectionName" type="text" placeholder="Enter section name" />
+            <div class="modal-actions">
+                <button @click="createClientSection">Create</button>
+                <button @click="showModal = false">Cancel</button>
+            </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, inject, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { URL } from '@/auth/url.js';
-import translateText from '@/auth/Translate';
-import * as pdfjsLib from "pdfjs-dist";
-const route = useRoute();
-const id = route.params.id;
-const data = ref(); // Initialize with an empty check array
-const htmlContents = ref([]); // Store multiple HTML contents as an array
-const dat = inject('dat')
 
-const GetClient = async () => {
+const route = useRoute();
+const router = useRouter();
+const id = parseInt(route.params.id); // Ensure id is a number
+const clientData = ref(null);
+const showModal = ref(false);
+const newSectionName = ref("");
+
+const fetchClientById = async () => {
     try {
         const response = await axios.get(`${URL}/client/${id}`);
-        console.log("Full API response:", response.data); // Debugging log to inspect the full response
-        data.value = response.data;
-        if (data.value?.check) {
-            console.log("Check array:", data.value.check); // Debugging log to inspect the check array
-            const htmlFilePaths = data.value.check.filter(item => typeof item === 'string' && item.endsWith('.html'));
-            if (htmlFilePaths.length > 0) {
-                try {
-                    const htmlContentsArray = await Promise.all(
-                        htmlFilePaths.map(async (filePath) => {
-                            const htmlResponse = await axios.get(`${URL}${filePath}`);
-                            return htmlResponse.data; // Fetch and return the HTML content
-                        })
-                    );
-                    htmlContents.value = htmlContentsArray; // Store all HTML contents in the array
-                } catch (htmlError) {
-                    console.error("Error fetching HTML files:", htmlError);
-                    htmlContents.value = ['<p>Error loading HTML content.</p>']; // Fallback HTML content
-                }
-            } else {
-                console.warn("No valid HTML file paths found in the check array.");
-                htmlContents.value = ['<p>No valid HTML content available.</p>']; // Fallback HTML content
-            }
-        } else {
-            console.warn("No valid 'check' array found in the response.");
-            htmlContents.value = ['<p>No data available.</p>']; // Fallback HTML content
-        }
+        clientData.value = response.data;
+        console.log("Client Data:", clientData.value); // Debugging: Log the client data
     } catch (error) {
-        console.error("Xatolik yuz berdi:", error);
-        htmlContents.value = ['<p>Error loading content.</p>']; // Fallback HTML content in case of error
+        console.error("Error fetching client data:", error);
     }
 };
 
-const downloadFile = async () => {
-    if (data.value?.file) {
-        try {
-            const response = await axios.get(`${URL}${data.value.file}`, {
-                responseType: 'blob', // Ensure the response is treated as a file
-            });
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', data.value.file.split('/').pop()); // Extract file name
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-        } catch (error) {
-            console.error("Error downloading file:", error);
-        }
-    } else {
-        console.warn("No file available to download.");
-    }
-};
-
-// Explicitly set the worker source
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js"; // Updated to match API version
-
-const isLoading = ref(false);
-const fileId = route.params.id;
-const fileUrl = ref("");
-const pdfPages = ref([]);
-
-const BASE_URL = 'https://backend.arizasud.uz'; // Replace with your actual API base URL
-
-const getData = async () => {
-    isLoading.value = true;
+// Function to create a new client section
+const createClientSection = async () => {
     try {
-        const requestUrl = `${BASE_URL}/client/${fileId}`;
-        console.log("Request URL:", requestUrl); // Debugging: Log the request URL
-
-        const res = await axios.get(requestUrl, {
-            validateStatus: (status) => status < 500, // Accept only non-server-error responses
-        });
-
-        console.log("Full API Response:", res); // Debugging: Log full response
-
-        // Check for HTTP status errors
-        if (res.status !== 200) {
-            console.error(`HTTP Error: ${res.status} - ${res.statusText}`);
-            throw new Error(`Failed to fetch data. HTTP Status: ${res.status}`);
+        if (!newSectionName.value.trim()) {
+            alert("Section name cannot be empty.");
+            return;
         }
-
-        // Validate API response format
-        if (!res.data || typeof res.data !== "object" || !res.data.file) {
-            if (typeof res.data === "string" && res.data.includes("<!DOCTYPE html>")) {
-                console.error("API returned an HTML document. Response:", res.data);
-                throw new Error("API response returned an HTML document instead of JSON. Check the API endpoint.");
-            }
-            throw new Error("API response is missing filePath or invalid");
-        }
-
-        // Correct the property access from 'filePath' to 'file'
-        fileUrl.value = res.data.file.startsWith("http")
-            ? res.data.file
-            : `${BASE_URL}${res.data.file}`;
-
-        console.log("File URL:", fileUrl.value); // Debugging: Check File URL
-
-        // PDF render qilish
-        await renderPdf(fileUrl.value);
+        const newSection = { clientId: id, name: newSectionName.value,type: "other" };
+        const response = await axios.post(`${URL}/client-sections`, newSection);
+        console.log("New Section Created:", response.data);
+        clientData.value.ClientSection.push(response.data);
+        newSectionName.value = "";
+        showModal.value = false;
     } catch (error) {
-        console.error("Ma'lumot yuklashda xatolik:", error);
-        // Fallback: Display a user-friendly message
-        pdfPages.value = [];
-        alert("Xatolik yuz berdi. Iltimos, keyinroq qayta urinib ko'ring."); // Notify the user
-    } finally {
-        isLoading.value = false;
-    }
-};
-
-// Render PDF pages as images
-const renderPdf = async (url) => {
-    try {
-        const loadingTask = pdfjsLib.getDocument(url);
-        const pdf = await loadingTask.promise;
-        pdfPages.value = [];
-
-        for (let i = 1; i <= pdf.numPages; i++) {
-            const page = await pdf.getPage(i);
-            const viewport = page.getViewport({ scale: 1.5 });
-
-            // Create a canvas element
-            const canvas = document.createElement("canvas");
-            const context = canvas.getContext("2d");
-            canvas.width = viewport.width;
-            canvas.height = viewport.height;
-
-            // Render the page into the canvas
-            await page.render({ canvasContext: context, viewport }).promise;
-
-            // Convert canvas to image data URL
-            const imageDataUrl = canvas.toDataURL("image/png");
-            pdfPages.value.push(imageDataUrl);
-        }
-    } catch (error) {
-        console.error("PDF yuklashda xatolik:", error);
+        console.error("Error creating client section:", error);
     }
 };
 
 onMounted(() => {
-    getData();
-    GetClient();
+    fetchClientById();
 });
 </script>
 
 <style scoped>
-.content-container {
-    padding: 20px;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    max-width: 900px;
-    margin: 20px auto;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+* {
+    color: #000;
 }
-
-.html-container {
-    display: flex;
-    gap: 20px;
-    /* Add spacing between HTML files */
-    flex-wrap: wrap;
-    /* Ensure responsiveness for smaller screens */
-}
-
-.html-content {
-    flex: 1;
-    /* Allow equal space for each HTML file */
-    min-width: 300px;
-    /* Set a minimum width for each content block */
-    margin-bottom: 20px;
-    font-size: 16px;
-    line-height: 1.5;
-}
-
-.download-button {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 16px;
-    color: #fff;
+.create-section-btn {
+    margin-top: 10px;
+    padding: 10px 15px;
     background-color: #007bff;
+    color: #fff;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
 }
-
-.download-button:hover {
+.create-section-btn:hover {
     background-color: #0056b3;
 }
-
-.html-content ::v-deep * {
-    color: black !important;
-}
-
-.pdf-container {
-    width: 99%;
-    max-width: 800px;
-    overflow-y: auto;
-}
-
-.pdf-page {
-    width: 100%;
-    margin-bottom: 5px;
-    display: block;
-}
-
-#particles-js {
-    position: absolute;
+.modal-overlay {
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 10;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-
-b {
-    color: white;
-    font-weight: bold;
+.modal {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    text-align: center;
+}
+.modal input {
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.modal-actions {
+    display: flex;
+    justify-content: space-between;
+}
+.modal-actions button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.modal-actions button:first-child {
+    background-color: #007bff;
+    color: #fff;
+}
+.modal-actions button:first-child:hover {
+    background-color: #0056b3;
+}
+.modal-actions button:last-child {
+    background-color: #ccc;
+}
+.modal-actions button:last-child:hover {
+    background-color: #aaa;
 }
 </style>
