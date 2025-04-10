@@ -75,6 +75,7 @@ import Docxtemplater from "docxtemplater";
 import { URL } from "../../auth/url.js";
 import axios from "axios";
 import { useRoute } from "vue-router";
+import html2pdf from 'html2pdf.js';
 import translateText from "@/auth/Translate.js";
 
 const dat = inject("dat");
@@ -247,9 +248,9 @@ const dataaa = {
   price: null,
 };
 
-const generateUniqueCode = () => {
-  formData.contractId = uuidv4();
-};
+// const generateUniqueCode = () => {
+//   formData.contractId = uuidv4();
+// };
 
 const resetForm = () => {
   Object.assign(formData, {
@@ -270,7 +271,7 @@ const resetForm = () => {
   fieldValues.value = new Array(uniqueFields.value.length).fill("");
   dataaa.summa1 = null;
   dataaa.summa2 = null;
-  generateUniqueCode();
+  // generateUniqueCode();
 };
 
 const formatNumberWithDots = (number) => {
@@ -378,92 +379,85 @@ const closeWarningModal = () => {
   isWarningModalOpen.value = false;
 };
 
+
+
 const generateCheckFile = async () => {
-  const img1 = new Image();
-  const img2 = new Image();
-  const img3 = new Image();
-  img1.src = "/asd.jpg";
-  img2.src = "https://arizasud.uz/https___arizasud.uz_.png";
-  img3.src = "/telegram.png";
+    const img1 = new Image();
+    const img2 = new Image();
+    const img3 = new Image();
+    img1.src = "/asd.jpg";
+    img2.src = "https://arizasud.uz/https___arizasud.uz_.png";
+    img3.src = "/telegram.png";
 
-  const today = new Date();
-  const day = String(today.getDate()).padStart(2, "0");
-  const month = String(today.getMonth() + 1).padStart(2, "0");
-  const year = today.getFullYear();
-  const formattedDate = `${day}.${month}.${year}`;
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, "0");
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const year = today.getFullYear();
+    const formattedDate = `${day}.${month}.${year}`;
 
-  const receiptHTML = `
-    <html>
-      <head>
-        <title>To'lov Cheki</title>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-            color: black;
-            margin: 0;
-            padding: 0;
-          }
-          .receipt-container {
-            width: 100%;
-            max-width: 400px;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-          }
-          .receipt-header {
-            text-align: center;
-            font-weight: bold;
-            margin-bottom: 20px;
-          }
-          .receipt-content p {
-            margin: 5px 0;
-          }
-          .receipt-footer {
-            text-align: right;
-            margin-top: 20px;
-            font-size: 12px;
-            color: gray;
-          }
-          .receipt-images {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-          }
-          .receipt-images img {
-            max-width: 90%;
-            height: auto;
-            margin-bottom: 10px;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="receipt-container">
-          <h2 class="receipt-header">To'lov Cheki</h2>
-          <div class="receipt-content">
-            <p><strong>Mijoz:</strong> ${formData.name} ${formData.surname} ${formData.dadname}</p>
-            <p><strong>Telefon:</strong> ${formData.phone || "Mavjud emas"}</p>
-            <p><strong>Shartnoma idsi:</strong> ${formData.contractId || "Mavjud emas"}</p>
-            <p><strong>To'langan Summa:</strong> ${formatNumberWithDots(dataaa.price)} so'm</p>
-            <p><strong>Qoldiq Qarz:</strong> ${formatNumberWithDots(formData.remainingSum)} so'm</p>
-            <p><strong>Sana:</strong>${formattedDate}</p>
-          </div>
-          <div class="receipt-images">
-            <img src="https://arizasud.uz/asd.jpg" alt="Image 1">
-            <img src="https://arizasud.uz/https___arizasud.uz_.png" alt="Image 2">
-          </div>
-          <div class="receipt-footer">
-            "YURIST KONSUL KONSALTING"
-          </div>
+    // HTML kontentni yaratish
+    const receiptHTML = `
+    <div style="font-size: 12px; max-width:23%; display:flex; flex-direction: column; justify-content: center; align-content:center; color: black;">
+        <h1 style="text-align: center; font-size:15px; font-weight: bold; color: black; margin-top:18px;">To'lov cheki</h1>
+        <table style="width: 100%; border-collapse: collapse; color: black; table-layout: fixed;">
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Mijoz:</td>
+                <td style="color: black;">${receiptData.name} ${receiptData.surname} ${receiptData.dadname}</td>
+            </tr>
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Telefon Raqami:</td>
+                <td style="color: black; line-height: 1.2;">${receiptData.phone || "Mavjud emas"}</td>
+            </tr>
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Shartnoma idsi:</td>
+                <td style="color: black; line-height: 1.2;">№${ "Mavjud emas"}</td>
+            </tr>
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">To'langan:</td>
+                <td style="color: black; line-height: 1.2;">${formatNumberWithDots(receiptData.name)} so'm</td>
+            </tr>
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Qoldiq qarz:</td>
+                <td style="color: black; line-height: 1.2;">${receiptData.remainingSum <= 0 ? "To‘landi" : formatNumberWithDots(receiptData.remainingSum) + " so'm"}</td>
+            </tr>
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Sana:</td>
+                <td style="color: black; line-height: 1.2;">${"dadsada"}</td>
+            </tr>
+        </table>
+        <p style="text-align: center; color: black; justify-content: center; gap:3px; align-items: center; display:flex; margin-top:10px;">
+            <img src="/telegram.png" alt="" style="max-width: 7%; height: auto;">
+            <span style="font-size: 10px; color: black;">Telegram: +998 99 106 70 35</span>
+        </p>
+        <p style="text-align: center; font-size:10px; color: black;">"YURIST KONSUL KONSALTING" х/к</p>
+        <div style="display: flex; flex-direction:column; justify-content: center; align-items: center; margin-top: 20px;">
+            <img src="/asd.jpg" alt="" style="max-width: 90%; height: auto;">
+            <img src="/https___arizasud.uz_.png" alt="" style="max-width: 90%; height: auto;">
         </div>
-      </body>
-    </html>
-  `;
+    </div>
+    `;
 
-  const blob = new Blob([receiptHTML], { type: "text/html" });
-  checkFile.value = new File([blob], `receipt-${formData.contractId}.html`, { type: "text/html" });
+    // DOM elementiga HTMLni qo'shish
+    const element = document.createElement('div');
+    element.innerHTML = receiptHTML;
+
+    // PDFni generatsiya qilish uchun sozlamalar
+    const options = {
+        margin: [0,0,0,0], // Margin (mm)
+        filename: `receipt-${formData.contractId || 'unknown'}.pdf`, // Fayl nomi
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 }, // Sifatni oshirish
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    // PDFni generatsiya qilish va Blob sifatida saqlash
+    const pdfBlob = await html2pdf()
+        .from(element)
+        .set(options)
+        .outputPdf('blob');
+
+    // Blobni File obyektiga aylantirish
+    checkFile.value = new File([pdfBlob], `receipt-${formData.contractId || 'unknown'}.pdf`, { type: "application/pdf" });
 };
 
 const printReceipt = () => {
@@ -494,7 +488,7 @@ const printReceipt = () => {
             </tr>
             <tr>
                 <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Shartnoma idsi:</td>
-                <td style="color: black; line-height: 1.2;">№${formData.contractId || "Mavjud emas"}</td>
+                <td style="color: black; line-height: 1.2;">№${UniqueID || "Mavjud emas"}</td>
             </tr>
             <tr>
                 <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">To'langan:</td>
@@ -550,58 +544,58 @@ const printReceipt = () => {
 };
 
 const submitForm = async () => {
-  if (!formData.file) {
-    errorMessage.value = "❌ Fayl generatsiya qilinmagan! Avval saqlash va generatsiya qiling!";
-    return;
-  }
-  if (!formData.image) {
-    errorMessage.value = "❌ Surat olish shart! Avval suratga oling!";
-    return;
-  }
-  if (!checkFile.value) {
-    errorMessage.value = "❌ Chek fayli generatsiya qilinmagan!";
-    return;
-  }
+    if (!formData.file) {
+        errorMessage.value = "❌ Fayl generatsiya qilinmagan! Avval saqlash va generatsiya qiling!";
+        return;
+    }
+    if (!formData.image) {
+        errorMessage.value = "❌ Surat olish shart! Avval suratga oling!";
+        return;
+    }
+    if (!checkFile.value) {
+        errorMessage.value = "❌ Chek fayli generatsiya qilinmagan!";
+        return;
+    }
 
-  isLoading.value = true;
-  loadingMessage.value = "Ma'lumotlar yuborilmoqda...";
-  errorMessage.value = "";
+    isLoading.value = true;
+    loadingMessage.value = "Ma'lumotlar yuborilmoqda...";
+    errorMessage.value = "";
 
-  const formDataToSend = new FormData();
-  formDataToSend.append("name", formData.name || "");
-  formDataToSend.append("surname", formData.surname || "");
-  formDataToSend.append("dadname", formData.dadname || "");
-  formDataToSend.append("userCode", formData.userCode || "");
-  formDataToSend.append("uniqueCode", formData.uniqueCode || "");
-  formDataToSend.append("contractId", String(formData.contractId) || "");
-  formDataToSend.append("phone", formData.phone || "");
-  formDataToSend.append("totalSum", formData.totalSum || 0); // Send as plain number
-  formDataToSend.append("paidSum", formData.paidSum || 0);   // Send as plain number
-  formDataToSend.append("remainingSum", formData.remainingSum || 0); // Send as plain number
-  formDataToSend.append("file", formData.file);
-  formDataToSend.append("image", formData.image);
-  formDataToSend.append("check", checkFile.value);
+    const formDataToSend = new FormData();
+    formDataToSend.append("name", formData.name || "");
+    formDataToSend.append("surname", formData.surname || "");
+    formDataToSend.append("dadname", formData.dadname || "");
+    formDataToSend.append("userCode", formData.userCode || "");
+    formDataToSend.append("uniqueCode", formData.uniqueCode || "");
+    formDataToSend.append("contractId", String(formData.contractId) || "");
+    formDataToSend.append("phone", formData.phone || "");
+    formDataToSend.append("totalSum", formData.totalSum || 0); // Send as plain number
+    formDataToSend.append("paidSum", formData.paidSum || 0);   // Send as plain number
+    formDataToSend.append("remainingSum", formData.remainingSum || 0); // Send as plain number
+    formDataToSend.append("file", formData.file);
+    formDataToSend.append("image", formData.image);
+    formDataToSend.append("check", checkFile.value); // PDF chek faylini yuborish
 
-  console.log("Yuborilayotgan ma'lumotlar:");
-  for (let [key, value] of formDataToSend.entries()) {
-    console.log(`Key: ${key}, Value: ${value}`);
-  }
+    console.log("Yuborilayotgan ma'lumotlar:");
+    for (let [key, value] of formDataToSend.entries()) {
+        console.log(`Key: ${key}, Value: ${value}`);
+    }
 
-  try {
-    const config = { headers: { "Content-Type": "multipart/form-data" } };
-    const response = await axios.post(API_URL1, formDataToSend, config);
-    console.log("✅ Ma'lumotlar muvaffaqiyatli saqlandi:", response.data);
-    errorMessage.value = "✅ Muvaffaqiyatli saqlandi!";
-    printReceipt();
-    resetForm();
-    await GetClient();
-  } catch (error) {
-    const errorDetails = error.response?.data || error.message;
-    console.error("❌ Xatolik detallari:", errorDetails);
-    errorMessage.value = `❌ Xatolik: ${errorDetails.message || error.message}`;
-  } finally {
-    isLoading.value = false;
-  }
+    try {
+        const config = { headers: { "Content-Type": "multipart/form-data" } };
+        const response = await axios.post(API_URL1, formDataToSend, config);
+        console.log("✅ Ma'lumotlar muvaffaqiyatli saqlandi:", response.data);
+        errorMessage.value = "✅ Muvaffaqiyatli saqlandi!";
+        resetForm();
+        printReceipt();
+        await GetClient();
+    } catch (error) {
+        const errorDetails = error.response?.data || error.message;
+        console.error("❌ Xatolik detallari:", errorDetails);
+        errorMessage.value = `❌ Xatolik: ${errorDetails.message || error.message}`;
+    } finally {
+        isLoading.value = false;
+    }
 };
 
 const formatNumberFields = (key, index) => {

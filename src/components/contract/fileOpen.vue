@@ -1,25 +1,24 @@
 <template>
     <div class="flex flex-col pr-2 items-end">
-        <button @click="showModal = true" class="create-section-btn">Yangi bo'lim yaratish</button>
+        <button @click="showModal = true" class="create-section-btn">{{ dat === 'datakril' ? translateText('Yangi bo\'lim yaratish') : 'Yangi bo\'lim yaratish' }}</button>
     </div>
     <div class="content-container">
         <div v-if="clientData" class="flex p-5">
             <div v-for="(section, index) in clientData.ClientSection" :key="index" class="client-section">
                 <img @click="router.push('/lists/'+ section.id)" src="../../../public/folder.ico" alt="">
-                <h1 class="text-center">{{ section.name }}</h1>
+                <h1 class="text-center">{{ dat === 'datakril' ? translateText(section.name) : section.name }}</h1>
             </div>
         </div>
-        <p v-else>Loading client data...</p>
     </div>
 
     <!-- Modal for creating a new client section -->
     <div v-if="showModal" class="modal-overlay">
         <div class="modal">
-            <h3>Create New Section</h3>
-            <input v-model="newSectionName" type="text" placeholder="Enter section name" />
+            <h3>{{ dat === 'datakril' ? translateText('Yangi bo\'lim yaratish') : 'Yangi bo\'lim yaratish' }}</h3>
+            <input v-model="newSectionName" type="text" :placeholder="dat === 'datakril' ? translateText('Bo\'lim nomini kiriting') : 'Bo\'lim nomini kiriting'" />
             <div class="modal-actions">
-                <button @click="createClientSection">Create</button>
-                <button @click="showModal = false">Cancel</button>
+                <button @click="createClientSection">{{ dat === 'datakril' ? translateText('Yaratish') : 'Yaratish' }}</button>
+                <button @click="showModal = false">{{ dat === 'datakril' ? translateText('bekor qilish') : 'Bekor qilish' }}</button>
             </div>
         </div>
     </div>
@@ -30,8 +29,13 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
 import { URL } from '@/auth/url.js';
+import translateText from '@/auth/Translate';
+import { inject } from 'vue';
+import { is } from 'date-fns/locale';
 
 const route = useRoute();
+const isLoading = inject('isLoading');
+const dat = inject('dat');
 const router = useRouter();
 const id = parseInt(route.params.id); // Ensure id is a number
 const clientData = ref(null);
@@ -39,17 +43,21 @@ const showModal = ref(false);
 const newSectionName = ref("");
 
 const fetchClientById = async () => {
+    isLoading.value = true;
     try {
         const response = await axios.get(`${URL}/client/${id}`);
         clientData.value = response.data;
         console.log("Client Data:", clientData.value); // Debugging: Log the client data
     } catch (error) {
         console.error("Error fetching client data:", error);
+    } finally {
+        isLoading.value = false;
     }
 };
 
 // Function to create a new client section
 const createClientSection = async () => {
+    isLoading.value = true;
     try {
         if (!newSectionName.value.trim()) {
             alert("Section name cannot be empty.");
@@ -57,12 +65,13 @@ const createClientSection = async () => {
         }
         const newSection = { clientId: id, name: newSectionName.value,type: "other" };
         const response = await axios.post(`${URL}/client-sections`, newSection);
-        console.log("New Section Created:", response.data);
         clientData.value.ClientSection.push(response.data);
         newSectionName.value = "";
         showModal.value = false;
     } catch (error) {
         console.error("Error creating client section:", error);
+    } finally {
+        isLoading.value = false;
     }
 };
 

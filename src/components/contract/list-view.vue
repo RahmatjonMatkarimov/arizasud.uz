@@ -14,9 +14,6 @@
             <img :src="page" class="w-full rounded-lg shadow-md object-cover transition-transform duration-300" alt="PDF Page" />
           </div>
         </div>
-        <div v-else class="text-gray-500 text-base md:text-lg text-center italic">
-          Hech qanday sahifa topilmadi.
-        </div>
       </main>
     </div>
   </template>
