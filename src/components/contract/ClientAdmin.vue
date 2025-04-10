@@ -90,6 +90,7 @@ const docxTemplate = ref(null);
 const errorMessage = ref("");
 const API_URL = URL + "/contract-file";
 const video = ref(null);
+const qarz = ref(0);
 const canvas = ref(null);
 const isModalOpen = ref(false);
 const isWarningModalOpen = ref(false);
@@ -115,7 +116,10 @@ const getAdmin = async () => {
     Loading.value = false;
   }
 };
-
+const name = ref("");
+const surname = ref("");
+const dadname = ref("");
+const phone = ref('');
 const formData = reactive({
   name: "",
   surname: "",
@@ -131,19 +135,6 @@ const formData = reactive({
   image: null,
 });
 
-const GetClient = async () => {
-  Loading.value = true;
-  try {
-    const response = await axios.get(URL + "/client");
-    ClientData = response.data.sort((a, b) => a.id - b.id);
-    UniqueID = ClientData[ClientData.length - 1].id + 1;
-  } catch (error) {
-    errorMessage.value = "❌ Client ma'lumotlarini olishda xatolik!";
-    console.error("GetClient xatosi:", error.message);
-  } finally {
-    Loading.value = false;
-  }
-};
 
 const fetchDocx = async () => {
   Loading.value = true;
@@ -279,6 +270,16 @@ const formatNumberWithDots = (number) => {
   return Number(number).toLocaleString("uz-UZ", { minimumFractionDigits: 0 }).replace(/,/g, ".");
 };
 
+const generateContractId = () => {
+  const now = new Date();
+  const day = String(now.getDate()).padStart(2, "0");
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+  const seconds = String(now.getSeconds()).padStart(2, "0");
+  const milliseconds = String(now.getMilliseconds()).padStart(3, "0");
+  return `${day}${hours}${minutes}${seconds}${milliseconds}`.slice(-8); // Generate an 8-character unique ID
+};
+
 const saveAndGenerate = async () => {
   try {
     if (!formData.image) {
@@ -288,12 +289,16 @@ const saveAndGenerate = async () => {
 
     uniqueFields.value.forEach((field, index) => {
       if (field.key === "Ism") formData.name = fieldValues.value[index];
+      if (field.key === "Ism") name.value = fieldValues.value[index];
       if (field.key === "Familya") formData.surname = fieldValues.value[index];
+      if (field.key === "Familya") surname.value = fieldValues.value[index];
       if (field.key === "Otasining ismi") formData.dadname = fieldValues.value[index];
+      if (field.key === "Otasining ismi") dadname.value = fieldValues.value[index];
       if (field.key === "Fuqaroning JSHSHIR raqami") formData.uniqueCode = fieldValues.value[index];
       if (field.key === "Fuqaroning ID karta raqami") formData.userCode = fieldValues.value[index];
       if (field.key === "Fuqaroning telefon raqami ") formData.phone = fieldValues.value[index];
-      if (field.key === "Buyurtmachini boshlang’ich to’lovi (avans)") dataaa.price = Number(fieldValues.value[index]) || 0;
+      if (field.key === "Fuqaroning telefon raqami ") phone.value = fieldValues.value[index];
+      if (field.key === "Buyurtmachini boshlang’ich to’lovi (avans)") dataaa.price = Number(fieldValues.value[index]);
       if (field.key === "Konsalting xizmat ko’rsatish narxi") dataaa.summa1 = Number(fieldValues.value[index]) || 0;
       if (field.key === "Hujjatga tushuntirish berish narxi") dataaa.summa2 = Number(fieldValues.value[index]) || 0;
     });
@@ -317,9 +322,12 @@ const saveAndGenerate = async () => {
     const formattedDate = `${day}.${month}.${year}`;
     data["Today Date"] = formattedDate;
 
-    data["ID"] = UniqueID;
-    data["documentId"] = UniqueID;
-    formData.contractId = UniqueID;
+    formData.contractId = generateContractId();
+    UniqueID = formData.contractId;
+    
+    // erate and assign unique contractId
+    data["ID"] = formData.contractId;
+    data["documentId"] = formData.contractId;
 
     const sum1Num = Number(sum1.value) || 0;
     const sum2Num = Number(sum2.value) || 0;
@@ -328,15 +336,16 @@ const saveAndGenerate = async () => {
     const boshlagichSumma = Number(dataaa.price) || 0;
 
     const umumiy = sum1Num + sum2Num + konsaltingNarxi + tushuntirishNarxi;
-    const qarz = umumiy - boshlagichSumma;
+    const qarza = umumiy - boshlagichSumma;
     formData.totalSum = umumiy;
     formData.paidSum = boshlagichSumma;
-    formData.remainingSum = qarz > 0 ? qarz : 0;
+    formData.remainingSum = qarza <= 0 ? 0 : qarza;
+    qarz.value = qarza;
 
     data["sum1"] = formatNumberWithDots(sum1Num);
     data["sum2"] = formatNumberWithDots(sum2Num);
     data["umumiy"] = formatNumberWithDots(umumiy);
-    data["qarz"] = formatNumberWithDots(qarz);
+    data["qarz"] = formatNumberWithDots(qarza);
     data["Konsalting xizmat ko’rsatish narxi"] = formatNumberWithDots(konsaltingNarxi);
     data["Hujjatga tushuntirish berish narxi"] = formatNumberWithDots(tushuntirishNarxi);
     data["Buyurtmachini boshlang’ich to’lovi (avans)"] = formatNumberWithDots(boshlagichSumma);
@@ -402,27 +411,29 @@ const generateCheckFile = async () => {
         <table style="width: 100%; border-collapse: collapse; color: black; table-layout: fixed;">
             <tr>
                 <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Mijoz:</td>
-                <td style="color: black;">${receiptData.name} ${receiptData.surname} ${receiptData.dadname}</td>
+                <td style="color: black;">${name.value} ${surname.value} ${dadname.value}</td>
             </tr>
             <tr>
                 <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Telefon Raqami:</td>
-                <td style="color: black; line-height: 1.2;">${receiptData.phone || "Mavjud emas"}</td>
+                <td style="color: black; line-height: 1.2;">${phone.value || "Mavjud emas"}</td>
             </tr>
             <tr>
                 <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Shartnoma idsi:</td>
-                <td style="color: black; line-height: 1.2;">№${ "Mavjud emas"}</td>
+                <td style="color: black; line-height: 1.2;">№ ${UniqueID || "Mavjud emas"}</td>
             </tr>
             <tr>
                 <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">To'langan:</td>
-                <td style="color: black; line-height: 1.2;">${formatNumberWithDots(receiptData.name)} so'm</td>
+                <td style="color: black; line-height: 1.2;">${formatNumberWithDots(dataaa.price)} so'm</td>
             </tr>
             <tr>
                 <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Qoldiq qarz:</td>
-                <td style="color: black; line-height: 1.2;">${receiptData.remainingSum <= 0 ? "To‘landi" : formatNumberWithDots(receiptData.remainingSum) + " so'm"}</td>
+                <td style="color: black; line-height: 1.2;">
+                  ${qarz.value <= 0 ? "To'langan" : formatNumberWithDots(qarz.value)}
+                </td>
             </tr>
             <tr>
                 <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Sana:</td>
-                <td style="color: black; line-height: 1.2;">${"dadsada"}</td>
+                <td style="color: black; line-height: 1.2;">${formattedDate}</td>
             </tr>
         </table>
         <p style="text-align: center; color: black; justify-content: center; gap:3px; align-items: center; display:flex; margin-top:10px;">
@@ -480,15 +491,15 @@ const printReceipt = () => {
         <table style="width: 100%; border-collapse: collapse; color: black; table-layout: fixed;">
             <tr>
                 <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Mijoz:</td>
-                <td style="color: black;">${formData.name} ${formData.surname} ${formData.dadname}</td>
+                <td style="color: black;">${name.value} ${surname.value} ${dadname.value}</td>
             </tr>
             <tr>
                 <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Telefon Raqami:</td>
-                <td style="color: black; line-height: 1.2;">${formData.phone || "Mavjud emas"}</td>
+                <td style="color: black; line-height: 1.2;">${phone.value || "Mavjud emas"}</td>
             </tr>
             <tr>
                 <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Shartnoma idsi:</td>
-                <td style="color: black; line-height: 1.2;">№${UniqueID || "Mavjud emas"}</td>
+                <td style="color: black; line-height: 1.2;">№ ${UniqueID || "Mavjud emas"}</td>
             </tr>
             <tr>
                 <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">To'langan:</td>
@@ -496,7 +507,9 @@ const printReceipt = () => {
             </tr>
             <tr>
                 <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Qoldiq qarz:</td>
-                <td style="color: black; line-height: 1.2;">${formData.remainingSum <= 0 ? "To‘landi" : formatNumberWithDots(formData.remainingSum) + " so'm"}</td>
+                <td style="color: black; line-height: 1.2;">
+                  ${qarz.value <= 0 ? "To'langan" : formatNumberWithDots(qarz.value)}
+                </td>
             </tr>
             <tr>
                 <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Sana:</td>
@@ -671,7 +684,6 @@ watch(
 onMounted(() => {
   fetchDocx();
   fetchRecords();
-  GetClient();
   getAdmin()
 });
 

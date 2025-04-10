@@ -5,7 +5,7 @@
     <div class="content-container">
         <div v-if="clientData" class="flex p-5">
             <div v-for="(section, index) in clientData.ClientSection" :key="index" class="client-section">
-                <img @click="router.push('/lists/'+ section.id)" src="../../../public/folder.ico" alt="">
+                <img @click="router.push('/lists/' + id + '/' + section.id)" src="../../../public/folder.ico" alt="">
                 <h1 class="text-center">{{ dat === 'datakril' ? translateText(section.name) : section.name }}</h1>
             </div>
         </div>

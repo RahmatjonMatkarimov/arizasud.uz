@@ -29,12 +29,14 @@
                                 </span>
                                 <span class="text-red-600 cursor-pointer" v-else
                                     @click="openPaymentDetailsModal(file, $event)">
-                                    {{ dat === 'datakril' ? translateText("Qarzi") : "Qarzi" }}: 
-                                    {{ file.ClientPayment[file.ClientPayment.length - 1]?.remainingSum || 0 }} {{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
+                                    {{ dat === 'datakril' ? translateText("Qarzi") : "Qarzi" }}:
+                                    {{ file.ClientPayment[file.ClientPayment.length - 1]?.remainingSum || 0 }} {{ dat
+                                        === 'datakril' ? translateText("so'm") : "so'm" }}
                                 </span>
                             </div>
                         </div>
-                        <div v-if="file.ClientPayment && file.ClientPayment.length && file.ClientPayment[file.ClientPayment.length - 1]?.remainingSum > 0">
+                        <div
+                            v-if="file.ClientPayment && file.ClientPayment.length && file.ClientPayment[file.ClientPayment.length - 1]?.remainingSum > 0">
                             <button @click="openPaymentModal(file)"
                                 class="ml-4 px-2 py-1 bg-green-500 text-white rounded-md hover:bg-green-600">
                                 {{ dat === 'datakril' ? translateText("To'lash") : "To'lash" }}
@@ -61,7 +63,7 @@
                     {{ dat === 'datakril' ? translateText("Fayl yuklash") : "Fayl yuklash" }}
                 </h2>
                 <form @submit.prevent="uploadFile" class="flex flex-col gap-4">
-                    <input type="text" v-model="formData.name" 
+                    <input type="text" v-model="formData.name"
                         :placeholder="dat === 'datakril' ? translateText('Shartnoma nomini kiriting') : 'Shartnoma nomini kiriting'"
                         class="p-3 border rounded-lg focus:outline-none text-black border-black focus:ring-2 focus:ring-blue-500"
                         required />
@@ -110,20 +112,24 @@
                     {{ dat === 'datakril' ? translateText("To'langan") : "To'langan" }}
                 </span>
                 <span class="text-red-600 font-medium" v-else>
-                    {{ dat === 'datakril' ? translateText("Qarzi") : "Qarzi" }}: 
-                    {{ selectedPaymentDetails[selectedPaymentDetails.length - 1].remainingSum }}{{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
+                    {{ dat === 'datakril' ? translateText("Qarzi") : "Qarzi" }}:
+                    {{ selectedPaymentDetails[selectedPaymentDetails.length - 1].remainingSum }}{{ dat === 'datakril' ?
+                        translateText("so'm") : "so'm" }}
                 </span>
             </div>
             <ul class="list-none p-0 m-0">
                 <li v-for="payment in selectedPaymentDetails" :key="payment.id" class="mt-1 border p-2 border-black">
                     <div class="text-black">
-                        {{ dat === 'datakril' ? translateText("Jami summa") : "Jami summa" }}: {{ payment.TotalSum }}{{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
+                        {{ dat === 'datakril' ? translateText("Jami summa") : "Jami summa" }}: {{ payment.TotalSum }}{{
+                            dat === 'datakril' ? translateText("so'm") : "so'm" }}
                     </div>
                     <div class="text-black">
-                        {{ dat === 'datakril' ? translateText("Qoldiq summa") : "Qoldiq summa" }}: {{ payment.remainingSum }}{{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
+                        {{ dat === 'datakril' ? translateText("Qoldiq summa") : "Qoldiq summa" }}: {{
+                            payment.remainingSum }}{{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
                     </div>
                     <div class="text-black">
-                        {{ dat === 'datakril' ? translateText("To'langan summa") : "To'langan summa" }}: {{ payment.paidSum }}{{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
+                        {{ dat === 'datakril' ? translateText("To'langan summa") : "To'langan summa" }}: {{
+                            payment.paidSum }}{{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
                     </div>
                     <div class="text-black">
                         {{ dat === 'datakril' ? translateText("Vaqt") : "Vaqt" }}: {{ formatDate(payment.createdAt) }}
@@ -141,11 +147,14 @@ import { useRoute, useRouter } from 'vue-router';
 import html2pdf from 'html2pdf.js';
 import { URL } from '@/auth/url.js';
 import translateText from '@/auth/Translate';
+import { da, el } from 'date-fns/locale';
 
 const dat = inject('dat');
 const route = useRoute();
 const router = useRouter();
 const id = route.params.id;
+const SectionId = route.params.id1;
+console.log("SectionId:", SectionId);
 const clientFiles = ref([]);
 const isLoading = ref(true);
 const showModal = ref(false);
@@ -161,6 +170,7 @@ const receiptData = ref({});
 const showReceipt = ref(false);
 const paymentDetailsModal = ref(false);
 const selectedPaymentDetails = ref(null);
+const data = ref(null);
 const modalPosition = ref({ top: 0, left: 0 });
 
 const closePaymentDetailsModal = (event) => {
@@ -174,6 +184,13 @@ const fetchClientFiles = async () => {
     try {
         const response = await axios.get(`${URL}/client-sections/${id}`);
         clientFiles.value = response.data.ClientFile || [];
+        data.value = response.data.client;
+
+        // Debugging logs
+        console.log("SectionId:", SectionId);
+        console.log("clientFiles.value[0].contractId:", clientFiles.value[0]?.contractId);
+        console.log("data.value:", data.value);
+        console.log("Client files:", clientFiles.value);
     } catch (error) {
         console.error("Error fetching client files:", error);
     } finally {
@@ -258,33 +275,116 @@ const submitPayment = async () => {
 };
 
 const printReceipt = () => {
+  const img1 = new Image();
+  const img2 = new Image();
+  const img3 = new Image();
+  img1.src = "/asd.jpg";
+  img2.src = "https://arizasud.uz/https___arizasud.uz_.png";
+  img3.src = "/telegram.png";
+
+  const today = new Date();
+  const day = String(today.getDate()).padStart(2, "0");
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const year = today.getFullYear();
+  const formattedDate = `${day}.${month}.${year}`;
+
+  const receiptHTML = `
+    <div style="font-size: 12px; width:100%; display:flex; flex-direction: column; justify-content: center; align-content:center; color: black;">
+        <h1 style="text-align: center; font-size:15px; font-weight: bold; color: black; margin-top:18px;">To'lov cheki</h1>
+        <table style="width: 100%; border-collapse: collapse; color: black; table-layout: fixed;">
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Mijoz:</td>
+                <td style="color: black;">${data.value.name} ${data.value.surname} ${data.value.dadname}</td>
+            </tr>
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Telefon Raqami:</td>
+                <td style="color: black; line-height: 1.2;">${data.value.phone || "Mavjud emas"}</td>
+            </tr>
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Shartnoma idsi:</td>
+                <td style="color: black; line-height: 1.2;">№${clientFiles.value[0]?.contractId || "Mavjud emas"}</td>
+            </tr>
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">To'langan:</td>
+                <td style="color: black; line-height: 1.2;">${receiptData.value.paymentAmount} so'm</td>
+            </tr>
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Qoldiq qarz:</td>
+                <td style="color: black; line-height: 1.2;">${receiptData.value.remainingDebt <= 0 ? "To‘landi" : formatNumberWithDots(receiptData.value.remainingDebt) + " so'm"}</td>
+            </tr>
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Sana:</td>
+                <td style="color: black; line-height: 1.2;">${receiptData.value.date}</td>
+            </tr>
+        </table>
+        <p style="text-align: center; color: black; justify-content: center; gap:3px; align-items: center; display:flex; margin-top:10px;">
+            <img src="${img3.src}" alt="" style="max-width: 7%; height: auto;">
+            <span style="font-size: 10px; color: black;">Telegram: +998 99 106 70 35</span>
+        </p>
+        <p style="text-align: center; font-size:10px; color: black;">"YURIST KONSUL KONSALTING" х/к</p>
+        <div style="display: flex; flex-direction:column; justify-content: center; align-items: center; margin-top: 20px;">
+            <img src="${img1.src}" alt="" style="max-width: 90%; height: auto;">
+            <img src="${img2.src}" alt="" style="max-width: 90%; height: auto;">
+        </div>
+    </div>
+  `;
+
+  const originalContent = document.body.innerHTML;
+  const style = document.createElement("style");
+  style.innerHTML = `
+    @media print {
+      @page { margin: 0; }
+      body { margin: 0; }
+    }
+  `;
+  document.head.appendChild(style);
+
+  document.body.innerHTML = receiptHTML;
+
+  img1.onload = img2.onload = img3.onload = () => {
+    window.print();
+    document.body.innerHTML = originalContent;
+    document.head.removeChild(style);
+    window.location.reload();
+  };
+
+  img1.onerror = img2.onerror = img3.onerror = () => {
+    console.error("Image failed to load");
+    window.print();
+    document.body.innerHTML = originalContent;
+    document.head.removeChild(style);
+    window.location.reload();
+  };
+};
+
+const generateCheckFile = async () => {
     const receiptHTML = `
     <div style="font-size: 12px; max-width:23%; display:flex; flex-direction: column; justify-content: center; align-content:center; color: black;">
         <h1 style="text-align: center; font-size:15px; font-weight: bold; color: black; margin-top:18px;">To'lov cheki</h1>
         <table style="width: 100%; border-collapse: collapse; color: black; table-layout: fixed;">
             <tr>
                 <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Mijoz:</td>
-                <td style="color: black;">${receiptData.name} ${receiptData.surname} ${receiptData.dadname}</td>
+                <td style="color: black;">${data.value.name} ${data.value.surname} ${data.value.dadname}</td>
             </tr>
             <tr>
                 <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Telefon Raqami:</td>
-                <td style="color: black; line-height: 1.2;">${receiptData.phone || "Mavjud emas"}</td>
+                <td style="color: black; line-height: 1.2;">${data.value.phone || "Mavjud emas"}</td>
             </tr>
             <tr>
                 <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Shartnoma idsi:</td>
-                <td style="color: black; line-height: 1.2;">№${ "Mavjud emas"}</td>
+                <td style="color: black; line-height: 1.2;">№${clientFiles.value[0]?.contractId || "Mavjud emas"}</td>
             </tr>
             <tr>
                 <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">To'langan:</td>
-                <td style="color: black; line-height: 1.2;">${formatNumberWithDots(receiptData.name)} so'm</td>
+                <td style="color: black; line-height: 1.2;">${receiptData.value.paymentAmount} so'm</td>
             </tr>
             <tr>
                 <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Qoldiq qarz:</td>
-                <td style="color: black; line-height: 1.2;">${receiptData.remainingSum <= 0 ? "To‘landi" : formatNumberWithDots(receiptData.remainingSum) + " so'm"}</td>
+                <td style="color: black; line-height: 1.2;">${receiptData.value.remainingDebt <= 0 ? "To‘landi" : formatNumberWithDots(receiptData.value.remainingDebt) + " so'm"}</td>
             </tr>
             <tr>
                 <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Sana:</td>
-                <td style="color: black; line-height: 1.2;">${"dadsada"}</td>
+                <td style="color: black; line-height: 1.2;">${receiptData.value.date}</td>
             </tr>
         </table>
         <p style="text-align: center; color: black; justify-content: center; gap:3px; align-items: center; display:flex; margin-top:10px;">
@@ -303,21 +403,28 @@ const printReceipt = () => {
     element.innerHTML = receiptHTML;
 
     const options = {
-        margin: [0,0,0,0],
+        margin: [0, 0, 0, 0],
         filename: `receipt-${receiptData.value.uniqueCode || 'unknown'}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2 },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
-    html2pdf()
-        .from(element)
-        .set(options)
-        .save();
-};
+    try {
+        const pdfBlob = await html2pdf().from(element).set(options).outputPdf('blob');
+        const formData = new FormData();
+        formData.append('check', pdfBlob, `receipt-${receiptData.value.uniqueCode || 'unknown'}.pdf`);
+        formData.append('contractId', string(clientFiles.value[0]?.contractId));
 
-const generateCheckFile = async () => {
-    
+        await axios.post(`${URL}/client/add-check/${SectionId}`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        });
+     formData.forEach(el => console.log(el));
+        
+        console.log("Check file generated and sent successfully.");
+    } catch (error) {
+        console.error("Error generating or sending the check file:", error);
+    }
 };
 
 const openPaymentModal = (file) => {
@@ -365,6 +472,7 @@ onMounted(() => {
         size: 58mm auto;
         margin: 0;
     }
+
     html,
     body {
         margin: 0 !important;
@@ -377,6 +485,7 @@ onMounted(() => {
         align-items: flex-start;
         justify-content: flex-start;
     }
+
     body {
         font-family: 'Courier New', Courier, monospace;
         font-size: 10px !important;
@@ -385,27 +494,33 @@ onMounted(() => {
         white-space: pre-wrap !important;
         box-sizing: border-box;
     }
+
     h2 {
         text-align: center;
         font-size: 12px !important;
         margin: 0 !important;
         padding: 0 !important;
     }
+
     table {
         width: 100%;
         border-collapse: collapse;
     }
+
     td {
         padding: 0 !important;
         vertical-align: top;
     }
+
     th {
         text-align: center;
     }
+
     .hidden,
     [hidden] {
         display: none !important;
     }
+
     * {
         box-sizing: border-box !important;
     }

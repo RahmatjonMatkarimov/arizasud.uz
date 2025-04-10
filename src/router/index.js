@@ -64,7 +64,7 @@ const routes = [
             { path: "/Sum", component: () => import("@/components/contract/SumAdmin.vue") },
             { path: "/CliendList", component: () => import("@/components/contract/cliendList.vue") },
             { path: "/Check/:id", component: () => import("@/components/contract/fileOpen.vue") },
-            { path: "/lists/:id", component: () => import("@/components/contract/lists.vue") },
+            { path: "/lists/:id1/:id", component: () => import("@/components/contract/lists.vue") },
             { path: "/lists-view/:id", component: () => import("@/components/contract/list-view.vue") },
         ],
         meta: { requiresAuth: true, allowedRoles: ["admin", "manager", "yurist", "bigAdmin"] },
