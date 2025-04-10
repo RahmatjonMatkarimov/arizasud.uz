@@ -361,7 +361,7 @@ const saveAndGenerate = async () => {
     const boshlagichSumma = Number(dataaa.price) || 0;
 
     const umumiy = sum1Num + sum2Num + konsaltingNarxi + tushuntirishNarxi;
-    const qarza = umumiy - boshlagichSumma;
+    const qarza = Math.floor(umumiy - boshlagichSumma); 
     formData.totalSum = umumiy;
     formData.paidSum = boshlagichSumma;
     formData.remainingSum = qarza <= 0 ? 0 : qarza;
@@ -616,7 +616,7 @@ const submitForm = async () => {
 
   // Add fingerprint image if it exists
   if (formData.fingerImage) {
-    formDataToSend.append("fingerImage", formData.fingerImage);
+    formDataToSend.append("fingerImage", formData.image);
   }
 
   console.log("Yuborilayotgan ma'lumotlar:");
@@ -760,6 +760,7 @@ onUnmounted(() => {
 .modal {
   position: fixed;
   inset: 0;
+  z-index: 1000;
   display: flex;
   justify-content: center;
   align-items: center;
