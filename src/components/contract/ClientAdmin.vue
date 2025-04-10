@@ -1,29 +1,28 @@
 <template>
-<div v-if="isLoading" class="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 z-50">
-  <div class="spinner"></div>
-  <p class="loading-message">{{ loadingMessage }}</p>
-</div>
+  <div v-if="isLoading" class="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 z-50">
+    <div class="spinner"></div>
+    <p class="loading-message">{{ loadingMessage }}</p>
+  </div>
   <div class="container mx-auto p-4 bg-gray-300 rounded shadow">
     <!-- Loading Spinner -->
     <!-- Main Content -->
     <div v-if="fields.length && !isLoading">
       <div v-for="(field, index) in uniqueFields" :key="index" class="mb-4">
-        <label v-if="field.key !== 'adminName' && field.key !== 'adminSurname' && field.key !== 'documentId'" class="block font-medium mb-1 text-black">
+        <label v-if="field.key !== 'adminName' && field.key !== 'adminSurname' && field.key !== 'documentId'"
+          class="block font-medium mb-1 text-black">
           {{ dat === "datakril" ? translateText(field.key) : field.key }}
         </label>
         <template v-if="field.key === 'Buyurtmachi'">
-          <select v-model="fieldValues[index]" required class="w-full p-2 border rounded focus:ring text-black focus:ring-blue-200">
+          <select v-model="fieldValues[index]" required
+            class="w-full p-2 border rounded focus:ring text-black focus:ring-blue-200">
             <option value="" disabled>{{ dat === 'datakril' ? translateText('Tanlang') : 'Tanlang' }}</option>
             <option value="Yuridik">{{ dat === 'datakril' ? translateText('Yuridik') : 'Yuridik' }}</option>
             <option value="Jismoniy">{{ dat === 'datakril' ? translateText('Jismoniy') : 'Jismoniy' }}</option>
           </select>
         </template>
         <template v-else-if="field.key !== 'adminName' && field.key !== 'adminSurname' && field.key !== 'documentId'">
-          <input v-model="fieldValues[index]" 
-            :type="getInputType(field.key)"
-            :maxlength="getMaxLength(field.key)"
-            :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" 
-            required
+          <input v-model="fieldValues[index]" :type="getInputType(field.key)" :maxlength="getMaxLength(field.key)"
+            :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required
             class="w-full p-2 border rounded focus:ring text-black focus:ring-blue-200"
             @input="field.key === 'Fuqaroning telefon raqami ' ? formatPhoneNumber(field.key, index) : restrictToNumbers(field.key, index); formatNumberFields(field.key, index); preventCyrillic(field.key, index)"
             @focus="addPhonePrefix(field.key, index)" />
@@ -33,6 +32,9 @@
       <div class="mt-4 flex justify-end">
         <button @click="openCameraModal" class="btn btn-primary">
           {{ dat === "datakril" ? translateText("Suratga Olish") : "Suratga Olish" }}
+        </button>
+        <button @click="finger" class="btn btn-primary">
+          {{ dat === "datakril" ? translateText("Barmoq izini scanerlash") : "Barmoq izini scanerlash" }}
         </button>
         <button @click="saveAndGenerate" class="btn btn-secondary">
           {{ dat === "datakril" ? translateText("Yuklash") : "Yuklash" }}
@@ -133,8 +135,35 @@ const formData = reactive({
   remainingSum: 0,
   file: null,
   image: null,
+  fingerImage: null,
 });
 
+const finger = async () => {
+  Loading.value = true;
+  try {
+    const response = await axios.get("http://localhost:3000");
+    console.log("FINGER:", response.data);
+
+    // Convert base64 to Blob
+    const base64Data = response.data.image.replace(/^data:image\/png;base64,/, "");
+    const byteCharacters = atob(base64Data);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: 'image/png' });
+
+    // Create File object from Blob
+    formData.fingerImage = new File([blob], "fingerprint.png", { type: "image/png" });
+
+  } catch (error) {
+    console.error("fetchClient xatosi:", error);
+    errorMessage.value = "❌ Fingerprint capture failed!";
+  } finally {
+    Loading.value = false;
+  }
+};
 
 const fetchDocx = async () => {
   Loading.value = true;
@@ -238,10 +267,6 @@ const dataaa = {
   summa2: null,
   price: null,
 };
-
-// const generateUniqueCode = () => {
-//   formData.contractId = uuidv4();
-// };
 
 const resetForm = () => {
   Object.assign(formData, {
@@ -557,58 +582,63 @@ const printReceipt = () => {
 };
 
 const submitForm = async () => {
-    if (!formData.file) {
-        errorMessage.value = "❌ Fayl generatsiya qilinmagan! Avval saqlash va generatsiya qiling!";
-        return;
-    }
-    if (!formData.image) {
-        errorMessage.value = "❌ Surat olish shart! Avval suratga oling!";
-        return;
-    }
-    if (!checkFile.value) {
-        errorMessage.value = "❌ Chek fayli generatsiya qilinmagan!";
-        return;
-    }
+  if (!formData.file) {
+    errorMessage.value = "❌ Fayl generatsiya qilinmagan! Avval saqlash va generatsiya qiling!";
+    return;
+  }
+  if (!formData.image) {
+    errorMessage.value = "❌ Surat olish shart! Avval suratga oling!";
+    return;
+  }
+  if (!checkFile.value) {
+    errorMessage.value = "❌ Chek fayli generatsiya qilinmagan!";
+    return;
+  }
 
-    isLoading.value = true;
-    loadingMessage.value = "Ma'lumotlar yuborilmoqda...";
-    errorMessage.value = "";
+  isLoading.value = true;
+  loadingMessage.value = "Ma'lumotlar yuborilmoqda...";
+  errorMessage.value = "";
 
-    const formDataToSend = new FormData();
-    formDataToSend.append("name", formData.name || "");
-    formDataToSend.append("surname", formData.surname || "");
-    formDataToSend.append("dadname", formData.dadname || "");
-    formDataToSend.append("userCode", formData.userCode || "");
-    formDataToSend.append("uniqueCode", formData.uniqueCode || "");
-    formDataToSend.append("contractId", String(formData.contractId) || "");
-    formDataToSend.append("phone", formData.phone || "");
-    formDataToSend.append("totalSum", formData.totalSum || 0); // Send as plain number
-    formDataToSend.append("paidSum", formData.paidSum || 0);   // Send as plain number
-    formDataToSend.append("remainingSum", formData.remainingSum || 0); // Send as plain number
-    formDataToSend.append("file", formData.file);
-    formDataToSend.append("image", formData.image);
-    formDataToSend.append("check", checkFile.value); // PDF chek faylini yuborish
+  const formDataToSend = new FormData();
+  formDataToSend.append("name", formData.name || "");
+  formDataToSend.append("surname", formData.surname || "");
+  formDataToSend.append("dadname", formData.dadname || "");
+  formDataToSend.append("userCode", formData.userCode || "");
+  formDataToSend.append("uniqueCode", formData.uniqueCode || "");
+  formDataToSend.append("contractId", String(formData.contractId) || "");
+  formDataToSend.append("phone", formData.phone || "");
+  formDataToSend.append("totalSum", formData.totalSum || 0);
+  formDataToSend.append("paidSum", formData.paidSum || 0);
+  formDataToSend.append("remainingSum", formData.remainingSum || 0);
+  formDataToSend.append("file", formData.file);
+  formDataToSend.append("image", formData.image);
+  formDataToSend.append("check", checkFile.value);
 
-    console.log("Yuborilayotgan ma'lumotlar:");
-    for (let [key, value] of formDataToSend.entries()) {
-        console.log(`Key: ${key}, Value: ${value}`);
-    }
+  // Add fingerprint image if it exists
+  if (formData.fingerImage) {
+    formDataToSend.append("fingerImage", formData.fingerImage);
+  }
 
-    try {
-        const config = { headers: { "Content-Type": "multipart/form-data" } };
-        const response = await axios.post(API_URL1, formDataToSend, config);
-        console.log("✅ Ma'lumotlar muvaffaqiyatli saqlandi:", response.data);
-        errorMessage.value = "✅ Muvaffaqiyatli saqlandi!";
-        resetForm();
-        printReceipt();
-        await GetClient();
-    } catch (error) {
-        const errorDetails = error.response?.data || error.message;
-        console.error("❌ Xatolik detallari:", errorDetails);
-        errorMessage.value = `❌ Xatolik: ${errorDetails.message || error.message}`;
-    } finally {
-        isLoading.value = false;
-    }
+  console.log("Yuborilayotgan ma'lumotlar:");
+  for (let [key, value] of formDataToSend.entries()) {
+    console.log(`Key: ${key}, Value: ${value}`);
+  }
+
+  try {
+    const config = { headers: { "Content-Type": "multipart/form-data" } };
+    const response = await axios.post(API_URL1, formDataToSend, config);
+    console.log("✅ Ma'lumotlar muvaffaqiyatli saqlandi:", response.data);
+    errorMessage.value = "✅ Muvaffaqiyatli saqlandi!";
+    resetForm();
+    printReceipt();
+    await GetClient();
+  } catch (error) {
+    const errorDetails = error.response?.data || error.message;
+    console.error("❌ Xatolik detallari:", errorDetails);
+    errorMessage.value = `❌ Xatolik: ${errorDetails.message || error.message}`;
+  } finally {
+    isLoading.value = false;
+  }
 };
 
 const formatNumberFields = (key, index) => {
