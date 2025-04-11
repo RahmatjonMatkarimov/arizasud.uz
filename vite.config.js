@@ -1,13 +1,20 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { fileURLToPath, URL } from "node:url";
+import VitePluginPrerender from "vite-plugin-prerender"; // To‘g‘ri import qilish
 
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    VitePluginPrerender({
+      staticDir: 'dist',
+      routes: ['/', '/ticket'], // kerakli sahifalaringni shu yerga yoz
+    })
+  ],
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
-      "pdfjs-dist": "pdfjs-dist/legacy/build/pdf", // Legacy build orqali to'g'ri yo'naltirish
+      "pdfjs-dist": "pdfjs-dist/legacy/build/pdf",
     },
   },
   server: {
@@ -16,7 +23,7 @@ export default defineConfig({
     strictPort: true,
     cors: true,
     watch: {
-      usePolling: true, // Windows yoki konteynerlarda ishlatiladi
+      usePolling: true,
     },
   },
 });

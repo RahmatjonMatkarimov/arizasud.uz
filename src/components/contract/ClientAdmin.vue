@@ -616,7 +616,7 @@ const submitForm = async () => {
 
   // Add fingerprint image if it exists
   if (formData.fingerImage) {
-    formDataToSend.append("fingerImage", formData.image);
+    formDataToSend.append("fingerImage", formData.fingerImage);
   }
 
   console.log("Yuborilayotgan ma'lumotlar:");

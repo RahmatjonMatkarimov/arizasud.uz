@@ -1,29 +1,74 @@
-const { SitemapStream, streamToPromise } = require('sitemap');
-const { createWriteStream } = require('fs');
-const router = require('./src/router/index').default;
+import { create } from 'xmlbuilder2';
+import fs from 'fs';
+import { routes } from './src/router/routes.js';
 
-// Sitemap stream yaratamiz
-const sitemap = new SitemapStream({ hostname: 'https://arizasud.uz' });
+const baseURL = 'https://arizasud.uz';
 
-// Router’dan marshrutlarni olamiz
-const routes = router.options.routes;
+const generateSitemap = () => {
+  console.log('Starting sitemap generation...');
+  
+  // Function to flatten nested routes
+  const flattenRoutes = (routes, parentPath = '') => {
+    const flattened = [];
+    
+    routes.forEach(route => {
+      // Construct full path
+      const fullPath = route.path.startsWith('/')
+        ? route.path
+        : `${parentPath}/${route.path}`.replace(/\/+/g, '/');
+      
+      // Log each route for debugging
+      console.log(`Processing route: ${fullPath}`);
+      
+      // Include only static, non-auth routes
+      if (
+        !route.path.includes(':') &&
+        route.path !== '/:catchAll(.*)' &&
+        (!route.meta?.requiresAuth || !route.meta?.allowedRoles)
+      ) {
+        flattened.push({
+          loc: `${baseURL}${fullPath}`,
+          lastmod: new Date().toISOString().split('T')[0],
+          changefreq: 'weekly',
+          priority: route.name === 'home' ? '1.0' : '0.8',
+        });
+      }
+      
+      // Process children recursively
+      if (route.children) {
+        flattened.push(...flattenRoutes(route.children, fullPath));
+      }
+    });
+    
+    return flattened;
+  };
+  
+  // Get all URLs
+  const urls = flattenRoutes(routes);
+  console.log('Generated URLs:', urls);
+  
+  // Create sitemap structure
+  const sitemapObj = {
+    urlset: {
+      '@xmlns': 'http://www.sitemaps.org/schemas/sitemap/0.9',
+      url: urls,
+    },
+  };
+  
+  // Generate XML
+  const sitemapXML = create(sitemapObj).end({ prettyPrint: true });
+  
+  // Save to file
+  try {
+    // Ensure public directory exists
+    if (!fs.existsSync('public')) {
+      fs.mkdirSync('public');
+    }
+    fs.writeFileSync('public/sitemap.xml', sitemapXML);
+    console.log('sitemap.xml generated successfully at public/sitemap.xml!');
+  } catch (error) {
+    console.error('Error generating sitemap:', error);
+  }
+};
 
-// Har bir marshrutni sitemap’ga qo‘shamiz
-routes.forEach(route => {
-  sitemap.write({ url: route.path, changefreq: 'daily', priority: 0.7 });
-});
-
-// Sitemap’ni yozishni tugatamiz
-sitemap.end();
-
-// Sitemap’ni faylga yozamiz
-streamToPromise(sitemap)
-  .then(data => {
-    const writeStream = createWriteStream('public/sitemap.xml');
-    writeStream.write(data.toString());
-    writeStream.end();
-    console.log('Sitemap muvaffaqiyatli yaratildi!');
-  })
-  .catch(err => {
-    console.error('Xatolik:', err);
-  });
+generateSitemap();
