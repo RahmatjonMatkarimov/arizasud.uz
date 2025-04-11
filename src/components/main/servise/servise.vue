@@ -1,4 +1,5 @@
 <template>
+  <Header />
   <div class="flex flex-col items-center justify-center mt-16 text-black">
     <div v-if="!isFolders" class="w-full max-w-[80rem] p-10 mb-16 bg-gray-300 rounded-[20px] shadow-2xl opacity-[98%]">
       <div v-for="(item, index) in ServiceData" :key="item.id" class="mb-1">
@@ -45,6 +46,7 @@
 import { ref, onMounted, inject } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from 'vue-i18n'; 
+import Header from "../../header.vue";
 import { URL } from "../../../auth/url.js";
 const { t } = useI18n();
 const ServiceId = ref(null);

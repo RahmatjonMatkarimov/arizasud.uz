@@ -33,7 +33,7 @@ const toggleSelection = (id) => {
   if (selectedItems.value.includes(id)) {
     selectedItems.value = selectedItems.value.filter(itemId => itemId !== id);
   } else {
-    selectedItems.value.push(id);
+    selectedItems.value.push(+id);
   }
 };
 const deleteSelectedItems = async () => {
@@ -79,6 +79,7 @@ onMounted(fetchItems);
       <button @click="toggleCheckboxMode" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 shadow">
         {{ showCheckboxes ? 'Bekor qilish' : "O'chirish rejimini yoqish" }}
       </button>
+      
     </div>
     <div v-if="showCheckboxes" class="mb-4">
       <button v-if="selectedItems.length > 0" @click="deleteSelectedItems"
@@ -86,6 +87,7 @@ onMounted(fetchItems);
         Belgilanganlarni o'chirish
       </button>
     </div>
+
     <div v-if="loading" class="text-center text-gray-500 py-4 text-lg">Yuklanmoqda...</div>
     <ul v-else class="space-y-4">
       <li v-for="(item, index) in items" :key="item.id"
@@ -93,7 +95,7 @@ onMounted(fetchItems);
         <div class="flex items-center">
           <input v-if="showCheckboxes" type="checkbox" :checked="selectedItems.includes(item.id)"
             @change="toggleSelection(item.id)"
-            class="mr-2 w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+            class="mr-2 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
           <span class="text-lg font-semibold text-gray-800 capitalize">{{ item.name }}</span>
         </div>
         <button @click="updateItem(item.id)"

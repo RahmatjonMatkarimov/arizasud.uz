@@ -26,7 +26,7 @@ const sections = [
   { path: 'applications', title: '3-bolim' },
   { path: 'admin', title: 'Adminlar' },
   { path: 'yurist', title: 'Yuristlar' },
-  { path: 'coll_center', title: 'Devonxona Mudirlari' },
+  { path: 'manager', title: 'Devonxona Mudirlari' },
   { path: 'partners', title: 'Hamkorlar' },
   { path: 'appeal', title: 'Interaktif xizmatlar' },
   { path: 'files', title: 'Filelar' },

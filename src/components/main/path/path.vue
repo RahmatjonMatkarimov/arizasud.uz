@@ -10,7 +10,7 @@
         <h1 class="text-black flex-1" @click="goToCard(item.id)">{{ translateText(item.fileName) }}</h1>
       </div>
       <div v-if="dat == 'datalotin'" v-for="(item, index) in ServiceData" :key="item.id"
-        class="flex items-center  min-h-[70px] md:text-xl justify-between mb-1 p-2 mt-[14px] shadow-2xl rounded-[10px] hover:bg-lime-500 duration-300 border-blue-700 border-2 bg-white cursor-pointer">
+        class="flex items-center min-h-[70px] md:text-xl justify-between mb-1 p-2 mt-[14px] shadow-2xl rounded-[10px] hover:bg-lime-500 duration-300 border-blue-700 border-2 bg-white cursor-pointer">
         <b class="text-[20px] text-black w-[35px] text-center">{{ index + 1 }}</b>
         <img width="25px" class="mr-5" src="../../../../public/word.png" alt="" />
         <h1 class="text-black flex-1" @click="goToCard(item.id)">{{ item.fileName }}</h1>
@@ -27,7 +27,7 @@
           Siz o'zingizga kerak bo'lgan sudni tanlang!
         </h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div v-if="dat === 'datakril'" v-for="item in data" :key="item.id" @click="goToPath(item.id)"
+          <div v-if="dat === 'datakril'" v-for="item in data" :key="item.id" @click="goToPath(item)"
             class="relative hover:bg-lime-500 duration-500 bg-white border-4 border-blue-800 rounded-lg p-[45px]">
             <div class="flex items-center gap-4">
               <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="w-14 h-14 rounded-md" />
@@ -38,7 +38,7 @@
               <b class="text-black font-bold text-[20px]">{{ $t('tez_kunda') }}</b>
             </div>
           </div>
-          <div v-if="dat === 'datalotin'" v-for="item in data" :key="item.id" @click="goToPath(item.id)"
+          <div v-if="dat === 'datalotin'" v-for="item in data" :key="item.id" @click="goToPath(item)"
             class="relative hover:bg-lime-500 duration-500 bg-white border-4 border-blue-800 rounded-lg p-[45px]">
             <div class="flex items-center gap-4">
               <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="w-14 h-14 rounded-md" />
@@ -65,7 +65,7 @@ const dat = ref(localStorage.getItem('til') || 'datalotin');
 const router = useRouter();
 const route = useRoute();
 const id = route.params.id;
-const data = ref({ services: [] });
+const data = ref([]);
 const url = `${URL}/courts`;
 const imageBaseUrl = `${URL}/upload`;
 
@@ -91,10 +91,10 @@ const getData = async () => {
     const response = await fetch(`${url}/${id}`);
     if (response.ok) {
       const result = await response.json();
-      data.value = (result.services)
+      data.value = (result.services || [])
         .sort((a, b) => a.id - b.id)
         .filter(item => item.status === "active");
-      ServiceData.value = (result.files)
+      ServiceData.value = result.files || [];
     } else {
       console.error("Ma'lumotlarni olishda xatolik:", response.statusText);
     }
@@ -102,10 +102,17 @@ const getData = async () => {
     console.error("Xatolik:", error);
   }
 };
+
 const getImageUrl = (filename) => `${imageBaseUrl}/${filename}`;
 
-const goToPath = (id) => {
-  router.push(`/aplications/${id}`);
+const goToPath = (item) => {
+  if (!item.workStatus) { // Only navigate if workStatus is false or undefined
+    router.push(`/aplications/${item.id}`);
+  }
+};
+
+const goToCard = (id) => {
+  router.push(`/card/${id}`);
 };
 
 let intervalId = null;

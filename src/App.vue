@@ -1,6 +1,6 @@
 <template>
   <!-- Loading holati barcha sahifalar uchun global -->
-  <div v-if="isLoading" class="fixed inset-0 flex justify-center items-center  bg-black bg-opacity-50 z-50">
+  <div v-if="isLoading" class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
     <svg class="animate-spin h-12 w-12 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
       <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
       <path class="opacity-75" fill="currentColor"
@@ -8,7 +8,6 @@
       </path>
     </svg>
   </div>
-
   <div
     class="bg-blue-600 hidden md:flex fixed right-0 z-50 top-[40%] p-[10px] rounded-tl-xl rounded-bl-xl flex-col gap-6">
     <img src="../public/telephone.png" alt="Telephone" class="cursor-pointer w-10" />
@@ -16,29 +15,34 @@
     <img src="../public/keyboard.png" alt="Keyboard" class="cursor-pointer w-10" />
   </div>
 
+  <ticketModal v-if="hidden" />
   <ErrorComponent v-if="errorCode" :errorCode="errorCode" />
   <RouterView v-else />
 </template>
 
 <script setup>
-import { ref, provide, watchEffect, onMounted } from 'vue';
+import { ref, provide, onMounted, onUnmounted } from 'vue';
 import axios from 'axios';
 import ErrorComponent from '@/components/error.vue';
 import { URL } from './auth/url';
 import { useRouter } from 'vue-router';
+import ticketModal from './components/ticket/ticketModal.vue';
 
 const errorCode = ref(null);
 const isLoading = ref(false);
-const router = useRouter()
+const hidden = ref(false);
+const router = useRouter();
 
 // Global provide qilish
 provide('isLoading', isLoading);
+provide('hidden', hidden);
 
 function goToPath() {
-router.push('/ticket')
+  router.push('/ticket');
 }
+
 function goToPath1() {
-router.push('/reminders')
+  router.push('/reminders');
 }
 
 const fetchData = async (url) => {
@@ -54,12 +58,25 @@ const fetchData = async (url) => {
   }
 };
 
-onMounted(async () => {
-  await fetchData(URL);
+// Ctrl+Enter hodisasini ushlash
+const handleKeyDown = (event) => {
+  if (event.ctrlKey && event.key === 'Enter') {
+    hidden.value = true; // hidden ni true qilish
+  }
+};
+
+onMounted(() => {
+  window.addEventListener('keydown', handleKeyDown);
+  fetchData(URL);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeyDown);
 });
 
 defineExpose({ fetchData });
 </script>
+
 <style>
 * {
   margin: 0;

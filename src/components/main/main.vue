@@ -10,13 +10,13 @@
           {{ $t('sud') }}
         </b>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div v-for="item in data" :key="item.id" @click="goToPath(item.id)"
+          <div v-for="item in data" :key="item.id" @click="goToPath(item)"
             class="hover:bg-lime-500 relative duration-500 active:duration-500 bg-white border-4 border-blue-800 rounded-lg p-[45px]">
             <div class="flex items-center justify-center gap-4">
               <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="w-14 h-14 rounded-md" />
-              <h3 v-if="dat === 'datalotin'" class="md:text-lg font-bold  text-center text-black capitalize">{{
+              <h3 v-if="dat === 'datalotin'" class="md:text-lg font-bold text-center text-black capitalize">{{
                 item.name }}</h3>
-              <h3 v-if="dat === 'datakril'" class="md:text-lg font-bold  text-center text-black capitalize">{{
+              <h3 v-if="dat === 'datakril'" class="md:text-lg font-bold text-center text-black capitalize">{{
                 translateText(item.name) }}</h3>
             </div>
             <div v-if="item.workStatus"
@@ -75,8 +75,10 @@ const getData = async () => {
 
 const getImageUrl = (filename) => `${imageBaseUrl}/${filename}`;
 
-const goToPath = (id) => {
-  router.push(`/path/${id}`);
+const goToPath = (item) => {
+  if (!item.workStatus) { // Only navigate if workStatus is false or undefined
+    router.push(`/path/${item.id}`);
+  }
 };
 
 let intervalId = null;
