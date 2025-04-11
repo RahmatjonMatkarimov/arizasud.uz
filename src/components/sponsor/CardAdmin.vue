@@ -94,10 +94,10 @@
 
       <!-- Action Modal (Edit/Delete/Toggle) -->
       <div v-if="asd" class="fixed inset-0 z-50 w-full h-full flex items-center bg-black bg-opacity-50 justify-center">
-        <div class="absolute w-96 bg-[#D9D9D9] flex flex-col items-center justify-center p-10 rounded-[15px]">
-          <img @click="func(null)" class="w-14 -mr-[300px] absolute -mt-44" src="../../../public/reject.png" alt="" />
-          <div class="mt-4 flex flex-col justify-center items-center">
-            <div class="flex flex-col justify-between h-40 items-center">
+        <div class="relative w-[500px] bg-[#D9D9D9] flex flex-col items-center justify-center p-10 rounded-[15px]">
+          <img @click="func(null)" class="w-10 absolute top-2 right-2" src="../../../public/reject.png" alt="" />
+          <div class="mt-4 flex flex-col justify-center w-full items-center">
+            <div class="flex flex-col gap-2 w-full justify-between items-center">
               <button @click="Modal"
                 class="py-4 rounded-[15px] h-[70px] items-center text-black w-full min-w-[250px] flex duration-500 text-[20px] px-10 bg-[#15FF09] hover:bg-lime-600">
                 <img class="w-8 mr-5" src="../../../public/pen.png" alt="">
@@ -108,8 +108,9 @@
                 <img class="w-10 mr-5" src="../../../public/remove.png" alt="">
                 O'chirish
               </button>
-              <div class="flex px-4 py-2 justify-between gap-1 w-full">
-                <h1 class="text-black">Ishga tushirish</h1>
+              <div 
+              class="py-4 rounded-[15px] h-[70px] items-center text-black w-full min-w-[250px] flex duration-500 text-[20px] px-10 bg-gray-400 hover:bg-gray-500">
+                <h1 class="text-black mr-2">Ishga tushirish</h1>
                 <label class="switch">
                   <input type="checkbox" v-model="selectedItem.isActive" @change="updateWorkStatus(selectedItem)">
                   <span class="slider round"></span>

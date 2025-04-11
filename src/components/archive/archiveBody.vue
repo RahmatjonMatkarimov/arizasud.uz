@@ -36,9 +36,19 @@ const toggleSelection = (id) => {
     selectedItems.value.push(+id);
   }
 };
+
+// New function to select or deselect all items
+const selectAllItems = () => {
+  if (selectedItems.value.length === items.value.length) {
+    selectedItems.value = []; // Deselect all if all are selected
+  } else {
+    selectedItems.value = items.value.map(item => item.id); // Select all
+  }
+};
+
 const deleteSelectedItems = async () => {
   if (selectedItems.value.length === 0) return;
-console.log(selectedItems.value);
+  console.log(selectedItems.value);
 
   try {
     await axios.delete(`${URL}/${data}/archived`, {
@@ -52,7 +62,6 @@ console.log(selectedItems.value);
     console.error('Xatolik:', error);
   }
 };
-console.log(items);
 
 const updateItem = async (id) => {
   try {
@@ -79,9 +88,13 @@ onMounted(fetchItems);
       <button @click="toggleCheckboxMode" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 shadow">
         {{ showCheckboxes ? 'Bekor qilish' : "O'chirish rejimini yoqish" }}
       </button>
-      
     </div>
-    <div v-if="showCheckboxes" class="mb-4">
+    <div v-if="showCheckboxes" class="mb-4 flex gap-2">
+      <!-- New Select All button -->
+      <button @click="selectAllItems"
+        class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 shadow">
+        {{ selectedItems.length === items.length ? 'Barchasini olib tashlash' : 'Barchasini belgilash' }}
+      </button>
       <button v-if="selectedItems.length > 0" @click="deleteSelectedItems"
         class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 shadow">
         Belgilanganlarni o'chirish
