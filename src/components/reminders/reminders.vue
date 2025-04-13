@@ -120,6 +120,7 @@ export default {
                 });
                 state.workLogs.unshift(response.data);
                 state.newWorkLog.comment = '';
+                fetchWorkLogs();
             } catch (error) {
                 console.error(dat.value === 'datakril' ? 'Иш қайд этишда хатолик:' : 'Ish qayd etishda xatolik:', error);
             } finally {
@@ -147,6 +148,7 @@ export default {
                 state.workLogs[index] = response.data;
                 state.editingWorkLogId = null;
                 state.editedComment = '';
+                fetchWorkLogs();
             } catch (error) {
                 console.error(dat.value === 'datakril' ? 'Ишни янгилашда хатолик:' : 'Ishni yangilashda xatolik:', error);
             }
@@ -157,6 +159,7 @@ export default {
             try {
                 await axios.delete(`${API_URL}/${workLogId}`);
                 state.workLogs = state.workLogs.filter(r => r.id !== workLogId);
+                fetchWorkLogs();
             } catch (error) {
                 console.error(dat.value === 'datakril' ? 'Ишни ўчиришда хатолик:' : 'Ishni o\'chirishda xatolik:', error);
             }

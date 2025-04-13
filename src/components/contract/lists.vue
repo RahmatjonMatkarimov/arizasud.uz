@@ -272,7 +272,7 @@ const printReceipt = () => {
   const img2 = new Image();
   const img3 = new Image();
   img1.src = "/asd.jpg";
-  img2.src = "https://arizasud.uz/https___arizasud.uz_.png";
+  img2.src = "/https___arizasud.uz_.png";
   img3.src = "/telegram.png";
 
   const today = new Date();
