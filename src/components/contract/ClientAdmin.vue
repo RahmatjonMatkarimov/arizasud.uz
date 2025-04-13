@@ -618,16 +618,9 @@ const submitForm = async () => {
   if (formData.fingerImage) {
     formDataToSend.append("fingerImage", formData.fingerImage);
   }
-
-  console.log("Yuborilayotgan ma'lumotlar:");
-  for (let [key, value] of formDataToSend.entries()) {
-    console.log(`Key: ${key}, Value: ${value}`);
-  }
-
   try {
     const config = { headers: { "Content-Type": "multipart/form-data" } };
     const response = await axios.post(API_URL1, formDataToSend, config);
-    console.log("✅ Ma'lumotlar muvaffaqiyatli saqlandi:", response.data);
     errorMessage.value = "✅ Muvaffaqiyatli saqlandi!";
     resetForm();
     printReceipt();

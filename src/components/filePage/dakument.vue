@@ -149,7 +149,6 @@ const API_URL = URL1;
 
 const getdata = async () => {
   const res = await axios.get(URL + "/applications")
-  console.log(res.data);
 }
 
 getdata()

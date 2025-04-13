@@ -400,7 +400,6 @@ const uploadFiles = async (htmlFile) => {
       headers: { 'Content-Type': 'multipart/form-data' },
       timeout: 60000,
     });
-    console.log('Response:', response.data);
     return response.data;
   } catch (error) {
     console.error('Axios error:', error.message, error.response?.data);

@@ -154,7 +154,6 @@ const route = useRoute();
 const router = useRouter();
 const id = route.params.id;
 const SectionId = route.params.id1;
-console.log("SectionId:", SectionId);
 const clientFiles = ref([]);
 const isLoading = ref(true);
 const showModal = ref(false);
@@ -185,12 +184,6 @@ const fetchClientFiles = async () => {
         const response = await axios.get(`${URL}/client-sections/${id}`);
         clientFiles.value = response.data.ClientFile || [];
         data.value = response.data.client;
-
-        // Debugging logs
-        console.log("SectionId:", SectionId);
-        console.log("clientFiles.value[0].contractId:", clientFiles.value[0]?.contractId);
-        console.log("data.value:", data.value);
-        console.log("Client files:", clientFiles.value);
     } catch (error) {
         console.error("Error fetching client files:", error);
     } finally {
@@ -419,9 +412,6 @@ const generateCheckFile = async () => {
         await axios.post(`${URL}/client/add-check/${SectionId}`, formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
         });
-     formData.forEach(el => console.log(el));
-        
-        console.log("Check file generated and sent successfully.");
     } catch (error) {
         console.error("Error generating or sending the check file:", error);
     }

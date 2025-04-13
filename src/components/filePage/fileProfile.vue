@@ -53,7 +53,6 @@ const list = ref([]);
 async function gethtml(url) {
     try {
         const response = await axios.get(url);
-        console.log('Fetched HTML:', response.data); // Debugging uchun
         return `<div class='p-4 bg-white shadow-md rounded-lg'>${response.data}</div>`;
     } catch (error) {
         console.error('HTML olishda xato:', error);
@@ -66,7 +65,6 @@ async function loadFilesHtml() {
     try {
         const htmlPromises = files.value.map(async (file) => gethtml(URL1 + file));
         filesHtml.value = await Promise.all(htmlPromises);
-        console.log('Loaded filesHtml:', filesHtml.value); // Debugging uchun
     } catch (error) {
         console.error('Fayllar HTML matnini yuklashda xato:', error);
     }
@@ -77,9 +75,7 @@ async function getdata() {
     try {
         const response = await axios.get(`${API_URL}/commoners/${id.value}`);
         data.value = response.data;
-        console.log('Fetched data:', data.value); // Debugging uchun
         files.value = response.data.file || [];
-        console.log('API Response:', response.data); // Debugging uchun
         list.value = [new Date(response.data.createdAt).toLocaleString()];
     } catch (error) {
         console.error('Ma\'lumot olishda xato:', error);
@@ -119,7 +115,6 @@ function parseHtmlToTextWithStyles(html) {
 // HTML contentni PDF sifatida yuklab olish funksiyasi
 function downloadAsPdf(index) {
     const htmlContent = filesHtml.value[index];
-    console.log('HTML to convert:', htmlContent); // Debugging uchun
 
     if (!htmlContent || htmlContent.trim() === '') {
         alert('Yuklab olish uchun matn mavjud emas!');
@@ -128,8 +123,6 @@ function downloadAsPdf(index) {
 
     // HTMLdan matn va stilni ajratib olamiz
     const textWithStyles = parseHtmlToTextWithStyles(htmlContent);
-    console.log('Parsed Text with Styles:', textWithStyles); // Debugging uchun
-
     // jsPDF obyektini yaratamiz
     const doc = new jsPDF({
         orientation: 'portrait',

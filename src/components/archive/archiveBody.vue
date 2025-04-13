@@ -48,8 +48,6 @@ const selectAllItems = () => {
 
 const deleteSelectedItems = async () => {
   if (selectedItems.value.length === 0) return;
-  console.log(selectedItems.value);
-
   try {
     await axios.delete(`${URL}/${data}/archived`, {
       data: { ids: selectedItems.value }

@@ -107,7 +107,7 @@
                 class="py-4 rounded-[15px] h-[70px] items-center text-black flex w-full min-w-[250px] duration-500 text-[20px] px-10 bg-[#FF0C0C] hover:bg-red-700">
                 <img class="w-10 mr-5" src="../../../public/remove.png" alt="">
                 O'chirish
-              </button>
+              </button> 
               <div 
               class="py-4 rounded-[15px] h-[70px] items-center text-black w-full min-w-[250px] flex duration-500 text-[20px] px-10 bg-gray-400 hover:bg-gray-500">
                 <h1 class="text-black mr-2">Ishga tushirish</h1>

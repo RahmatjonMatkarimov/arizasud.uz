@@ -171,7 +171,6 @@
       const response = await axios.post(`${URL}/enterprise`, payload, {
         headers: { "Content-Type": "application/json" },
       });
-      console.log("Response:", response.data);
       successMessage.value = "Court muvaffaqiyatli yuklandi!";
       errorMessage.value = "";
       resetForm();
@@ -276,7 +275,6 @@
       if (response.status === 200) {
         const filteredData = response.data.filter(item => item.status === "active");
         data.value = filteredData;
-        console.log("Fetched data:", filteredData);
       }
     } catch (error) {
       console.error("Fetch error:", error.response?.data || error.message);

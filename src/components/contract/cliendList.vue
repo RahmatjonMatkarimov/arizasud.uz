@@ -70,7 +70,6 @@ const GetClient = async () => {
     try {
         const response = await axios.get(`${URL}/client`);
         data.value = response.data;
-        console.log("Client data:", data.value);
     } catch (error) {
         console.error("Xatolik yuz berdi:", error);
     }

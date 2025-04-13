@@ -22,7 +22,6 @@ streamToPromise(sitemap)
     const writeStream = createWriteStream('public/sitemap.xml');
     writeStream.write(data.toString());
     writeStream.end();
-    console.log('Sitemap muvaffaqiyatli yaratildi!');
   })
   .catch(err => {
     console.error('Xatolik:', err);

@@ -46,7 +46,6 @@ const setData = async () => {
       username: username.value.trim(),
       password: password.value.trim(),
     });
-    console.log();
     id.value = res.data.user.id;
     if (id.value) {
       router.push('/fileProfile/' + id.value)

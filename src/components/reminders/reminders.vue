@@ -13,7 +13,7 @@
                     <div class="form-group">
                         <label v-if="dat === 'datalotin'" for="comment">Bajarilgan Ish Tavsifi</label>
                         <label v-if="dat === 'datakril'" for="comment">{{ translateText("Бажарилган Иш Тавсифи") }}</label>
-                        <textarea  class= "w-[] text-black" v-model="state.newWorkLog.comment" id="comment"
+                        <textarea class="w-[725px] text-black" v-model="state.newWorkLog.comment" id="comment"
                             :placeholder="dat === 'datakril' ? translateText('Бугун қилган ишларингизни ёзинг...') : 'Bugun qilgan ishlaringizni yozing...'"
                             required></textarea>
                     </div>
@@ -38,7 +38,7 @@
                     <div v-for="workLog in state.workLogs" :key="workLog.id" class="worklog-card">
                         <div v-if="state.editingWorkLogId !== workLog.id" class="worklog-view">
                             <div class="worklog-content flex items-center gap-5">
-                                <img class="w-[60px] border" :src="'https://backend.arizasud.uz/upload/' + workLog.user.img" alt="">
+                                <img v-if="workLog.user && workLog.user.img" class="w-[60px] border" :src="'https://backend.arizasud.uz/upload/' + workLog.user.img" alt="User image">
                                 <div class="worklog-meta">
                                     <p class="worklog-text">{{ dat === 'datakril' ? translateText(workLog.comment) : workLog.comment }}</p>
                                     <span class="text-[#172029]">{{ dat === 'datakril' ? translateText('Қайд этилган:') : 'Qayd etilgan:' }} {{ formatDate(workLog.createdAt) }}</span>
@@ -54,7 +54,7 @@
                             </div>
                         </div>
                         <div v-else class="edit-form">
-                            <textarea class="text-black" v-model="state.editedComment" required
+                            <textarea class="text-black w-[725px]" v-model="state.editedComment" required
                                 :placeholder="dat === 'datakril' ? translateText('Иш тавсифини янгилаг...') : 'Ish tavsifini yangilang...'"></textarea>
                             <div class="edit-actions">
                                 <button @click="updateWorkLog(workLog.id)" class="save-btn">
@@ -102,7 +102,6 @@ export default {
             try {
                 const response = await axios.get(`${URL}/admin/${userId}/reminder`);
                 state.workLogs = response.data.Reminder;
-                console.log('Fetched work logs:', state.workLogs);
             } catch (error) {
                 console.error(dat.value === 'datakril' ? 'Ишлар рўйхатини олишда хатолик:' : 'Ishlar ro\'yxatini olishda xatolik:', error);
             }

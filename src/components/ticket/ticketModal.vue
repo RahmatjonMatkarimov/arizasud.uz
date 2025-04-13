@@ -16,7 +16,7 @@
             <div class="form-group">
               <label v-if="dat === 'datalotin'" for="comment">Muammoingizni Tasvirlab Bering</label>
               <label v-if="dat === 'datakril'" for="comment">{{ translateText("Muammoingizni Tasvirlab Bering") }}</label>
-              <textarea class="text-black" v-model="state.newTicket.comment" id="comment"
+              <textarea class="text-black w-[725px]" v-model="state.newTicket.comment" id="comment"
               :placeholder="dat === 'datakril' ? translateText('Iltimos, muammoingiz haqida batafsil ma\'lumot bering...') : 'Iltimos, muammoingiz haqida batafsil ma\'lumot bering...'"
               required></textarea>
             </div>
@@ -154,6 +154,7 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  width: 100%;
 
   label {
     color: #e0e0e0; /* Light gray text */

@@ -100,8 +100,6 @@ const modalResponse = ref(null);
 const dat = inject('dat');
 const modalResponseMessage = ref('');
 const role = localStorage.getItem('role');
-console.log(role);
-
 
 const handleFileChange = (event) => {
     file.value = event.target.files[0];

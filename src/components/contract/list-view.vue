@@ -42,14 +42,12 @@
     try {
       const response = await axios.get(`${URL}/client-files/${id}`);
       clientData.value = response.data;
-      console.log('API Response:', clientData.value); // Log the full response
 
       // Directly set the file URL from the response
       if (clientData.value.filePath) {
         fileUrl.value = clientData.value.filePath.startsWith('http')
           ? clientData.value.filePath
           : `${URL}${clientData.value.filePath}`;
-        console.log('File URL:', fileUrl.value);
       } else {
         console.error('No filePath found in the API response');
         fileUrl.value = '';

@@ -300,7 +300,6 @@ const getData = async () => {
       .filter(item => item.status === "active")
       .sort((a, b) => a.id - b.id);
     ServiceData.value = result.files || [];
-    console.log(result);
   } catch (error) {
     console.error("Error fetching data:", error);
     errorMessage.value = "Ma'lumotlarni yuklashda xatolik yuz berdi";

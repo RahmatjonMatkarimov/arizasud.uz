@@ -181,7 +181,6 @@ const getData = async () => {
       .filter(item => item.status === 'active')
       .sort((a, b) => a.id - b.id);
     data.value = filteredData;
-    console.log(result);
     
   } catch (error) {
     console.error("Xatolik:", error);

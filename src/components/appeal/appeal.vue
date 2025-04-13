@@ -70,8 +70,6 @@ const getData = async () => {
       const activeItems = result.filter(item => item.status === 'active').sort((a, b) => a.id - b.id);
       datakril.value = activeItems.map(item => ({ ...item, translatedName: translateText(item.name) }));
       data.value = activeItems;
-      console.log(result);
-      
     }
   } catch (error) {
     console.error("Xatolik:", error);

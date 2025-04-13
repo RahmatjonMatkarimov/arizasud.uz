@@ -47,7 +47,6 @@ const fetchClientById = async () => {
     try {
         const response = await axios.get(`${URL}/client/${id}`);
         clientData.value = response.data;
-        console.log("Client Data:", clientData.value); // Debugging: Log the client data
     } catch (error) {
         console.error("Error fetching client data:", error);
     } finally {

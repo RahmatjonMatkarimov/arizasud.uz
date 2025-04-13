@@ -55,13 +55,10 @@ const getData = async () => {
   isLoading.value = true;
   try {
     const requestUrl = `${BASE_URL}/client/${fileId}`;
-    console.log("Request URL:", requestUrl); // Debugging: Log the request URL
 
     const res = await axios.get(requestUrl, {
       validateStatus: (status) => status < 500, // Accept only non-server-error responses
     });
-
-    console.log("Full API Response:", res); // Debugging: Log full response
 
     // Check for HTTP status errors
     if (res.status !== 200) {
@@ -82,8 +79,6 @@ const getData = async () => {
     fileUrl.value = res.data.file.startsWith("http")
       ? res.data.file
       : `${BASE_URL}${res.data.file}`;
-
-    console.log("File URL:", fileUrl.value); // Debugging: Check File URL
 
     // PDF render qilish
     await renderPdf(fileUrl.value);

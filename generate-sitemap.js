@@ -7,20 +7,17 @@ const baseURL = 'https://arizasud.uz';
 const generateSitemap = () => {
   console.log('Starting sitemap generation...');
   
-  // Function to flatten nested routes
   const flattenRoutes = (routes, parentPath = '') => {
     const flattened = [];
     
     routes.forEach(route => {
-      // Construct full path
+
       const fullPath = route.path.startsWith('/')
         ? route.path
         : `${parentPath}/${route.path}`.replace(/\/+/g, '/');
-      
-      // Log each route for debugging
+
       console.log(`Processing route: ${fullPath}`);
       
-      // Include only static, non-auth routes
       if (
         !route.path.includes(':') &&
         route.path !== '/:catchAll(.*)' &&
