@@ -64,6 +64,7 @@ export const routes = [
         { path: '/Check/:id', component: () => import('@/components/contract/fileOpen.vue') },
         { path: '/lists/:id1/:id', component: () => import('@/components/contract/lists.vue') },
         { path: '/lists-view/:id', component: () => import('@/components/contract/list-view.vue') },
+        { path: '/admin-list', component: () => import('@/components/admins/all.vue') },
       ],
       meta: { requiresAuth: true, allowedRoles: ['admin', 'manager', 'yurist', 'bigAdmin'] },
     },

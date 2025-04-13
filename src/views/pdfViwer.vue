@@ -6,7 +6,7 @@
         {{ $t('header') }}
       </b>
       <div class="flex justify-center relative ml-2 sm:mx-10 mt-2 z-10">
-        <img src="/logo.png" class="w-[200px] md:w-[250px] lg:w-[300px]" alt="Logo" />
+        <img src="/logo1.png" class="w-[250px] md:w-[300px] lg:w-[350px]" alt="Logo" />
       </div>
       <b class="lg:text-[25px] md:text-[16px] text-[10px] text-center w-[80%] md:w-[60%] lg:w-[35%] z-0 uppercase" style="text-shadow: 2px 2px 50px white;">
         {{ $t('header') }}

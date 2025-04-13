@@ -19,7 +19,7 @@
       <div id="particles-js" class="absolute top-0 left-0 w-full h-full"></div>
       <div class="flex items-center">
         <div class="flex justify-center relative sm:ml-2 sm:mx-10 mt-2 z-10">
-          <img src="/logo.png" class="w-[100px] md:w-[250px] lg:w-[300px]" alt="Logo" />
+          <img src="/logo1.png" class="w-[150px] md:w-[300px] lg:w-[350px]" alt="Logo" />
         </div>
         <b
           class="lg:text-[18px] hidden lg:block 2xl:text-[23px] text-[10px] w-[80%] md:w-[60%] lg:w-[35%] z-0 uppercase">

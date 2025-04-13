@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-100 flex flex-col justify-center items-center p-6">
+  <div class="bg-gray-200 flex flex-col justify-center items-center p-6">
     <div class="flex h-full w-full gap-3 justify-center">
       <form @submit.prevent="submitForm" class="w-1/2">
         <div class="bg-white shadow-md rounded-lg p-6 w-full">
@@ -11,7 +11,7 @@
                 <select
                   v-if="isFieldPlaceholder(placeholder, 'userCode')"
                   v-model="idKartaPrefix"
-                  class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  class="px-4 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="AA">AA</option>
                   <option value="AB">AB</option>
@@ -20,9 +20,9 @@
                 </select>
                 <input
                   v-model="inputValues[placeholder]"
-                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  class="w-full px-4 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   :placeholder="getPlaceholderLabel(placeholder)"
-                  :type="isFieldPlaceholder(placeholder, 'userCode') || isFieldPlaceholder(placeholder, 'uniqueCode') ? 'text' : 'text'"
+                  :type="getInputType(placeholder)"
                   :maxlength="isFieldPlaceholder(placeholder, 'userCode') ? 7 : isFieldPlaceholder(placeholder, 'uniqueCode') ? 14 : undefined"
                   @input="validateInput(placeholder); updateContent(placeholder)"
                   @keypress="restrictToNumbers($event, placeholder)"
@@ -116,6 +116,17 @@ const getPlaceholderLabel = computed(() => (placeholder) =>
   placeholder.replaceAll('{{', '').replaceAll('}}', '')
 );
 
+// New computed function to determine input type
+const getInputType = (placeholder) => {
+  const cleanPlaceholder = placeholder.replaceAll('{{', '').replaceAll('}}', '').toLowerCase();
+  if (cleanPlaceholder.includes('sana') || cleanPlaceholder.includes('tugilgansana')) {
+    return 'date';
+  } else if (isFieldPlaceholder(placeholder, 'userCode') || isFieldPlaceholder(placeholder, 'uniqueCode')) {
+    return 'text';
+  }
+  return 'text';
+};
+
 // Check if there are any validation errors
 const hasValidationErrors = computed(() => {
   return Object.values(validationErrors.value).some((error) => error !== '');
@@ -131,9 +142,11 @@ const restrictToNumbers = (event, placeholder) => {
   }
 };
 
-// Validate input for "jshshir" (14 digits) and "id karta" (7 digits)
+// Validate input for "jshshir", "id karta", and dates
 const validateInput = (placeholder) => {
   const value = inputValues.value[placeholder] || '';
+  const cleanPlaceholder = placeholder.replaceAll('{{', '').replaceAll('}}', '').toLowerCase();
+
   if (isFieldPlaceholder(placeholder, 'uniqueCode')) {
     if (!/^\d{14}$/.test(value)) {
       validationErrors.value[placeholder] = 'JSHShIR 14 ta raqamdan iborat bo‘lishi kerak!';
@@ -145,6 +158,18 @@ const validateInput = (placeholder) => {
       validationErrors.value[placeholder] = 'ID Karta 7 ta raqamdan iborat bo‘lishi kerak!';
     } else {
       validationErrors.value[placeholder] = '';
+    }
+  } else if (cleanPlaceholder.includes('sana') || cleanPlaceholder.includes('tugilgansana')) {
+    if (value) {
+      const selectedDate = new Date(value);
+      const today = new Date();
+      if (selectedDate > today) {
+        validationErrors.value[placeholder] = 'Tug‘ilgan sana kelajakdagi sana bo‘lishi mumkin emas!';
+      } else {
+        validationErrors.value[placeholder] = '';
+      }
+    } else {
+      validationErrors.value[placeholder] = 'Iltimos, sanani kiriting!';
     }
   } else {
     validationErrors.value[placeholder] = '';

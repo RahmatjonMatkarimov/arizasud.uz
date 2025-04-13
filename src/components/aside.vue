@@ -30,10 +30,7 @@ onMounted(fetchAdminData);
 const dat = inject('dat');
 
 const menuItems = [
-  { to: "/all", label: "Barcha ishchilar roʻyxati", condition: () => data.value?.admins },
-  { to: "/operators", label: "ishchilarni hujjatini yaratuvchi devonxona mudiri", condition: () => data.value?.call_centres },
-  { to: "/yurists", label: "Yurist-ekspert yaratish boʻlimi", condition: () => data.value?.yurists },
-  { to: "/admins", label: "Ishchi hodimlarni yaratish ( Admin yaratish )", condition: () => data.value?.admins },
+  { to: "/admin-list", label: "Ishchilar ro'yxati", condition: () => data.value?.admins },
   { to: "/remindersAdmin", label: "Ishchilarni bajargan ishlari", condition: () => data.value?.workDone },
   { to: "/FileAdmin", label: "Mijozlar bilan shartnoma tuzish", condition: true },
   { to: "/CliendList", label: "Mijozlar bilan tuzilgan shartnomalar", condition: true },
