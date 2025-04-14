@@ -7,7 +7,7 @@
         isAsideVisible ? 'left-[0px] top-[200px] duration-500 rounded-r-lg' : 'left-0 top-[210px] duration-1000 rounded-r-lg'
       ]">
         <img src="/menu1.png"
-          :class="['w-6 h-6 transition-transform duration-500', isAsideVisible ? 'rotate-180' : 'rotate-0']" />
+          :class="['w-6 h-6 transition-transform  duration-500', isAsideVisible ? 'rotate-180' : 'rotate-0']" />
       </button>
 
       <div v-if="dat === 'datakril'" class="bg-blue-800 flex h-[200px] p-2">
