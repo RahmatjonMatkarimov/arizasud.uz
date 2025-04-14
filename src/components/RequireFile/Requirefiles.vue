@@ -42,12 +42,12 @@
             </div>
           </label>
         </li>
-        <li v-if="dat === 'datalotin'" v-for="(file, index) in filteredFiles" :key="index"
+        <li v-if="dat === 'datalotin'"  v-for="(file, index) in filteredFiles" @click="router.push('/Require-signing/'+file.id)" :key="index"
           :class="[index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200', 'flex group items-center border justify-between p-2 mb-2 hover:bg-lime-600 transition']">
           <h1 class="text-black w-[870px]">
             {{ file.User.surname }} {{ file.User.name }} <span class="text-[13px] text-black">{{ file.User.lavozimi
             }}</span>
-            <p @click="openFile(file)" class="text-blue-600  cursor-pointer font-semibold hover:underline">
+            <p class="text-blue-600  cursor-pointer font-semibold hover:underline">
               {{ file.name }}
             </p>
           </h1>
@@ -175,7 +175,11 @@
 import { ref, onMounted, inject, watch, computed } from 'vue'
 import axios from 'axios'
 import { URL } from '../../auth/url.js'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import translateText from '@/auth/Translate.js'
+
+
+const router = useRouter()
 const API_URL = `${URL}/signingFiles`
 const qwen = ref(false)
 const selectedFiles = ref([]);
@@ -221,20 +225,6 @@ function qwenn(file) {
   qwen.value = !qwen.value
 }
 
-const translitMap = {
-  "ch": "ч", "sh": "ш", "yo": "ё", "yu": "ю", "ya": "я", "ye": "е", "oʻ": "ў", "g‘": "ғ",
-  "a": "а", "b": "б", "d": "д", "e": "э", "f": "ф", "g": "г", "h": "ҳ", "i": "и", "j": "ж",
-  "k": "к", "l": "л", "m": "м", "n": "н", "o": "о", "p": "п", "q": "қ", "r": "р", "s": "с",
-  "t": "т", "u": "у", "v": "в", "x": "х", "y": "й", "z": "з", "'": "ъ"
-};
-const translateText = (text) => {
-  let translated = text.toLowerCase();
-  for (const key in translitMap) {
-    const regex = new RegExp(key, "g");
-    translated = translated.replace(regex, translitMap[key]);
-  }
-  return translated;
-};
 
 const getStatusText = (status) => {
   if (status === 'waiting') return 'Kutish';

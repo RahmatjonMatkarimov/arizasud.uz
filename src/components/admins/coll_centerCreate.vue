@@ -83,7 +83,7 @@
         </div>
       </div>
     </div>
-    <div class=" recrystallization justify-center mb-16 items-center">
+    <div class=" recrystallization justify-center mb-16 mt-4 items-center">
       <h1 style="text-shadow: 0 0 5px #fff,0 0 10px #fff;" class="text-black text-[40px] font-bold text-center bg-lime-500 border-[3px] border-black rounded-lg py-2 px-[100px]">
         {{ $t('adminList.title1') }} <span v-if="Count" class="border-b-4 px-1 border-black text-black">{{ Count }}</span>
       </h1>

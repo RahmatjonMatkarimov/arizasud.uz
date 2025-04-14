@@ -1,18 +1,18 @@
 <script setup>
 import { ref, inject, onMounted, computed } from 'vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faUsers, faBuilding, faUserTie, faUserPlus } from '@fortawesome/free-solid-svg-icons'
+import { faUsers, faBuilding, faUserTie, faUserPlus, faFileAlt, faClipboardList, faDollarSign } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import translateText from '@/auth/Translate'
 
-library.add(faUsers, faBuilding, faUserTie, faUserPlus)
+library.add(faUsers, faBuilding, faUserTie, faUserPlus, faFileAlt, faClipboardList, faDollarSign)
 
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { URL } from '@/auth/url'
 const router = useRouter()
 const dat = inject('dat')
-const id = parseInt(localStorage.getItem("id"));
+const id = localStorage.getItem("id");
 const newId = parseInt(id);
 const data = ref({});
 
@@ -28,39 +28,32 @@ const fetchAdminData = async () => {
   }
 };
 
+
 const cards = ref([
     {
-        title: 'Barcha Ishchilar Ro\'yxati',
-        icon: ['fas', 'users'],
+        title: 'Mijozlar bilan shartnoma tuzish',
+        icon: faUserPlus, // Tanlangan icon
         bgColor: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         iconColor: '#ffffff',
-        routerLink: '/all',
+        routerLink: '/FileAdmin',
         condition: true
     },
     {
-        title: 'Hujjatini Yaratuvchi Devonxona Mudiri',
-        icon: ['fas', 'building'],
+        title: 'Mijozlar bilan tuzilgan shartnomalar',
+        icon: faClipboardList, // Tanlangan icon
         bgColor: 'linear-gradient(135deg, #2af598 0%, #009efd 100%)',
         iconColor: '#ffffff',
-        routerLink: '/operators',
-        condition: () => data.value?.call_centres
+        routerLink: '/CliendList',
+        condition: true
     },
     {
-        title: 'Yurist-Ekspert Yaratish Bo\'limi',
-        icon: ['fas', 'user-tie'],
+        title: 'Lex.uz va QR-code xizmati uchun BXMni tahrirlash',
+        icon: faDollarSign, // Tanlangan icon
         bgColor: 'linear-gradient(135deg, #f6d365 0%, #fda085 100%)',
         iconColor: '#ffffff',
-        routerLink: '/yurists',
-        condition: () => data.value?.yurists 
+        routerLink: '/Sum',
+        condition: true
     },
-    {
-        title: 'Ishchi Hodimlarni Yaratish (Admin Yaratish)',
-        icon: ['fas', 'user-plus'],
-        bgColor: 'linear-gradient(135deg, #5ee7df 0%, #b490ca 100%)',
-        iconColor: '#ffffff',
-        routerLink: '/admins',
-        condition: () => data.value?.admins
-    }
 ])
 
 const filteredMenu = computed(() => {
@@ -70,14 +63,13 @@ const filteredMenu = computed(() => {
 });
 
 onMounted(fetchAdminData);
-
 </script>
 
 <template>
     <div class="flex justify-center mt-8 items-center">
         <h1
             class="text-black text-[40px] font-bold text-center bg-lime-500 border-[3px] border-black rounded-lg py-2 px-[100px]">
-            {{ dat === 'datakril' ? translateText('Ishchi hodimlar bo\'limi') : 'Ishchi hodimlar bo\'limi' }}
+            {{ dat === 'datakril' ? translateText('Shartnoma tushish bo\'limi') : 'Shartnoma tushish bo\'limi' }}
         </h1>
     </div>
     <div class="app-container">
@@ -93,6 +85,7 @@ onMounted(fetchAdminData);
         </div>
     </div>
 </template>
+
 
 <style scoped>
 .app-container {

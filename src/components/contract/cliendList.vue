@@ -1,4 +1,10 @@
 <template>
+    <div class="flex justify-center mt-8 items-center">
+        <h1
+            class="text-black text-[40px] font-bold text-center bg-lime-500 border-[3px] border-black rounded-lg py-2 px-[100px]">
+            {{ dat === 'datakril' ? translateText("Shartnomalar") : "Shartnomalar" }}
+        </h1>
+    </div>
     <div class="max-w-[900px] mx-auto mt-5">"
         <div class="flex justify-end">
             <input v-model="searchQuery" type="text"
@@ -28,14 +34,15 @@
                     }}
                 </button>
             </div>
-            <div v-for="item in filteredData" :key="item.id" class="p-3">
+            <div v-for="(item, index) in filteredData" :key="item.id" @click="router.push('/Check/' + item.id)"
+                class="p-3">
                 <div
                     class="flex justify-between border-black items-center p-4 border rounded-lg shadow bg-gray-200 hover:bg-gray-300 transition">
                     <div class="flex items-center space-x-2">
                         <input v-if="showCheckboxes" type="checkbox" v-model="selectedClientIds" :value="item.id"
                             class="form-checkbox h-4 w-4 text-blue-500 focus:ring focus:ring-blue-300" />
-                        <h1 @click="router.push('/Check/' + item.id)"
-                            class="text-gray-900 text-lg font-medium cursor-pointer">
+                        <b class="text-black text-lg">{{ index + 1 }}</b>
+                        <h1 class="text-gray-900 text-lg font-medium cursor-pointer">
                             {{ dat === 'datakril'
                                 ? translateText(item.name) + ' ' + translateText(item.surname) + ' ' +
                                 translateText(item.dadname)
@@ -170,4 +177,3 @@ div.bg-white {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 </style>
-

@@ -1,4 +1,10 @@
 <template>
+        <div class="flex justify-center mt-8 items-center">
+        <h1
+            class="text-black text-[40px] font-bold text-center bg-lime-500 border-[3px] border-black rounded-lg py-2 px-[100px]">
+            {{ dat === 'datakril' ? translateText("Lex.uz va QR-code xizmati uchun BXM tahrirlash") : "Lex.uz va QR-code xizmati uchun BXMni tahrirlash" }}
+        </h1>
+    </div>
     <div class="max-w-3xl mx-auto p-6 text-center">
         <!-- <div class="mb-6 flex justify-end">
             <button @click="openPostModal" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">

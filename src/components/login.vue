@@ -114,7 +114,7 @@ const setData = async () => {
       } else if (typeof role !== "string") {
         error.value = "Noto‘g‘ri rol formati.";
       } else if (["admin", "bigAdmin", "yurist", "manager"].includes(role.trim())) {
-        router.push(`/admin`);
+        router.push(`/admin-list`);
       } else {
         error.value = "Bu rolda tizimga kirish taqiqlangan.";
       }

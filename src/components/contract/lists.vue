@@ -14,21 +14,20 @@
             </div>
             <!-- File List -->
             <ul class="list-none p-0 m-0">
-                <li v-for="file in filteredFiles" :key="file.id"
-                    class="py-2 flex justify-between items-center bg-white p-2 my-2">
-                    <a @click="router.push('/lists-view/' + file.id)" target="_blank"
-                        class="text-gray-800 hover:underline">
+                <li v-for="file in filteredFiles" @click="router.push('/lists-view/' + file.id)" :key="file.id"
+                    class="py-2 flex justify-between items-center relative z-20 bg-white p-2 my-2">
+                    <a target="_blank" class="text-gray-800 hover:underline">
                         {{ dat === 'datakril' ? translateText(file.name) : file.name }}
                     </a>
-                    <div class="flex items-center gap-4">
+                    <div class="flex items-center relative z-50 gap-4">
                         <div v-if="file.ClientPayment && file.ClientPayment.length" class="text-sm">
-                            <div class="text-black cursor-pointer" @click="file.showDetails = !file.showDetails">
-                                <span @click="openPaymentDetailsModal(file, $event)" class="text-green-600"
+                            <div class="text-black cursor-pointer" @click.stop="file.showDetails = !file.showDetails">
+                                <span @click.stop="openPaymentDetailsModal(file, $event)" class="text-green-600"
                                     v-if="file.ClientPayment[file.ClientPayment.length - 1]?.remainingSum <= 0">
                                     {{ dat === 'datakril' ? translateText("To'langan") : "To'langan" }}
                                 </span>
                                 <span class="text-red-600 cursor-pointer" v-else
-                                    @click="openPaymentDetailsModal(file, $event)">
+                                    @click.stop="openPaymentDetailsModal(file, $event)">
                                     {{ dat === 'datakril' ? translateText("Qarzi") : "Qarzi" }}:
                                     {{ file.ClientPayment[file.ClientPayment.length - 1]?.remainingSum || 0 }} {{ dat
                                         === 'datakril' ? translateText("so'm") : "so'm" }}
@@ -37,7 +36,7 @@
                         </div>
                         <div
                             v-if="file.ClientPayment && file.ClientPayment.length && file.ClientPayment[file.ClientPayment.length - 1]?.remainingSum > 0">
-                            <button @click="openPaymentModal(file)"
+                            <button @click.stop="openPaymentModal(file)"
                                 class="ml-4 px-2 py-1 bg-green-500 text-white rounded-md hover:bg-green-600">
                                 {{ dat === 'datakril' ? translateText("To'lash") : "To'lash" }}
                             </button>
@@ -47,6 +46,7 @@
                         </div>
                     </div>
                 </li>
+
             </ul>
         </div>
         <!-- Modal -->
@@ -268,20 +268,20 @@ const submitPayment = async () => {
 };
 
 const printReceipt = () => {
-  const img1 = new Image();
-  const img2 = new Image();
-  const img3 = new Image();
-  img1.src = "/asd.jpg";
-  img2.src = "/https___arizasud.uz_.png";
-  img3.src = "/telegram.png";
+    const img1 = new Image();
+    const img2 = new Image();
+    const img3 = new Image();
+    img1.src = "/asd.jpg";
+    img2.src = "/https___arizasud.uz_.png";
+    img3.src = "/telegram.png";
 
-  const today = new Date();
-  const day = String(today.getDate()).padStart(2, "0");
-  const month = String(today.getMonth() + 1).padStart(2, "0");
-  const year = today.getFullYear();
-  const formattedDate = `${day}.${month}.${year}`;
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, "0");
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const year = today.getFullYear();
+    const formattedDate = `${day}.${month}.${year}`;
 
-  const receiptHTML = `
+    const receiptHTML = `
     <div style="font-size: 12px; width:100%; display:flex; flex-direction: column; justify-content: center; align-content:center; color: black;">
         <h1 style="text-align: center; font-size:15px; font-weight: bold; color: black; margin-top:18px;">To'lov cheki</h1>
         <table style="width: 100%; border-collapse: collapse; color: black; table-layout: fixed;">
@@ -322,32 +322,32 @@ const printReceipt = () => {
     </div>
   `;
 
-  const originalContent = document.body.innerHTML;
-  const style = document.createElement("style");
-  style.innerHTML = `
+    const originalContent = document.body.innerHTML;
+    const style = document.createElement("style");
+    style.innerHTML = `
     @media print {
       @page { margin: 0; }
       body { margin: 0; }
     }
   `;
-  document.head.appendChild(style);
+    document.head.appendChild(style);
 
-  document.body.innerHTML = receiptHTML;
+    document.body.innerHTML = receiptHTML;
 
-  img1.onload = img2.onload = img3.onload = () => {
-    window.print();
-    document.body.innerHTML = originalContent;
-    document.head.removeChild(style);
-    window.location.reload();
-  };
+    img1.onload = img2.onload = img3.onload = () => {
+        window.print();
+        document.body.innerHTML = originalContent;
+        document.head.removeChild(style);
+        window.location.reload();
+    };
 
-  img1.onerror = img2.onerror = img3.onerror = () => {
-    console.error("Image failed to load");
-    window.print();
-    document.body.innerHTML = originalContent;
-    document.head.removeChild(style);
-    window.location.reload();
-  };
+    img1.onerror = img2.onerror = img3.onerror = () => {
+        console.error("Image failed to load");
+        window.print();
+        document.body.innerHTML = originalContent;
+        document.head.removeChild(style);
+        window.location.reload();
+    };
 };
 
 const generateCheckFile = async () => {

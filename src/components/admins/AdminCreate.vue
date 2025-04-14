@@ -90,7 +90,7 @@
     </div>
 
     <!-- Admin List Header -->
-    <div class="flex justify-center mb-16 items-center">
+    <div class="flex justify-center mb-16 mt-4 items-center">
       <h1 class="text-black text-[40px] font-bold text-center bg-lime-500 border-[3px] border-black rounded-lg py-2 px-[100px]">
         {{ t('adminList.title') }} <span v-if="Count" class="border-b-4 px-1 border-black text-black">{{ Count }}</span>
       </h1>

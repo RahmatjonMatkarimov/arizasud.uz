@@ -1,4 +1,10 @@
 <template>
+      <div class="flex justify-center mt-8 items-center">
+        <h1
+            class="text-black text-[40px] font-bold text-center bg-lime-500 border-[3px] border-black rounded-lg py-2 px-[100px]">
+            {{ dat === 'datakril' ? translateText("Sud hujjatlari") : "Sud hujjatlari" }}
+        </h1>
+    </div>
   <div v-if="showModal" class="fixed inset-0 z-50 h-full flex items-center bg-black bg-opacity-50 justify-center">
     <div class="bg-slate-800 flex flex-col opacity-[90%] items-center justify-center p-10 rounded-[15px]">
       <img @click="toggleModal" class="w-14 -mr-[290px] absolute -mt-44" src="../../../public/reject.png" alt="" />

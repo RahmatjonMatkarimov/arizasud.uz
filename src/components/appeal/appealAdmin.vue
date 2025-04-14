@@ -1,4 +1,10 @@
 <template>
+      <div class="flex justify-center mt-8 items-center">
+        <h1
+            class="text-black text-[40px] font-bold text-center bg-lime-500 border-[3px] border-black rounded-lg py-2 px-[100px]">
+            {{ dat === 'datakril' ? translateText('Interaktiv xizmatlar bo\'limi') : 'Interaktiv xizmatlar bo\'limi' }}
+        </h1>
+    </div>
   <div class="text-white">
     <!-- Modal for Uploading -->
     <div v-if="showModal"

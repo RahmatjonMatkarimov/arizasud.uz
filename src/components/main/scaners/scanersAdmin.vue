@@ -1,4 +1,10 @@
 <template>
+    <div class="flex justify-center mt-8 items-center">
+        <h1
+            class="text-black text-[40px] font-bold text-center bg-lime-500 border-[3px] border-black rounded-lg py-2 px-[100px]">
+            {{ dat === 'datakril' ? translateText('Nusxalash xizmatlar bo\'limi') : 'Nusxalash xizmatlar bo\'limi' }}
+        </h1>
+    </div>
     <div class="min-h-screen bg-gray-100 p-6 font-sans">
         <div class="flex justify-end mb-8">
             <button @click="openCreateModal"

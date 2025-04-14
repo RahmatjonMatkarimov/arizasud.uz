@@ -1,4 +1,10 @@
 <template>
+  <div class="flex justify-center mt-8 items-center">
+    <h1
+      class="text-black text-[40px] font-bold text-center bg-lime-500 border-[3px] border-black rounded-lg py-2 px-[100px]">
+      {{ dat === 'datakril' ? translateText('Barcha ishchilar ro\'yxati') : 'Barcha ishchilar ro\'yxati' }}
+    </h1>
+  </div>
   <div class="min-h-screen flex items-center flex-col p-4">
     <div class="flex items-end gap-3">
       <!-- Big Admins Section -->
@@ -171,6 +177,7 @@ import { io } from "socket.io-client";
 import { useRouter } from "vue-router";
 import { useI18n } from 'vue-i18n';
 
+
 // Vue I18n setup
 const { t } = useI18n();
 
@@ -190,24 +197,7 @@ const two = ref([]); // Admins with specific roles (orinbosar, bolim boshligi)
 // Inject 'dat' for language toggle
 const dat = inject('dat');
 
-// Transliteration map for Cyrillic conversion
-const translitMap = {
-  "ch": "ч", "sh": "ш", "yo": "ё", "yu": "ю", "ya": "я", "ye": "е", "o'": "ў", "g'": "ғ",
-  "a": "а", "b": "б", "d": "д", "e": "э", "f": "ф", "g": "г", "h": "ҳ", "i": "и", "j": "ж",
-  "k": "к", "l": "л", "m": "м", "n": "н", "o": "о", "p": "п", "q": "қ", "r": "р", "s": "с",
-  "t": "т", "u": "у", "v": "в", "x": "х", "y": "й", "z": "з", "'": "ў"
-};
-
-// Function to transliterate text to Cyrillic if 'dat' is 'datakril'
-const translateText = (text) => {
-  if (!text) return '';
-  let translated = text.toLowerCase();
-  for (const key in translitMap) {
-    const regex = new RegExp(key, "g");
-    translated = translated.replace(regex, translitMap[key]);
-  }
-  return translated;
-};
+import translateText from "@/auth/Translate";
 
 // Navigation function (currently redirects to '/all' instead of individual profiles)
 const path = (id) => {

@@ -1,4 +1,10 @@
 <template>
+    <div class="flex justify-center mt-8 items-center">
+        <h1
+            class="text-black text-[40px] font-bold text-center bg-lime-500 border-[3px] border-black rounded-lg py-2 px-[100px]">
+            {{ dat === 'datakril' ? translateText("Shartnoma hujjatlari") : "Shartnoma hujjatlari" }}
+        </h1>
+    </div>
     <div class="container mx-auto p-4">
         <div v-if="role === 'yurist' || role === 'bigAdmin'" class="flex justify-end mb-4">
             <button @click="openModal('post')" :disabled="isLoading"
@@ -8,24 +14,21 @@
         </div>
 
         <!-- GET So‘rovi -->
-        <div class="bg-gray-300 p-4 rounded-lg shadow">
-            <h3 class="text-xl sm:text-2xl block font-extrabold text-blue-800 text-center mb-6">
-                {{ dat === 'datakril' ? translateText("Shartnoma hujjatlari") : "Shartnoma hujjatlari" }}
-            </h3>
+        <div class="bg-gray-300 p-4 pt-6 rounded-lg shadow">
             <div v-if="getResponse" class="space-y-2">
                 <div v-if="items.length > 0">
-                    <div v-for="item in items" :key="item.id"
+                    <div @click="router.push('/ContractAdmin/' + item.id)" v-for="item in items" :key="item.id"
                         class="flex justify-between items-center mb-2 p-2 border border-black bg-white border-opacity-[30%] rounded">
-                        <h1 @click="router.push('/ContractAdmin/' + item.id)"
+                        <h1
                             class="cursor-pointer text-black hover:underline">
                             {{ dat === 'datakril' ? translateText(item.name) : item.name }}
                         </h1>
                         <div v-if="role === 'yurist' || role === 'bigAdmin'" class="space-x-2">
-                            <button @click="openPutModal(item)" :disabled="isLoading"
+                            <button @click.stop="openPutModal(item)" :disabled="isLoading"
                                 class="bg-yellow-400 text-white px-3 py-1 rounded disabled:opacity-50">
                                 {{ dat === 'datakril' ? translateText("Yangilash") : "Yangilash" }}
                             </button>
-                            <button @click="handleDelete(item.id)" :disabled="isLoading"
+                            <button @click.stop="handleDelete(item.id)" :disabled="isLoading"
                                 class="bg-red-400 text-white px-3 py-1 rounded disabled:opacity-50">
                                 {{ dat === 'datakril' ? translateText("O'chirish") : "O'chirish" }}
                             </button>
@@ -42,7 +45,7 @@
         </div>
 
         <!-- Modal POST va PUT uchun -->
-        <div v-if="showModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30">
+        <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30">
             <div class="bg-white p-4 rounded shadow-lg w-80">
                 <h3 class="text-lg font-semibold text-black mb-4 text-center">
                     {{ dat === 'datakril' ? translateText(modalTitle) : modalTitle }}

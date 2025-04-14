@@ -1,18 +1,18 @@
 <script setup>
 import { ref, inject, onMounted, computed } from 'vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faUsers, faBuilding, faUserTie, faUserPlus } from '@fortawesome/free-solid-svg-icons'
+import { faUsers, faBuilding, faUserTie, faUserPlus, faFileAlt, faListAlt, faCopy } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import translateText from '@/auth/Translate'
 
-library.add(faUsers, faBuilding, faUserTie, faUserPlus)
+library.add(faUsers, faBuilding, faUserTie, faUserPlus, faFileAlt, faListAlt, faCopy)
 
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { URL } from '@/auth/url'
 const router = useRouter()
 const dat = inject('dat')
-const id = parseInt(localStorage.getItem("id"));
+const id = localStorage.getItem("id");
 const newId = parseInt(id);
 const data = ref({});
 
@@ -28,41 +28,41 @@ const fetchAdminData = async () => {
   }
 };
 
+
 const cards = ref([
     {
-        title: 'Barcha Ishchilar Ro\'yxati',
-        icon: ['fas', 'users'],
+        title: 'Sud hujjatlarini yozish',
+        icon: faFileAlt, // Tanlangan icon
         bgColor: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         iconColor: '#ffffff',
-        routerLink: '/all',
+        routerLink: '/admin',
         condition: true
     },
     {
-        title: 'Hujjatini Yaratuvchi Devonxona Mudiri',
-        icon: ['fas', 'building'],
+        title: 'Interaktiv xizmatlar roʻyxati',
+        icon: faListAlt, // Tanlangan icon
         bgColor: 'linear-gradient(135deg, #2af598 0%, #009efd 100%)',
         iconColor: '#ffffff',
-        routerLink: '/operators',
-        condition: () => data.value?.call_centres
+        routerLink: '/appealAdmin',
+        condition: true
     },
     {
-        title: 'Yurist-Ekspert Yaratish Bo\'limi',
-        icon: ['fas', 'user-tie'],
+        title: 'Tizimni nusxalash xizmatlari',
+        icon: faCopy, // Tanlangan icon
         bgColor: 'linear-gradient(135deg, #f6d365 0%, #fda085 100%)',
         iconColor: '#ffffff',
-        routerLink: '/yurists',
-        condition: () => data.value?.yurists 
+        routerLink: '/scanersAdmin',
+        condition: true
     },
     {
-        title: 'Ishchi Hodimlarni Yaratish (Admin Yaratish)',
-        icon: ['fas', 'user-plus'],
+        title: 'Hamkorlar roʻyxati',
+        icon: faUserPlus, // Tanlangan icon
         bgColor: 'linear-gradient(135deg, #5ee7df 0%, #b490ca 100%)',
         iconColor: '#ffffff',
-        routerLink: '/admins',
-        condition: () => data.value?.admins
+        routerLink: '/partners',
+        condition: true
     }
 ])
-
 const filteredMenu = computed(() => {
   return cards.value.filter(item =>
     typeof item.condition === "function" ? item.condition() : item.condition
@@ -70,14 +70,13 @@ const filteredMenu = computed(() => {
 });
 
 onMounted(fetchAdminData);
-
 </script>
 
 <template>
     <div class="flex justify-center mt-8 items-center">
         <h1
             class="text-black text-[40px] font-bold text-center bg-lime-500 border-[3px] border-black rounded-lg py-2 px-[100px]">
-            {{ dat === 'datakril' ? translateText('Ishchi hodimlar bo\'limi') : 'Ishchi hodimlar bo\'limi' }}
+            {{ dat === 'datakril' ? translateText('Hujjatlar bo\'limi') : 'Hujjatlar bo\'limi' }}
         </h1>
     </div>
     <div class="app-container">

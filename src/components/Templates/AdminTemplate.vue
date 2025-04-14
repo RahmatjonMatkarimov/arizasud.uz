@@ -1,16 +1,28 @@
 <template>
   <div>
     <div class="w-full fixed mb-32 top-0 z-20 mx-auto">
+      <!-- Toggle Button for Aside -->
+      <button @click="toggleAside" :class="[
+        'fixed z-30 bg-blue-800 hover:bg-blue-900 text-white w-11 h-11 flex items-center justify-center',
+        isAsideVisible ? 'left-[0px] top-[200px] duration-500 rounded-r-lg' : 'left-0 top-[210px] duration-1000 rounded-r-lg'
+      ]">
+        <img src="/menu1.png"
+          :class="['w-6 h-6 transition-transform duration-500', isAsideVisible ? 'rotate-180' : 'rotate-0']" />
+      </button>
+
       <div v-if="dat === 'datakril'" class="bg-blue-800 flex h-[200px] p-2">
+        <!-- Existing content for datakril -->
         <div class="flex items-start gap-6 mb-8">
-          <div @click="router.push(`/profileUser/${userInfoLotin.id}`)" class="flex gap-2 flex-col justify-center items-center">
+          <div @click="router.push(`/profileUser/${userInfoLotin.id}`)"
+            class="flex gap-2 flex-col justify-center items-center">
             <div class="w-36 h-36 border-2 border-profile-blue rounded-lg overflow-hidden">
               <img :src="getImageUrl(userInfoLotin.img)" alt="Profile Image" />
             </div>
-            <h1 class="font-bold border-2 border-profile-blue rounded-lg overflow-hidden px-2">{{ userInfo.name }} {{ userInfo.surname }}</h1>
+            <h1 class="font-bold border-2 border-profile-blue rounded-lg overflow-hidden px-2">{{ userInfo.name }} {{
+              userInfo.surname }}</h1>
           </div>
           <div class="flex-1 w-[300px] bg-profile-blue m-2 text-white rounded-lg">
-            <div class="mb-4 relative  w-full flex border p-4 rounded-lg break-words">
+            <div class="mb-4 relative w-full flex border p-4 rounded-lg break-words">
               <span class="font-medium capitalize">{{ $t('fuqaro_lavozimi') }}:</span>
               <span class="block group capitalize truncate max-w-[250px] ml-2 cursor-pointer">
                 {{ userInfo.lavozimi }}
@@ -34,8 +46,8 @@
             </div>
           </div>
         </div>
-        <div class=" flex flex-col flex-wrap">
-          <button @click="router.push('/reminders')"
+        <div class="flex flex-col flex-wrap">
+          <button v-if="role === 'bigAdmin'" @click="router.push('/reminders')"
             class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
             {{ $t('hisobot') }}
           </button>
@@ -64,8 +76,8 @@
             <img class="w-10 -ml-4 mr-9" src="../../../public/chat.png" alt="">
             {{ $t('muhim_sms') }}
             <span v-if="notificationCount > 0"
-              class="ml-2 absolute top-[2px] left-[37px] bg-red-500 text-white rounded-full px-2 py-1 h-5  text-[13px]">
-              <h1 class="-mt-1 capitalize ">{{ notificationCount }}</h1>
+              class="ml-2 absolute top-[2px] left-[37px] bg-red-500 text-white rounded-full px-2 py-1 h-5 text-[13px]">
+              <h1 class="-mt-1 capitalize">{{ notificationCount }}</h1>
             </span>
           </div>
           <div @click="gochat1(userInfo.id)"
@@ -73,8 +85,8 @@
             <img class="w-10 -ml-4 mr-9" src="../../../public/chat.png" alt="">
             {{ $t('chat-guruh') }}
             <span v-if="messageCount > 0"
-              class="ml-2 absolute top-[2px] left-[37px] bg-red-500 text-white rounded-full px-2 py-1 h-5  text-[13px]">
-              <h1 class="-mt-1 capitalize ">{{ messageCount }}</h1>
+              class="ml-2 absolute top-[2px] left-[37px] bg-red-500 text-white rounded-full px-2 py-1 h-5 text-[13px]">
+              <h1 class="-mt-1 capitalize">{{ messageCount }}</h1>
             </span>
           </div>
           <div class="absolute top-1 right-1">
@@ -90,7 +102,6 @@
                     clip-rule="evenodd"></path>
                 </svg>
               </button>
-
               <div v-if="isOpen"
                 class="absolute right-0 mt-2 w-40 bg-blue-700 border rounded-lg shadow-md overflow-hidden transition-opacity">
                 <div @click="setLanguage('uzb', 'Uz', '/uzb.png')"
@@ -109,15 +120,18 @@
         </div>
       </div>
       <div v-if="dat === 'datalotin'" class="bg-blue-800 flex h-[200px] p-2">
+        <!-- Existing content for datalotin -->
         <div class="flex items-start gap-6 mb-8">
-          <div @click="router.push(`/profileUser/${userInfoLotin.id}`)" class="flex gap-2 flex-col justify-center items-center">
+          <div @click="router.push(`/profileUser/${userInfoLotin.id}`)"
+            class="flex gap-2 flex-col justify-center items-center">
             <div class="w-36 h-36 border-2 border-profile-blue rounded-lg overflow-hidden">
               <img :src="getImageUrl(userInfoLotin.img)" alt="Profile Image" />
             </div>
-            <h1 class="font-bold border-2 border-profile-blue rounded-lg overflow-hidden px-2">{{ userInfoLotin.name }} {{ userInfoLotin.surname }}</h1>
+            <h1 class="font-bold border-2 border-profile-blue rounded-lg overflow-hidden px-2">{{ userInfoLotin.name }}
+              {{ userInfoLotin.surname }}</h1>
           </div>
           <div class="flex-1 w-[300px] bg-profile-blue m-2 text-white rounded-lg">
-            <div class="mb-4 relative  w-full flex border p-4 rounded-lg break-words">
+            <div class="mb-4 relative w-full flex border p-4 rounded-lg break-words">
               <span class="font-medium capitalize">{{ $t('fuqaro_lavozimi') }}:</span>
               <span class="block group capitalize truncate max-w-[250px] ml-2 cursor-pointer">
                 {{ userInfoLotin.lavozimi }}
@@ -141,8 +155,8 @@
             </div>
           </div>
         </div>
-        <div class=" flex flex-col flex-wrap">
-          <button @click="router.push('/reminders')"
+        <div class="flex flex-col flex-wrap">
+          <button v-if="role === 'bigAdmin'" @click="router.push('/reminders')"
             class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
             {{ $t('hisobot') }}
           </button>
@@ -171,8 +185,8 @@
             <img class="w-10 -ml-4 mr-9" src="../../../public/chat.png" alt="">
             {{ $t('muhim_sms') }}
             <span v-if="notificationCount > 0"
-              class="ml-2 absolute top-[2px] left-[37px] bg-red-500 text-white rounded-full px-2 py-1 h-5  text-[13px]">
-              <h1 class="-mt-1 capitalize ">{{ notificationCount }}</h1>
+              class="ml-2 absolute top-[2px] left-[37px] bg-red-500 text-white rounded-full px-2 py-1 h-5 text-[13px]">
+              <h1 class="-mt-1 capitalize">{{ notificationCount }}</h1>
             </span>
           </div>
           <div @click="gochat1(userInfo.id)"
@@ -180,8 +194,8 @@
             <img class="w-10 -ml-4 mr-9" src="../../../public/chat.png" alt="">
             {{ $t('chat-guruh') }}
             <span v-if="messageCount > 0"
-              class="ml-2 absolute top-[2px] left-[37px] bg-red-500 text-white rounded-full px-2 py-1 h-5  text-[13px]">
-              <h1 class="-mt-1 capitalize ">{{ messageCount }}</h1>
+              class="ml-2 absolute top-[2px] left-[37px] bg-red-500 text-white rounded-full px-2 py-1 h-5 text-[13px]">
+              <h1 class="-mt-1 capitalize">{{ messageCount }}</h1>
             </span>
           </div>
         </div>
@@ -198,7 +212,6 @@
                   clip-rule="evenodd"></path>
               </svg>
             </button>
-
             <div v-if="isOpen"
               class="absolute right-0 mt-2 w-40 bg-blue-700 border rounded-lg shadow-md overflow-hidden transition-opacity">
               <div @click="setLanguage('uzb', 'Uz', '/uzb.png')"
@@ -217,13 +230,16 @@
       </div>
     </div>
     <div class="flex">
-      <Aside class="fixed left-0 top-0 h-full w-64" />
-      <main class="flex-1 ml-[420px]  mt-[200px]">
+      <Aside class="fixed left-0 mt-[45px] top-0 h-full w-64 transition-all duration-700 ease-in-out"
+        :class="{ 'translate-x-0 opacity-100': isAsideVisible, '-translate-x-full opacity-0': !isAsideVisible }" />
+      <main
+        :class="['flex-1 mt-[200px] transition-all duration-700 ease-in-out', isAsideVisible ? 'ml-[420px]' : 'ml-[0px]']">
         <router-view />
       </main>
     </div>
   </div>
 </template>
+
 <script setup>
 import { ref, onMounted, onUnmounted, computed, inject, watch } from "vue";
 import { useRouter } from "vue-router";
@@ -242,12 +258,13 @@ const selectedLabel = ref("Uz");
 const dat = ref("datalotin");
 provide("dat", dat);
 const isLoading = inject('isLoading');
-
+const isAsideVisible = ref(false); // Reactive state for aside visibility
 const ids = localStorage.getItem("id");
 const newIds = parseInt(ids);
+const role = localStorage.getItem("role");
 const data = ref({});
 const fetchAdminData = async () => {
-  isLoading.value = true; // Yuklanishni boshlash
+  isLoading.value = true;
   try {
     const response = await axios.get(`${URL}/${localStorage.getItem("role")}/${newIds}`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -256,7 +273,7 @@ const fetchAdminData = async () => {
   } catch (error) {
     console.error("Xatolik yuz berdi:", error);
   } finally {
-    isLoading.value = false; // Yuklanish tugashi
+    isLoading.value = false;
   }
 };
 
@@ -271,10 +288,14 @@ const setLanguage = (lang, label, flag) => {
   selectedFlag.value = flag;
   isOpen.value = false;
 };
+
+const toggleAside = () => {
+  isAsideVisible.value = !isAsideVisible.value;
+};
+
 const router = useRouter();
 const id = localStorage.getItem("id");
 const newId = id ? parseInt(id) : null;
-const loading = ref(true);
 const error = ref(null);
 const userInfo = ref({});
 const isOnline = ref(false);
@@ -301,8 +322,9 @@ const gochat1 = (id) => router.push(`/chat/${id}`);
 if (!newId || isNaN(newId)) {
   console.error("ID топилмади ёки нотўғри форматда.");
 }
+
 const getData = async () => {
-  isLoading.value = true; // 🔹 Ma'lumot yuklanayotganini belgilash
+  isLoading.value = true;
   try {
     const token = localStorage.getItem("token");
     if (!token) throw new Error("Токен топилмади. Фойдаланувчи авторизациядан ўтмаган.");
@@ -329,15 +351,13 @@ const getData = async () => {
     console.error("Хатолик:", err.response?.data || err.message);
     error.value = "Маълумотларни юклашда хатолик юз берди.";
   } finally {
-    isLoading.value = false; // 🔹 Yuklanish tugaganini belgilash
+    isLoading.value = false;
   }
 };
 
 socket.on("unreadCount", (message) => {
   messageCount.value++;
 });
-
-
 
 const fetchNotifications = async () => {
   try {
@@ -353,9 +373,8 @@ const fetchNotifications = async () => {
   }
 };
 
-
 const formattedBirthday = computed(() => {
-  if (!userInfoLotin.value?.birthday);
+  if (!userInfoLotin.value?.birthday) return "Маълум эмас";
 
   const date = new Date(userInfoLotin.value.birthday);
 
@@ -368,15 +387,13 @@ const formattedBirthday = computed(() => {
   return `${day}.${month}.${year}`;
 });
 
-
 const checkOnlineStatus = (onlineAdmins) => {
   isOnline.value = onlineAdmins.includes(id);
 };
 
-
 onMounted(() => {
   getData();
-  fetchAdminData()
+  fetchAdminData();
   socket.emit("joinUser", id);
 
   socket.on("adminOnlineUpdate", checkOnlineStatus);
@@ -390,7 +407,6 @@ onMounted(() => {
   intervalId = setInterval(fetchNotifications, 10000);
 });
 
-
 onUnmounted(() => {
   socket.off("adminOnlineUpdate");
   socket.off("notification");
@@ -399,3 +415,11 @@ onUnmounted(() => {
   socket.disconnect();
 });
 </script>
+
+<style scoped>
+/* Ensure the aside has a defined background to avoid transparency issues during animation */
+aside {
+  background-color: #1e3a8a;
+  /* Match your existing design, adjust as needed */
+}
+</style>

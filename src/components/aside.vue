@@ -30,15 +30,10 @@ onMounted(fetchAdminData);
 const dat = inject('dat');
 
 const menuItems = [
-  { to: "/admin-list", label: "Ishchilar ro'yxati", condition: () => data.value?.admins },
+  { to: "/admin-list", label: "Ishchi hodimlar ro'yxati", condition: true },
+  { to: "/all-contract", label: "Shartnoma tuzish bo'limi", condition: true },
+  { to: "/all-courts", label: "Sud hujjatlari", condition: true },
   { to: "/remindersAdmin", label: "Ishchilarni bajargan ishlari", condition: () => data.value?.workDone },
-  { to: "/FileAdmin", label: "Mijozlar bilan shartnoma tuzish", condition: true },
-  { to: "/CliendList", label: "Mijozlar bilan tuzilgan shartnomalar", condition: true },
-  { to: "/Sum", label: "Mijozlar bilan shartnoma tuzishdagi summa", condition: true },
-  { to: "/admin", label: "Sud hujjatlarini yozish", condition: true },
-  { to: "/appealAdmin", label: "Interaktiv xizmatlar roʻyxati", condition: true },
-  { to: "/scanersAdmin", label: "Tizimni nusxalash xizmatlari", condition: true },
-  { to: "/partners", label: "Hamkorlar roʻyxati", condition: true },
   { to: "/Requirefiles", label: "Imzolanishi kerak boʻlgan fayllar", condition: () => data.value?.userFiles },
   { to: "/payments", label: "Tizim toʻlovlari", condition: true },
   { to: "/smile", label: "Stikker qoʻshish", condition: true },
@@ -57,23 +52,36 @@ const filteredMenu = computed(() => {
 </script>
 
 <template>
-  <aside class="overflow-y-auto aside-nav bg-blue-800">
+  <aside class="overflow-y-auto aside-nav">
     <div class="mt-[200px]">
       <p v-if="isLoading" class="text-white text-center text-lg">Yuklanmoqda...</p>
       <template v-else>
-        <router-link :to="item.to" v-for="(item, index) in filteredMenu" :key="index" class="mb-1 li"
-          :class="{ 'active': route.path === item.to }">
-          <b class="text-black block w-[30px]">{{ index + 1 }}</b>
-          <h1 v-if="dat === 'datalotin'" class="text-black first-letter:uppercase">
+        <router-link :to="item.to" v-for="(item, index) in filteredMenu" :key="index" class="mb-1 group li" :class="{
+          active: route.path === item.to
+        }">
+          <b :class="[
+            'block group-hover:text-white w-[30px]',
+            route.path === item.to ? 'text-white' : 'text-black'
+          ]">
+            {{ index + 1 }}
+          </b>
+          <h1 v-if="dat === 'datalotin'" :class="[
+            'group-hover:text-white first-letter:uppercase',
+            route.path === item.to ? 'text-white' : 'text-black'
+          ]">
             {{ item.label }}
           </h1>
-          <h1 v-if="dat === 'datakril'" class="text-black first-letter:uppercase">
+          <h1 v-if="dat === 'datakril'" :class="[
+            'group-hover:text-white first-letter:uppercase',
+            route.path === item.to ? 'text-white' : 'text-black'
+          ]">
             {{ translateText(item.label) }}
           </h1>
         </router-link>
-        <div @click="open()" class="text-black block li">
-          <b class="text-black block w-[30px]">{{ filteredMenu.length + 1 }}</b>
-          <h1 class="text-black">
+
+        <div @click="open()" class="text-black group block li">
+          <b class="text-black block group-hover:text-white w-[30px]">{{ filteredMenu.length + 1 }}</b>
+          <h1 class="text-black group-hover:text-white">
             GitHub
           </h1>
         </div>
@@ -87,6 +95,8 @@ const filteredMenu = computed(() => {
   width: 420px;
   height: 100vh;
   color: black;
+  --tw-bg-opacity: 1;
+  background-color: rgba(30, 64, 175, var(--tw-bg-opacity));
   position: fixed;
 }
 
@@ -104,6 +114,10 @@ const filteredMenu = computed(() => {
 
 .active {
   background-color: rgba(229, 231, 235, 0.1);
-  color: white;
+  color: white !important;
+}
+
+.active:hover h1 {
+  color: white !important;
 }
 </style>
