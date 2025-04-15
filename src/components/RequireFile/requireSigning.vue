@@ -21,8 +21,8 @@
                     </div>
                     <div>
                         <div class="flex bg-white w-[400px] shadow-lg ml-2 flex-col p-4 space-y-2 mb-4">
-                            <h1 class="uppercase text-black"><b class="text-black">F.I.O.:</b> Maxmud Salayev Narimanovich</h1>
-                            <h1 class="uppercase text-black"><b class="text-black">Yaratilgan sana:</b> {{ formattedCreatedAt }}</h1>
+                            <h1 class="uppercase text-black"><b class="text-black">{{ dat === 'datakril' ? translateText('F.I.O.:') : 'F.I.O.:' }}</b> {{ dat === 'datakril' ? translateText('Maxmud Salayev Narimanovich') : 'Maxmud Salayev Narimanovich' }}</h1>
+                            <h1 class="uppercase text-black"><b class="text-black">{{ dat === 'datakril' ? translateText('Yaratilgan sana:') : 'Yaratilgan sana:' }}</b> {{ formattedCreatedAt }}</h1>
                             <div class="flex space-x-2">
                                 <select v-if="data === 'yurist' || data === 'bigAdmin'" v-model="selectedAction"
                                     class="px-4 py-3 bg-blue-600 text-white w-full rounded-lg shadow-md hover:bg-blue-700 transition">
@@ -39,7 +39,7 @@
                                 :placeholder="$t('sabab')" />
                             <button v-if="selectedAction" @click="handleAction"
                                 class="px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition">
-                                {{ $t('Yuborish') }}
+                                {{ dat === 'datakril' ? translateText('Yuborish') : 'Yuborish' }}
                             </button>
                         </div>
                     </div>
@@ -69,7 +69,7 @@ import axios from 'axios';
 import { useRoute } from 'vue-router';
 import { URL } from '@/auth/url';
 import * as pdfjsLib from 'pdfjs-dist';
-
+import translateText from '@/auth/Translate';
 // Explicitly set the worker source for pdfjs-dist
 pdfjsLib.GlobalWorkerOptions.workerSrc =
     'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
