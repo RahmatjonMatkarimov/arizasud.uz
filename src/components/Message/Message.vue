@@ -1,5 +1,5 @@
 <template>
-  <div id="asda" class="w-[1111111124px] -ml-4 top-[200px] h-[100vh] fixed border-4 rounded-xl border-[#ffcc00]"></div>
+  <div id="asda" class="w-[1111111124px]  top-[200px] h-[100vh] fixed border-4 rounded-xl border-[#ffcc00]"></div>
   <div id="img" class="relative flex justify-between mb-28">
     <div class="w-full mr-[460px] flex flex-col items-center justify-center p-4">
       <div ref="messagesContainer" class="w-full p-4 space-y-4">

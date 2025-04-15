@@ -1,5 +1,5 @@
 <template>
-  <div class="text-black">
+  <div class="text-black p-12">
     <button @click="sendTestNotification">Test Notification Yuborish</button>
     <br>
     <button @click="checkBirthday">Tug'ilgan kunlarni tekshirish</button>
