@@ -47,7 +47,7 @@
           </div>
         </div>
         <div class="flex flex-col flex-wrap">
-          <button v-if="role === 'bigAdmin'" @click="router.push('/reminders')"
+          <button v-if="role !== 'bigAdmin'" @click="router.push('/reminders')"
             class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
             {{ $t('hisobot') }}
           </button>
@@ -156,7 +156,7 @@
           </div>
         </div>
         <div class="flex flex-col flex-wrap">
-          <button v-if="role === 'bigAdmin'" @click="router.push('/reminders')"
+          <button v-if="role !== 'bigAdmin'" @click="router.push('/reminders')"
             class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
             {{ $t('hisobot') }}
           </button>
