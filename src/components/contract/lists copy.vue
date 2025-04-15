@@ -282,52 +282,44 @@ const printReceipt = () => {
     const formattedDate = `${day}.${month}.${year}`;
 
     const receiptHTML = `
-       <table style="border: 1px solid black; border-collapse: collapse;">
-        <tr>
-            <td rowspan="8" style="width: 200px; text-align: center; color: black; border: 1px solid black;">1</td>
-            <td style="width: 200px; text-align: center; color: black; border: 1px solid black;">2</td>
-            <td rowspan="2" style="width: 200px; text-align: center; color: black; border: 1px solid black;">3</td>
-            <td rowspan="5" style="width: 200px; text-align: center; color: black; border: 1px solid black;">4</td>
-        </tr>
-        <tr>
-            <td style="width: 200px; text-align: center; color: black; border: 1px solid black;">5</td>
-        </tr>
-        <tr>
-            <td style="width: 200px; text-align: center; color: black; border: 1px solid black;">MFO</td>
-            <td style="width: 200px; text-align: center; color: black; border: 1px solid black;">STIR</td>
-        </tr>
-        <tr>
-            <td style="width: 200px; text-align: center; color: black; border: 1px solid black;">Hisob</td>
-            <td style="width: 200px; text-align: center; color: black; border: 1px solid black;"></td>
-        </tr>
-        <tr>
-            <td style="width: 200px; text-align: center; color: black; border: 1px solid black;"></td>
-            <td style="width: 200px; text-align: center; color: black; border: 1px solid black;"></td>
-        </tr>
-        <tr>
-            <td style="width: 200px; text-align: center; color: black; border: 1px solid black;">Qabul</td>
-            <td colspan="2" style="width: 200px; text-align: center; color: black; border: 1px solid black;">Yurist</td>
-        </tr>
-        <tr>
-            <td style="width: 200px; text-align: center; color: black; border: 1px solid black;">Qabul</td>
-            <td colspan="2" style="width: 200px; text-align: center; color: black; border: 1px solid black;">Yurist</td>
-        </tr>
-        <tr>
-            <td style="width: 200px; text-align: center; color: black; border: 1px solid black;">Tolov maqsadi</td>
-            <td colspan="2" style="width: 200px; text-align: center; color: black; border: 1px solid black;">25.00.2012</td>
-        </tr>
-        <tr>
-            <td style="width: 200px; text-align: center; color: black; border: 1px solid black;">Nomi</td>
-            <td colspan="3" style="width: 200px; text-align: center; color: black; border: 1px solid black;">awfafarfa</td>
-        </tr>
-        <tr>
-            <td style="width: 200px; text-align: center; color: black; border: 1px solid black;">Pul miqdori</td>
-            <td colspan="3" style="width: 200px; text-align: center; color: black; border: 1px solid black;">375000</td>
-        </tr>
-        <tr>
-            <td colspan="4" style="width: 200px; text-align: center; color: black; border: 1px solid black;">rfasfarfarwfwrfafrw</td>
-        </tr>
-    </table>
+    <div style="font-size: 12px; width:100%; display:flex; flex-direction: column; justify-content: center; align-content:center; color: black;">
+        <h1 style="text-align: center; font-size:15px; font-weight: bold; color: black; margin-top:18px;">To'lov cheki</h1>
+        <table style="width: 100%; border-collapse: collapse; color: black; table-layout: fixed;">
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Mijoz:</td>
+                <td style="color: black;">${data.value.name} ${data.value.surname} ${data.value.dadname}</td>
+            </tr>
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Telefon Raqami:</td>
+                <td style="color: black; line-height: 1.2;">${data.value.phone || "Mavjud emas"}</td>
+            </tr>
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Shartnoma idsi:</td>
+                <td style="color: black; line-height: 1.2;">№${clientFiles.value[0]?.contractId || "Mavjud emas"}</td>
+            </tr>
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">To'langan:</td>
+                <td style="color: black; line-height: 1.2;">${receiptData.value.paymentAmount} so'm</td>
+            </tr>
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Qoldiq qarz:</td>
+                <td style="color: black; line-height: 1.2;">${receiptData.value.remainingDebt <= 0 ? "To‘landi" : formatNumberWithDots(receiptData.value.remainingDebt) + " so'm"}</td>
+            </tr>
+            <tr>
+                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Sana:</td>
+                <td style="color: black; line-height: 1.2;">${receiptData.value.date}</td>
+            </tr>
+        </table>
+        <p style="text-align: center; color: black; justify-content: center; gap:3px; align-items: center; display:flex; margin-top:10px;">
+            <img src="${img3.src}" alt="" style="max-width: 7%; height: auto;">
+            <span style="font-size: 10px; color: black;">Telegram: +998 99 106 70 35</span>
+        </p>
+        <p style="text-align: center; font-size:10px; color: black;">"YURIST KONSUL KONSALTING" х/к</p>
+        <div style="display: flex; flex-direction:column; justify-content: center; align-items: center; margin-top: 20px;">
+            <img src="${img1.src}" alt="" style="max-width: 90%; height: auto;">
+            <img src="${img2.src}" alt="" style="max-width: 90%; height: auto;">
+        </div>
+    </div>
   `;
 
     const originalContent = document.body.innerHTML;

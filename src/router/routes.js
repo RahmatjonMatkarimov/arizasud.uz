@@ -68,6 +68,7 @@ export const routes = [
         { path: '/all-contract', component: () => import('@/components/contract/all.vue') },
         { path: '/all-courts', component: () => import('@/components/main/all.vue') },
         { path: '/Require-signing/:id', component: () => import('@/components/RequireFile/requireSigning.vue') },
+        { path: '/asinstant', component: () => import('@/components/admins/Yurist-asinstant.vue') },
       ],
       meta: { requiresAuth: true, allowedRoles: ['admin', 'manager', 'yurist', 'bigAdmin'] },
     },
