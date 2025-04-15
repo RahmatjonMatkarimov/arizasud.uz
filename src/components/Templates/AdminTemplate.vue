@@ -4,7 +4,7 @@
       <!-- Toggle Button for Aside -->
       <button @click="toggleAside" :class="[
         'fixed z-30 bg-blue-800 hover:bg-blue-900 text-white w-11 h-11 flex items-center justify-center',
-        isAsideVisible ? 'left-[0px] top-[200px] duration-500 rounded-r-lg' : 'left-0 top-[210px] duration-1000 rounded-r-lg'
+        isAsideVisible ? 'left-[420px] top-[50%] duration-700 rounded-r-lg' : 'left-0 top-[50%] duration-700 rounded-r-lg'
       ]">
         <img src="/menu1.png"
           :class="['w-6 h-6 transition-transform  duration-500', isAsideVisible ? 'rotate-180' : 'rotate-0']" />
@@ -230,7 +230,7 @@
       </div>
     </div>
     <div class="flex">
-      <Aside class="fixed left-0 mt-[45px] top-0 h-full w-64 transition-all duration-700 ease-in-out"
+      <Aside class="fixed left-0 top-0 h-full w-64 transition-all duration-700 ease-in-out"
         :class="{ 'translate-x-0 opacity-100': isAsideVisible, '-translate-x-full opacity-0': !isAsideVisible }" />
       <main
         :class="['flex-1 mt-[200px] transition-all duration-700 ease-in-out', isAsideVisible ? 'ml-[420px]' : 'ml-[0px]']">
