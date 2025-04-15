@@ -82,17 +82,17 @@
 
         <!-- PUT Modal -->
         <div v-if="showPutModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div class="bg-white p-6 rounded shadow-lg w-80">
+            <div class="bg-white p-6 rounded shadow-lg w-[500px]">
                 <form @submit.prevent="submitPut">
                     <div class="flex gap-2 justify-center items-center">
-                        <label class="block w-[100px] text-black font-medium">{{ dat === 'datakril' ? translateText('lex.uz qonunchilik bazasidan foydalanish uchun:') : 'lex.uz qonunchilik bazasidan foydalanish uchun:' }}</label>
+                        <label class="block text-black w-[400px] font-medium">{{ dat === 'datakril' ? translateText('lex.uz qonunchilik bazasidan foydalanish uchun:') : 'lex.uz qonunchilik bazasidan foydalanish uchun:' }}</label>
                         <input type="number" v-model.number="putForm.sum1" required
-                            class="w-full mb-4 text-black p-2 border rounded" />
+                            class="w-full mb-4 text-black border-gray-400 p-2 border rounded" />
                     </div>
                     <div class="flex gap-2 justify-center items-center mb-4">
-                        <label class="block w-[100px] text-black font-medium">{{ dat === 'datakril' ? translateText('QR-code xizmati uchun:') : 'QR-code xizmati uchun:' }}</label>
+                        <label class="block w-[400px] text-black font-medium">{{ dat === 'datakril' ? translateText('QR-code xizmati uchun:') : 'QR-code xizmati uchun:' }}</label>
                         <input type="number" v-model.number="putForm.sum2" required
-                            class="w-full mb-4 text-black p-2 border rounded" />
+                            class="w-full mb-4 border-gray-400 text-black p-2 border rounded" />
                     </div>
                     <div v-if="putError" class="text-red-500 mb-4">
                         <p>{{ putError }}</p>

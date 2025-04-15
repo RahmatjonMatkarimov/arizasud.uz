@@ -15,9 +15,9 @@
         <template v-if="field.key === 'Buyurtmachi'">
           <select v-model="fieldValues[index]" required
             class="w-full p-2 border rounded focus:ring text-black focus:ring-blue-200">
-            <option value="" disabled>{{ dat === 'datakril' ? translateText('Tanlang') : 'Tanlang' }}</option>
-            <option value="Yuridik">{{ dat === 'datakril' ? translateText('Yuridik') : 'Yuridik' }}</option>
-            <option value="Jismoniy">{{ dat === 'datakril' ? translateText('Jismoniy') : 'Jismoniy' }}</option>
+            <option class="text-black" value="" disabled>{{ dat === 'datakril' ? translateText('Tanlang') : 'Tanlang' }}</option>
+            <option class="text-black" value="Yuridik">{{ dat === 'datakril' ? translateText('Yuridik') : 'Yuridik' }}</option>
+            <option class="text-black" value="Jismoniy">{{ dat === 'datakril' ? translateText('Jismoniy') : 'Jismoniy' }}</option>
           </select>
         </template>
         <template v-else-if="field.key !== 'adminName' && field.key !== 'adminSurname' && field.key !== 'documentId'">
