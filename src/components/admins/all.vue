@@ -64,7 +64,7 @@ const cards = ref([
     {
         title: 'Yurist Yordamchisini Yaratish Bo\'limi',
         icon: ['fas', 'user-tie'],
-        bgColor: 'linear-gradient(135deg, #5ee7df 0%, #b490ca 100%)',
+        bgColor: 'linear-gradient(300deg, #5ee7df 4%, #b490ca 90%)',
         iconColor: '#ffffff',
         routerLink: '/asinstant',
         condition: () => data.value?.admins

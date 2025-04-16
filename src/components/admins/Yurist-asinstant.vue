@@ -159,7 +159,7 @@
                 {{ t('adminCard.editButton') }}
               </button>
               <button @click="openDeleteModal(item.id)" class="w-full px-4 py-2 flex items-center text-left text-red-600 hover:bg-red-100">
-                <h1 class="text-red-600 text-[30px] mr-1">🗑</h1> {{ t('adminCard.deleteButton') }}
+                <h1 class="text-red-600 text-[30px] mr-1"></h1> {{ t('adminCard.deleteButton') }}
               </button>
               <button @click="openPassModal(item)" class="block w-full px-4 py-2 text-left text-lime-600 hover:bg-red-100">
                 {{ t('adminCard.changePasswordButton') }}
