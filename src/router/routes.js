@@ -6,6 +6,7 @@ export const routes = [
     { path: '/view-file/:id', name: 'PDF', component: () => import('@/views/pdfViwer.vue') },
     { path: '/FEq8Qt7oKTrvFEq8Qt7oKTrv8YFWGtPL3Yot50diIP9VH_FL6NQIcT08YFWGtPLFEq8Qt7oKTrv8YFWGtPL3Yot50diIP9VH_FL6NQIcT03Yot50diIPFEq8Qt7oKTrv8YFWGtPL3Yot50diIP9VH_FL6NQIcT09VH_FL6NQIcT0', name: 'login', component: () => import('@/components/login.vue') },
     { path: '/path/:id', name: 'pathId', component: () => import('@/components/main/path/path.vue') },
+    { path: '/payments', name: 'payment', component: () => import('@/views/payments.vue') },
     { path: '/service/:id', name: 'service', component: () => import('@/components/main/file/file.vue') },
     { path: '/offering', name: 'offer', component: () => import('@/components/offering/OfferingAdmin.vue') },
     { path: '/appeals', name: 'appeals', component: () => import('@/components/appeal/appeal.vue') },
