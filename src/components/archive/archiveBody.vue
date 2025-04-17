@@ -1,9 +1,11 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, inject } from 'vue';
 import { useRoute } from "vue-router";
 import axios from "axios";
 import { URL } from "@/auth/url.js";
+import translateText from "@/auth/Translate.js";
 
+const dat = inject('dat');
 const items = ref([]);
 const loading = ref(false);
 const showCheckboxes = ref(false);
@@ -82,24 +84,24 @@ onMounted(fetchItems);
 <template>
   <div class="p-6 w-[90%] mx-auto bg-white shadow-lg rounded-lg mt-6">
     <div class="flex justify-between items-center mb-4">
-      <h2 class="text-2xl font-bold text-gray-800">O'chirilgan elementlar</h2>
+      {{ dat === 'datakril' ? translateText("O'chirilgan elementlar") : "O'chirilgan elementlar" }}
       <button @click="toggleCheckboxMode" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 shadow">
-        {{ showCheckboxes ? 'Bekor qilish' : "O'chirish rejimini yoqish" }}
+        {{ dat === 'datakril' ? translateText(showCheckboxes ? "Bekor qilish" : "O'chirish rejimini yoqish") : (showCheckboxes ? "Bekor qilish" : "O'chirish rejimini yoqish") }}
       </button>
     </div>
     <div v-if="showCheckboxes" class="mb-4 flex gap-2">
       <!-- New Select All button -->
       <button @click="selectAllItems"
         class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 shadow">
-        {{ selectedItems.length === items.length ? 'Barchasini olib tashlash' : 'Barchasini belgilash' }}
+        {{ dat === 'datakril' ? translateText(selectedItems.length === items.length ? 'Barchasini olib tashlash' : 'Barchasini belgilash') : (selectedItems.length === items.length ? 'Barchasini olib tashlash' : 'Barchasini belgilash') }}
       </button>
       <button v-if="selectedItems.length > 0" @click="deleteSelectedItems"
         class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 shadow">
-        Belgilanganlarni o'chirish
+        {{ dat === 'datakril' ? translateText("Belgilanganlarni o'chirish") : "Belgilanganlarni o'chirish" }}
       </button>
     </div>
 
-    <div v-if="loading" class="text-center text-gray-500 py-4 text-lg">Yuklanmoqda...</div>
+    <div v-if="loading" class="text-center text-gray-500 py-4 text-lg">{{ dat === 'datakril' ? translateText("Yuklanmoqda...") : "Yuklanmoqda..." }}</div>
     <ul v-else class="space-y-4">
       <li v-for="(item, index) in items" :key="item.id"
         :class="[index % 2 === 0 ? 'bg-white' : 'bg-gray-100', 'flex items-center border justify-between p-2 hover:bg-gray-100 transition']">
@@ -107,11 +109,11 @@ onMounted(fetchItems);
           <input v-if="showCheckboxes" type="checkbox" :checked="selectedItems.includes(item.id)"
             @change="toggleSelection(item.id)"
             class="mr-2 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-          <span class="text-lg font-semibold text-gray-800 capitalize">{{ item.name }}</span>
+          <span class="text-lg font-semibold text-gray-800 capitalize">{{ dat === 'datakril' ? translateText(item.name) : item.name }}</span>
         </div>
         <button @click="updateItem(item.id)"
           class="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 shadow">
-          Tiklash
+          {{ dat === 'datakril' ? translateText("Tiklash") : "Tiklash" }}
         </button>
       </li>
     </ul>

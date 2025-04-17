@@ -2,7 +2,7 @@
   <div class="flex my-10 justify-center items-center">
     <h1 style="text-shadow: 0 0 5px #fff,0 0 10px #fff;"
       class="text-black text-[40px] font-bold text-center bg-lime-500 border-[3px] border-black rounded-lg py-2 px-[100px]">
-      O'chirilgan elementlar</h1>
+      {{ dat === 'datakril' ? translateText("O'chirilgan elementlar") : "O'chirilgan elementlar" }}</h1>
   </div>
 
   <div class="flex gap-5 justify-center flex-wrap">

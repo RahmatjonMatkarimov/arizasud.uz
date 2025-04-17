@@ -34,12 +34,12 @@ const socialLinks = ref([
   {
     href: 'https://www.apelsin.uz/open-service?serviceId=498617823',
     icon: '/uzum.png',
-    label: 'Uzum bank orqali to\'lov qiling',
+    label: 'Uzumpay orqali to\'lov qiling',
   },
   {
     href: 'https://alifmobi.page.link/payByQrNasiya?code=0002010102113120000430734208NA223496621603044313070433766304d4ab',
     icon: '/alif.png',
-    label: 'Alif mobi orqali to\'lov qiling',
+    label: 'Alif Mobi orqali to\'lov qiling',
   },
   {
     href: 'https://payme.uz/fallback/merchant/?id=6684025cb3b5f1f6665d398e',
