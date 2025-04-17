@@ -3,7 +3,7 @@
     class="flex flex-col lg:flex-row lg:gap-[100px] gap-10 items-center sm:justify-center min-w-full min-h-[100vh] text-white bg-gradient-to-r from-stone-500 to-slate-800 bg-cover p-6 animate-gradient"
   >
   <div class="flex flex-col w-full sm:w-[600px] md:w-[800px] gap-2 mt-4 lg:mt-6">
-    <h1 class="bg-gradient-to-r from-gray-100 via-blue-500 text-[30px] md:text-[33px] md:mt-[0] mt-[50px] mb-[50px] text-center to-green-800 text-transparent bg-clip-text animate-gradient">O‘zingizga qulay va mos to‘lov usulini tanlab, to‘lovni amalga oshiring.</h1>
+    <h1 class="bg-gradient-to-r from-gray-100 via-blue-500 text-[25px] md:text-[33px] md:mt-[0] mt-[50px] mb-[50px] text-center to-green-800 text-transparent bg-clip-text animate-gradient">O‘zingizga qulay va mos to‘lov usulini tanlab, to‘lovni amalga oshiring.</h1>
       <Motion
         v-for="(link, index) in socialLinks"
         :key="link.href"
