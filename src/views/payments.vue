@@ -13,7 +13,7 @@
         :animate="{ opacity: 1, x: 0 }"
         :transition="{ duration: 0.8, ease: 'ease-out', delay: 0.1 * index }"
         class="flex items-center lg:justify-start gap-4 no-underline text-[20px] duration-300
-        w-full lg:text-[25px] text-white border-2 border-gray-500 p-3 rounded-lg hover:bg-gray-600 hover:opacity-55"
+        w-full lg:text-[25px] h-[90px] text-white border-2 border-gray-500 p-3 rounded-lg hover:bg-gray-600 hover:opacity-55"
       >
         <img :src="link.icon" alt="icon" class="w-10 rounded-lg h-10 lg:w-12 lg:h-12" />
         <h2 class="bg-gradient-to-r from-gray-100 via-blue-500 to-green-800 text-transparent bg-clip-text animate-gradient">
