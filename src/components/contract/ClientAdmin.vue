@@ -4,11 +4,10 @@
     <p class="loading-message">{{ loadingMessage }}</p>
   </div>
   <div class="container mx-auto p-4 bg-gray-300 rounded shadow">
-    <!-- Loading Spinner -->
     <!-- Main Content -->
     <div v-if="fields.length && !isLoading">
       <div v-for="(field, index) in uniqueFields" :key="index" class="mb-4">
-        <label v-if="field.key !== 'adminName' && field.key !== 'adminSurname' && field.key !== 'documentId'"
+        <label v-if="field.key !== 'adminName' && field.key !== 'adminSurname' && field.key !== 'documentId' && field.key !== 'fingerImage1' && field.key !== 'fingerImage2' && field.key !== 'image1' && field.key !== 'image2' && field.key !== 'qrcode1' && field.key !== 'qrcode2'" 
           class="block font-medium mb-1 text-black">
           {{ dat === "datakril" ? translateText(field.key) : field.key }}
         </label>
@@ -20,7 +19,7 @@
             <option class="text-black" value="Jismoniy">{{ dat === 'datakril' ? translateText('Jismoniy') : 'Jismoniy' }}</option>
           </select>
         </template>
-        <template v-else-if="field.key !== 'adminName' && field.key !== 'adminSurname' && field.key !== 'documentId'">
+        <template v-else-if="field.key !== 'adminName' && field.key !== 'adminSurname' && field.key !== 'documentId'  && field.key !== 'fingerImage1' && field.key !== 'fingerImage2' && field.key !== 'image1' && field.key !== 'image2' && field.key !== 'qrcode1' && field.key !== 'qrcode2'">
           <input v-model="fieldValues[index]" :type="getInputType(field.key)" :maxlength="getMaxLength(field.key)"
             :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required
             class="w-full p-2 border rounded focus:ring text-black focus:ring-blue-200"
@@ -30,8 +29,11 @@
       </div>
 
       <div class="mt-4 flex justify-end">
-        <button @click="openCameraModal" class="btn btn-primary">
-          {{ dat === "datakril" ? translateText("Suratga Olish") : "Suratga Olish" }}
+        <button @click="openCameraModal('profile')" class="btn btn-primary">
+          {{ dat === "datakril" ? translateText("Profil Suratga Olish") : "Profil Suratga Olish" }}
+        </button>
+        <button @click="openCameraModal('document')" class="btn btn-primary">
+          {{ dat === "datakril" ? translateText("Hujjat Suratga Olish") : "Hujjat Suratga Olish" }}
         </button>
         <button @click="finger" class="btn btn-primary">
           {{ dat === "datakril" ? translateText("Barmoq izini scanerlash") : "Barmoq izini scanerlash" }}
@@ -61,7 +63,7 @@
       <div v-if="isWarningModalOpen" class="modal" @click.self="closeWarningModal">
         <div class="modal-content">
           <p class="text-red-600 text-center">
-            {{ dat === "datakril" ? translateText("Iltimos, avval rasmga tushuring!") : "Iltimos, avval rasmga tushuring!" }}
+            {{ dat === "datakril" ? translateText("Iltimos, avval ikkala rasmga tushuring (profil va hujjat)!") : "Iltimos, avval ikkala rasmga tushuring (profil va hujjat)!" }}
           </p>
         </div>
       </div>
@@ -76,12 +78,13 @@ import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
 import { URL } from "../../auth/url.js";
 import axios from "axios";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import html2pdf from 'html2pdf.js';
 import translateText from "@/auth/Translate.js";
 
 const dat = inject("dat");
 const route = useRoute();
+const router = useRouter();
 let UniqueID = null;
 let ClientData = '';
 const id = route.params.id;
@@ -98,13 +101,13 @@ const isModalOpen = ref(false);
 const isWarningModalOpen = ref(false);
 const sum1 = ref("");
 const sum2 = ref("");
-const checkFile = ref(null); // Chek fayli uchun
+const checkFile = ref(null);
 const isLoading = ref(false);
-const loadingMessage = ref("Yuklanmoqda..."); 
+const loadingMessage = ref("Yuklanmoqda...");
 const Loading = inject('isLoading');
-const adminName = ref('')
-const adminSurname = ref('')
-// Default loading message
+const adminName = ref('');
+const adminSurname = ref('');
+const imageType = ref(null); // Tracks whether capturing 'profile' or 'document' image
 
 const getAdmin = async () => {
   Loading.value = true;
@@ -118,6 +121,7 @@ const getAdmin = async () => {
     Loading.value = false;
   }
 };
+
 const name = ref("");
 const surname = ref("");
 const dadname = ref("");
@@ -134,7 +138,8 @@ const formData = reactive({
   paidSum: 0,
   remainingSum: 0,
   file: null,
-  image: null,
+  image: null, // Profile image
+  documentImage: null, // Document image
   fingerImage: null,
 });
 
@@ -143,8 +148,6 @@ const finger = async () => {
   try {
     const response = await axios.get("http://localhost:3000");
     console.log("FINGER:", response.data);
-
-    // Convert base64 to Blob
     const base64Data = response.data.image.replace(/^data:image\/png;base64,/, "");
     const byteCharacters = atob(base64Data);
     const byteNumbers = new Array(byteCharacters.length);
@@ -153,10 +156,7 @@ const finger = async () => {
     }
     const byteArray = new Uint8Array(byteNumbers);
     const blob = new Blob([byteArray], { type: 'image/png' });
-
-    // Create File object from Blob
     formData.fingerImage = new File([blob], "fingerprint.png", { type: "image/png" });
-
   } catch (error) {
     console.error("fetchClient xatosi:", error);
     errorMessage.value = "❌ Fingerprint capture failed!";
@@ -171,11 +171,9 @@ const fetchDocx = async () => {
     const response = await axios.get(`${API_URL}/${id}`);
     const fileUrl = URL + response.data.filePath;
     const fileResponse = await axios.get(fileUrl, { responseType: "blob" });
-
     if (!fileResponse.headers["content-type"].includes("application/vnd.openxmlformats")) {
       throw new Error("❌ Server noto‘g‘ri formatda ma’lumot qaytardi!");
     }
-
     const blob = fileResponse.data;
     const reader = new FileReader();
     reader.onload = function (e) {
@@ -192,7 +190,6 @@ const fetchDocx = async () => {
           fields.value = matches.map((match) => ({
             key: match.replace(/{{|}}/g, ""),
           }));
-
           const uniqueKeys = [...new Set(fields.value.map((field) => field.key))].filter(
             (key) => key !== "sum1" && key !== "sum2" && key !== "qarz" && key !== "umumiy" && key !== "ID" && key !== "Today Date"
           );
@@ -218,7 +215,6 @@ const startWebcam = async () => {
     errorMessage.value = "❌ Video elementi topilmadi!";
     return;
   }
-
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ video: true });
     video.value.srcObject = stream;
@@ -237,7 +233,8 @@ const stopWebcam = () => {
   }
 };
 
-const openCameraModal = () => {
+const openCameraModal = (type) => {
+  imageType.value = type; // Set the type of image to capture ('profile' or 'document')
   isModalOpen.value = true;
   nextTick(() => startWebcam());
 };
@@ -245,6 +242,7 @@ const openCameraModal = () => {
 const closeCameraModal = () => {
   stopWebcam();
   isModalOpen.value = false;
+  imageType.value = null;
 };
 
 const captureImage = () => {
@@ -252,12 +250,14 @@ const captureImage = () => {
     errorMessage.value = "❌ Video yoki canvas topilmadi!";
     return;
   }
-
   const context = canvas.value.getContext("2d");
   context.drawImage(video.value, 0, 0, 320, 240);
-
   canvas.value.toBlob((blob) => {
-    formData.image = new File([blob], "captured-image.jpg", { type: "image/jpeg" });
+    if (imageType.value === 'profile') {
+      formData.image = new File([blob], "profile-image.jpg", { type: "image/jpeg" });
+    } else if (imageType.value === 'document') {
+      formData.documentImage = new File([blob], "document-image.jpg", { type: "image/jpeg" });
+    }
     closeCameraModal();
   }, "image/jpeg");
 };
@@ -282,12 +282,12 @@ const resetForm = () => {
     contractId: "",
     file: null,
     image: null,
+    documentImage: null,
+    fingerImage: null,
   });
-
   fieldValues.value = new Array(uniqueFields.value.length).fill("");
   dataaa.summa1 = null;
   dataaa.summa2 = null;
-  // generateUniqueCode();
 };
 
 const formatNumberWithDots = (number) => {
@@ -302,13 +302,14 @@ const generateContractId = () => {
   const minutes = String(now.getMinutes()).padStart(2, "0");
   const seconds = String(now.getSeconds()).padStart(2, "0");
   const milliseconds = String(now.getMilliseconds()).padStart(3, "0");
-  return `${day}${hours}${minutes}${seconds}${milliseconds}`.slice(-8); // Generate an 8-character unique ID
+  return `${day}${hours}${minutes}${seconds}${milliseconds}`.slice(-8);
 };
 
 const saveAndGenerate = async () => {
   try {
-    if (!formData.image) {
+    if (!formData.image || !formData.documentImage) {
       isWarningModalOpen.value = true;
+      errorMessage.value = "❌ Iltimos, ikkala rasmni ham oling (profil va hujjat)!";
       return;
     }
 
@@ -349,8 +350,6 @@ const saveAndGenerate = async () => {
 
     formData.contractId = generateContractId();
     UniqueID = formData.contractId;
-    
-    // erate and assign unique contractId
     data["ID"] = formData.contractId;
     data["documentId"] = formData.contractId;
 
@@ -361,7 +360,7 @@ const saveAndGenerate = async () => {
     const boshlagichSumma = Number(dataaa.price) || 0;
 
     const umumiy = sum1Num + sum2Num + konsaltingNarxi + tushuntirishNarxi;
-    const qarza = Math.floor(umumiy - boshlagichSumma); 
+    const qarza = Math.floor(umumiy - boshlagichSumma);
     formData.totalSum = umumiy;
     formData.paidSum = boshlagichSumma;
     formData.remainingSum = qarza <= 0 ? 0 : qarza;
@@ -376,6 +375,12 @@ const saveAndGenerate = async () => {
     data["Buyurtmachini boshlang’ich to’lovi (avans)"] = formatNumberWithDots(boshlagichSumma);
     data["adminName"] = adminName.value;
     data["adminSurname"] = adminSurname.value;
+    data["image1"] = "{{image1}}";
+    data["image2"] = "{{image2}}";
+    data["qrcode1"] = "{{qrcode1}}";
+    data["qrcode2"] = "{{qrcode2}}";
+    data["fingerImage1"] = "{{fingerImage1}}";
+    data["fingerImage2"] = "{{fingerImage2}}";
 
     docxTemplate.value.render(data);
     const output = docxTemplate.value.getZip().generate({ type: "blob" });
@@ -413,24 +418,21 @@ const closeWarningModal = () => {
   isWarningModalOpen.value = false;
 };
 
-
-
 const generateCheckFile = async () => {
-    const img1 = new Image();
-    const img2 = new Image();
-    const img3 = new Image();
-    img1.src = "/asd.jpg";
-    img2.src = "/https___arizasud.uz_.png";
-    img3.src = "/telegram.png";
+  const img1 = new Image();
+  const img2 = new Image();
+  const img3 = new Image();
+  img1.src = "/asd.jpg";
+  img2.src = "/https___arizasud.uz_.png";
+  img3.src = "/telegram.png";
 
-    const today = new Date();
-    const day = String(today.getDate()).padStart(2, "0");
-    const month = String(today.getMonth() + 1).padStart(2, "0");
-    const year = today.getFullYear();
-    const formattedDate = `${day}.${month}.${year}`;
+  const today = new Date();
+  const day = String(today.getDate()).padStart(2, "0");
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const year = today.getFullYear();
+  const formattedDate = `${day}.${month}.${year}`;
 
-    // HTML kontentni yaratish
-    const receiptHTML = `
+  const receiptHTML = `
     <div style="font-size: 12px; max-width:23%; display:flex; flex-direction: column; justify-content: center; align-content:center; color: black;">
         <h1 style="text-align: center; font-size:15px; font-weight: bold; color: black; margin-top:18px;">To'lov cheki</h1>
         <table style="width: 100%; border-collapse: collapse; color: black; table-layout: fixed;">
@@ -471,29 +473,25 @@ const generateCheckFile = async () => {
             <img src="/https___arizasud.uz_.png" alt="" style="max-width: 90%; height: auto;">
         </div>
     </div>
-    `;
+  `;
 
-    // DOM elementiga HTMLni qo'shish
-    const element = document.createElement('div');
-    element.innerHTML = receiptHTML;
+  const element = document.createElement('div');
+  element.innerHTML = receiptHTML;
 
-    // PDFni generatsiya qilish uchun sozlamalar
-    const options = {
-        margin: [0,0,0,0], // Margin (mm)
-        filename: `receipt-${formData.contractId || 'unknown'}.pdf`, // Fayl nomi
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 }, // Sifatni oshirish
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
+  const options = {
+    margin: [0, 0, 0, 0],
+    filename: `receipt-${formData.contractId || 'unknown'}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
 
-    // PDFni generatsiya qilish va Blob sifatida saqlash
-    const pdfBlob = await html2pdf()
-        .from(element)
-        .set(options)
-        .outputPdf('blob');
+  const pdfBlob = await html2pdf()
+    .from(element)
+    .set(options)
+    .outputPdf('blob');
 
-    // Blobni File obyektiga aylantirish
-    checkFile.value = new File([pdfBlob], `receipt-${formData.contractId || 'unknown'}.pdf`, { type: "application/pdf" });
+  checkFile.value = new File([pdfBlob], `receipt-${formData.contractId || 'unknown'}.pdf`, { type: "application/pdf" });
 };
 
 const printReceipt = () => {
@@ -586,8 +584,8 @@ const submitForm = async () => {
     errorMessage.value = "❌ Fayl generatsiya qilinmagan! Avval saqlash va generatsiya qiling!";
     return;
   }
-  if (!formData.image) {
-    errorMessage.value = "❌ Surat olish shart! Avval suratga oling!";
+  if (!formData.image || !formData.documentImage) {
+    errorMessage.value = "❌ Ikkala surat olish shart! Avval profil va hujjat suratlarini oling!";
     return;
   }
   if (!checkFile.value) {
@@ -611,20 +609,20 @@ const submitForm = async () => {
   formDataToSend.append("paidSum", formData.paidSum || 0);
   formDataToSend.append("remainingSum", formData.remainingSum || 0);
   formDataToSend.append("file", formData.file);
-  formDataToSend.append("image", formData.image);
+  formDataToSend.append("image1", formData.image); // Profile image
+  formDataToSend.append("image2", formData.documentImage); // Document image
   formDataToSend.append("check", checkFile.value);
-
-  // Add fingerprint image if it exists
-  if (formData.fingerImage) {
-    formDataToSend.append("fingerImage", formData.fingerImage);
-  }
+  formDataToSend.append("fingerImage1", formData.image);
+  formDataToSend.append("fingerImage2", formData.documentImage);
   try {
     const config = { headers: { "Content-Type": "multipart/form-data" } };
     const response = await axios.post(API_URL1, formDataToSend, config);
+    const clientId = response.data.client.id;
     errorMessage.value = "✅ Muvaffaqiyatli saqlandi!";
     resetForm();
     printReceipt();
-    await GetClient();
+    await router.push(`/Check/${clientId}`);
+
   } catch (error) {
     const errorDetails = error.response?.data || error.message;
     console.error("❌ Xatolik detallari:", errorDetails);
@@ -637,26 +635,26 @@ const submitForm = async () => {
 const formatNumberFields = (key, index) => {
   const lowerKey = key.toLowerCase();
   if (['konsalting xizmat ko’rsatish narxi', 'hujjatga tushuntirish berish narxi', 'buyurtmachini boshlang’ich to’lovi (avans)'].some(k => lowerKey.includes(k))) {
-    const rawValue = String(fieldValues.value[index] || "").replace(/[^\d]/g, ""); // Remove non-numeric characters
-    fieldValues.value[index] = rawValue ? formatNumberWithDots(rawValue) : ""; // Format with dots
+    const rawValue = String(fieldValues.value[index] || "").replace(/[^\d]/g, "");
+    fieldValues.value[index] = rawValue ? formatNumberWithDots(rawValue) : "";
   }
 };
 
 const getInputType = (key) => {
   const lowerKey = key.toLowerCase();
-  if (['Konsalting xizmat ko’rsatish narxi', 'Hujjatga tushuntirish berish narxi', 'Buyurtmachini boshlang’ich to’lovi (avans)'].some(k => lowerKey.includes(k))) {
-    return 'text'; // Use text type for formatted numbers
+  if (['konsalting xizmat ko’rsatish narxi', 'hujjatga tushuntirish berish narxi', 'buyurtmachini boshlang’ich to’lovi (avans)'].some(k => lowerKey.includes(k))) {
+    return 'text';
   }
   if (lowerKey.includes('tug’ilgan sanasi')) {
     return 'date';
   }
-  return 'text'; // Default to text for all other fields
+  return 'text';
 };
 
 const getMaxLength = (key) => {
   if (key.trim() === "Fuqaroning JSHSHIR raqami") return 14;
   if (key.trim() === "Fuqaroning telefon raqami ") return 19;
-  if (key.trim() === "Fuqaroning ID karta raqami") return 9; // Set max length to 9
+  if (key.trim() === "Fuqaroning ID karta raqami") return 9;
   return undefined;
 };
 
@@ -668,9 +666,9 @@ const restrictToNumbers = (key, index) => {
     }
   }
   if (key === "Fuqaroning ID karta raqami") {
-    fieldValues.value[index] = fieldValues.value[index].replace(/[^a-zA-Z0-9]/g, ""); // Allow only alphanumeric characters
+    fieldValues.value[index] = fieldValues.value[index].replace(/[^a-zA-Z0-9]/g, "");
     if (fieldValues.value[index].length > 9) {
-      fieldValues.value[index] = fieldValues.value[index].slice(0, 9); // Limit to 9 characters
+      fieldValues.value[index] = fieldValues.value[index].slice(0, 9);
     }
   }
 };
@@ -707,7 +705,7 @@ watch(
 onMounted(() => {
   fetchDocx();
   fetchRecords();
-  getAdmin()
+  getAdmin();
 });
 
 onUnmounted(() => {
@@ -770,8 +768,6 @@ onUnmounted(() => {
 .hidden {
   display: none;
 }
-
-
 
 .spinner {
   width: 50px;

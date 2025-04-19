@@ -35,7 +35,7 @@
 
 <script setup>
 import axios from "axios";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, inject } from "vue";
 import { useRoute } from "vue-router";
 import * as pdfjsLib from "pdfjs-dist";
 
@@ -43,7 +43,7 @@ import * as pdfjsLib from "pdfjs-dist";
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js"; // Updated to match API version
 
-  const isLoading = inject('isLoading');
+const isLoading = inject('isLoading');
 const route = useRoute();
 const fileId = route.params.id;
 const fileUrl = ref("");

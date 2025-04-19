@@ -35,7 +35,7 @@
 
 <script setup>
 import axios from "axios";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, inject } from "vue";
 import { useRoute } from "vue-router";
 import * as pdfjsLib from "pdfjs-dist";
 

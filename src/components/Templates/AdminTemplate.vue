@@ -67,7 +67,7 @@
             class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
             {{ $t('hodim_vazifalari') }}
           </button>
-          <button v-if="data.ticket" @click="router.push('/ticketAdmin')"
+          <button v-if="data?.ticket" @click="router.push('/ticketAdmin')"
             class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
             {{ $t('taklif_va_shikoyat') }}
           </button>
@@ -176,7 +176,7 @@
             class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
             {{ $t('hodim_vazifalari') }}
           </button>
-          <button v-if="data.ticket" @click="router.push('/ticketAdmin')"
+          <button v-if="data?.ticket" @click="router.push('/ticketAdmin')"
             class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
             {{ $t('taklif_va_shikoyat') }}
           </button>

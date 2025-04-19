@@ -385,7 +385,11 @@ const printReceipt = () => {
             <td colspan="3" style="width: 100px; text-align: center; color: black; text-transform: uppercase; border: 1px solid black;">${numberToUzbekWords(receiptData.value.paymentAmount)} so'm</td>
         </tr>
         <tr>
-            <td colspan="4" style="width: 100px; text-align: center; color: black; text-transform: uppercase; border: 1px solid black;">Toʻlov pattasi kassa muhri bilan tasdiqlangandan keyingina haqiqiy hisoblanadi. Muhrsiz pattalar yaroqsizdir.</td>
+            <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Texnik yordam: +998 62 226 99 00</td>
+            <td colspan="3" style="width: 100px; text-align: center; color: black; text-transform: uppercase; border: 1px solid black;">ushbu to'lov arizasud.uz tizimi orqali amalga oshirilgan</td>
+        </tr>
+        <tr>
+            <td colspan="4" style="width: 100px; text-align: center; color: black; text-transform: uppercase; border: 1px solid black;">Toʻlov pattasi faqatgina kassa muhri bilan tasdiqlangandan so‘ng haqiqiy hisoblanadi. Agar pattada muhr bo‘lmasa, u rasmiy kuchga ega emas va yaroqsiz deb topiladi. Shu sababli, har qanday toʻlov hujjatining muhrlanganligiga e’tibor berish lozim.</td>
         </tr>
     </table>
     `;
@@ -537,6 +541,38 @@ const filteredFiles = computed(() => {
         return nameMatch || contractIdMatch;
     });
 });
+async function getCityName() {
+  try {
+    // Geolocationdan foydalanuvchi koordinatalarini olish
+    const position = await new Promise((resolve, reject) => {
+      if (!navigator.geolocation) {
+        reject("Geolocation qo'llab-quvvatlanmaydi.");
+      }
+      navigator.geolocation.getCurrentPosition(resolve, (error) =>
+        reject("Joylashuv aniqlanmadi: " + error.message)
+      );
+    });
+
+    const { latitude, longitude } = position.coords;
+
+    // OpenStreetMap API-ga so'rov jo'natish
+    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw "Geocoding xizmati bilan muammo yuz berdi.";
+    }
+    const data = await response.json();
+
+    // Shaxar nomini aniqlash va console-ga chiqarish
+    const city = data.address.city || data.address.town || data.address.village || "Noma'lum shaxar";
+    console.log("Sizning turgan shaxringiz:", city);
+  } catch (error) {
+    console.error("Xatolik:", error);
+  }
+}
+
+// Funksiyani chaqirish
+getCityName();
 
 onMounted(() => {
     fetchClientFiles();
@@ -546,7 +582,7 @@ onMounted(() => {
 <style>
 @media print {
     @page {
-        size: 58mm auto;
+        size: 80mm auto;
         margin: 0;
     }
 
@@ -554,7 +590,7 @@ onMounted(() => {
     body {
         margin: 0 !important;
         padding: 0 !important;
-        width: 85% !important;
+        width: 100% !important;
         height: 100% !important;
         overflow: hidden !important;
         display: flex;
