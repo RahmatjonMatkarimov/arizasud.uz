@@ -1,102 +1,117 @@
 <template>
   <div class="bg-blue-200 -mt-[20px] pt-[20px]">
-  <div v-if="isLoading" class="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-80 z-50">
-    <span class="loader"></span>
-    <p class="loading-message">{{ loadingMessage }}</p>
-  </div>
-  <div class="container mt-5 mx-auto p-4 bg-blue-300 rounded shadow">
-    <div v-if="fields.length && !isLoading">
-      <div v-for="(field, index) in uniqueFields" :key="index" class="mb-4">
-        <div v-if="field.key === 'Mahalla nomi ko’cha nomi uy raqamini yozing'">
-          <div v-if="fieldValues[buyurtmachiIndex] === 'Jismoniy'">
-            <!-- Shartnoma uchun yangi dropdown -->
-            <label for="" class="text-black">
-              {{ dat === 'datakril' ? translateText('Viloyatni tanlang') : 'Viloyatni tanlang' }}
-            </label>
-            <select v-model="contractRegion.regionId"
-              class="p-3 mb-4 rounded-lg focus:outline-none block w-full text-black border-2 border-blue-500 focus:ring-2 focus:ring-blue-500"
-              @change="fetchDistricts('contract')">
-              <option class="text-black" value="" disabled>
+    <div v-if="isLoading"
+      class="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-80 z-50">
+      <span class="loader"></span>
+      <p class="loading-message">{{ loadingMessage }}</p>
+    </div>
+    <div class="container mt-5 mx-auto p-4 bg-blue-300 rounded shadow">
+      <div v-if="fields.length && !isLoading">
+        <div v-for="(field, index) in uniqueFields" :key="index" class="mb-4">
+          <div v-if="field.key === 'Mahalla nomi ko’cha nomi uy raqamini yozing'">
+            <div v-if="fieldValues[buyurtmachiIndex] === 'Jismoniy'">
+              <!-- Shartnoma uchun yangi dropdown -->
+              <label for="" class="text-black">
                 {{ dat === 'datakril' ? translateText('Viloyatni tanlang') : 'Viloyatni tanlang' }}
-              </option>
-              <option class="text-black" v-for="region in regions" :key="region.id" :value="region.id">
-                {{ dat === 'datakril' ? region.name_oz : region.name_uz }}
-              </option>
-            </select>
+              </label>
+              <select v-model="contractRegion.regionId"
+                class="p-3 mb-4 rounded-lg focus:outline-none block w-full text-black border-2 border-blue-500 focus:ring-2 focus:ring-blue-500"
+                @change="fetchDistricts('contract')">
+                <option class="text-black" value="" disabled>
+                  {{ dat === 'datakril' ? translateText('Viloyatni tanlang') : 'Viloyatni tanlang' }}
+                </option>
+                <option class="text-black" v-for="region in regions" :key="region.id" :value="region.id">
+                  {{ dat === 'datakril' ? region.name_oz : region.name_uz }}
+                </option>
+              </select>
 
-            <label for="" class="text-black">
-              {{ dat === 'datakril' ? translateText('Tuman yoki shaxarni tanlang') :
-              'Tuman yoki shaxarni tanlang' }}
-            </label>
-            <select v-model="contractRegion.districtId"
-              class="p-3 mb-4 rounded-lg block w-full focus:outline-none text-black border-2 border-blue-500 focus:ring-2 focus:ring-blue-500"
-              :disabled="!contractRegion.regionId">
-              <option class="text-black" value="" disabled>
+              <label for="" class="text-black">
                 {{ dat === 'datakril' ? translateText('Tuman yoki shaxarni tanlang') :
-                'Tuman yoki shaxarni tanlang' }}
-              </option>
-              <option class="text-black" v-for="district in contractDistricts" :key="district.id" :value="district.id">
-                {{ dat === 'datakril' ? district.name_oz : district.name_uz }}
-              </option>
-            </select>
-            <label class="block font-medium mb-1 text-black">
-              {{ dat === "datakril" ? translateText(field.key) : field.key }}
-            </label>
-            <input v-model="fieldValues[index]" :type="getInputType(field.key)" :maxlength="getMaxLength(field.key)"
-              :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required
-              class="w-full p-2 border-2 border-blue-500 rounded focus:ring text-black focus:ring-blue-200">
+                  'Tuman yoki shaxarni tanlang' }}
+              </label>
+              <select v-model="contractRegion.districtId"
+                class="p-3 mb-4 rounded-lg block w-full focus:outline-none text-black border-2 border-blue-500 focus:ring-2 focus:ring-blue-500"
+                :disabled="!contractRegion.regionId">
+                <option class="text-black" value="" disabled>
+                  {{ dat === 'datakril' ? translateText('Tuman yoki shaxarni tanlang') :
+                    'Tuman yoki shaxarni tanlang' }}
+                </option>
+                <option class="text-black" v-for="district in contractDistricts" :key="district.id"
+                  :value="district.id">
+                  {{ dat === 'datakril' ? district.name_oz : district.name_uz }}
+                </option>
+              </select>
+              <label class="block font-medium mb-1 text-black">
+                {{ dat === "datakril" ? translateText(field.key) : field.key }}
+              </label>
+              <input v-model="fieldValues[index]" :type="getInputType(field.key)" :maxlength="getMaxLength(field.key)"
+                :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required
+                class="w-full p-2 border-2 border-blue-500 rounded focus:ring text-black focus:ring-blue-200">
+            </div>
           </div>
-        </div>
 
-        <div v-if="field.key === 'Mahalla nomi ko’cha nomi uy raqamini yozing'">
-          <div v-if="fieldValues[buyurtmachiIndex] === 'Yuridik'">
+          <div v-if="field.key === 'Mahalla nomi ko’cha nomi uy raqamini yozing'">
+            <div v-if="fieldValues[buyurtmachiIndex] === 'Yuridik'">
 
-            <label for="" class="text-black">
-              {{ dat === 'datakril' ? translateText('Viloyatni tanlang') : 'Viloyatni tanlang' }}
-            </label>
-            <select v-model="contractRegion.regionId"
-              class="p-3 mb-4 rounded-lg focus:outline-none block w-full text-black border-2 border-blue-500 focus:ring-2 focus:ring-blue-500"
-              @change="fetchDistricts('contract')">
-              <option class="text-black" value="" disabled>
+              <label for="" class="text-black">
                 {{ dat === 'datakril' ? translateText('Viloyatni tanlang') : 'Viloyatni tanlang' }}
-              </option>
-              <option class="text-black" v-for="region in regions" :key="region.id" :value="region.id">
-                {{ dat === 'datakril' ? region.name_oz : region.name_uz }}
-              </option>
-            </select>
-            <label for="" class="text-black">
-              {{ dat === 'datakril' ? translateText('Tuman yoki shaxarni tanlang') : 'Tuman yoki shaxarni tanlang' }}
-            </label>
-            <select v-model="contractRegion.districtId"
-              class="p-3 mb-4 rounded-lg block w-full focus:outline-none text-black border-2 border-blue-500 focus:ring-2 focus:ring-blue-500"
-              :disabled="!contractRegion.regionId">
-              <option class="text-black" value="" disabled>
-                {{ dat === 'datakril' ? translateText('Tuman yoki shaxarni tanlang') :
-                'Tuman yoki shaxarni tanlang' }}
-              </option>
-              <option class="text-black" v-for="district in contractDistricts" :key="district.id" :value="district.id">
-                {{ dat === 'datakril' ? district.name_oz : district.name_uz }}
-              </option>
-            </select>
-            <label for="" class="text-black">
-              {{ dat === 'datakril' ? translateText('Tashkilot manzilini kiriting (Mahalla nomi ko’cha nomi uy raqamini yozing)') : 'Tashkilot manzilini kiriting (Mahalla nomi ko’cha nomi uy raqamini yozing)' }}
-            </label>
-            <input v-model="fieldValues[index]" :type="getInputType(field.key)" :maxlength="getMaxLength(field.key)"
-              :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required
-              class="w-full p-2  rounded border-2 border-blue-500 focus:ring text-black focus:ring-blue-200">
+              </label>
+              <select v-model="contractRegion.regionId"
+                class="p-3 mb-4 rounded-lg focus:outline-none block w-full text-black border-2 border-blue-500 focus:ring-2 focus:ring-blue-500"
+                @change="fetchDistricts('contract')">
+                <option class="text-black" value="" disabled>
+                  {{ dat === 'datakril' ? translateText('Viloyatni tanlang') : 'Viloyatni tanlang' }}
+                </option>
+                <option class="text-black" v-for="region in regions" :key="region.id" :value="region.id">
+                  {{ dat === 'datakril' ? region.name_oz : region.name_uz }}
+                </option>
+              </select>
+              <label for="" class="text-black">
+                {{ dat === 'datakril' ? translateText('Tuman yoki shaxarni tanlang') : 'Tuman yoki shaxarni tanlang' }}
+              </label>
+              <select v-model="contractRegion.districtId"
+                class="p-3 mb-4 rounded-lg block w-full focus:outline-none text-black border-2 border-blue-500 focus:ring-2 focus:ring-blue-500"
+                :disabled="!contractRegion.regionId">
+                <option class="text-black" value="" disabled>
+                  {{ dat === 'datakril' ? translateText('Tuman yoki shaxarni tanlang') :
+                    'Tuman yoki shaxarni tanlang' }}
+                </option>
+                <option class="text-black" v-for="district in contractDistricts" :key="district.id"
+                  :value="district.id">
+                  {{ dat === 'datakril' ? district.name_oz : district.name_uz }}
+                </option>
+              </select>
+              <label for="" class="text-black">
+                {{ dat === 'datakril' ?
+                  translateText('Tashkilot manzilini kiriting (Mahalla nomi ko’cha nomi uy raqamini yozing)') :
+                  'Tashkilot manzilini kiriting(Mahalla nomi ko’cha nomi uy raqamini yozing)' }}
+              </label>
+              <input v-model="fieldValues[index]" :type="getInputType(field.key)" :maxlength="getMaxLength(field.key)"
+                :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required
+                class="w-full p-2  rounded border-2 border-blue-500 focus:ring text-black focus:ring-blue-200">
+            </div>
           </div>
-        </div>
 
-        <!-- Conditionally render fields based on Buyurtmachi value -->
-        <template v-if="shouldShowField(field.key)">
-          <label
-            v-if="field.key !== 'adminName' && field.key !== 'adminSurname' && field.key !== 'documentId' && field.key !== 'login' && field.key !== 'parol' && field.key !== 'fingerImage1' && field.key !== 'fingerImage2' && field.key !== 'image1' && field.key !== 'image2' && field.key !== 'qrcode1' && field.key !== 'qrcode3' && field.key !== 'qrcode2' && field.key !== 'ofis' && field.key !== 'STIR' && field.key !== 'Korxona rahbarini F.I.SH.:' && field.key !== 'Mahalla nomi ko’cha nomi uy raqamini yozing' && field.key !== 'Buyurtmachi' && field.key !== 'yuristName' && field.key !== 'yuristSurname' && field.key !== 'Tashkilot nomini kirting'"
-            class="block font-medium mb-1 text-black">
-            <!-- Modified label rendering logic -->
-            {{
-              dat === "datakril"
-                ? translateText(
-                  fieldValues[buyurtmachiIndex] === 'Yuridik' &&
+          <!-- Conditionally render fields based on Buyurtmachi value -->
+          <template v-if="shouldShowField(field.key)">
+            <label
+              v-if="field.key !== 'adminName' && field.key !== 'adminSurname' && field.key !== 'documentId' && field.key !== 'login' && field.key !== 'parol' && field.key !== 'fingerImage1' && field.key !== 'fingerImage2' && field.key !== 'image1' && field.key !== 'image2' && field.key !== 'qrcode1' && field.key !== 'qrcode3' && field.key !== 'qrcode2' && field.key !== 'ofis' && field.key !== 'STIR' && field.key !== 'Korxona rahbarini F.I.SH.:' && field.key !== 'Mahalla nomi ko’cha nomi uy raqamini yozing' && field.key !== 'Buyurtmachi' && field.key !== 'yuristName' && field.key !== 'yuristSurname' && field.key !== 'Tashkilot nomini kirting'"
+              class="block font-medium mb-1 text-black">
+              <!-- Modified label rendering logic -->
+              {{
+                dat === "datakril"
+                  ? translateText(
+                    fieldValues[buyurtmachiIndex] === 'Yuridik' &&
+                      [
+                        'Fuqaroning ID karta raqami',
+                        'Fuqaroning JSHSHIR raqami',
+                        'Fuqaroning qo’shimcha telefon raqami',
+                        'Fuqaroning telefon raqami '
+                      ].includes(field.key)
+                      ? field.key.replace('Fuqaroning', 'Yuridik shaxsning')
+                      : field.key
+                  )
+                  : fieldValues[buyurtmachiIndex] === 'Yuridik' &&
                     [
                       'Fuqaroning ID karta raqami',
                       'Fuqaroning JSHSHIR raqami',
@@ -105,304 +120,303 @@
                     ].includes(field.key)
                     ? field.key.replace('Fuqaroning', 'Yuridik shaxsning')
                     : field.key
-                )
-                : fieldValues[buyurtmachiIndex] === 'Yuridik' &&
-                  [
-                    'Fuqaroning ID karta raqami',
-                    'Fuqaroning JSHSHIR raqami',
-                    'Fuqaroning qo’shimcha telefon raqami',
-                    'Fuqaroning telefon raqami '
-                  ].includes(field.key)
-                  ? field.key.replace('Fuqaroning', 'Yuridik shaxsning')
-                  : field.key
-            }}
+              }}
+            </label>
+
+            <template v-if="field.key === 'Buyurtmachi'">
+              <div class="flex gap-2">
+                <div class="buyurtmachi-option flex border-2 border-blue-500 flex-col justify-center items-center gap-3"
+                  :class="{ 'buyurtmachi-selected': fieldValues[index] === 'Jismoniy' }"
+                  @click="selectBuyurtmachi(index, 'Jismoniy')">
+                  <img src="/userr.png" class="w-[50px]" alt="">
+                  {{ dat === "datakril" ? translateText('Jismoniy') : 'Jismoniy' }}
+                </div>
+                <div class="buyurtmachi-option flex border-2 border-blue-500 flex-col justify-center items-center gap-3"
+                  :class="{ 'buyurtmachi-selected': fieldValues[index] === 'Yuridik' }"
+                  @click="selectBuyurtmachi(index, 'Yuridik')">
+                  <img src="/bag.png" class="w-[50px]" alt="">
+                  {{ dat === "datakril" ? translateText('Yuridik') : 'Yuridik' }}
+                </div>
+              </div>
+            </template>
+
+            <template v-else-if="field.key === 'STIR'">
+              <div v-if="fieldValues[buyurtmachiIndex] === 'Yuridik'">
+                <label class="block font-medium mb-1 text-black">
+                  {{ dat === "datakril" ? translateText(field.key) : field.key }}
+                </label>
+                <input v-model="fieldValues[index]" type="text" :maxlength="getMaxLength(field.key)"
+                  :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required
+                  class="w-full p-2  border-2 border-blue-500 rounded focus:ring text-black focus:ring-blue-200"
+                  @input="restrictToNumbers(field.key, index)" />
+              </div>
+            </template>
+            <template v-else-if="field.key === 'Korxona rahbarini F.I.SH.:'">
+              <div v-if="fieldValues[buyurtmachiIndex] === 'Yuridik'">
+                <label class="block font-medium mb-1 text-black">
+                  {{ dat === "datakril" ? translateText(field.key) : field.key }}
+                </label>
+                <input v-model="fieldValues[index]" type="text" :maxlength="getMaxLength(field.key)"
+                  :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required
+                  class="w-full p-2 border-2 border-blue-500 rounded focus:ring text-black focus:ring-blue-200"
+                  @input="validateFullName(field.key, index)" />
+                <p v-if="errors[index]" class="text-red-600 text-sm mticators 1">{{ errors[index] }}</p>
+              </div>
+            </template>
+            <template v-else-if="field.key === 'Tashkilot nomini'">
+              <div v-if="fieldValues[buyurtmachiIndex] === 'Yuridik'">
+                <label class="block font-medium mb-1 text-black">
+                  {{ dat === "datakril" ? translateText(field.key) : field.key }}
+                </label>
+                <input v-model="fieldValues[index]" type="text" :maxlength="getMaxLength(field.key)"
+                  :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required
+                  class="w-full p-2 border-2 border-blue-500 rounded focus:ring text-black focus:ring-blue-200"
+                  @input="validateFullName(field.key, index)" />
+                <p v-if="errors[index]" class="text-red-600 text-sm mticators 1">{{ errors[index] }}</p>
+              </div>
+            </template>
+            <template
+              v-else-if="field.key !== 'adminName' && field.key !== 'adminSurname' && field.key !== 'documentId' && field.key !== 'fingerImage1' && field.key !== 'fingerImage2' && field.key !== 'image1' && field.key !== 'qrcode3' && field.key !== 'image2' && field.key !== 'qrcode1' && field.key !== 'qrcode2' && field.key !== 'Korxona rahbarini F.I.SH.:' && field.key !== 'yuristName' && field.key !== 'yuristSurname' && field.key !== 'Mahalla nomi ko’cha nomi uy raqamini yozing' && field.key !== 'Buyurtmachi' && field.key !== 'Tashkilot nomini kirting' && field.key !== 'login' && field.key !== 'parol' && field.key !== 'ofis'">
+              <input v-model="fieldValues[index]" :type="getInputType(field.key)" :maxlength="getMaxLength(field.key)"
+                :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required
+                class="w-full p-2 border-2 border-blue-500 rounded focus:ring text-black focus:ring-blue-200"
+                @input="['Fuqaroning telefon raqami ', 'Fuqaroning qo’shimcha telefon raqami'].includes(field.key) ? formatPhoneNumber(field.key, index) : restrictToNumbers(field.key, index); formatNumberFields(field.key, index); preventCyrillic(field.key, index)"
+                @focus="addPhonePrefix(field.key, index)" />
+              <p v-if="formSubmitted && !fieldValues[index] && shouldShowField(field.key) && field.key !== 'Fuqaroning qo’shimcha telefon raqami'"
+                class="error-message">
+                {{ dat === 'datakril' ? translateText('Bu maydon to\'ldirilishi shart!') :
+                  "Bu maydon to'ldirilishi shart!" }}
+
+              </p>
+            </template>
+          </template>
+        </div>
+        <div class="mb-4 w-full relative">
+          <!-- Label -->
+          <label class="block w-full font-medium mb-1 text-black">
+            {{ dat === 'datakril' ? translateText('Ushbu ishni o\'z zimmasiga oladigan yuristni tanlang') :
+              'Ushbu ishni o\'z zimmasiga oladigan yuristni tanlang' }}
           </label>
 
-          <template v-if="field.key === 'Buyurtmachi'">
-            <div class="flex gap-2">
-               <div class="buyurtmachi-option flex border-2 border-blue-500 flex-col justify-center items-center gap-3"
-                :class="{ 'buyurtmachi-selected': fieldValues[index] === 'Jismoniy' }"
-                @click="selectBuyurtmachi(index, 'Jismoniy')">
-                <img src="/userr.png" class="w-[50px]" alt="">
-                {{ dat === "datakril" ? translateText('Jismoniy') : 'Jismoniy' }}
+          <!-- Selected Yurist Display -->
+          <div class="p-3 border-2 border-blue-500 bg-white rounded-lg cursor-pointer flex justify-between items-center"
+            @click="toggleDropdown">
+            <span class="text-black">{{ dat === 'datakril' ? translateText(selectedYuristName) : selectedYuristName
+            }}</span>
+          </div>
+
+          <!-- Dropdown Options -->
+          <div v-if="isDropdownOpen"
+            class="absolute p-2 top-full left-0 mt-2 w-full flex flex-col gap-2 bg-gray-200 border border-gray-300 rounded-lg shadow-lg z-10">
+            <div v-for="yurist in yurists" :key="yurist.id"
+              class="p-3 flex gap-4 border-2 border-blue-500 h-[70px] rounded-md items-center cursor-pointer hover:bg-gray-300 text-black relative"
+              @click="selectYurist(yurist)" @mouseenter="hoveredYurist = yurist; showHoverModal = true"
+              @mouseleave="showHoverModal = false">
+              <img class="w-[50px]" :src="URL + '/upload/' + yurist.img" alt="img">
+              <h1 class="text-black text-[15px] font-bold">
+                {{ dat === 'datakril' ? translateText(yurist.name) : yurist.name }}
+              </h1>
+              <!-- Hover Modal -->
+              <div v-if="showHoverModal && hoveredYurist?.id === yurist.id"
+                class="absolute bottom-0 left-full max-h-[500px] overflow-scroll -ml-[40%] p-3 bg-white border border-gray-300 rounded-lg shadow-lg z-20 min-w-[300px]">
+                <p class="text-black">Bajaradigan ishlari</p>
+                <div v-if="filteredTasks.length > 0">
+                  <div class="text-black bg-gray-300 flex justify-between p-2 rounded-lg my-1"
+                    v-for="item in filteredTasks" :key="item.id">
+                    <p class="text-black">
+                      {{ dat === 'datakril' ? translateText(item.name) : item.name }}</p>
+                    <h1 class="text-black">holati: <span class="text-red-500">Kutish</span></h1>
+                  </div>
+                </div>
+                <div v-else class="text-black text-center p-2">
+                  {{ dat === 'datakril' ? translateText('Bajaradigan ishlari yo\'q') : "Bajaradigan ishlari yo'q" }}
+                </div>
               </div>
-              <div class="buyurtmachi-option flex border-2 border-blue-500 flex-col justify-center items-center gap-3"
-                :class="{ 'buyurtmachi-selected': fieldValues[index] === 'Yuridik' }"
-                @click="selectBuyurtmachi(index, 'Yuridik')">
-                <img src="/bag.png" class="w-[50px]" alt="">
-                {{ dat === "datakril" ? translateText('Yuridik') : 'Yuridik' }}
-              </div>
             </div>
-          </template>
-
-          <template v-else-if="field.key === 'STIR'">
-            <div v-if="fieldValues[buyurtmachiIndex] === 'Yuridik'">
-              <label class="block font-medium mb-1 text-black">
-                {{ dat === "datakril" ? translateText(field.key) : field.key }}
-              </label>
-              <input v-model="fieldValues[index]" type="text" :maxlength="getMaxLength(field.key)"
-                :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required
-                class="w-full p-2  border-2 border-blue-500 rounded focus:ring text-black focus:ring-blue-200"
-                @input="restrictToNumbers(field.key, index)" />
-            </div>
-          </template>
-          <template v-else-if="field.key === 'Korxona rahbarini F.I.SH.:'">
-            <div v-if="fieldValues[buyurtmachiIndex] === 'Yuridik'">
-              <label class="block font-medium mb-1 text-black">
-                {{ dat === "datakril" ? translateText(field.key) : field.key }}
-              </label>
-              <input v-model="fieldValues[index]" type="text" :maxlength="getMaxLength(field.key)"
-                :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required
-                class="w-full p-2 border-2 border-blue-500 rounded focus:ring text-black focus:ring-blue-200"
-                @input="validateFullName(field.key, index)" />
-              <p v-if="errors[index]" class="text-red-600 text-sm mticators 1">{{ errors[index] }}</p>
-            </div>
-          </template>
-          <template v-else-if="field.key === 'Tashkilot nomini'">
-            <div v-if="fieldValues[buyurtmachiIndex] === 'Yuridik'">
-              <label class="block font-medium mb-1 text-black">
-                {{ dat === "datakril" ? translateText(field.key) : field.key }}
-              </label>
-              <input v-model="fieldValues[index]" type="text" :maxlength="getMaxLength(field.key)"
-                :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required
-                class="w-full p-2 border-2 border-blue-500 rounded focus:ring text-black focus:ring-blue-200"
-                @input="validateFullName(field.key, index)" />
-              <p v-if="errors[index]" class="text-red-600 text-sm mticators 1">{{ errors[index] }}</p>
-            </div>
-          </template>
-          <template
-            v-else-if="field.key !== 'adminName' && field.key !== 'adminSurname' && field.key !== 'documentId' && field.key !== 'fingerImage1' && field.key !== 'fingerImage2' && field.key !== 'image1' && field.key !== 'qrcode3' && field.key !== 'image2' && field.key !== 'qrcode1' && field.key !== 'qrcode2' && field.key !== 'Korxona rahbarini F.I.SH.:' && field.key !== 'yuristName' && field.key !== 'yuristSurname' && field.key !== 'Mahalla nomi ko’cha nomi uy raqamini yozing' && field.key !== 'Buyurtmachi' && field.key !== 'Tashkilot nomini kirting' && field.key !== 'login' && field.key !== 'parol' && field.key !== 'ofis'">
-            <input v-model="fieldValues[index]" :type="getInputType(field.key)" :maxlength="getMaxLength(field.key)"
-              :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required
-              class="w-full p-2 border-2 border-blue-500 rounded focus:ring text-black focus:ring-blue-200"
-              @input="['Fuqaroning telefon raqami ', 'Fuqaroning qo’shimcha telefon raqami'].includes(field.key) ? formatPhoneNumber(field.key, index) : restrictToNumbers(field.key, index); formatNumberFields(field.key, index); preventCyrillic(field.key, index)"
-              @focus="addPhonePrefix(field.key, index)" />
-              <p v-if="formSubmitted && !fieldValues[index] && shouldShowField(field.key)&& field.key !== 'Fuqaroning qo’shimcha telefon raqami'" class="error-message">
-          {{ dat === 'datakril' ? translateText('Bu maydon to\'ldirilishi shart!') :"Bu maydon to'ldirilishi shart!" }}
-  
-</p>
-          </template>
-        </template>
-      </div>
-      <div class="mb-4 w-full relative">
-  <!-- Label -->
-  <label class="block w-full font-medium mb-1 text-black">
-    {{ dat === 'datakril' ? translateText('Ushbu ishni o\'z zimmasiga oladigan yuristni tanlang') : 'Ushbu ishni o\'z zimmasiga oladigan yuristni tanlang' }}
-  </label>
-
-  <!-- Selected Yurist Display -->
-  <div class="p-3 border-2 border-blue-500 bg-white rounded-lg cursor-pointer flex justify-between items-center"
-    @click="toggleDropdown">
-    <span class="text-black">{{ dat === 'datakril' ? translateText(selectedYuristName) : selectedYuristName }}</span>
-  </div>
-
-  <!-- Dropdown Options -->
-  <div v-if="isDropdownOpen"
-    class="absolute p-2 top-full left-0 mt-2 w-full flex flex-col gap-2 bg-gray-200 border border-gray-300 rounded-lg shadow-lg z-10">
-    <div v-for="yurist in yurists" :key="yurist.id"
-      class="p-3 flex gap-4 border-2 border-blue-500 h-[70px] rounded-md items-center cursor-pointer hover:bg-gray-300 text-black relative"
-      @click="selectYurist(yurist)" @mouseenter="hoveredYurist = yurist; showHoverModal = true"
-      @mouseleave="showHoverModal = false">
-      <img class="w-[50px]" :src="URL + '/upload/' + yurist.img" alt="img">
-      <h1 class="text-black text-[15px] font-bold">
-        {{ dat === 'datakril' ? translateText(yurist.name) : yurist.name }}
-      </h1>
-      <!-- Hover Modal -->
-      <div v-if="showHoverModal && hoveredYurist?.id === yurist.id"
-        class="absolute bottom-0 left-full max-h-[500px] overflow-scroll -ml-[40%] p-3 bg-white border border-gray-300 rounded-lg shadow-lg z-20 min-w-[300px]">
-        <p class="text-black">Bajaradigan ishlari</p>
-        <div v-if="filteredTasks.length > 0">
-          <div class="text-black bg-gray-300 flex justify-between p-2 rounded-lg my-1" v-for="item in filteredTasks" :key="item.id">
-            <p class="text-black">
-              {{ dat === 'datakril' ? translateText(item.name) : item.name }}</p>
-            <h1 class="text-black">holati: <span class="text-red-500">Kutish</span></h1>
           </div>
         </div>
-        <div v-else class="text-black text-center p-2">
-          {{ dat === 'datakril' ? translateText('Bajaradigan ishlari yo\'q') :"Bajaradigan ishlari yo'q" }}
+        <div>
+          <label for="" class="text-black">
+            {{ dat === 'datakril' ? translateText('Shartnoma YKKni qaysi filialida amalga oshirilmoqda') :
+              'Shartnoma YKKni qaysi filialida amalga oshirilmoqda' }}
+          </label>
+          <select v-model="paymentTuman"
+            class="p-3 border-2 border-blue-500 mb-4 rounded-lg block w-full focus:outline-none text-black  focus:ring-2 focus:ring-blue-500"
+            required>
+            <option class="text-black" value="" disabled>
+              {{ dat === 'datakril' ? translateText('Shartnoma YKKni qaysi filialida amalga oshirilmoqda') :
+                'Shartnoma YKKni qaysi filialida amalga oshirilmoqda' }}
+            </option>
+            <option class="text-black" value="Xorazm viloyati Urganch shaxar 1-son filiali">
+              {{ dat === 'datakril' ? translateText('Xorazm viloyati Urganch shaxar 1-son filiali') :
+                'Xorazm viloyati Urganch shaxar 1-son filiali' }}
+            </option>
+            <option class="text-black" value="Xorazm viloyati Xiva shaxar markaziy binosi">
+              {{ dat === 'datakril' ? translateText('Xorazm viloyati Xiva shaxar markaziy binosi') :
+                'Xorazm viloyati Xiva shaxar markaziy binosi' }}
+            </option>
+          </select>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
-      <div>
-        <label for="" class="text-black">
-          {{ dat === 'datakril' ? translateText('Shartnoma YKKni qaysi filialida amalga oshirilmoqda') : 'Shartnoma YKKni qaysi filialida amalga oshirilmoqda' }}
-        </label>
-        <select v-model="paymentTuman"
-          class="p-3 border-2 border-blue-500 mb-4 rounded-lg block w-full focus:outline-none text-black  focus:ring-2 focus:ring-blue-500"
-           required>
-          <option class="text-black" value="" disabled>
-            {{ dat === 'datakril' ? translateText('Shartnoma YKKni qaysi filialida amalga oshirilmoqda') : 'Shartnoma YKKni qaysi filialida amalga oshirilmoqda' }}
-          </option>
-          <option class="text-black"  value="Xorazm viloyati Urganch shaxar 1-son filiali">
-            {{ dat === 'datakril' ? translateText('Xorazm viloyati Urganch shaxar 1-son filiali') : 'Xorazm viloyati Urganch shaxar 1-son filiali' }}
-          </option>
-          <option class="text-black"  value="Xorazm viloyati Xiva shaxar markaziy binosi">
-            {{ dat === 'datakril' ? translateText('Xorazm viloyati Xiva shaxar markaziy binosi') : 'Xorazm viloyati Xiva shaxar markaziy binosi' }}
-          </option>
-        </select>
-      </div>
 
-      <!-- Rest of the template remains unchanged -->
-      <div class="mt-4 flex justify-between">
-        <div class="">
-          <div class="flex">
-            <button @click="openCameraModal('profile')" class="btn btn-primary">
-              {{ dat === "datakril" ? translateText("Ong tamondan") : "Ong tamondan" }}<br>
-              {{ dat === "datakril" ? translateText("suratga olish") : "suratga olish" }}
-            </button>
-            <button @click="openCameraModal('document')" class="btn btn-primary">
-              {{ dat === "datakril" ? translateText("Chap tamondan suratga olish") : "Chap tamondan suratga olish" }}
-            </button>
-            <button @click="openVideoModal" class="btn h-[65px] btn-primary">
-              {{ dat === "datakril" ? translateText("Video yozib olish") : "Video yozib olish" }}
-            </button>
+        <!-- Rest of the template remains unchanged -->
+        <div class="mt-4 flex justify-between">
+          <div class="">
+            <div class="flex">
+              <button @click="openCameraModal('profile')" class="btn btn-primary">
+                {{ dat === "datakril" ? translateText("Ong tamondan") : "Ong tamondan" }}<br>
+                {{ dat === "datakril" ? translateText("suratga olish") : "suratga olish" }}
+              </button>
+              <button @click="openCameraModal('document')" class="btn btn-primary">
+                {{ dat === "datakril" ? translateText("Chap tamondan suratga olish") : "Chap tamondan suratga olish" }}
+              </button>
+              <button @click="openVideoModal" class="btn h-[65px] btn-primary">
+                {{ dat === "datakril" ? translateText("Video yozib olish") : "Video yozib olish" }}
+              </button>
+            </div>
+
+            <div>
+              <button @click="fingerSearch = !fingerSearch" class="btn btn-primary">
+                {{ dat === "datakril" ? translateText("Barmoq izini scanerlash") : "Barmoq izini scanerlash" }}
+              </button>
+            </div>
           </div>
 
           <div>
-            <button @click="fingerSearch = !fingerSearch" class="btn btn-primary">
-              {{ dat === "datakril" ? translateText("Barmoq izini scanerlash") : "Barmoq izini scanerlash" }}
+            <button @click="saveAndGenerate" class="btn h-[50px] text-[20px] btn-secondary">
+              {{ dat === "datakril" ? translateText("Yuklash") : "Yuklash" }}
             </button>
+          </div>
+        </div>
+        <!-- Completion Date Modal -->
+        <div v-if="isCompletionDateModalOpen" class="modal" @click.self="closeCompletionDateModal">
+          <div class="modal-content">
+            <h2 class="text-lg text-black font-bold mb-4">
+              {{ dat === 'datakril' ? translateText('Ishni yakunlash sanasini tanlang') :
+                'Ishni yakunlash sanasini tanlang' }}
+            </h2>
+            <input v-model="selectedCompletionDate" type="text" readonly
+              class="p-3 border mb-4 rounded-lg focus:outline-none block w-full text-black border-black focus:ring-2 focus:ring-blue-500"
+              :placeholder="dat === 'datakril' ? translateText('Tanlangan sanasi') : 'Tanlangan sanasi'"
+              :value="formattedCompletionDate" />
+            <!-- Calendar -->
+            <div class="calendar">
+              <div class="header flex justify-between items-center mb-4">
+                <button @click="prevMonth" class="btn btn-secondary"> {{ '<' }} </button>
+                    <span class="month-year text-black">{{ getMonthName(currentMonth) }} {{ currentYear }}</span>
+                    <button @click="nextMonth" class="btn btn-secondary">></button>
+              </div>
+              <!-- Weekdays -->
+              <div class="weekdays flex gap-2 justify-center">
+                <span v-for="(day, index) in ['D', 'S', 'Ch', 'P', 'J', 'Sh', 'Y']" :key="index" class="weekday">
+                  {{ day }}
+                </span>
+              </div>
+              <div class="days grid grid-cols-7 gap-2">
+                <div v-for="date in days" :key="'day' + date.day" class="day"
+                  :class="{ 'today': isToday(date.day), 'selected': isSelected(date.day), 'disabled': !date.isSelectable }"
+                  @click="date.isSelectable ? selectDate(date.day) : null">
+                  {{ date.day }}
+                </div>
+              </div>
+            </div>
+            <!-- Save Button -->
+            <button v-if="selectedCompletionDate" @click="saveSelectedDate" class="btn btn-primary mt-4 w-full">
+              {{ dat === 'datakril' ? translateText('Saqlash') : 'Saqlash' }}
+            </button>
+          </div>
+        </div>
+        <!-- Camera Modal -->
+        <div v-if="isModalOpen" class="modal" @click.self="closeCameraModal">
+          <div class="modal-content dark">
+            <video ref="video" width="420" height="240" autoplay class="rounded border"></video>
+            <canvas ref="canvas" width="320" height="240" class="hidden"></canvas>
+            <div class="mt-4 flex justify-between">
+              <button @click="captureImage" class="btn btn-success">
+                {{ dat === "datakril" ? translateText("Suratga Olish") : "Suratga Olish" }}
+              </button>
+              <button @click="closeCameraModal" class="btn btn-danger">
+                {{ dat === "datakril" ? translateText("Yopish") : "Yopish" }}
+              </button>
+            </div>
           </div>
         </div>
 
-        <div>
-          <button @click="saveAndGenerate" class="btn h-[50px] text-[20px] btn-secondary">
-            {{ dat === "datakril" ? translateText("Yuklash") : "Yuklash" }}
-          </button>
+        <div v-if="isVideoModalOpen" class="modal" @click.self="closeVideoModal">
+          <div class="video-modal-content dark">
+            <video ref="recordingVideo" autoplay class="rounded border" style="width:100%; max-width:670px;"></video>
+            <div class="mt-4 pb-2 flex justify-between">
+              <button @click="startRecording" v-if="!isRecording" class="btn btn-success">
+                {{ dat === "datakril" ? translateText("Yozib olish") : "Yozib olish" }}
+              </button>
+              <button @click="stopRecording" v-else class="btn btn-danger">
+                {{ dat === "datakril" ? translateText("To'xtatish") : "To'xtatish" }}
+              </button>
+              <button @click="saveVideo" v-if="recordedVideoBlob" class="btn btn-primary">
+                {{ dat === "datakril" ? translateText("Saqlash") : "Saqlash" }}
+              </button>
+            </div>
+            <p class="text-center -mt-[40px] text-red-500">
+              {{ dat === "datakril" ? translateText("Qolgan vaqt") : "Qolgan vaqt" }}: {{ recordingTime }} sec
+            </p>
+          </div>
         </div>
-      </div>
-<!-- Completion Date Modal -->
-<div v-if="isCompletionDateModalOpen" class="modal" @click.self="closeCompletionDateModal">
-  <div class="modal-content">
-    <h2 class="text-lg text-black font-bold mb-4">
-      {{ dat === 'datakril' ? translateText('Ishni yakunlash sanasini tanlang') : 'Ishni yakunlash sanasini tanlang' }}
-    </h2>
-    <input
-      v-model="selectedCompletionDate"
-      type="text"
-      readonly
-      class="p-3 border mb-4 rounded-lg focus:outline-none block w-full text-black border-black focus:ring-2 focus:ring-blue-500"
-      :placeholder="dat === 'datakril' ? translateText('Tanlangan sanasi') : 'Tanlangan sanasi'"
-      :value="formattedCompletionDate"
-    />
-    <!-- Calendar -->
-    <div class="calendar">
-      <div class="header flex justify-between items-center mb-4">
-        <button @click="prevMonth" class="btn btn-secondary"><</button>
-        <span class="month-year text-black">{{ getMonthName(currentMonth) }} {{ currentYear }}</span>
-        <button @click="nextMonth" class="btn btn-secondary">></button>
-      </div>
-      <!-- Weekdays -->
-      <div class="weekdays flex gap-2 justify-center">
-        <span v-for="(day, index) in ['D', 'S', 'Ch', 'P', 'J', 'Sh', 'Y']" :key="index" class="weekday">
-          {{ day }}
-        </span>
-      </div>
-      <div class="days grid grid-cols-7 gap-2">
-        <div v-for="date in days" :key="'day' + date.day" class="day"
-     :class="{ 'today': isToday(date.day), 'selected': isSelected(date.day), 'disabled': !date.isSelectable }"
-     @click="date.isSelectable ? selectDate(date.day) : null">
-  {{ date.day }}
-</div>
-      </div>
-    </div>
-    <!-- Save Button -->
-    <button 
-      v-if="selectedCompletionDate" 
-      @click="saveSelectedDate" 
-      class="btn btn-primary mt-4 w-full">
-      {{ dat === 'datakril' ? translateText('Saqlash') : 'Saqlash' }}
-    </button>
-  </div>
-</div>
-      <!-- Camera Modal -->
-      <div v-if="isModalOpen" class="modal" @click.self="closeCameraModal">
-        <div class="modal-content dark">
-          <video ref="video" width="420" height="240" autoplay class="rounded border"></video>
-          <canvas ref="canvas" width="320" height="240" class="hidden"></canvas>
-          <div class="mt-4 flex justify-between">
-            <button @click="captureImage" class="btn btn-success">
-              {{ dat === "datakril" ? translateText("Suratga Olish") : "Suratga Olish" }}
-            </button>
-            <button @click="closeCameraModal" class="btn btn-danger">
-              {{ dat === "datakril" ? translateText("Yopish") : "Yopish" }}
-            </button>
+        <!-- Warning Modal -->
+        <div v-if="isWarningModalOpen" class="modal" @click.self="closeWarningModal">
+          <div class="modal-content flex border-4 relative border-red-700">
+            <img src="/x.png" class="w-12 mr-1" alt="">
+            <img @click="isWarningModalOpen = false" src="/reject.png" class="w-5 h-5 absolute top-1 right-1" alt="">
+            <p class="text-red-600 text-center">
+              {{ dat === "datakril" ? translateText(errorMessage) : errorMessage }}
+            </p>
           </div>
         </div>
       </div>
-
-      <div v-if="isVideoModalOpen" class="modal" @click.self="closeVideoModal">
-        <div class="video-modal-content dark">
-          <video ref="recordingVideo" autoplay class="rounded border" style="width:100%; max-width:670px;"></video>
-          <div class="mt-4 pb-2 flex justify-between">
-            <button @click="startRecording" v-if="!isRecording" class="btn btn-success">
-              {{ dat === "datakril" ? translateText("Yozib olish") : "Yozib olish" }}
-            </button>
-            <button @click="stopRecording" v-else class="btn btn-danger">
-              {{ dat === "datakril" ? translateText("To'xtatish") : "To'xtatish" }}
-            </button>
-            <button @click="saveVideo" v-if="recordedVideoBlob" class="btn btn-primary">
-              {{ dat === "datakril" ? translateText("Saqlash") : "Saqlash" }}
-            </button>
-          </div>
-          <p class="text-center -mt-[40px] text-red-500">
-            {{ dat === "datakril" ? translateText("Qolgan vaqt") : "Qolgan vaqt" }}: {{ recordingTime }} sec
-          </p>
-        </div>
-      </div>
-      <!-- Warning Modal -->
-      <div v-if="isWarningModalOpen" class="modal" @click.self="closeWarningModal">
-        <div class="modal-content flex border-4 relative border-red-700">
-          <img src="/x.png" class="w-12 mr-1" alt="">
-          <img @click="isWarningModalOpen = false" src="/reject.png" class="w-5 h-5 absolute top-1 right-1" alt="">
-          <p class="text-red-600 text-center">
-            {{ dat === "datakril" ? translateText(errorMessage) : errorMessage }}
-          </p>
-        </div>
-      </div>
     </div>
-  </div>
-  <div v-if="fingerSearch" class="flex justify-center items-center z-40 fixed inset-0 bg-black bg-opacity-70">
-    <div class="bg-white rounded-md p-4">
-    <div v-if="imageData" class="image-preview">
-      <img :src="`data:image/png;base64,${imageData}`" class="mx-auto" alt="Barmoq izi rasmi" />
-    </div>
+    <div v-if="fingerSearch" class="flex justify-center items-center z-40 fixed inset-0 bg-black bg-opacity-70">
+      <div class="bg-white rounded-md p-4">
+        <div v-if="imageData" class="image-preview">
+          <img :src="`data:image/png;base64,${imageData}`" class="mx-auto" alt="Barmoq izi rasmi" />
+        </div>
         <div className="w-full space-y-3">
-<!-- className ni class ga o'zgartirganimizni eslatib o'taman -->
-<button 
-  @click="finger1" 
-  class="w-full py-2.5 px-4 bg-[#0B4D45] text-white text-sm font-medium rounded hover:bg-[#083D37] transition-colors">
-  {{ 
-    fingerText2 
-      ? (dat === 'datakril' ? translateText('Barmoq izini qayta skaynerlash ( Ong tamon )') : 'Barmoq izini qayta skaynerlash ( Ong tamon )') 
-      : (dat === 'datakril' ? translateText('Barmoq izini skaynerlaish ( Ong tamon )') :'Barmoq izini skaynerlaish ( Ong tamon )')
-  }}
-</button>
+          <button @click="finger1" :class="[
+            'w-full py-2.5 px-4 text-white text-sm font-medium rounded transition-colors',
+            fingerText2 ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-[#0B4D45] hover:bg-[#083D37]'
+          ]">
+            {{ fingerText2
+              ? (dat === 'datakril' ? translateText('Barmoq izini qayta skaynerlash ( Ong tamon )') :
+                'Barmoq izini qayta skaynerlash(Ong tamon)')
+              : (dat === 'datakril' ? translateText('Barmoq izini skaynerlaish ( Ong tamon )') :
+                'Barmoq izini skaynerlaish ( Ong tamon )') }}
+          </button>
 
-<button 
-  @click="finger" 
-  class="w-full py-2.5 px-4 bg-[#0B4D45] text-white text-sm font-medium rounded hover:bg-[#083D37] transition-colors">
-  {{ 
-    fingerText1 
-      ? (dat === 'datakril' ? translateText('Barmoq izini qayta skaynerlash ( Chap tamon )') : 'Barmoq izini qayta skaynerlash ( Chap tamon )') 
-      : (dat === 'datakril' ? translateText('Barmoq izini skaynerlaish ( Chap tamon )') :'Barmoq izini skaynerlaish ( Chap tamon )')
-  }}
-</button>
-          
+          <!-- Chap tomoni -->
+          <button @click="finger" :class="[
+            'w-full py-2.5 px-4 text-white text-sm font-medium rounded transition-colors',
+            fingerText1 ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-[#0B4D45] hover:bg-[#083D37]'
+          ]">
+            {{
+              fingerText1
+                ? (dat === 'datakril' ? translateText('Barmoq izini qayta skaynerlash ( Chap tamon )') :
+                  'Barmoq izini qayta skaynerlash(Chap tamon)')
+                : (dat === 'datakril' ? translateText('Barmoq izini skaynerlaish ( Chap tamon )')
+                  : 'Barmoq izini skaynerlaish ( Chap tamon )')
+            }}
+          </button>
+
           <div class="flex gap-2">
-            <button  @click="fingerSearch = false" class="w-full py-2.5 px-4 bg-[#4d0b0b] text-white text-sm font-medium rounded hover:bg-[#3d0808] transition-colors">
-              {{ dat === 'datakril' ? translateText('Bekor qilish') :'Bekor qilish' }}
+            <button @click="fingerSearch = false"
+              class="w-full py-2.5 px-4 bg-[#4d0b0b] text-white text-sm font-medium rounded hover:bg-[#3d0808] transition-colors">
+              {{ dat === 'datakril' ? translateText('Bekor qilish') : 'Bekor qilish' }}
             </button>
-            <button v-if="imageData" @click="fingerSearch = false" class="w-full py-2.5 px-4 bg-[#0b4d1d] text-white text-sm font-medium rounded hover:bg-[#083D37] transition-colors">
-              {{ dat === 'datakril' ? translateText('Saqlash') :'Saqlash' }}
+            <button v-if="imageData" @click="fingerSearch = false"
+              class="w-full py-2.5 px-4 bg-[#0b4d1d] text-white text-sm font-medium rounded hover:bg-[#083D37] transition-colors">
+              {{ dat === 'datakril' ? translateText('Saqlash') : 'Saqlash' }}
             </button>
           </div>
         </div>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <script setup>
@@ -925,7 +939,7 @@ const resetForm = () => {
     paidSum: 0,
     remainingSum: 0,
     contractId: "",
-  fingerImage1: null,
+    fingerImage1: null,
     file: null,
     image: null,
     documentImage: null,
@@ -1047,20 +1061,20 @@ const submitRegionSelection = async () => {
 
 const submitSelection = async () => {
   const selectedContractRegion = regions.value.find(
-  (r) => r.id === parseInt(contractRegion.value.regionId)
-);
-const selectedContractDistrict = contractDistricts.value.find(
-  (d) => d.id === parseInt(contractRegion.value.districtId)
-);
+    (r) => r.id === parseInt(contractRegion.value.regionId)
+  );
+  const selectedContractDistrict = contractDistricts.value.find(
+    (d) => d.id === parseInt(contractRegion.value.districtId)
+  );
   const selectedPaymentRegion = regions.value.find(
-  (r) => r.id === parseInt(paymentRegion.value.regionId)
-);
-const selectedPaymentDistrict = paymentDistricts.value.find(
-  (d) => d.id === parseInt(paymentRegion.value.districtId)
-);
+    (r) => r.id === parseInt(paymentRegion.value.regionId)
+  );
+  const selectedPaymentDistrict = paymentDistricts.value.find(
+    (d) => d.id === parseInt(paymentRegion.value.districtId)
+  );
   viloyat.value = selectedContractRegion?.name_uz || '';
-tuman.value = selectedContractDistrict?.name_uz || '';
-paymentViloyat.value = selectedPaymentRegion?.name_uz || '';
+  tuman.value = selectedContractDistrict?.name_uz || '';
+  paymentViloyat.value = selectedPaymentRegion?.name_uz || '';
 
 };
 
@@ -1084,16 +1098,16 @@ const saveAndGenerate = async () => {
 
     // Validate region and district selections
     if (!contractRegion.value.regionId || !contractRegion.value.districtId) {
-  errorMessage.value = " Shartnoma uchun viloyat va tuman tanlanishi shart!";
-  isWarningModalOpen.value = true;
-  return;
-}
+      errorMessage.value = " Shartnoma uchun viloyat va tuman tanlanishi shart!";
+      isWarningModalOpen.value = true;
+      return;
+    }
 
     if (!contractRegion.value.regionId || !contractRegion.value.districtId) {
-  errorMessage.value = " Shartnoma uchun viloyat va tuman tanlanishi shart!";
-  isWarningModalOpen.value = true;
-  return;
-}
+      errorMessage.value = " Shartnoma uchun viloyat va tuman tanlanishi shart!";
+      isWarningModalOpen.value = true;
+      return;
+    }
 
     // Validate yurist selection
     if (!selectedYurist.value) {
@@ -1451,7 +1465,7 @@ const saveSelectedDate = () => {
   }
   // Perform any additional actions needed with the selected date
   console.log("Selected Completion Date:", selectedCompletionDate.value);
-  
+
   // Close the modal
   isCompletionDateModalOpen.value = false;
 };
@@ -1815,7 +1829,7 @@ const formatNumberFields = (key, index) => {
 
 const getInputType = (key) => {
   const lowerKey = key.toLowerCase();
-  if (['konsalting xizmat ko’rsatish narxi',  'hujjatga tushuntirish berish narxi', 'buyurtmachini boshlang’ich to’lovi (avans)'].some(k => lowerKey.includes(k))) {
+  if (['konsalting xizmat ko’rsatish narxi', 'hujjatga tushuntirish berish narxi', 'buyurtmachini boshlang’ich to’lovi (avans)'].some(k => lowerKey.includes(k))) {
     return 'text';
   }
   if (lowerKey.includes('tug’ilgan sanasi')) {
@@ -2091,6 +2105,7 @@ onUnmounted(() => {
   font-weight: bold;
   text-align: center;
 }
+
 .modal {
   position: fixed;
   inset: 0;
@@ -2101,11 +2116,15 @@ onUnmounted(() => {
   align-items: center;
   background: rgba(0, 0, 0, 0.5);
 }
+
 .day.disabled {
-  color: #ccc; /* Bo'yash rangini o'zgartirish */
+  color: #ccc;
+  /* Bo'yash rangini o'zgartirish */
   background: #3a3a3a;
-  pointer-events: none; /* Bosib bo'lmaydigan qilish */
+  pointer-events: none;
+  /* Bosib bo'lmaydigan qilish */
 }
+
 .modal-content {
   background: white;
   padding: 24px;
@@ -2120,9 +2139,12 @@ onUnmounted(() => {
   border-radius: 8px;
   color: black;
   overflow: hidden;
-  max-width: 350px; /* Qo'shildi */
-  margin: 0 auto; /* Qo'shildi */
+  max-width: 350px;
+  /* Qo'shildi */
+  margin: 0 auto;
+  /* Qo'shildi */
 }
+
 .input-error {
   border-color: #dc3545 !important;
 }
@@ -2136,6 +2158,7 @@ onUnmounted(() => {
   font-size: 12px;
   margin-top: 4px;
 }
+
 .header {
   color: black;
   font-size: 18px;
@@ -2154,7 +2177,8 @@ onUnmounted(() => {
   color: black;
   padding: 8px;
   font-size: 14px;
-  margin: auto; /* Qo'shildi */
+  margin: auto;
+  /* Qo'shildi */
 }
 
 .days {
@@ -2185,6 +2209,7 @@ onUnmounted(() => {
   background-color: #007bff !important;
   color: white;
 }
+
 .today {
   background: #ff6b6b;
   color: white;
@@ -2197,8 +2222,10 @@ onUnmounted(() => {
   border-radius: 4px;
   font-size: 16px;
   background-color: #f9f9f9;
-  cursor: not-allowed; /* Make it read-only */
+  cursor: not-allowed;
+  /* Make it read-only */
 }
+
 @keyframes spin {
   to {
     transform: rotate(360deg);
