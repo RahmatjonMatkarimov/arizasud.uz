@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-end">
-    <div class="clock-container mr-2 p-[10px] flex sm:p-[15px] md:p-[20px] mt-2">
+    <div class="clock-container relative z-40 mr-2 p-[10px] flex sm:p-[15px] md:p-[20px] mt-2">
       <div>
         <b class="clock-text md:text-[25px]">{{ currentTime }}</b>
       </div>

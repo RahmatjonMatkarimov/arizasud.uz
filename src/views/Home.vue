@@ -1,9 +1,9 @@
 <template>
     <div
-        class="bg-blue-600 hidden md:flex fixed right-0 z-50 top-[40%] p-[10px] rounded-tl-xl rounded-bl-xl flex-col gap-6">
-        <img src="/telephone.png" alt="Telephone" class="cursor-pointer w-10" />
-        <img @click="goToPath()" src="/consult.png" alt="Keyboard" class="cursor-pointer w-10" />
-        <img src="/keyboard.png" alt="Keyboard" class="cursor-pointer w-10" />
+        class="hidden md:flex fixed right-0 z-50 top-[35%] p-[10px] rounded-tl-xl rounded-bl-xl flex-col gap-2">
+        <img src="/telephone.png" alt="Telephone" class="bg-blue-600 p-2 rounded-xl cursor-pointer w-14" />
+        <img @click="goToPath()" src="/consult.png" alt="Keyboard" class="cursor-pointer bg-blue-600 p-2 rounded-xl  w-14" />
+        <img src="/keyboard.png" alt="Keyboard" class="bg-blue-600 p-2 rounded-xl cursor-pointer w-14" />
     </div>
     <Header />
     <Time />

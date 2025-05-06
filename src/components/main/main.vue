@@ -1,12 +1,13 @@
 <template>
-  <div class="flex text-white w-full flex-col items-center pb-10">
+  <div class="flex relative text-white w-full flex-col items-center pb-10">
+    <div class="w-full h-[360px] absolute -top-24 bg-blue-100"></div>
     <div class="flex flex-col items-center w-full mt-6 px-4">
-      <h1 class="text-2xl sm:text-4xl font-bold text-center text-blue-800 mb-6">
+      <h1 class="text-2xl sm:text-4xl relative font-bold text-center text-blue-800 mb-6">
         {{ $t('murojaat') }}
       </h1>
       <div class="w-full bg-gray-200 rounded-lg p-6 sm:p-10">
         <b 
-          class="text-xl sm:text-2xl block font-extrabold text-blue-800 text-center mb-6">
+          class="text-xl sm:text-2xl block relative font-extrabold text-blue-800 text-center mb-6">
           {{ $t('sud') }}
         </b>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
