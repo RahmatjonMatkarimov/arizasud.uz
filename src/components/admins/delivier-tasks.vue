@@ -204,27 +204,27 @@ const updateType = async (id, newStatus, commentText = '', adminId = null) => {
     await axios.post(`${URL}/client-file-status-history`, payload);
 
     // Rad etish bo'lsa (newStatus < currentStatusNumber)
-    if (newStatus == 4) {
+    if (newStatus == 7) {
       await axios.put(`${URL}/yurist-tasks/${selectedRejectId.value}`, {
         lawyerId: +selecteradminId.value, // Joriy foydalanuvchi lawyer bolidi
-        adminId: 43, // Taskdagi adminId saqlanadi
+        adminId: +localStorage.getItem('id'), // Taskdagi adminId saqlanadi
       }, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
     }
-    // Oddiy taklif qilish yoki keyingi bosqichga o'tish
-    else if (newStatus === 6) {
-      await axios.put(`${URL}/yurist-tasks/${id}`, {
-        lawyerId: +adminId || +selectedAdminId.value,
-        adminId: +localStorage.getItem('id'),
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-    }
+    // // Oddiy taklif qilish yoki keyingi bosqichga o'tish
+    // else if (newStatus === 6) {
+    //   await axios.put(`${URL}/yurist-tasks/${selectedRejectId.value}`, {
+    //     lawyerId: +adminId || +selectedAdminId.value,
+    //     adminId: +localStorage.getItem('id'), // Taskdagi adminId saqlanadi
+    //   }, {
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //   });
+    // }
 
     // Status tarixini yangilash
 
@@ -567,7 +567,7 @@ onMounted(() => {
                       </div>
 
                       <!-- Workflow Timeline Inside Each Document -->
-                      <div class="mt-6 2xl:w-[1450px]">
+                      <div class="mt-6 2xl:w-[1400px]">
                         <h4 class="text-sm font-semibold text-gray-800 mb-2">
                           {{ dat === 'datakril' ? translateText('Ish jarayoni holati') : 'Ish jarayoni holati' }}
                         </h4>
@@ -612,7 +612,7 @@ onMounted(() => {
                           </div>
                         </div>
                       </div>
-                      <div class="mt-4 flex space-x-2">
+                      <div class="mt-4 flex justify-end -mr-[130px] space-x-2">
                         <button @click="router.push('/Check/' + doc.clientFile.client.clientId)"
                           class="btn bg-indigo-400 text-sm">
                           {{ dat === 'datakril' ? translateText('Buyurtmachini shaxsiy kabinetiga otish') : 'Buyurtmachini shaxsiy kabinetiga otish' }}

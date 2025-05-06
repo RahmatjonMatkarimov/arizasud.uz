@@ -236,7 +236,8 @@ const updateType = async (id, newStatus, commentText = '', adminId = null) => {
       });
     }
     else if (newStatus === 5) {
-      await axios.put(`${URL}/yurist-tasks/${id}`, {
+      if(commentText === ''){
+        await axios.put(`${URL}/yurist-tasks/${id}`, {
         lawyerId: +adminId || +selectedAdminId.value,
         adminId: +localStorage.getItem('id'),
       }, {
@@ -244,6 +245,16 @@ const updateType = async (id, newStatus, commentText = '', adminId = null) => {
           'Content-Type': 'application/json',
         },
       });
+      }else{
+        await axios.put(`${URL}/yurist-tasks/${id}`, {
+        lawyerId: +adminId || +selecteradminId.value,
+        adminId: +localStorage.getItem('id'),
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      }
     }
 
     // Status tarixini yangilash
