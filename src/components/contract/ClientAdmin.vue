@@ -1859,7 +1859,7 @@ const restrictToNumbers = (key, index) => {
     }
   }
   if (key === "Fuqaroning JSHSHIR raqami") {
-    fieldValues.value[index] = fieldValues.value[index].replace(/[^0-14]/g, "");
+    fieldValues.value[index] = fieldValues.value[index].replace(/[^0-9]/g, "");
     if (fieldValues.value[index].length > 14) {
       fieldValues.value[index] = fieldValues.value[index].slice(0, 14);
     }
