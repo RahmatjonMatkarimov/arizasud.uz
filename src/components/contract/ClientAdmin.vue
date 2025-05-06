@@ -503,7 +503,6 @@ const regionFormData = ref({
   districtId: ''
 });
 const selectedRegionForPrint = ref({ regionName: '', districtName: '' });
-const pendingPrint = ref(false);
 const buyurtmachiIndex = ref(null);
 const clientId = ref(null);
 const isVideoModalOpen = ref(false);
@@ -1017,9 +1016,6 @@ const closeRegionModal = () => {
     districtId: ''
   };
   districts.value = [];
-  if (pendingPrint.value) {
-    pendingPrint.value = false;
-  }
 };
 
 const submitRegionSelection = async () => {
@@ -1050,7 +1046,6 @@ const submitRegionSelection = async () => {
     districtId: ''
   };
   districts.value = [];
-
 };
 
 const submitSelection = async () => {
@@ -1130,7 +1125,16 @@ const saveAndGenerate = async () => {
       return;
     }
 
-
+    if (!formData.fingerImage) {
+      errorMessage.value = "Iltimos barmoq izini skaynerlang";
+      isWarningModalOpen.value = true;
+      return;
+    }
+    if (!formData.fingerImage1) {
+      errorMessage.value = "Iltimos barmoq izini skaynerlang";
+      isWarningModalOpen.value = true;
+      return;
+    }
 
     // Clear previous errors
     errors.value = new Array(uniqueFields.value.length).fill("");
@@ -1768,8 +1772,8 @@ const submitForm = async () => {
   formDataToSend.append("image1", formData.image);
   formDataToSend.append("image2", formData.documentImage);
   formDataToSend.append("check", checkFile.value);
-  formDataToSend.append("fingerImage1", formData.image);
-  formDataToSend.append("fingerImage2", formData.image);
+  formDataToSend.append("fingerImage1", formData.fingerImage);
+  formDataToSend.append("fingerImage2", formData.fingerImage1);
   formDataToSend.append("video", formData.video);
   formDataToSend.append("login", generatedLogin.value);
   formDataToSend.append("lawyerId", +yuristId.value || 0);
@@ -1855,7 +1859,7 @@ const restrictToNumbers = (key, index) => {
     }
   }
   if (key === "Fuqaroning JSHSHIR raqami") {
-    fieldValues.value[index] = fieldValues.value[index].replace(/[^0-9]/g, "");
+    fieldValues.value[index] = fieldValues.value[index].replace(/[^0-14]/g, "");
     if (fieldValues.value[index].length > 14) {
       fieldValues.value[index] = fieldValues.value[index].slice(0, 14);
     }
