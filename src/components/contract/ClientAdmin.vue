@@ -1051,12 +1051,6 @@ const submitRegionSelection = async () => {
   };
   districts.value = [];
 
-  if (pendingPrint.value) {
-    pendingPrint.value = false;
-    await printReceipt();
-    router.push(`/Check/${clientId.value}`);
-    window.location.reload();
-  }
 };
 
 const submitSelection = async () => {
@@ -1136,16 +1130,7 @@ const saveAndGenerate = async () => {
       return;
     }
 
-    if (!formData.fingerImage) {
-      errorMessage.value = "Iltimos barmoq izini skaynerlang";
-      isWarningModalOpen.value = true;
-      return;
-    }
-    if (!formData.fingerImage1) {
-      errorMessage.value = "Iltimos barmoq izini skaynerlang";
-      isWarningModalOpen.value = true;
-      return;
-    }
+
 
     // Clear previous errors
     errors.value = new Array(uniqueFields.value.length).fill("");
@@ -1633,7 +1618,6 @@ function numberToUzbekWords(n) {
 }
 const printReceipt = () => {
   // If region selection is pending, do not proceed until modal is closed
-  if (pendingPrint.value) return;
 
   const today = new Date();
   const day = String(today.getDate()).padStart(2, '0');
@@ -1784,8 +1768,8 @@ const submitForm = async () => {
   formDataToSend.append("image1", formData.image);
   formDataToSend.append("image2", formData.documentImage);
   formDataToSend.append("check", checkFile.value);
-  formDataToSend.append("fingerImage1", formData.fingerImage);
-  formDataToSend.append("fingerImage2", formData.fingerImage1);
+  formDataToSend.append("fingerImage1", formData.image);
+  formDataToSend.append("fingerImage2", formData.image);
   formDataToSend.append("video", formData.video);
   formDataToSend.append("login", generatedLogin.value);
   formDataToSend.append("lawyerId", +yuristId.value || 0);
@@ -1804,7 +1788,9 @@ const submitForm = async () => {
     resetForm();
 
     if (paid.value > 0) {
-      pendingPrint.value = true;
+      printReceipt();
+      await router.push(`/Check/${clientId.value}`);
+      window.location.reload();
       submitRegionSelection()
     } else {
       await router.push(`/Check/${clientId.value}`);
@@ -1834,9 +1820,6 @@ const getInputType = (key) => {
   }
   if (lowerKey.includes('tug’ilgan sanasi')) {
     return 'date';
-  }
-  if (key === 'Fuqaroning JSHSHIR raqami') {
-    return 'number';
   }
   return 'text';
 };
@@ -1869,6 +1852,12 @@ const restrictToNumbers = (key, index) => {
     fieldValues.value[index] = fieldValues.value[index].replace(/[^0-9]/g, "");
     if (fieldValues.value[index].length > 9) {
       fieldValues.value[index] = fieldValues.value[index].slice(0, 9);
+    }
+  }
+  if (key === "Fuqaroning JSHSHIR raqami") {
+    fieldValues.value[index] = fieldValues.value[index].replace(/[^0-9]/g, "");
+    if (fieldValues.value[index].length > 14) {
+      fieldValues.value[index] = fieldValues.value[index].slice(0, 14);
     }
   }
 };
