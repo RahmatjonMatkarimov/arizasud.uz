@@ -768,7 +768,7 @@ const finger = async () => {
   isLoading.value = true;
   loadingMessage.value = 'Iltimos, barmogʻingizni qurilmaga qoʻying. Barmoq izi olinmoqda...';
   try {
-    const response = await axios.get("http://localhost:3000");
+    const response = await axios.get("http://localhost:2181");
     console.log("FINGER:", response.data);
     if (response.data.image) {
       imageData.value = response.data.image
@@ -798,7 +798,7 @@ const finger1 = async () => {
   isLoading.value = true;
   loadingMessage.value = 'Iltimos, barmogʻingizni qurilmaga qoʻying. Barmoq izi olinmoqda...';
   try {
-    const response = await axios.get("http://localhost:3000");
+    const response = await axios.get("http://localhost:2181");
     console.log("FINGER:", response.data);
     if (response.data.image) {
       imageData.value = response.data.image
@@ -1649,8 +1649,8 @@ function numberToUzbekWords(n) {
 
   return result.trim();
 }
+// If region selection is pending, do not proceed until modal is closed
 const printReceipt = async () => {
-  // If region selection is pending, do not proceed until modal is closed
 
   const today = new Date();
   const day = String(today.getDate()).padStart(2, '0');
@@ -1817,7 +1817,6 @@ const submitForm = async () => {
   formDataToSend.append("password", generatedPassword.value);
   formDataToSend.append("endDate", selectedCompletionDate.value || "");
   formDataToSend.append("bio_id", bio.value);
-  console.log(bio.value);
 
   try {
     const config = { headers: { "Content-Type": "multipart/form-data" } };
@@ -1827,8 +1826,8 @@ const submitForm = async () => {
     loginSearch()
     resetForm();
 
-    await printReceipt();
-    if (paid.value > 0) {
+    if (+paid.value > 0) {
+      await printReceipt();
       await router.push(`/Check/${clientId.value}`);
       window.location.reload();
       submitRegionSelection()

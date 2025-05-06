@@ -38,7 +38,7 @@ const Loading = inject('isLoading');
 const fingerPost = async () => {
     Loading.value= true
     try {
-        const response = await axios.post(`${URL}/client/search`, {
+        const response = await axios.post(`http://localhost:2181/search`, {
             bio_id: bioId.value
         }, {
             headers: {
@@ -56,7 +56,7 @@ const fingerPost = async () => {
 const fingerGet = async () => {
     Loading.value = true
     try {
-        const response = await axios.get("http://localhost:3000")
+        const response = await axios.get("http://localhost:2181")
         result.value = JSON.stringify(response.data, null, 2)
         bioId.value = response.data.bio_id || ""
 
