@@ -5,7 +5,7 @@
       <h1 class="text-2xl sm:text-4xl relative font-bold text-center text-blue-800 mb-6">
         {{ $t('murojaat') }}
       </h1>
-      <div class="w-full bg-gray-200 rounded-lg p-6 sm:p-10">
+      <div class="w-full rounded-lg p-6 sm:p-10">
         <b 
           class="text-xl sm:text-2xl block relative font-extrabold text-blue-800 text-center mb-6">
           {{ $t('sud') }}
