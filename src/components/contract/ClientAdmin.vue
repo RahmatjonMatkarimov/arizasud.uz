@@ -45,12 +45,11 @@
                 {{ dat === "datakril" ? translateText(field.key) : field.key }}
               </label>
               <input v-model="fieldValues[index]" :type="getInputType(field.key)" :maxlength="getMaxLength(field.key)"
-                :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required
-                :class="[
-                'w-full p-2 border-2 border-blue-500 rounded focus:ring text-black focus:ring-blue-200',
+                :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required :class="[
+                  'w-full p-2 border-2 border-blue-500 rounded focus:ring text-black focus:ring-blue-200',
 
-formSubmitted && !fieldValues[index] && shouldShowField(field.key)?'border-red-500':'border-blue-500']">
-                <p v-if="formSubmitted && !fieldValues[index] && shouldShowField(field.key)" class="error-message">
+                  formSubmitted && !fieldValues[index] && shouldShowField(field.key) ? 'border-red-500' : 'border-blue-500']">
+              <p v-if="formSubmitted && !fieldValues[index] && shouldShowField(field.key)" class="error-message">
                 {{ dat === 'datakril' ? translateText('Bu maydon to\'ldirilishi shart!')
                   : "Bu maydon to'ldirilishi shart!" }}
               </p>
@@ -94,12 +93,11 @@ formSubmitted && !fieldValues[index] && shouldShowField(field.key)?'border-red-5
                   : 'Tashkilot manzilini kiriting(Mahalla nomi ko’cha nomi uy raqamini yozing)' }}
               </label>
               <input v-model="fieldValues[index]" :type="getInputType(field.key)" :maxlength="getMaxLength(field.key)"
-                :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required
-                :class="[
+                :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required :class="[
                   'w-full p-2 border-2 border-blue-500 rounded focus:ring text-black focus:ring-blue-200',
- 
- formSubmitted && !fieldValues[index] && shouldShowField(field.key)?'border-red-500':'border-blue-500']">
-                <p v-if="formSubmitted && !fieldValues[index] && shouldShowField(field.key)" class="error-message">
+
+                  formSubmitted && !fieldValues[index] && shouldShowField(field.key) ? 'border-red-500' : 'border-blue-500']">
+              <p v-if="formSubmitted && !fieldValues[index] && shouldShowField(field.key)" class="error-message">
                 {{ dat === 'datakril' ? translateText('Bu maydon to\'ldirilishi shart!')
                   : "Bu maydon to'ldirilishi shart!" }}
               </p>
@@ -160,16 +158,15 @@ formSubmitted && !fieldValues[index] && shouldShowField(field.key)?'border-red-5
                   {{ dat === "datakril" ? translateText(field.key) : field.key }}
                 </label>
                 <input v-model="fieldValues[index]" type="text" :maxlength="getMaxLength(field.key)"
-                  :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required
-                  :class="[
-                  'w-full p-2 border-2 border-blue-500 rounded focus:ring text-black focus:ring-blue-200',
- 
- formSubmitted && !fieldValues[index] && shouldShowField(field.key)?'border-red-500':'border-blue-500']"
+                  :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required :class="[
+                    'w-full p-2 border-2 border-blue-500 rounded focus:ring text-black focus:ring-blue-200',
+
+                    formSubmitted && !fieldValues[index] && shouldShowField(field.key) ? 'border-red-500' : 'border-blue-500']"
                   @input="restrictToNumbers(field.key, index)" />
-                  <p v-if="formSubmitted && !fieldValues[index] && shouldShowField(field.key)" class="error-message">
-                {{ dat === 'datakril' ? translateText('Bu maydon to\'ldirilishi shart!')
-                  : "Bu maydon to'ldirilishi shart!" }}
-              </p>
+                <p v-if="formSubmitted && !fieldValues[index] && shouldShowField(field.key)" class="error-message">
+                  {{ dat === 'datakril' ? translateText('Bu maydon to\'ldirilishi shart!')
+                    : "Bu maydon to'ldirilishi shart!" }}
+                </p>
               </div>
             </template>
             <template v-else-if="field.key === 'Korxona rahbarini F.I.SH.:'">
@@ -178,16 +175,15 @@ formSubmitted && !fieldValues[index] && shouldShowField(field.key)?'border-red-5
                   {{ dat === "datakril" ? translateText(field.key) : field.key }}
                 </label>
                 <input v-model="fieldValues[index]" type="text" :maxlength="getMaxLength(field.key)"
-                  :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required
-                  :class="[
-                  'w-full p-2 border-2 border-blue-500 rounded focus:ring text-black focus:ring-blue-200',
- 
- formSubmitted && !fieldValues[index] && shouldShowField(field.key)?'border-red-500':'border-blue-500']"
+                  :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required :class="[
+                    'w-full p-2 border-2 border-blue-500 rounded focus:ring text-black focus:ring-blue-200',
+
+                    formSubmitted && !fieldValues[index] && shouldShowField(field.key) ? 'border-red-500' : 'border-blue-500']"
                   @input="validateFullName(field.key, index)" />
-                  <p v-if="formSubmitted && !fieldValues[index] && shouldShowField(field.key)" class="error-message">
-                {{ dat === 'datakril' ? translateText('Bu maydon to\'ldirilishi shart!')
-                  : "Bu maydon to'ldirilishi shart!" }}
-              </p>
+                <p v-if="formSubmitted && !fieldValues[index] && shouldShowField(field.key)" class="error-message">
+                  {{ dat === 'datakril' ? translateText('Bu maydon to\'ldirilishi shart!')
+                    : "Bu maydon to'ldirilishi shart!" }}
+                </p>
               </div>
             </template>
             <template v-else-if="field.key === 'Tashkilot nomini'">
@@ -196,25 +192,23 @@ formSubmitted && !fieldValues[index] && shouldShowField(field.key)?'border-red-5
                   {{ dat === "datakril" ? translateText(field.key) : field.key }}
                 </label>
                 <input v-model="fieldValues[index]" type="text" :maxlength="getMaxLength(field.key)"
-                  :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required
-                  :class="[
-                  'w-full p-2 border-2 border-blue-500 rounded focus:ring text-black focus:ring-blue-200',
- 
- formSubmitted && !fieldValues[index] && shouldShowField(field.key)?'border-red-500':'border-blue-500']"
+                  :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required :class="[
+                    'w-full p-2 border-2 border-blue-500 rounded focus:ring text-black focus:ring-blue-200',
+
+                    formSubmitted && !fieldValues[index] && shouldShowField(field.key) ? 'border-red-500' : 'border-blue-500']"
                   @input="validateFullName(field.key, index)" />
-                  <p v-if="formSubmitted && !fieldValues[index] && shouldShowField(field.key)" class="error-message">
-                {{ dat === 'datakril' ? translateText('Bu maydon to\'ldirilishi shart!')
-                  : "Bu maydon to'ldirilishi shart!" }}
-              </p>
+                <p v-if="formSubmitted && !fieldValues[index] && shouldShowField(field.key)" class="error-message">
+                  {{ dat === 'datakril' ? translateText('Bu maydon to\'ldirilishi shart!')
+                    : "Bu maydon to'ldirilishi shart!" }}
+                </p>
               </div>
             </template>
             <template
               v-else-if="field.key !== 'adminName' && field.key !== 'adminSurname' && field.key !== 'documentId' && field.key !== 'fingerImage1' && field.key !== 'fingerImage2' && field.key !== 'image1' && field.key !== 'qrcode3' && field.key !== 'image2' && field.key !== 'qrcode1' && field.key !== 'qrcode2' && field.key !== 'Korxona rahbarini F.I.SH.:' && field.key !== 'yuristName' && field.key !== 'yuristSurname' && field.key !== 'Mahalla nomi ko’cha nomi uy raqamini yozing' && field.key !== 'Buyurtmachi' && field.key !== 'Tashkilot nomini kirting' && field.key !== 'login' && field.key !== 'parol' && field.key !== 'ofis'">
               <input v-model="fieldValues[index]" :type="getInputType(field.key)" :maxlength="getMaxLength(field.key)"
-                :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required
-                :class="[
-                'w-full p-2 border-2 border-blue-500 rounded focus:ring text-black focus:ring-blue-200',
-                formSubmitted && !fieldValues[index] && shouldShowField(field.key)?'border-red-500':'border-blue-500'
+                :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required :class="[
+                  'w-full p-2 border-2 border-blue-500 rounded focus:ring text-black focus:ring-blue-200',
+                  formSubmitted && !fieldValues[index] && shouldShowField(field.key) ? 'border-red-500' : 'border-blue-500'
                 ]"
                 @input="['Fuqaroning telefon raqami ', 'Fuqaroning qo’shimcha telefon raqami'].includes(field.key) ? formatPhoneNumber(field.key, index) : restrictToNumbers(field.key, index); formatNumberFields(field.key, index); preventCyrillic(field.key, index)"
                 @focus="addPhonePrefix(field.key, index)" />
@@ -236,7 +230,7 @@ formSubmitted && !fieldValues[index] && shouldShowField(field.key)?'border-red-5
           <div class="p-3 border-2 border-blue-500 bg-white rounded-lg cursor-pointer flex justify-between items-center"
             @click="toggleDropdown">
             <span class="text-black">{{ dat === 'datakril' ? translateText(selectedYuristName) : selectedYuristName
-            }}</span>
+              }}</span>
           </div>
 
           <!-- Dropdown Options -->
@@ -403,7 +397,8 @@ formSubmitted && !fieldValues[index] && shouldShowField(field.key)?'border-red-5
             <p class="text-red-600 text-center">
               {{ dat === "datakril" ? translateText(errorMessage) : errorMessage }}
             </p>
-            <button @click="isWarningModalOpen = false" class="text-white bg-red-600 w-[360px] text-[19px] py-1 rounded-md">Tushundim</button>
+            <button @click="isWarningModalOpen = false"
+              class="text-white bg-red-600 w-[360px] text-[19px] py-1 rounded-md">Tushundim</button>
           </div>
         </div>
       </div>
@@ -1767,11 +1762,10 @@ const printReceipt = async () => {
 };
 
 const loginSearch = async () => {
-
-  const res = await axios.post(`${URL}/client/uniqueCode/${formData.uniqueCode}`)
-console.log(res)
+  const res = await axios.get(`${URL}/client/uniqueCode/${formData.uniqueCode}`)
+  console.log(res)
 }
-
+loginSearch()
 const submitForm = async () => {
   if (!formData.file) {
     errorMessage.value = " Fayl generatsiya qilinmagan! Avval saqlash va generatsiya qiling!";
@@ -1833,8 +1827,8 @@ const submitForm = async () => {
     loginSearch()
     resetForm();
 
+    await printReceipt();
     if (paid.value > 0) {
-      await printReceipt();
       await router.push(`/Check/${clientId.value}`);
       window.location.reload();
       submitRegionSelection()
