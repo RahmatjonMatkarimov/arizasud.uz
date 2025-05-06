@@ -83,8 +83,8 @@
               </select>
               <label for="" class="text-black">
                 {{ dat === 'datakril' ?
-                  translateText('Tashkilot manzilini kiriting (Mahalla nomi ko’cha nomi uy raqamini yozing)') :
-                  'Tashkilot manzilini kiriting(Mahalla nomi ko’cha nomi uy raqamini yozing)' }}
+                  translateText('Tashkilot manzilini kiriting (Mahalla nomi ko’cha nomi uy raqamini yozing)')
+                  : 'Tashkilot manzilini kiriting(Mahalla nomi ko’cha nomi uy raqamini yozing)' }}
               </label>
               <input v-model="fieldValues[index]" :type="getInputType(field.key)" :maxlength="getMaxLength(field.key)"
                 :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required
@@ -182,11 +182,9 @@
                 class="w-full p-2 border-2 border-blue-500 rounded focus:ring text-black focus:ring-blue-200"
                 @input="['Fuqaroning telefon raqami ', 'Fuqaroning qo’shimcha telefon raqami'].includes(field.key) ? formatPhoneNumber(field.key, index) : restrictToNumbers(field.key, index); formatNumberFields(field.key, index); preventCyrillic(field.key, index)"
                 @focus="addPhonePrefix(field.key, index)" />
-              <p v-if="formSubmitted && !fieldValues[index] && shouldShowField(field.key) && field.key !== 'Fuqaroning qo’shimcha telefon raqami'"
-                class="error-message">
-                {{ dat === 'datakril' ? translateText('Bu maydon to\'ldirilishi shart!') :
-                  "Bu maydon to'ldirilishi shart!" }}
-
+              <p v-if="formSubmitted && !fieldValues[index] && shouldShowField(field.key)" class="error-message">
+                {{ dat === 'datakril' ? translateText('Bu maydon to\'ldirilishi shart!')
+                  : "Bu maydon to'ldirilishi shart!" }}
               </p>
             </template>
           </template>
@@ -194,8 +192,8 @@
         <div class="mb-4 w-full relative">
           <!-- Label -->
           <label class="block w-full font-medium mb-1 text-black">
-            {{ dat === 'datakril' ? translateText('Ushbu ishni o\'z zimmasiga oladigan yuristni tanlang') :
-              'Ushbu ishni o\'z zimmasiga oladigan yuristni tanlang' }}
+            {{ dat === 'datakril' ? translateText('Ushbu ishni o\'z zimmasiga oladigan yuristni tanlang')
+              : 'Ushbu ishni o\'z zimmasiga oladigan yuristni tanlang' }}
           </label>
 
           <!-- Selected Yurist Display -->
@@ -248,12 +246,12 @@
                 'Shartnoma YKKni qaysi filialida amalga oshirilmoqda' }}
             </option>
             <option class="text-black" value="Xorazm viloyati Urganch shaxar 1-son filiali">
-              {{ dat === 'datakril' ? translateText('Xorazm viloyati Urganch shaxar 1-son filiali') :
-                'Xorazm viloyati Urganch shaxar 1-son filiali' }}
+              {{ dat === 'datakril' ? translateText('Xorazm viloyati Urganch shaxar 1-son filiali')
+                : 'Xorazm viloyati Urganch shaxar 1-son filiali' }}
             </option>
             <option class="text-black" value="Xorazm viloyati Xiva shaxar markaziy binosi">
-              {{ dat === 'datakril' ? translateText('Xorazm viloyati Xiva shaxar markaziy binosi') :
-                'Xorazm viloyati Xiva shaxar markaziy binosi' }}
+              {{ dat === 'datakril' ? translateText('Xorazm viloyati Xiva shaxar markaziy binosi')
+                : 'Xorazm viloyati Xiva shaxar markaziy binosi' }}
             </option>
           </select>
         </div>
@@ -301,7 +299,8 @@
             <!-- Calendar -->
             <div class="calendar">
               <div class="header flex justify-between items-center mb-4">
-                <button @click="prevMonth" class="btn btn-secondary"> {{ '<' }} </button>
+                <button @click="prevMonth" class="btn btn-secondary">
+                  {{ '<' }} </button>
                     <span class="month-year text-black">{{ getMonthName(currentMonth) }} {{ currentYear }}</span>
                     <button @click="nextMonth" class="btn btn-secondary">></button>
               </div>
@@ -382,11 +381,13 @@
             'w-full py-2.5 px-4 text-white text-sm font-medium rounded transition-colors',
             fingerText2 ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-[#0B4D45] hover:bg-[#083D37]'
           ]">
-            {{ fingerText2
-              ? (dat === 'datakril' ? translateText('Barmoq izini qayta skaynerlash ( Ong tamon )') :
-                'Barmoq izini qayta skaynerlash(Ong tamon)')
-              : (dat === 'datakril' ? translateText('Barmoq izini skaynerlaish ( Ong tamon )') :
-                'Barmoq izini skaynerlaish ( Ong tamon )') }}
+            {{
+              fingerText2
+                ? (dat === 'datakril' ? translateText('Barmoq izini qayta skaynerlash ( Ong tamon )') :
+                  'Barmoq izini qayta skaynerlash(Ong tamon)')
+                : (dat === 'datakril' ? translateText('Barmoq izini skaynerlaish ( Ong tamon )') :
+                  'Barmoq izini skaynerlaish ( Ong tamon )')
+            }}
           </button>
 
           <!-- Chap tomoni -->
@@ -399,8 +400,7 @@
                 ? (dat === 'datakril' ? translateText('Barmoq izini qayta skaynerlash ( Chap tamon )') :
                   'Barmoq izini qayta skaynerlash(Chap tamon)')
                 : (dat === 'datakril' ? translateText('Barmoq izini skaynerlaish ( Chap tamon )')
-                  : 'Barmoq izini skaynerlaish ( Chap tamon )')
-            }}
+                  : 'Barmoq izini skaynerlaish ( Chap tamon )') }}
           </button>
 
           <div class="flex gap-2">
@@ -1835,8 +1835,8 @@ const getInputType = (key) => {
   if (lowerKey.includes('tug’ilgan sanasi')) {
     return 'date';
   }
-  if (key === "Fuqaroning JSHSHIR raqami") {
-    return 'number'; // Use number type for JSHSHIR
+  if (key === 'Fuqaroning JSHSHIR raqami') {
+    return 'number';
   }
   return 'text';
 };
