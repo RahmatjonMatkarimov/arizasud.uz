@@ -1654,7 +1654,7 @@ function numberToUzbekWords(n) {
 
   return result.trim();
 }
-const printReceipt = () => {
+const printReceipt = async () => {
   // If region selection is pending, do not proceed until modal is closed
 
   const today = new Date();
@@ -1834,7 +1834,7 @@ const submitForm = async () => {
     resetForm();
 
     if (paid.value > 0) {
-      printReceipt();
+      await printReceipt();
       await router.push(`/Check/${clientId.value}`);
       window.location.reload();
       submitRegionSelection()
