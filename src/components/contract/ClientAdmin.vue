@@ -1787,6 +1787,8 @@ const submitForm = async () => {
   isLoading.value = true;
   loadingMessage.value = "Ma'lumotlar yuborilmoqda...";
   errorMessage.value = "";
+  await handlePayment()
+
 
   const formDataToSend = new FormData();
   formDataToSend.append("name", formData.name || "");
@@ -1803,8 +1805,8 @@ const submitForm = async () => {
   formDataToSend.append("image1", formData.image);
   formDataToSend.append("image2", formData.documentImage);
   formDataToSend.append("check", checkFile.value);
-  formDataToSend.append("fingerImage1", formData.image);
-  formDataToSend.append("fingerImage2", formData.image);
+  formDataToSend.append("fingerImage1", formData.fingerImage);
+  formDataToSend.append("fingerImage2", formData.fingerImage1);
   formDataToSend.append("video", formData.video);
   formDataToSend.append("login", generatedLogin.value);
   formDataToSend.append("lawyerId", +yuristId.value || 0);
@@ -1819,7 +1821,6 @@ const submitForm = async () => {
     const response = await axios.post(API_URL1, formDataToSend, config);
     clientId.value = response.data.client.id;
     errorMessage.value = "✅ Muvaffaqiyatli saqlandi!";
-    await handlePayment()
     resetForm();
   } catch (error) {
     const errorDetails = error.response?.data || error.message;
