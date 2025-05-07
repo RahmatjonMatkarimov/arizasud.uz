@@ -11,24 +11,24 @@
                 <ul class="list-none p-0 m-0">
                     <li v-for="file in filteredFiles"
                         @click="router.push(file.type === 'video' ? '/video/' + file.id : '/room-file/' + file.id)"
-                        :key="file.id" class="relative rounded border-b-2 border-blue-500 z-20 p-2 my-2 cursor-pointer">
-                        <div class="py-2 flex justify-between items-center">
-                            <a target="_blank" class="text-gray-800 lg:w-auto w-[200px] lg:hover:underline">
+                        :key="file.id" class="relative duration-200 rounded-xl border-4 border-blue-500 z-20 p-2 my-2 cursor-pointer">
+                        <div class="py-2 flex  hover:bg-white border-4 rounded-xl  border-blue-500 bg-blue-500 group justify-between items-center">
+                            <a target="_blank" class="text-white ml-1 group-hover:text-blue-500 px-0 lg:px-4 text-md lg:text-xl lg:w-auto w-[200px] lg:hover:underline">
                                 {{ dat === 'datakril' ? translateText(file.name) : file.name }}
                             </a>
                             <div class="flex gap-4">
                                 <div class="lg:flex items-center relative z-50 gap-4">
-                                    <div v-if="file.ClientPayment && file.ClientPayment.length" class="text-sm">
+                                    <div v-if="file.ClientPayment && file.ClientPayment.length" class="text-lg">
                                         <span class="text-green-600"
                                             v-if="file.ClientPayment[file.ClientPayment.length - 1]?.remainingSum <= 0">
                                             {{ dat === 'datakril' ? translateText("To'langan") : "To'langan" }}
                                         </span>
                                         <span v-else
                                             @click.stop="openPaymentDetailsModal(file, $event)">
-                                            <span class="block text-red-600 cursor-pointer sm:hidden">
+                                            <span class="block text-red-400 cursor-pointer sm:hidden">
                                                 {{ dat === 'datakril' ? translateText("Qarzlar") : "Qarzlar" }}
                                             </span>
-                                            <span class="hidden text-red-600 cursor-pointer sm:inline">
+                                            <span class="hidden text-red-400 cursor-pointer sm:inline">
                                                 {{ dat === 'datakril' ? translateText("Qarzi") : "Qarzi" }}:
                                                 {{ file.ClientPayment[file.ClientPayment.length - 1]?.remainingSum || 0
                                                 }}
@@ -37,15 +37,15 @@
                                         </span>
 
                                     </div>
-                                    <div class="text-black">
+                                    <div class="group-hover:text-blue-500 mr-2 text-white">
                                         {{ formatDate(file.createdAt) }}
                                     </div>
                                 </div>
                                 <div v-if="file.LawyerTask[0]"
-                                    class="mt-2 rounded-full bg-blue-600 w-7 rotate-90 h-7 flex justify-center items-center sm:hidden">
+                                    class="mt-2 rounded-full bg-white text-blue-500 w-9 rotate-90 h-9 flex justify-center items-center sm:hidden">
                                     <button @click.stop="toggleTaskSection(file.id)"
                                         :class="{ 'rotate-180': taskSectionOpen[file.id] }"
-                                        class="text-white transition-transform duration-100">
+                                        class="text-blue-500 text-xl font-bold  transition-transform duration-300">
                                         < </button>
                                 </div>
                             </div>
@@ -74,7 +74,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="mt-2 lg:text-center">
-                                                    <div class="lg:group relative">
+                                                    <div class="lg:asd relative">
                                                         <p :class="[
                                                             'text-[16px] font-medium lg:p-1 line-clamp-2 lg:w-[120px] mb-1',
                                                             step.isLatestRejectionWithComment ? 'text-red-600' : 'text-green-600']"
@@ -83,7 +83,7 @@
                                                                 : getStatus(step.title) }}
                                                         </p>
                                                         <p
-                                                            class="absolute hidden -mt-2 rounded-md z-40 bg-gray-600 group-hover:block min-w-[300px] text-center text-white">
+                                                            class="absolute das -mt-2 rounded-md z-40 bg-gray-600 min-w-[300px] text-center text-white">
                                                             {{ dat === 'datakril' ? translateText(getStatus(step.title))
                                                                 : getStatus(step.title) }}
                                                         </p>
@@ -395,7 +395,13 @@ onUnmounted(() => {
         background-position: 0 0;
     }
 }
+.das {
+    display: none;
+  }
 
+  .asd:hover .das {
+    display: block;
+  }
 .bg-stripes {
     background-image: linear-gradient(45deg,
             rgb(159, 213, 157) 25%,

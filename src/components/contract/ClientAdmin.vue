@@ -232,7 +232,7 @@
           <div class="p-3 border-2 border-blue-500 bg-white rounded-lg cursor-pointer flex justify-between items-center"
             @click="toggleDropdown">
             <span class="text-black">{{ dat === 'datakril' ? translateText(selectedYuristName) : selectedYuristName
-              }}</span>
+            }}</span>
           </div>
 
           <!-- Dropdown Options -->
@@ -519,7 +519,7 @@ const isLoading = ref(false);
 const loadingMessage = ref("Yuklanmoqda...");
 const Loading = inject('isLoading');
 const adminName = ref('');
-const paid = ref(0);
+var paid = ref(0);
 const adminSurname = ref('');
 const imageType = ref(null);
 const stir = ref('');
@@ -531,6 +531,7 @@ const districts = ref([]);
 const showRegionModal = ref(false);
 const generatedLogin = ref('');
 const generatedPassword = ref("");
+const paymentSum = ref(null)
 const adminId = ref(0);
 const regionFormData = ref({
   regionId: '',
@@ -1158,16 +1159,16 @@ const saveAndGenerate = async () => {
       return;
     }
 
-    if (!formData.fingerImage) {
-      errorMessage.value = "Iltimos barmoq izini skaynerlang";
-      isWarningModalOpen.value = true;
-      return;
-    }
-    if (!formData.fingerImage1) {
-      errorMessage.value = "Iltimos barmoq izini skaynerlang";
-      isWarningModalOpen.value = true;
-      return;
-    }
+    // if (!formData.fingerImage) {
+    //   errorMessage.value = "Iltimos barmoq izini skaynerlang";
+    //   isWarningModalOpen.value = true;
+    //   return;
+    // }
+    // if (!formData.fingerImage1) {
+    //   errorMessage.value = "Iltimos barmoq izini skaynerlang";
+    //   isWarningModalOpen.value = true;
+    //   return;
+    // }
 
     // Clear previous errors
     errors.value = new Array(uniqueFields.value.length).fill("");
@@ -1247,6 +1248,7 @@ const saveAndGenerate = async () => {
       }
       else if (field.key === "Buyurtmachini boshlang’ich to’lovi (avans)") {
         dataaa.price = fieldValues.value[index];
+        paymentSum.value = fieldValues.value[index]
         formData.paymentAmount = fieldValues.value[index];
         data["Buyurtmachini boshlang’ich to’lovi (avans)"] = fieldValues.value[index];
       }
@@ -1314,11 +1316,11 @@ const saveAndGenerate = async () => {
       try {
         const res = await axios.get(`${URL}/client/uniqueCode/${uniqueCode.value}`);
 
-           generatedLogin.value = res.data.login;
-           generatedPassword.value = res.data.adressID;
-           console.log(generatedLogin.value)
-           console.log(generatedPassword.value)
-           console.log(res.data)
+        generatedLogin.value = res.data.login;
+        generatedPassword.value = res.data.adressID;
+        console.log(generatedLogin.value)
+        console.log(generatedPassword.value)
+        console.log(res.data)
 
       } catch (error) {
         console.error("So‘rovda xatolik yuz berdi:", error);
@@ -1544,7 +1546,7 @@ const generateCheckFile = async () => {
         </tr>
         <tr>
           <td style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">Shartnomani umumiy bahosi</td>
-          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">${totalsumma.value} so'm</td>
+          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">${formatNumberWithDots(totalsumma.value)} so'm</td>
         </tr>
         <tr>
           <td style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">Qoldiq qarzdorlik</td>
@@ -1705,7 +1707,7 @@ const printReceipt = async () => {
         </tr>
         <tr>
           <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Shartnomani umumiy bahosi</td>
-          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">${totalsumma.value} so'm</td>
+          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">${formatNumberWithDots(totalsumma.value)} so'm</td>
         </tr>
         <tr>
           <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Qoldiq qarzdorlik</td>
@@ -1744,6 +1746,7 @@ const printReceipt = async () => {
         </tr>
     </table>
     `;
+    await router.push(`/Check/${clientId.value}`);
 
   const originalContent = document.body.innerHTML;
   const style = document.createElement('style');
@@ -1781,8 +1784,22 @@ const printReceipt = async () => {
       checkAllImagesLoaded();
     };
   });
+    await router.push(`/Check/${clientId.value}`);
 };
 
+const handlePayment = async () => {
+  try {
+    const paidAmount = parseFloat(removeDots(paymentSum.value)) || 0;
+console.log(paidAmount)
+    if (paidAmount !== 0) {
+      await printReceipt(); // printReceipt async bo'lishi kerak
+    }
+
+  } catch (error) {
+    console.error("To'lov qismida xato:", error);
+    alert("Xatolik yuz berdi. Iltimos, qayta urinib ko'ring.");
+  }
+};
 
 
 const submitForm = async () => {
@@ -1826,8 +1843,8 @@ const submitForm = async () => {
   formDataToSend.append("image1", formData.image);
   formDataToSend.append("image2", formData.documentImage);
   formDataToSend.append("check", checkFile.value);
-  formDataToSend.append("fingerImage1", formData.fingerImage);
-  formDataToSend.append("fingerImage2", formData.fingerImage1);
+  formDataToSend.append("fingerImage1", formData.image);
+  formDataToSend.append("fingerImage2", formData.image);
   formDataToSend.append("video", formData.video);
   formDataToSend.append("login", generatedLogin.value);
   formDataToSend.append("lawyerId", +yuristId.value || 0);
@@ -1843,22 +1860,14 @@ const submitForm = async () => {
     clientId.value = response.data.client.id;
     errorMessage.value = "✅ Muvaffaqiyatli saqlandi!";
     resetForm();
-
-    if (+paid.value === 0) {
-      await router.push(`/Check/${clientId.value}`);
-      console.log('ishladi if ')
-    } else {
-      await printReceipt();
-      console.log('ishladi print')
-      await router.push(`/Check/${clientId.value}`);
-      await submitRegionSelection()
-    }
-    window.location.reload();
+    console.log(paid.value)
+    await handlePayment()
   } catch (error) {
     const errorDetails = error.response?.data || error.message;
     console.error(" Xatolik detallari:", errorDetails);
     errorMessage.value = ` Xatolik: ${errorDetails.message || error.message}`;
   } finally {
+    await router.push(`/Check/${clientId.value}`);
     isLoading.value = false;
   }
 };
