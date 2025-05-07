@@ -1803,27 +1803,6 @@ console.log(paidAmount)
 
 
 const submitForm = async () => {
-  if (!formData.file) {
-    errorMessage.value = " Fayl generatsiya qilinmagan! Avval saqlash va generatsiya qiling!";
-    return;
-  }
-  if (!formData.image || !formData.documentImage) {
-    errorMessage.value = " Ikkala surat olish shart! Avval chap va ong tamondan suratlarini oling!";
-    return;
-  }
-  if (!formData.image || !formData.documentImage) {
-    errorMessage.value = " Avval Videoga olishingiz shart oling!";
-    return;
-  }
-  if (!checkFile.value) {
-    errorMessage.value = " Chek fayli generatsiya qilinmagan!";
-    return;
-  }
-  if (!checkFile.value) {
-    errorMessage.value = " Ong qol barmoq izi skaynerlanagan!";
-    return;
-  }
-
   isLoading.value = true;
   loadingMessage.value = "Ma'lumotlar yuborilmoqda...";
   errorMessage.value = "";
