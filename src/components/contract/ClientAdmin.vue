@@ -832,6 +832,7 @@ const fetchDocx = async () => {
   Loading.value = true;
   try {
     const response = await axios.get(`${API_URL}/${id}`);
+    console.log(response.data)
     const fileUrl = URL + response.data.filePath;
     const fileResponse = await axios.get(fileUrl, { responseType: "blob" });
     if (!fileResponse.headers["content-type"].includes("application/vnd.openxmlformats")) {

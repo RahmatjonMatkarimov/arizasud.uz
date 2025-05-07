@@ -174,10 +174,10 @@
             class="p-3 border rounded-lg focus:outline-none text-black border-black focus:ring-2 focus:ring-blue-500"
             @change="fetchDistricts"
           >
-            <option value="" disabled>
+            <option class=" text-black" value="" disabled>
               {{ dat === 'datakril' ? translateText('Viloyatni tanlang') : 'Viloyatni tanlang' }}
             </option>
-            <option v-for="region in regions" :key="region.id" :value="region.id">
+            <option class=" text-black" v-for="region in regions" :key="region.id" :value="region.id">
               {{ dat === 'datakril' ? region.name_ru : region.name_uz }}
             </option>
           </select>
@@ -187,10 +187,10 @@
             class="p-3 border rounded-lg focus:outline-none text-black border-black focus:ring-2 focus:ring-blue-500"
             :disabled="!regionFormData.regionId"
           >
-            <option value="" disabled>
+            <option class=" text-black" value="" disabled>
               {{ dat === 'datakril' ? translateText('Tumanni tanlang') : 'Tumanni tanlang' }}
             </option>
-            <option v-for="district in districts" :key="district.id" :value="district.id">
+            <option class=" text-black" v-for="district in districts" :key="district.id" :value="district.id">
               {{ dat === 'datakril' ? district.name_ru : district.name_uz }}
             </option>
           </select>
@@ -733,19 +733,13 @@ const generateCheckFile = async () => {
   const month = String(today.getMonth() + 1).padStart(2, '0');
   const year = today.getFullYear();
   const formattedDate = `${day}.${month}.${year}`;
-
-  const images = [
-    { src: `${window.location.origin}/telegram-cloud.jpg`, key: 'telegram-cloud' },
-    { src: `${window.location.origin}/https___arizasud.uz_.png`, key: 'arizasud' },
-    { src: `${window.location.origin}/telegram.png`, key: 'telegram' },
-  ];
   const receiptHTML = `
     <table style="border: 1px solid black; height:80px; width:100%; border-collapse: collapse;">
         <tr>
-            <td rowspan="8" style="text-align: center; color: black; border: 1px solid black;"><img width="150px" src="${window.location.origin}/telegram-cloud.jpg" alt=""></td>
+            <td rowspan="8" style="text-align: center; color: black; border: 1px solid black;"><img width="150px" src="/telegram-cloud.jpg" alt=""></td>
             <td rowspan="2" style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black; vertical-align: middle;">Korxona manzili</td>
             <td rowspan="2" style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black; vertical-align: middle;">Xorazm viloyati, Xiva shaxar, <br> Yangi-hayot mahallasi, Sportchilar ko'chasi 14-uy</td>
-            <td rowspan="5" style="width: 70px; text-align: center; color: black; border: 1px solid black;"><img width="100%" src="${window.location.origin}/https___arizasud.uz_.png" alt=""></td>
+            <td rowspan="5" style="width: 70px; text-align: center; color: black; border: 1px solid black;"><img width="100%" src="/https___arizasud.uz_.png" alt=""></td>
         </tr>
         <tr>
         </tr>
@@ -798,18 +792,6 @@ const generateCheckFile = async () => {
         </tr>
     </table>
     `;
-    images.forEach((image) => {
-    const img = new Image();
-    img.src = image.src;
-    img.onload = () => {
-      console.log(`${image.key} loaded successfully`);
-      checkAllImagesLoaded();
-    };
-    img.onerror = () => {
-      console.error(`Failed to load image: ${image.key}`);
-      checkAllImagesLoaded();
-    };
-  });
 
   const element = document.createElement('div');
   element.innerHTML = receiptHTML;
