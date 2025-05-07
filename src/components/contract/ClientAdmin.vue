@@ -698,8 +698,6 @@ const saveVideo = () => {
   if (recordedVideoBlob.value) {
     const videoFile = new File([recordedVideoBlob.value], "recorded-video.mp4", { type: "video/mp4" });
     formData.video = videoFile;
-    console.log("Saved video file:", formData.video); // Debug log
-
     closeVideoModal();
     recordedVideoBlob.value = null;
     recordedChunks.value = [];
@@ -728,7 +726,6 @@ const getYurist = async () => {
   try {
     const response = await axios.get(`${URL}/yurist`);
     yurists.value = response.data; // Populate the yurists array
-    console.log("Yurists:", yurists.value);
   } catch (error) {
     console.error("getYurist error:", error);
     errorMessage.value = " Yuristlar ro'yxatini yuklashda xatolik!";
@@ -773,7 +770,6 @@ const finger = async () => {
   loadingMessage.value = 'Iltimos, barmogʻingizni qurilmaga qoʻying. Barmoq izi olinmoqda...';
   try {
     const response = await axios.get("http://localhost:2181");
-    console.log("FINGER:", response.data);
     if (response.data.image) {
       imageData.value = response.data.image
     } else {
@@ -794,7 +790,6 @@ const finger = async () => {
   } finally {
     isLoading.value = false;
     fingerText1.value = true
-    console.log("O'ng barmoq skanerlangan?", fingerText1.value) // ✅ Tekshiruv
   }
 };
 
@@ -803,7 +798,6 @@ const finger1 = async () => {
   loadingMessage.value = 'Iltimos, barmogʻingizni qurilmaga qoʻying. Barmoq izi olinmoqda...';
   try {
     const response = await axios.get("http://localhost:2181");
-    console.log("FINGER:", response.data);
     if (response.data.image) {
       imageData.value = response.data.image
     } else {
@@ -826,14 +820,12 @@ const finger1 = async () => {
   } finally {
     isLoading.value = false;
     fingerText2.value = true
-    console.log("Chap barmoq skanerlangan?", fingerText2.value) // ✅ Tekshiruv
   }
 };
 const fetchDocx = async () => {
   Loading.value = true;
   try {
     const response = await axios.get(`${API_URL}/${id}`);
-    console.log(response.data)
     const fileUrl = URL + response.data.filePath;
     const fileResponse = await axios.get(fileUrl, { responseType: "blob" });
     if (!fileResponse.headers["content-type"].includes("application/vnd.openxmlformats")) {
@@ -1318,10 +1310,6 @@ const saveAndGenerate = async () => {
 
         generatedLogin.value = res.data.login;
         generatedPassword.value = res.data.adressID;
-        console.log(generatedLogin.value)
-        console.log(generatedPassword.value)
-        console.log(res.data)
-
       } catch (error) {
         console.error("So‘rovda xatolik yuz berdi:", error);
         generatedLogin.value = `${formData.name}${generateRandomName()}`
@@ -1461,7 +1449,6 @@ const selectDate = (day) => {
     return;
   }
   const selectedDate = new Date(Date.UTC(currentYear.value, currentMonth.value, day));
-  console.log('Selected Date:', selectedDate, selectedDate.toISOString());
   selectedCompletionDate.value = selectedDate.toISOString().split('T')[0];
 };
 
@@ -1469,7 +1456,6 @@ const isSelected = (date) => {
   if (!selectedCompletionDate.value) return false;
   const selectedDate = new Date(selectedCompletionDate.value + 'T00:00:00Z');
   const calendarDate = new Date(Date.UTC(currentYear.value, currentMonth.value, date));
-  console.log('Comparing:', selectedDate, calendarDate);
   return (
     selectedDate.getUTCFullYear() === calendarDate.getUTCFullYear() &&
     selectedDate.getUTCMonth() === calendarDate.getUTCMonth() &&
@@ -1505,10 +1491,7 @@ const saveSelectedDate = () => {
     errorMessage.value = " Iltimos, avval sana tanlang!";
     return;
   }
-  // Perform any additional actions needed with the selected date
-  console.log("Selected Completion Date:", selectedCompletionDate.value);
 
-  // Close the modal
   isCompletionDateModalOpen.value = false;
 };
 
@@ -1746,7 +1729,7 @@ const printReceipt = async () => {
         </tr>
     </table>
     `;
-    await router.push(`/Check/${clientId.value}`);
+  await router.push(`/Check/${clientId.value}`);
 
   const originalContent = document.body.innerHTML;
   const style = document.createElement('style');
@@ -1776,7 +1759,6 @@ const printReceipt = async () => {
     const img = new Image();
     img.src = image.src;
     img.onload = () => {
-      console.log(`${image.key} loaded successfully`);
       checkAllImagesLoaded();
     };
     img.onerror = () => {
@@ -1784,13 +1766,12 @@ const printReceipt = async () => {
       checkAllImagesLoaded();
     };
   });
-    await router.push(`/Check/${clientId.value}`);
+  await router.push(`/Check/${clientId.value}`);
 };
 
 const handlePayment = async () => {
   try {
     const paidAmount = parseFloat(removeDots(paymentSum.value)) || 0;
-console.log(paidAmount)
     if (paidAmount !== 0) {
       await printReceipt(); // printReceipt async bo'lishi kerak
     }
@@ -1839,7 +1820,6 @@ const submitForm = async () => {
     clientId.value = response.data.client.id;
     errorMessage.value = "✅ Muvaffaqiyatli saqlandi!";
     resetForm();
-    console.log(paid.value)
     await handlePayment()
   } catch (error) {
     const errorDetails = error.response?.data || error.message;
