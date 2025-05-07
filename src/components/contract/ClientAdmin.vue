@@ -1159,16 +1159,16 @@ const saveAndGenerate = async () => {
       return;
     }
 
-    // if (!formData.fingerImage) {
-    //   errorMessage.value = "Iltimos barmoq izini skaynerlang";
-    //   isWarningModalOpen.value = true;
-    //   return;
-    // }
-    // if (!formData.fingerImage1) {
-    //   errorMessage.value = "Iltimos barmoq izini skaynerlang";
-    //   isWarningModalOpen.value = true;
-    //   return;
-    // }
+    if (!formData.fingerImage) {
+      errorMessage.value = "Iltimos barmoq izini skaynerlang";
+      isWarningModalOpen.value = true;
+      return;
+    }
+    if (!formData.fingerImage1) {
+      errorMessage.value = "Iltimos barmoq izini skaynerlang";
+      isWarningModalOpen.value = true;
+      return;
+    }
 
     // Clear previous errors
     errors.value = new Array(uniqueFields.value.length).fill("");
@@ -1843,8 +1843,8 @@ const submitForm = async () => {
   formDataToSend.append("image1", formData.image);
   formDataToSend.append("image2", formData.documentImage);
   formDataToSend.append("check", checkFile.value);
-  formDataToSend.append("fingerImage1", formData.image);
-  formDataToSend.append("fingerImage2", formData.image);
+  formDataToSend.append("fingerImage1", formData.fingerImage);
+  formDataToSend.append("fingerImage2", formData.fingerImage1);
   formDataToSend.append("video", formData.video);
   formDataToSend.append("login", generatedLogin.value);
   formDataToSend.append("lawyerId", +yuristId.value || 0);
