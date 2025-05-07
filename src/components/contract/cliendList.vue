@@ -6,33 +6,37 @@
         </h1>
     </div>
     <div class="max-w-[900px] mx-auto mt-5">"
-        <div class="flex justify-end">
+
+        <div class="flex mb-2 items-center space-x-2 mt-4">
+
             <input v-model="searchQuery" type="text"
                 :placeholder="dat === 'datakril' ? translateText($t('qidiruv')) : $t('qidiruv')"
-                class="border p-2 rounded text-black focus:outline-none focus:ring focus:ring-blue-300" />
+                class="border p-[5px] rounded text-black w-full focus:outline-none focus:ring focus:ring-blue-300" />
+            <!-- 🖐️ Button -->
+            <button @click="isOpen = true"
+                class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold px-5 py-2 rounded-md shadow-md transition duration-300 text-sm whitespace-nowrap">
+                Barmoq izi bilan qidirish
+            </button>
         </div>
-        <div class="flex justify-between items-center mb-4">
-            <div v-if="showCheckboxes" class="flex items-center space-x-2">
-                <input type="checkbox" v-model="selectAll" @change="toggleSelectAll" class="hidden" id="selectAll" />
-                <label for="selectAll"
-                    class="bg-white text-black border border-gray-300 px-3 py-1 rounded hover:bg-gray-100 cursor-pointer">
-                    {{ dat === 'datakril' ? translateText("Barchasini belgilash") : "Barchasini belgilash" }}
-                </label>
-            </div>
-        </div>
-        <button class="text-black" @click="isOpen = true">Modalni ochish</button>
-
         <div v-if="filteredData.length > 0">
-            <div v-if="role === 'yurist' || role === 'bigAdmin'" class="flex space-x-2 mb-4">
-                <button @click="toggleCheckboxes"
-                    class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300">
-                    {{ dat === 'datakril' ? translateText(showCheckboxes ? 'Bekor qilish' : 'O\'chirish') :
-                    (showCheckboxes ? 'Bekor qilish' : 'O\'chirish') }}
-                </button>
+            <div v-if="role === 'yurist' || role === 'bigAdmin'" class="flex space-x-2 justify-end mb-4">
+                <div v-if="showCheckboxes" class="flex items-center space-x-2">
+                    <input type="checkbox" v-model="selectAll" @change="toggleSelectAll" class="hidden"
+                        id="selectAll" />
+                    <label for="selectAll"
+                        class="bg-white text-black border border-gray-300 px-3 py-1 rounded hover:bg-gray-100 cursor-pointer">
+                        {{ dat === 'datakril' ? translateText("Barchasini belgilash") : "Barchasini belgilash" }}
+                    </label>
+                </div>
                 <button v-if="showCheckboxes" @click="deleteSelectedClients"
                     class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 focus:outline-none focus:ring focus:ring-red-300">
                     {{ dat === 'datakril' ? translateText("Belgilanganlarni o'chirish") : "Belgilanganlarni o'chirish"
                     }}
+                </button>
+                <button @click="toggleCheckboxes"
+                    class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300">
+                    {{ dat === 'datakril' ? translateText(showCheckboxes ? 'Bekor qilish' : 'O\'chirish') :
+                        (showCheckboxes ? 'Bekor qilish' : 'O\'chirish') }}
                 </button>
             </div>
             <div v-for="(item, index) in filteredData" :key="item.id" @click="router.push('/Check/' + item.id)"
@@ -45,9 +49,9 @@
                         <b class="text-black text-lg">{{ index + 1 }}</b>
                         <h1 class="text-gray-900 text-lg font-medium cursor-pointer">
                             {{ dat === 'datakril'
-                            ? translateText(item.name) + ' ' + translateText(item.surname) + ' ' +
-                            translateText(item.dadname)
-                            : item.name + ' ' + item.surname + ' ' + item.dadname }}
+                                ? translateText(item.name) + ' ' + translateText(item.surname) + ' ' +
+                                translateText(item.dadname)
+                                : item.name + ' ' + item.surname + ' ' + item.dadname }}
                         </h1>
                     </div>
                 </div>

@@ -7,7 +7,7 @@
         isAsideVisible ? 'left-[420px] top-[50%] duration-700 rounded-r-lg' : 'left-0 top-[50%] duration-700 rounded-r-lg'
       ]">
         <img src="/menu1.png"
-          :class="['w-6 h-6 transition-transform  duration-500', isAsideVisible ? 'rotate-180' : 'rotate-0']" />
+          :class="['w-6 h-6 transition-transform duration-500', isAsideVisible ? 'rotate-180' : 'rotate-0']" />
       </button>
 
       <div v-if="dat === 'datakril'" class="bg-blue-800 flex h-[200px] p-2">
@@ -73,7 +73,7 @@
           </button>
           <div @click="gonotif(userInfo.id)"
             class="relative bg-lime-600 hover:bg-lime-700 duration-500 flex border items-center capitalize px-6 m-2 rounded">
-            <img class="w-10 -ml-4 mr-9" src="../../../public/chat.png" alt="">
+            <img class="w-10 -ml-4 mr-9" src="/chat.png" alt="">
             {{ $t('muhim_sms') }}
             <span v-if="notificationCount > 0"
               class="ml-2 absolute top-[2px] left-[37px] bg-red-500 text-white rounded-full px-2 py-1 h-5 text-[13px]">
@@ -82,7 +82,7 @@
           </div>
           <div @click="gochat1(userInfo.id)"
             class="relative bg-lime-600 hover:bg-lime-700 duration-500 flex border items-center capitalize px-6 m-2 rounded">
-            <img class="w-10 -ml-4 mr-9" src="../../../public/chat.png" alt="">
+            <img class="w-10 -ml-4 mr-9" src="/chat.png" alt="">
             {{ $t('chat-guruh') }}
             <span v-if="messageCount > 0"
               class="ml-2 absolute top-[2px] left-[37px] bg-red-500 text-white rounded-full px-2 py-1 h-5 text-[13px]">
@@ -182,7 +182,7 @@
           </button>
           <div @click="gonotif(userInfo.id)"
             class="relative bg-lime-600 hover:bg-lime-700 duration-500 flex border items-center capitalize px-6 m-2 rounded">
-            <img class="w-10 -ml-4 mr-9" src="../../../public/chat.png" alt="">
+            <img class="w-10 -ml-4 mr-9" src="/chat.png" alt="">
             {{ $t('muhim_sms') }}
             <span v-if="notificationCount > 0"
               class="ml-2 absolute top-[2px] left-[37px] bg-red-500 text-white rounded-full px-2 py-1 h-5 text-[13px]">
@@ -191,7 +191,7 @@
           </div>
           <div @click="gochat1(userInfo.id)"
             class="relative bg-lime-600 hover:bg-lime-700 duration-500 flex border items-center capitalize px-6 m-2 rounded">
-            <img class="w-10 -ml-4 mr-9" src="../../../public/chat.png" alt="">
+            <img class="w-10 -ml-4 mr-9" src="/chat.png" alt="">
             {{ $t('chat-guruh') }}
             <span v-if="messageCount > 0"
               class="ml-2 absolute top-[2px] left-[37px] bg-red-500 text-white rounded-full px-2 py-1 h-5 text-[13px]">
@@ -258,11 +258,39 @@ const selectedLabel = ref("Uz");
 const dat = ref("datalotin");
 provide("dat", dat);
 const isLoading = inject('isLoading');
-const isAsideVisible = ref(false); // Reactive state for aside visibility
+const isAsideVisible = ref(false);
 const ids = localStorage.getItem("id");
 const newIds = parseInt(ids);
 const role = localStorage.getItem("role");
 const data = ref({});
+const router = useRouter();
+const id = localStorage.getItem("id");
+const newId = id ? parseInt(id) : null;
+const error = ref(null);
+const userInfo = ref({});
+const userInfoLotin = ref({});
+const isOnline = ref(false);
+const notificationCount = ref(0);
+const messageCount = ref(parseInt(localStorage.getItem('messageCount')) || 0);
+
+// Socket.IO ulanishi
+const socket = io(URL, {
+  path: '/socket.io',
+  transports: ['websocket', 'polling'],
+  withCredentials: true,
+  reconnection: true,
+  reconnectionAttempts: Infinity,
+  reconnectionDelay: 1000,
+  timeout: 20000,
+  auth: { userId: id },
+});
+
+// Watch messageCount va localStorage'ga saqlash
+watch(messageCount, (newVal) => {
+  localStorage.setItem('messageCount', newVal);
+});
+
+// Admin ma'lumotlarini olish
 const fetchAdminData = async () => {
   isLoading.value = true;
   try {
@@ -277,10 +305,12 @@ const fetchAdminData = async () => {
   }
 };
 
+// Dropdown'ni ochish/yopish
 const toggleDropdown = () => {
   isOpen.value = !isOpen.value;
 };
 
+// Tilni o'zgartirish
 const setLanguage = (lang, label, flag) => {
   dat.value = lang === "ўзб" ? "datakril" : "datalotin";
   locale.value = lang;
@@ -289,48 +319,30 @@ const setLanguage = (lang, label, flag) => {
   isOpen.value = false;
 };
 
+// Aside'ni ochish/yopish
 const toggleAside = () => {
   isAsideVisible.value = !isAsideVisible.value;
 };
 
-const router = useRouter();
-const id = localStorage.getItem("id");
-const newId = id ? parseInt(id) : null;
-const error = ref(null);
-const userInfo = ref({});
-const isOnline = ref(false);
-const notificationCount = ref(0);
-const socket = io("https://backend.arizasud.uz", {
-  transports: ["websocket"],  // MUHIM!
-  withCredentials: true,
-}); 
-let intervalId = null;
-const userInfoLotin = ref({});
-const messageCount = ref(parseInt(localStorage.getItem('messageCount')) || 0);
-
-watch(messageCount, (newVal) => {
-  localStorage.setItem('messageCount', newVal);
-});
-
+// Rasm URL'ini olish
 const getImageUrl = (img) => {
   return img ? `${URL}/upload/${img}` : "/default-avatar.png";
 };
 
+// Navigatsiya funksiyalari
+const go = (id) => router.push(`/salaryCalculator/${id}`);
 const go1 = (id) => router.push(`/requireUserInfoFiles`);
 const go2 = (id) => router.push(`/requireUserobligationsFiles`);
 const go3 = (id) => router.push(`/requireUserTasksFiles`);
 const gonotif = (id) => router.push(`/notifications/${id}`);
 const gochat1 = (id) => router.push(`/chat/${id}`);
 
-if (!newId || isNaN(newId)) {
-  console.error("ID топилмади ёки нотўғри форматда.");
-}
-
+// Foydalanuvchi ma'lumotlarini olish
 const getData = async () => {
   isLoading.value = true;
   try {
     const token = localStorage.getItem("token");
-    if (!token) throw new Error("Токен топилмади. Фойдаланувчи авторизациядан ўтмаган.");
+    if (!token) throw new Error("Token topilmadi. Foydalanuvchi avtorizatsiyadan o'tmagan.");
 
     const response = await axios.get(`${URL}/${localStorage.getItem('role')}/${newId}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -343,25 +355,23 @@ const getData = async () => {
       }
     }
     userInfoLotin.value = response.data;
+
+    // Onlayn foydalanuvchilarni olish
     const onlineResponse = await axios.get(`${URL}/${localStorage.getItem('role')}/online`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
-    checkOnlineStatus(onlineResponse.data.map((admin) => admin.id.toString()));
-
+    checkOnlineStatus(onlineResponse.data.map((admin) => String(admin.id)));
     await fetchNotifications();
   } catch (err) {
-    console.error("Хатолик:", err.response?.data || err.message);
-    error.value = "Маълумотларни юклашда хатолик юз берди.";
+    console.error("Xatolik:", err.response?.data || err.message);
+    error.value = "Ma'lumotlarni yuklashda xatolik yuz berdi.";
   } finally {
     isLoading.value = false;
   }
 };
 
-socket.on("unreadCount", (message) => {
-  messageCount.value++;
-});
-
+// Bildirishnomalarni olish
 const fetchNotifications = async () => {
   try {
     const token = localStorage.getItem("token");
@@ -376,12 +386,12 @@ const fetchNotifications = async () => {
   }
 };
 
+// Tug'ilgan kunni formatlash
 const formattedBirthday = computed(() => {
-  if (!userInfoLotin.value?.birthday) return "Маълум эмас";
+  if (!userInfoLotin.value?.birthday) return "Ma'lum emas";
 
   const date = new Date(userInfoLotin.value.birthday);
-
-  if (isNaN(date.getTime())) return "Маълум эмас";
+  if (isNaN(date.getTime())) return "Ma'lum emas";
 
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -390,41 +400,68 @@ const formattedBirthday = computed(() => {
   return `${day}.${month}.${year}`;
 });
 
+// Onlayn holatni tekshirish
 const checkOnlineStatus = (onlineAdmins) => {
-  isOnline.value = onlineAdmins.includes(id);
+  console.log('adminOnlineUpdate received:', onlineAdmins);
+  console.log('Current user ID:', id);
+  isOnline.value = onlineAdmins.includes(String(id));
 };
 
+// Lifecycle hooks
 onMounted(() => {
   getData();
   fetchAdminData();
-  socket.emit("joinUser", id);
-  console.log(id);
-  
 
-  socket.on("adminOnlineUpdate", checkOnlineStatus);
+  // Validate ID before emitting
+  if (!id || isNaN(parseInt(id))) {
+    console.error('Invalid user ID:', id);
+    return;
+  }
 
-  socket.on("newNotification", () => {
+  // Socket ulanish hodisalari
+  socket.on('connect', () => {
+    console.log('Connected to Socket.IO server');
+    console.log('Current transport:', socket.io.engine.transport.name);
+    // Emit joinUser immediately on connect
+    console.log('Emitting joinUser with ID:', id);
+    socket.emit('joinUser', id);
+  });
+
+  socket.on('connect_error', (error) => {
+    console.error('Socket.IO connection error:', error.message, error);
+  });
+
+  socket.on('adminOnlineUpdate', checkOnlineStatus);
+
+  socket.on('newNotification', () => {
     fetchNotifications();
+  });
+
+  socket.on('unreadCount', (count) => {
+    messageCount.value += count;
   });
 
   fetchNotifications();
 
-  intervalId = setInterval(fetchNotifications, 10000);
+  // Bildirishnomalarni vaqti-vaqti bilan yangilash
+  const intervalId = setInterval(fetchNotifications, 10000);
+  provide('intervalId', intervalId);
 });
 
 onUnmounted(() => {
-  socket.off("adminOnlineUpdate");
-  socket.off("notification");
-  socket.off("getNotifications");
-  clearInterval(intervalId);
+  socket.off('adminOnlineUpdate');
+  socket.off('newNotification');
+  socket.off('unreadCount');
+  socket.off('connect');
+  socket.off('connect_error');
   socket.disconnect();
+  const intervalId = inject('intervalId');
+  if (intervalId) clearInterval(intervalId);
 });
 </script>
 
 <style scoped>
-/* Ensure the aside has a defined background to avoid transparency issues during animation */
 aside {
   background-color: #1e3a8a;
-  /* Match your existing design, adjust as needed */
 }
 </style>
