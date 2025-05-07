@@ -1819,8 +1819,8 @@ const submitForm = async () => {
     const response = await axios.post(API_URL1, formDataToSend, config);
     clientId.value = response.data.client.id;
     errorMessage.value = "✅ Muvaffaqiyatli saqlandi!";
-    resetForm();
     await handlePayment()
+    resetForm();
   } catch (error) {
     const errorDetails = error.response?.data || error.message;
     console.error(" Xatolik detallari:", errorDetails);
