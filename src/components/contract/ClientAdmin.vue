@@ -1787,8 +1787,6 @@ const submitForm = async () => {
   isLoading.value = true;
   loadingMessage.value = "Ma'lumotlar yuborilmoqda...";
   errorMessage.value = "";
-  await handlePayment()
-
 
   const formDataToSend = new FormData();
   formDataToSend.append("name", formData.name || "");
@@ -1820,6 +1818,8 @@ const submitForm = async () => {
     const config = { headers: { "Content-Type": "multipart/form-data" } };
     const response = await axios.post(API_URL1, formDataToSend, config);
     clientId.value = response.data.client.id;
+  await handlePayment()
+
     errorMessage.value = "✅ Muvaffaqiyatli saqlandi!";
     resetForm();
   } catch (error) {
