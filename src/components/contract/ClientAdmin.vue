@@ -1527,58 +1527,58 @@ const generateCheckFile = async () => {
        <table style="border: 1px solid black; height:80px; width:100%; border-collapse: collapse;">
         <tr>
             <td rowspan="9" style="text-align: center; color: black; border: 1px solid black;"><img width="150px" src="${window.location.origin}/telegram-cloud.jpg" alt=""></td>
-            <td rowspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black; vertical-align: middle;">Korxona manzili</td>
-            <td rowspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black; vertical-align: middle;">Xorazm viloyati, Xiva shaxar, <br> Yangi-hayot mahallasi, Sportchilar ko'chasi 14-uy</td>
+            <td rowspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px; vertical-align: middle;">Korxona manzili</td>
+            <td rowspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px; vertical-align: middle;">Xorazm viloyati, Xiva shaxar, <br> Yangi-hayot mahallasi, Sportchilar ko'chasi 14-uy</td>
             <td rowspan="5" style="width: 70px; text-align: center; color: black; border: 1px solid black;"><img width="100%" src="${window.location.origin}/https___arizasud.uz_.png" alt=""></td>
         </tr>
         <tr>
         </tr>
         <tr>
-          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Shartnoma raqami</td>
-          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">№${UniqueID || 'Mavjud emas'}</td>
+          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">Shartnoma raqami</td>
+          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">№${UniqueID || 'Mavjud emas'}</td>
         </tr>
         <tr>
-          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Tolov maqsadi</td>
-          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Kansating xizmat</td>
+          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">Tolov maqsadi</td>
+          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">Kansating xizmat</td>
         </tr>
         <tr>
-          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Shartnomani umumiy bahosi</td>
-          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">${totalsumma.value} so'm</td>
+          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">Shartnomani umumiy bahosi</td>
+          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">${totalsumma.value} so'm</td>
         </tr>
         <tr>
-          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Qoldiq qarzdorlik</td>
-          <td colspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black;">${qarz.value <= 0 ? "To'landi" : formatNumberWithDots(qarz.value) + " so'm"}</td>
+          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">Qoldiq qarzdorlik</td>
+          <td colspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">${qarz.value <= 0 ? "To'landi" : formatNumberWithDots(qarz.value) + " so'm"}</td>
         </tr>
         <tr>
-            <td style="width: 100px; text-align: center; color: black; border: 1px solid black; height:15px;">Joriy to'lov</td>
-            <td colspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black;height:15px">${formatNumberWithDots(paid.value)} so'm</td>
+            <td style="width: 100px; text-align: center; color: black; border: 1px solid black; height:15px;font-size:12px; padding-bottom: 12px;">Joriy to'lov</td>
+            <td colspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black;height:15px;font-size:12px; padding-bottom: 12px;">${formatNumberWithDots(paid.value)} so'm</td>
         </tr>
         <tr>
-            <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Joriy to'lov qilingan sana</td>
-            <td colspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black;">${formattedDate}</td>
+            <td style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">Joriy to'lov qilingan sana</td>
+            <td colspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">${formattedDate}</td>
         </tr>
         <tr>
-            <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">To'lovchining F.I.O.:</td>
-            <td colspan="3" style="width: 100px; text-align: center; color: black; border: 1px solid black;">${name.value} ${surname.value} ${dadname.value}</td>
+            <td style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">To'lovchining F.I.O.:</td>
+            <td colspan="3" style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">${name.value} ${surname.value} ${dadname.value}</td>
         </tr>
         <tr>
-            <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">${paymentTuman.value} bosh ofis binosi</td>
-            <td colspan="3" style="width: 100px; text-align: center; color: black; border: 1px solid black;">STIR 307675491      MFO: 01037</td>
+            <td style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">${paymentTuman.value} bosh ofis binosi</td>
+            <td colspan="3" style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">STIR 307675491      MFO: 01037</td>
         </tr>
         <tr>
-            <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">To'lovni qabul qiluvchi korxona</td>
-            <td colspan="3" style="width: 100px; text-align: center; color: black; border: 1px solid black;">"YURIST KONSUL KONSALTING" X/k</td>
+            <td style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">To'lovni qabul qiluvchi korxona</td>
+            <td colspan="3" style="width: 100px; text-align: center; color: black;font-size:12px; padding-bottom: 12px; border: 1px solid black;">"YURIST KONSUL KONSALTING" X/k</td>
         </tr>
         <tr>
-            <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">TO'LOV SUMMASI SO"Z BILAN</td>
-            <td colspan="3" style="width: 100px; text-align: center; color: black; text-transform: uppercase; border: 1px solid black;">${numberToUzbekWords(+paid.value)} so'm</td>
+            <td style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">TO'LOV SUMMASI SO"Z BILAN</td>
+            <td colspan="3" style="width: 100px; text-align: center; color: black;font-size:12px; padding-bottom: 12px; text-transform: uppercase; border: 1px solid black;">${numberToUzbekWords(+paid.value)} so'm</td>
         </tr>
         <tr>
-            <td style="width: 110px; text-align: center; color: black; border: 1px solid black;">Texnik yordam: +998 62 226 99 00</td>
-            <td colspan="3" style="width: 110px; text-align: center; color: black; border: 1px solid black;">ushbu to'lov ARIZASUD.UZ tizimi orqali amalga oshirilgan</td>
+            <td style="width: 110px; text-align: center; color: black; font-size:12px; padding-bottom: 12px;border: 1px solid black;">Texnik yordam: +998 62 226 99 00</td>
+            <td colspan="3" style="width: 110px; text-align: center; color: black;font-size:12px; padding-bottom: 12px; border: 1px solid black;">ushbu to'lov ARIZASUD.UZ tizimi orqali amalga oshirilgan</td>
         </tr>
         <tr>
-            <td colspan="4" style="width: 100px; text-align: center; color: black; text-transform: uppercase; border: 1px solid black;">To'lov pattasi faqatgina kassa muhri bilan tasdiqlangandan so'ng haqiqiy hisoblanadi. Agar pattada muhr bo'lmasa, u rasmiy kuchga ega emas va yaroqsiz deb topiladi. Shu sababli, har qanday to'lov hujjatining muhrlanganligiga e'tibor berish lozim.</td>
+            <td colspan="4" style="width: 100px; text-align: center; color: black;font-size:12px; padding-bottom: 12px; text-transform: uppercase; border: 1px solid black;">To'lov pattasi faqatgina kassa muhri bilan tasdiqlangandan so'ng haqiqiy hisoblanadi. Agar pattada muhr bo'lmasa, u rasmiy kuchga ega emas va yaroqsiz deb topiladi. Shu sababli, har qanday to'lov hujjatining muhrlanganligiga e'tibor berish lozim.</td>
         </tr>
     </table>
     `;
