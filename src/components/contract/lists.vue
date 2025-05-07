@@ -729,52 +729,63 @@ const printReceipt = () => {
 
 const generateCheckFile = async () => {
   const receiptHTML = `
-    <div style="font-size: 12px; max-width:17%; display:flex; flex-direction: column; justify-content: center; align-content:center; color: black;">
-        <h1 style="text-align: center; font-size:15px; font-weight: bold; color: black; margin-top:18px;">To'lov cheki</h1>
-        <table style="width: 100%; border-collapse: collapse; color: black; table-layout: fixed;">
-            <tr>
-                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Mijoz:</td>
-                <td style="color: black;">${data.value.name} ${data.value.surname} ${data.value.dadname}</td>
-            </tr>
-            <tr>
-                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Telefon Raqami:</td>
-                <td style="color: black; line-height: 1.2;">${data.value.phone || 'Mavjud emas'}</td>
-            </tr>
-            <tr>
-                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Shartnoma idsi:</td>
-                <td style="color: black; line-height: 1.2;">№${clientFiles.value[0]?.contractId || 'Mavjud emas'}</td>
-            </tr>
-            <tr>
-                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Viloyat:</td>
-                <td style="color: black; line-height: 1.2;">${selectedRegionForPrint.value.regionName || 'Tanlanmagan'}</td>
-            </tr>
-            <tr>
-                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Tuman:</td>
-                <td style="color: black; line-height: 1.2;">${selectedRegionForPrint.value.districtName || 'Tanlanmagan'}</td>
-            </tr>
-            <tr>
-                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">To'langan:</td>
-                <td style="color: black; line-height: 1.2;">${formatNumberWithDots(receiptData.value.paymentAmount)} so'm</td>
-            </tr>
-            <tr>
-                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Qoldiq qarz:</td>
-                <td style="color: black; line-height: 1.2;">${receiptData.value.remainingDebt <= 0 ? "To'landi" : formatNumberWithDots(receiptData.value.remainingDebt) + " so'm"}</td>
-            </tr>
-            <tr>
-                <td style="color: black; text-align: left; line-height: 1.2; white-space: nowrap;">Sana:</td>
-                <td style="color: black; line-height: 1.2;">${receiptData.value.date}</td>
-            </tr>
-        </table>
-        <p style="text-align: center; color: black; justify-content: center; gap:3px; align-items: center; display:flex; margin-top:10px;">
-            <img src="/telegram.png" alt="" style="max-width: 7%; height: auto;">
-            <span style="font-size: 10px; color: black;">Telegram: +998 99 106 70 35</span>
-        </p>
-        <p style="text-align: center; font-size:10px; color: black;">"YURIST KONSUL KONSALTING" x/k</p>
-        <div style="display: flex; flex-direction:column; justify-content: center; align-items: center; margin-top: 20px;">
-            <img src="/asd.jpg" alt="" style="max-width: 90%; height: auto;">
-            <img src="/https___arizasud.uz_.png" alt="" style="max-width: 90%; height: auto;">
-        </div>
-    </div>
+    <table style="border: 1px solid black; height:80px; width:100%; border-collapse: collapse;">
+        <tr>
+            <td rowspan="8" style="text-align: center; color: black; border: 1px solid black;"><img width="150px" src="${window.location.origin}/telegram-cloud.jpg" alt=""></td>
+            <td rowspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black; vertical-align: middle;">Korxona manzili</td>
+            <td rowspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black; vertical-align: middle;">Xorazm viloyati, Xiva shaxar, <br> Yangi-hayot mahallasi, Sportchilar ko'chasi 14-uy</td>
+            <td rowspan="5" style="width: 70px; text-align: center; color: black; border: 1px solid black;"><img width="100%" src="${window.location.origin}/https___arizasud.uz_.png" alt=""></td>
+        </tr>
+        <tr>
+        </tr>
+        <tr>
+          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Shartnoma raqami</td>
+          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">№${clientFiles.value[0]?.contractId || 'Mavjud emas'}</td>
+        </tr>
+        <tr>
+          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Tolov maqsadi</td>
+          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Kansating xizmat</td>
+        </tr>
+        <tr>
+          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Shartnomani umumiy bahosi</td>
+          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">${totalsumma.value} so'm</td>
+        </tr>
+        <tr>
+          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Qoldiq qarzdorlik</td>
+          <td colspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black;">${receiptData.value.remainingDebt <= 0 ? "To'landi" : formatNumberWithDots(receiptData.value.remainingDebt) + " so'm"}</td>
+        </tr>
+        <tr>
+            <td style="width: 100px; text-align: center; color: black; border: 1px solid black; height:15px;">Joriy to'lov</td>
+            <td colspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black;height:15px;">${formatNumberWithDots(receiptData.value.paymentAmount)} so'm</td>
+        </tr>
+        <tr>
+            <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Joriy to'lov qilingan sana</td>
+            <td colspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black;">${formattedDate}</td>
+        </tr>
+        <tr>
+            <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">To'lovchining F.I.O.:</td>
+            <td colspan="3" style="width: 100px; text-align: center; color: black; border: 1px solid black;">${data.value.name} ${data.value.surname} ${data.value.dadname}</td>
+        </tr>
+        <tr>
+            <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">${selectedRegionForPrint.value.regionName || 'Tanlanmagan'} ${selectedRegionForPrint.value.districtName ? ' ' + selectedRegionForPrint.value.districtName : ''} bosh ofis binosi</td>
+            <td colspan="3" style="width: 100px; text-align: center; color: black; border: 1px solid black;">STIR 307675491      MFO: 01037</td>
+        </tr>
+        <tr>
+            <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">To'lovni qabul qiluvchi korxona</td>
+            <td colspan="3" style="width: 100px; text-align: center; color: black; border: 1px solid black;">"YURIST KONSUL KONSALTING" X/k</td>
+        </tr>
+        <tr>
+            <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">TO'LOV SUMMASI SO"Z BILAN</td>
+            <td colspan="3" style="width: 100px; text-align: center; color: black; text-transform: uppercase; border: 1px solid black;">${numberToUzbekWords(receiptData.value.paymentAmount)} so'm</td>
+        </tr>
+        <tr>
+            <td style="width: 110px; text-align: center; color: black; border: 1px solid black;">Texnik yordam: +998 62 226 99 00</td>
+            <td colspan="3" style="width: 110px; text-align: center; color: black; border: 1px solid black;">ushbu to'lov ARIZASUD.UZ tizimi orqali amalga oshirilgan</td>
+        </tr>
+        <tr>
+            <td colspan="4" style="width: 100px; text-align: center; color: black; text-transform: uppercase; border: 1px solid black;">To'lov pattasi faqatgina kassa muhri bilan tasdiqlangandan so'ng haqiqiy hisoblanadi. Agar pattada muhr bo'lmasa, u rasmiy kuchga ega emas va yaroqsiz deb topiladi. Shu sababli, har qanday to'lov hujjatining muhrlanganligiga e'tibor berish lozim.</td>
+        </tr>
+    </table>
     `;
 
   const element = document.createElement('div');
