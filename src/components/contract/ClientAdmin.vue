@@ -45,7 +45,8 @@
                 {{ dat === "datakril" ? translateText(field.key) : field.key }}
               </label>
               <input v-model="fieldValues[index]" :type="getInputType(field.key)" :maxlength="getMaxLength(field.key)"
-                :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required :class="[
+                :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required
+                :class="[
                   'w-full p-2 border-2 border-blue-500 rounded focus:ring text-black focus:ring-blue-200',
 
                   formSubmitted && !fieldValues[index] && shouldShowField(field.key) ? 'border-red-500' : 'border-blue-500']">
@@ -93,7 +94,8 @@
                   : 'Tashkilot manzilini kiriting(Mahalla nomi ko’cha nomi uy raqamini yozing)' }}
               </label>
               <input v-model="fieldValues[index]" :type="getInputType(field.key)" :maxlength="getMaxLength(field.key)"
-                :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required :class="[
+                :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required
+                :class="[
                   'w-full p-2 border-2 border-blue-500 rounded focus:ring text-black focus:ring-blue-200',
 
                   formSubmitted && !fieldValues[index] && shouldShowField(field.key) ? 'border-red-500' : 'border-blue-500']">
@@ -158,11 +160,11 @@
                   {{ dat === "datakril" ? translateText(field.key) : field.key }}
                 </label>
                 <input v-model="fieldValues[index]" type="text" :maxlength="getMaxLength(field.key)"
-                  :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required :class="[
+                  :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required
+                  :class="[
                     'w-full p-2 border-2 border-blue-500 rounded focus:ring text-black focus:ring-blue-200',
 
-                    formSubmitted && !fieldValues[index] && shouldShowField(field.key) ? 'border-red-500' : 'border-blue-500']"
-                  @input="restrictToNumbers(field.key, index)" />
+                    formSubmitted && !fieldValues[index] && shouldShowField(field.key) ? 'border-red-500' : 'border-blue-500']" @input="restrictToNumbers(field.key, index)" />
                 <p v-if="formSubmitted && !fieldValues[index] && shouldShowField(field.key)" class="error-message">
                   {{ dat === 'datakril' ? translateText('Bu maydon to\'ldirilishi shart!')
                     : "Bu maydon to'ldirilishi shart!" }}
@@ -175,11 +177,11 @@
                   {{ dat === "datakril" ? translateText(field.key) : field.key }}
                 </label>
                 <input v-model="fieldValues[index]" type="text" :maxlength="getMaxLength(field.key)"
-                  :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required :class="[
+                  :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required
+                  :class="[
                     'w-full p-2 border-2 border-blue-500 rounded focus:ring text-black focus:ring-blue-200',
 
-                    formSubmitted && !fieldValues[index] && shouldShowField(field.key) ? 'border-red-500' : 'border-blue-500']"
-                  @input="validateFullName(field.key, index)" />
+                    formSubmitted && !fieldValues[index] && shouldShowField(field.key) ? 'border-red-500' : 'border-blue-500']" @input="validateFullName(field.key, index)" />
                 <p v-if="formSubmitted && !fieldValues[index] && shouldShowField(field.key)" class="error-message">
                   {{ dat === 'datakril' ? translateText('Bu maydon to\'ldirilishi shart!')
                     : "Bu maydon to'ldirilishi shart!" }}
@@ -192,11 +194,11 @@
                   {{ dat === "datakril" ? translateText(field.key) : field.key }}
                 </label>
                 <input v-model="fieldValues[index]" type="text" :maxlength="getMaxLength(field.key)"
-                  :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required :class="[
+                  :placeholder="dat === 'datakril' ? translateText(field.key) : field.key" required
+                  :class="[
                     'w-full p-2 border-2 border-blue-500 rounded focus:ring text-black focus:ring-blue-200',
 
-                    formSubmitted && !fieldValues[index] && shouldShowField(field.key) ? 'border-red-500' : 'border-blue-500']"
-                  @input="validateFullName(field.key, index)" />
+                    formSubmitted && !fieldValues[index] && shouldShowField(field.key) ? 'border-red-500' : 'border-blue-500']" @input="validateFullName(field.key, index)" />
                 <p v-if="formSubmitted && !fieldValues[index] && shouldShowField(field.key)" class="error-message">
                   {{ dat === 'datakril' ? translateText('Bu maydon to\'ldirilishi shart!')
                     : "Bu maydon to'ldirilishi shart!" }}
@@ -317,7 +319,7 @@
         </div>
         <!-- Completion Date Modal -->
         <div v-if="isCompletionDateModalOpen" class="modal" @click.self="closeCompletionDateModal">
-          <div class="modal-content">
+          <div class="modal-content flex flex-col items-center gap-2">
             <h2 class="text-lg text-black font-bold mb-4">
               {{ dat === 'datakril' ? translateText('Ishni yakunlash sanasini tanlang') :
                 'Ishni yakunlash sanasini tanlang' }}
@@ -349,7 +351,7 @@
               </div>
             </div>
             <!-- Save Button -->
-            <button v-if="selectedCompletionDate" @click="saveSelectedDate" class="btn btn-primary mt-4 w-full">
+            <button v-if="selectedCompletionDate" @click="saveSelectedDate" class="btn btn-primary mt-4">
               {{ dat === 'datakril' ? translateText('Saqlash') : 'Saqlash' }}
             </button>
           </div>
@@ -542,6 +544,7 @@ const recordingVideo = ref(null);
 const recordedVideoBlob = ref(null);
 const mediaRecorder = ref(null);
 const recordedChunks = ref([]);
+const uniqueCode = ref('')
 const isRecording = ref(false);
 const formSubmitted = ref(false);
 const filteredTasks = computed(() => {
@@ -1228,6 +1231,7 @@ const saveAndGenerate = async () => {
       }
       else if (field.key === "Fuqaroning JSHSHIR raqami") {
         formData.uniqueCode = fieldValues.value[index] || "";
+        uniqueCode.value = fieldValues.value[index] || "";
         data["Fuqaroning JSHSHIR raqami"] = fieldValues.value[index] || "";
       }
       // Inside saveAndGenerate function, within uniqueFields.value.forEach loop
@@ -1304,8 +1308,25 @@ const saveAndGenerate = async () => {
     formData.paidSum = boshlagichSumma;
     formData.remainingSum = qarza <= 0 ? 0 : qarza;
     qarz.value = qarza;
-    generatedLogin.value = `${formData.name}${generateRandomName()}`
-    generatedPassword.value = `${generateRandomName()}${formData.name}`
+
+    const loginSearch = async () => {
+      try {
+        const res = await axios.get(`${URL}/client/uniqueCode/${uniqueCode.value}`);
+
+           generatedLogin.value = res.data.login;
+           generatedPassword.value = res.data.adressID;
+           console.log(generatedLogin.value)
+           console.log(generatedPassword.value)
+           console.log(res.data)
+
+      } catch (error) {
+        console.error("So‘rovda xatolik yuz berdi:", error);
+        generatedLogin.value = `${formData.name}${generateRandomName()}`
+        generatedPassword.value = `${generateRandomName()}${formData.name}`
+      }
+    };
+    await loginSearch();
+
     // Add calculated fields to data
     data["sum1"] = formatNumberWithDots(sum1Num);
     data["sum2"] = formatNumberWithDots(sum2Num);
@@ -1317,8 +1338,8 @@ const saveAndGenerate = async () => {
     data["image2"] = "{{image2}}";
     data["yuristName"] = yuristName.value;
     data["yuristSurname"] = yuristSurname.value;
-    data["parol"] = generatedPassword;
-    data["login"] = generatedLogin;
+    data["parol"] = generatedPassword.value;
+    data["login"] = generatedLogin.value;
     data["qrcode1"] = "{{qrcode1}}";
     data["ofis"] = translateText(paymentTuman.value);
     data["qrcode2"] = "{{qrcode2}}";
@@ -1761,11 +1782,8 @@ const printReceipt = async () => {
   });
 };
 
-const loginSearch = async () => {
-  const res = await axios.get(`${URL}/client/uniqueCode/${formData.uniqueCode}`)
-  console.log(res)
-}
-loginSearch()
+
+
 const submitForm = async () => {
   if (!formData.file) {
     errorMessage.value = " Fayl generatsiya qilinmagan! Avval saqlash va generatsiya qiling!";
@@ -1823,18 +1841,18 @@ const submitForm = async () => {
     const response = await axios.post(API_URL1, formDataToSend, config);
     clientId.value = response.data.client.id;
     errorMessage.value = "✅ Muvaffaqiyatli saqlandi!";
-    loginSearch()
     resetForm();
 
-    if (+paid.value > 0) {
-      await printReceipt();
+    if (+paid.value === 0) {
       await router.push(`/Check/${clientId.value}`);
-      window.location.reload();
-      submitRegionSelection()
+      console.log('ishladi if ')
     } else {
+      await printReceipt();
+      console.log('ishladi print')
       await router.push(`/Check/${clientId.value}`);
-      window.location.reload();
+      await submitRegionSelection()
     }
+    window.location.reload();
   } catch (error) {
     const errorDetails = error.response?.data || error.message;
     console.error(" Xatolik detallari:", errorDetails);
@@ -2141,7 +2159,7 @@ onUnmounted(() => {
 .day.disabled {
   color: #ccc;
   /* Bo'yash rangini o'zgartirish */
-  background: #3a3a3a;
+  background: #700000;
   pointer-events: none;
   /* Bosib bo'lmaydigan qilish */
 }
