@@ -1151,12 +1151,12 @@ const saveAndGenerate = async () => {
       return;
     }
 
-    if (!formData.image) {
+    if (!formData.fingerImage) {
       errorMessage.value = "Iltimos barmoq izini skaynerlang";
       isWarningModalOpen.value = true;
       return;
     }
-    if (!formData.image) {
+    if (!formData.fingerImage1) {
       errorMessage.value = "Iltimos barmoq izini skaynerlang";
       isWarningModalOpen.value = true;
       return;
