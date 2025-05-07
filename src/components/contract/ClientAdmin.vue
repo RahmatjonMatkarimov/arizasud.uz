@@ -1151,16 +1151,16 @@ const saveAndGenerate = async () => {
       return;
     }
 
-    // if (!formData.fingerImage) {
-    //   errorMessage.value = "Iltimos barmoq izini skaynerlang";
-    //   isWarningModalOpen.value = true;
-    //   return;
-    // }
-    // if (!formData.fingerImage1) {
-    //   errorMessage.value = "Iltimos barmoq izini skaynerlang";
-    //   isWarningModalOpen.value = true;
-    //   return;
-    // }
+    if (!formData.image) {
+      errorMessage.value = "Iltimos barmoq izini skaynerlang";
+      isWarningModalOpen.value = true;
+      return;
+    }
+    if (!formData.image) {
+      errorMessage.value = "Iltimos barmoq izini skaynerlang";
+      isWarningModalOpen.value = true;
+      return;
+    }
 
     // Clear previous errors
     errors.value = new Array(uniqueFields.value.length).fill("");
