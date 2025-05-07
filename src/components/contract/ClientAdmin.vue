@@ -1524,9 +1524,9 @@ const generateCheckFile = async () => {
   const formattedDate = `${day}.${month}.${year}`;
 
   const receiptHTML = `
-    <table style="border: 1px solid black; border-collapse: collapse;">
+       <table style="border: 1px solid black; height:80px; width:100%; border-collapse: collapse;">
         <tr>
-            <td rowspan="9" text-align: center; color: black; border: 1px solid black;"><img width="150px" src="${window.location.origin}/telegram-cloud.jpg" alt=""></td>
+            <td rowspan="9" style="text-align: center; color: black; border: 1px solid black;"><img width="150px" src="${window.location.origin}/telegram-cloud.jpg" alt=""></td>
             <td rowspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black; vertical-align: middle;">Korxona manzili</td>
             <td rowspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black; vertical-align: middle;">Xorazm viloyati, Xiva shaxar, <br> Yangi-hayot mahallasi, Sportchilar ko'chasi 14-uy</td>
             <td rowspan="5" style="width: 70px; text-align: center; color: black; border: 1px solid black;"><img width="100%" src="${window.location.origin}/https___arizasud.uz_.png" alt=""></td>
