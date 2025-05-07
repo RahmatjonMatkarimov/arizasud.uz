@@ -15,8 +15,7 @@
 
             <!-- 📋 Natija -->
             <div class="result">
-                <h2 class="text-black">Natija:</h2>
-                <pre class="text-black">{{ result }}</pre>
+                <h2 class="text-black">Natija: {{ result.user_id }}</h2>
             </div>
         </div>
     </div>
