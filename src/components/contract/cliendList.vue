@@ -84,7 +84,7 @@ const isOpen = ref(false)
 const GetClient = async () => {
     try {
         const response = await axios.get(`${URL}/client`);
-        data.value = response.data;
+        data.value = response.data.sort((a, b) => a.id - b.id);
     } catch (error) {
         console.error("Xatolik yuz berdi:", error);
     }

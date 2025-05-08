@@ -716,12 +716,17 @@ onMounted(() => {
                 <p class="text-black">
                   {{ dat === 'datakril' ? translateText(item.name) : item.name }}
                 </p>
-                <h1 class="text-black">
-                  {{ dat === 'datakril' ? translateText('holati:') : 'holati:' }}
-                  <span class="text-red-500">
-                    {{ dat === 'datakril' ? translateText('Kutish') : 'Kutish' }}
-                  </span>
-                </h1>
+                <h1 class="text-black">{{ dat=='datakril'? translateText('holati:'):'holati:' }} <span class="text-red-500">
+                        {{
+                          item.ClientFileStatusHistory[item.ClientFileStatusHistory.length - 1]?.status === 'status4' ?
+                            dat === 'datakril'?translateText('1-Bosqichda'):'1-Bosqichda' :
+                            item.ClientFileStatusHistory[item.ClientFileStatusHistory.length - 1]?.status === 'status6' ?
+                            dat === 'datakril'?translateText('2-Bosqichda'):'2-Bosqichda' :
+                              item.ClientFileStatusHistory[item.ClientFileStatusHistory.length - 1]?.status === 'status7' ?
+                              dat === 'datakril'?translateText('3-Bosqichda'):'3-Bosqichda' :
+                        ''
+                        }}
+                      </span></h1>
               </div>
             </div>
             <div v-else class="text-black text-center p-2">

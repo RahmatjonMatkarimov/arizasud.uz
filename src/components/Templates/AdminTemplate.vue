@@ -402,8 +402,6 @@ const formattedBirthday = computed(() => {
 
 // Onlayn holatni tekshirish
 const checkOnlineStatus = (onlineAdmins) => {
-  console.log('adminOnlineUpdate received:', onlineAdmins);
-  console.log('Current user ID:', id);
   isOnline.value = onlineAdmins.includes(String(id));
 };
 
@@ -420,10 +418,6 @@ onMounted(() => {
 
   // Socket ulanish hodisalari
   socket.on('connect', () => {
-    console.log('Connected to Socket.IO server');
-    console.log('Current transport:', socket.io.engine.transport.name);
-    // Emit joinUser immediately on connect
-    console.log('Emitting joinUser with ID:', id);
     socket.emit('joinUser', id);
   });
 

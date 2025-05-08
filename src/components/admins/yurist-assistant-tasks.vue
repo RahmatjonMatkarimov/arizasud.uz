@@ -147,7 +147,7 @@ const getAdmin = async () => {
 };
 const getAdminFromSubDomain = async () => {
   try {
-    const response = await axios.get(URL+'/admin', {
+    const response = await axios.get(URL + '/admin', {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
     });
     adminData.value = response.data; // Subdomen adminlarini saqlash
@@ -214,7 +214,7 @@ const updateType = async (id, newStatus, commentText = '', adminId = null) => {
     await axios.post(`${URL}/client-file-status-history`, payload);
 
     // Rad etish bo'lsa (newStatus < currentStatusNumber)
-    if (newStatus ==3) {
+    if (newStatus == 3) {
       await axios.put(`${URL}/yurist-tasks/${selectedRejectId.value}`, {
         lawyerId: +selecteradminId.value, // Joriy foydalanuvchi lawyer bolidi
         adminId: 43, // Taskdagi adminId saqlanadi
@@ -223,7 +223,7 @@ const updateType = async (id, newStatus, commentText = '', adminId = null) => {
           'Content-Type': 'application/json',
         },
       });
-    } 
+    }
     // Oddiy taklif qilish yoki keyingi bosqichga o'tish
     else if (newStatus === 8) {
       await axios.put(`${URL}/yurist-tasks/${id}`, {
@@ -236,24 +236,24 @@ const updateType = async (id, newStatus, commentText = '', adminId = null) => {
       });
     }
     else if (newStatus === 5) {
-      if(commentText === ''){
+      if (commentText === '') {
         await axios.put(`${URL}/yurist-tasks/${id}`, {
-        lawyerId: +adminId || +selectedAdminId.value,
-        adminId: +localStorage.getItem('id'),
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      }else{
+          lawyerId: +adminId || +selectedAdminId.value,
+          adminId: +localStorage.getItem('id'),
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+      } else {
         await axios.put(`${URL}/yurist-tasks/${id}`, {
-        lawyerId: +adminId || +selecteradminId.value,
-        adminId: +localStorage.getItem('id'),
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+          lawyerId: +adminId || +selecteradminId.value,
+          adminId: +localStorage.getItem('id'),
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
       }
     }
 
@@ -523,7 +523,8 @@ onMounted(() => {
               'border-gray-500': card.color === 'as' && activeSection === card.section,
             }">
             <div class="flex justify-between items-start">
-              <h3 class="text-[19px] font-semibold text-gray-800">{{ dat == 'datakril' ? translateText(card.title):card.title }}</h3>
+              <h3 class="text-[19px] font-semibold text-gray-800">{{ dat == 'datakril' ?
+                translateText(card.title) :card.title }}</h3>
             </div>
             <div class="mt-4">
               <p class="text-3xl font-bold text-gray-900 mb-1">{{ card.count }}</p>
@@ -556,7 +557,8 @@ onMounted(() => {
                           class="w-10 h-10 border-2 rounded-full flex items-center justify-center text-primary-800 font-semibold">
                           {{ index + 1 }}
                         </div>
-                        <span class="font-medium text-gray-900 line-clamp-1">{{ dat==='datakril' ? translateText(doc.title) : doc.title }}</span>
+                        <span class="font-medium text-gray-900 line-clamp-1">{{ dat === 'datakril' ?
+                          translateText(doc.title) : doc.title }}</span>
                       </div>
                       <div class="flex items-center space-x-4">
                         <span class="text-sm text-gray-500 hidden md:block">
@@ -576,14 +578,16 @@ onMounted(() => {
                             <span class="font-medium text-gray-600">
                               {{ dat === 'datakril' ? translateText('Ma\'sul Shaxs:') : 'Ma\'sul Shaxs:' }}
                             </span>
-                            {{ dat === 'datakril' ? translateText(`${doc.user.name} ${doc.user.surname} ${doc.user.dadname}`) : `${doc.user.name} ${doc.user.surname} ${doc.user.dadname}` }}
+                            {{ dat === 'datakril' ? translateText(`${doc.user.name} ${doc.user.surname}
+                            ${doc.user.dadname}`) : `${doc.user.name} ${doc.user.surname} ${doc.user.dadname}` }}
                           </p>
                           <p class="py-1">
                             <span class="font-medium text-gray-600">
                               {{ dat === 'datakril' ? translateText('Holati: ') : 'Holati: ' }}
                             </span>
                             <span class="text-gray-600" :class="getStatusColor(doc.status)">
-                              {{ dat === 'datakril' ? translateText(getStatus(getLastChar(doc.status))) : getStatus(getLastChar(doc.status)) }}
+                              {{ dat === 'datakril' ? translateText(getStatus(getLastChar(doc.status))) :
+                                getStatus(getLastChar(doc.status)) }}
                             </span>
                           </p>
                         </div>
@@ -647,7 +651,7 @@ onMounted(() => {
                         <button @click="router.push('/Check/' + doc.clientFile.client.clientId)"
                           class="btn bg-indigo-400 text-sm">
                           {{ dat === 'datakril' ? translateText('Buyurtmachini shaxsiy kabinetiga otish') :
-                          'Buyurtmachini shaxsiy kabinetiga otish' }}
+                            'Buyurtmachini shaxsiy kabinetiga otish' }}
                         </button>
                         <button v-if="hasRejectionComment(doc.history)" class="btn bg-yellow-500 text-white text-sm"
                           @click="openReasonModal(getLatestRejectionComment(doc.history))">
@@ -657,7 +661,8 @@ onMounted(() => {
                           {{ dat === 'datakril' ? translateText('Rad etish') : 'Rad etish' }}
                         </button>
                         <button class="btn btn-primary text-sm" @click="moveToNextStage(doc.id)">
-                          {{ dat === 'datakril' ? translateText('Keyingi bosqichga o\'tish') : 'Keyingi bosqichga o\'tish' }}
+                          {{ dat === 'datakril' ? translateText('Keyingi bosqichga o\'tish') :
+                           'Keyingi bosqichga o\'tish' }}
                         </button>
                       </div>
                     </div>
@@ -732,12 +737,15 @@ onMounted(() => {
                 <p class="text-black">
                   {{ dat === 'datakril' ? translateText(item.name) : item.name }}
                 </p>
-                <h1 class="text-black">
-                  {{ dat === 'datakril' ? translateText('holati:') : 'holati:' }}
-                  <span class="text-red-500">
-                    {{ dat === 'datakril' ? translateText('Kutish') : 'Kutish' }}
-                  </span>
-                </h1>
+                <h1 class="text-black">{{ dat == 'datakril' ? translateText('holati:') : 'holati:' }} <span
+                    class="text-red-500">
+                    {{
+                      item.ClientFileStatusHistory[item.ClientFileStatusHistory.length - 1]?.status === 'status8' ?
+                        dat === 'datakril' ? translateText('1-Bosqich') : '1-Bosqich' :
+                        item.ClientFileStatusHistory[item.ClientFileStatusHistory.length - 1]?.status === 'status5' ?
+                        dat === 'datakril' ? translateText('1-Bosqich') : '1-Bosqich' : ''
+                    }}
+                  </span></h1>
               </div>
             </div>
             <div v-else class="text-black text-center p-2">
@@ -813,6 +821,7 @@ onMounted(() => {
   justify-content: center;
   overflow: hidden;
 }
+
 .border-line {
   position: absolute;
   top: 50%;
@@ -825,6 +834,7 @@ onMounted(() => {
   pointer-events: none;
   user-select: none;
 }
+
 @keyframes progress-bar-stripes {
   from {
     background-position: 1rem 0;
@@ -847,6 +857,7 @@ onMounted(() => {
   background-size: 1rem 1rem;
   animation: progress-bar-stripes 1s linear infinite;
 }
+
 @keyframes moveLine {
   0% {
     transform: translateX(140%);

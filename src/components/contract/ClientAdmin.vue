@@ -232,7 +232,7 @@
           <div class="p-3 border-2 border-blue-500 bg-white rounded-lg cursor-pointer flex justify-between items-center"
             @click="toggleDropdown">
             <span class="text-black">{{ dat === 'datakril' ? translateText(selectedYuristName) : selectedYuristName
-            }}</span>
+              }}</span>
           </div>
 
           <!-- Dropdown Options -->
@@ -249,13 +249,23 @@
               <!-- Hover Modal -->
               <div v-if="showHoverModal && hoveredYurist?.id === yurist.id"
                 class="absolute bottom-0 left-full max-h-[500px] overflow-scroll -ml-[40%] p-3 bg-white border border-gray-300 rounded-lg shadow-lg z-20 min-w-[300px]">
-                <p class="text-black">Bajaradigan ishlari</p>
+                <p class="text-black">{{ dat === 'datakril' ? translateText('Bajaradigan ishlari'):'Bajaradigan ishlari' }}</p>
                 <div v-if="filteredTasks.length > 0">
                   <div class="text-black bg-gray-300 flex justify-between p-2 rounded-lg my-1"
                     v-for="item in filteredTasks" :key="item.id">
                     <p class="text-black">
                       {{ dat === 'datakril' ? translateText(item.name) : item.name }}</p>
-                    <h1 class="text-black">holati: <span class="text-red-500">Kutish</span></h1>
+                    <h1 class="text-black">{{ dat=='datakril'? translateText('holati:'):'holati:' }} <span class="text-red-500">
+                        {{
+                          item.ClientFileStatusHistory[item.ClientFileStatusHistory.length - 1]?.status === 'status1' ?
+                            dat === 'datakril'?translateText('Kutish'):'Kutish' :
+                            item.ClientFileStatusHistory[item.ClientFileStatusHistory.length - 1]?.status === 'status2' ?
+                              '2-Bosqichda' :
+                              item.ClientFileStatusHistory[item.ClientFileStatusHistory.length - 1]?.status === 'status3' ?
+                        '3-Bosqichda' :
+                        ''
+                        }}
+                      </span></h1>
                   </div>
                 </div>
                 <div v-else class="text-black text-center p-2">
@@ -1818,7 +1828,7 @@ const submitForm = async () => {
     const config = { headers: { "Content-Type": "multipart/form-data" } };
     const response = await axios.post(API_URL1, formDataToSend, config);
     clientId.value = response.data.client.id;
-  await handlePayment()
+    await handlePayment()
 
     errorMessage.value = "✅ Muvaffaqiyatli saqlandi!";
     resetForm();

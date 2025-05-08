@@ -38,7 +38,7 @@ const fetchWordFile = async () => {
     if (!response.ok) throw new Error('File fetch failed');
     const resData = await response.json();
 
-    const fileResponse = await fetch(`${API_URL}${resData.filePath}`);
+    const fileResponse = await fetch(`${API_URL}/uploads${resData.filePath}`);
     if (!fileResponse.ok) throw new Error('Word faylini yuklab bo‘lmadi');
     const blob = await fileResponse.blob();
 

@@ -52,29 +52,56 @@ const statusCards = [
     section: 'status1',
   },
 ];
+const filteredTasks = ref([]); // Topda declare qilingan bo'lsin
 
-// Compute dynamic status cards with counts and documentId
+const tasks = async () => {
+  try {
+    const res = await axios.get(`${URL}/yurist-tasks`);
+    const adminId = localStorage.getItem('id');
+    
+    // 1. adminId mos keladigan tasklar
+    const adminTasks = res.data.filter(task => task.adminId == adminId);
+    
+    // 2. Oxirgi statusi 'status1' bo'lgan tasklar
+    const result = adminTasks.filter(task => {
+      const history = task.ClientFileStatusHistory;
+      if (!history || history.length === 0) return false;
+      const lastStatus = history[history.length - 1].status;
+      return lastStatus === 'status1';
+    });
+    
+    filteredTasks.value = result; // reactive sifatida saqlaymiz
+    console.log('filteredTasks:', filteredTasks.value);
+  } catch (error) {
+    console.error("Xatolik yuz berdi:", error);
+  }
+};
+
+
 const dynamicStatusCards = computed(() => {
-  const tasks = data.value.LawyerTask || [];
+  const tasksList = data.value.LawyerTask || [];
   const counts = {
     status5: 0,
-    status1: 0,
+    status1: filteredTasks.value.length, // <--- Bu yerda filteredTasks dan foydalanilyapti
   };
 
-  tasks.forEach((task) => {
+  // Faqat status5 uchun oddiy hisoblash
+  tasksList.forEach((task) => {
     const latestStatus = task.ClientFileStatusHistory?.[task.ClientFileStatusHistory.length - 1]?.status;
     const statusNumber = getLastChar(latestStatus);
     if (statusNumber === '5') counts.status5 += 1;
-    else if (statusNumber === '1') counts.status1 += 1;
   });
 
   return statusCards.map((card) => ({
     ...card,
     count: counts[card.section] || 0,
-    documentId: tasks.find((task) => {
-      const latestStatus = task.ClientFileStatusHistory?.[task.ClientFileStatusHistory.length - 1]?.status;
-      return getLastChar(latestStatus) === card.section.slice(-1);
-    })?.clientFile?.name || 'N/A',
+    documentId: (() => {
+      const task = tasksList.find((t) => {
+        const latestStatus = t.ClientFileStatusHistory?.[t.ClientFileStatusHistory.length - 1]?.status;
+        return getLastChar(latestStatus) === card.section.slice(-1);
+      });
+      return task?.clientFile?.name || 'N/A';
+    })(),
   }));
 });
 
@@ -356,10 +383,14 @@ const getStatusColor = (status) => {
       return 'text-gray-600';
   }
 };
-
-// Fix filteredDocuments to use correct property name
 const filteredDocuments = computed(() => {
-  const tasks = data.value.LawyerTask || [];
+  let tasks = data.value.LawyerTask || [];
+
+  // Agar joriy aktiv section 'status1' bo'lsa, filteredTasks dan olish
+  if (activeSection.value === 'status1') {
+    tasks = filteredTasks.value;
+  }
+
   return tasks
     .filter((task) => {
       const latestStatus = task.ClientFileStatusHistory?.[task.ClientFileStatusHistory.length - 1]?.status;
@@ -369,7 +400,7 @@ const filteredDocuments = computed(() => {
     .map((task) => ({
       id: task.id,
       title: task.name || 'N/A',
-      clientFile: task.clientFile, // Fixed typo: clentFile -> clientFile
+      clientFile: task.clientFile,
       status: task.ClientFileStatusHistory?.[task.ClientFileStatusHistory.length - 1]?.status,
       date: task.createdAt || new Date(),
       user: task.user,
@@ -445,6 +476,7 @@ const toggleExpand = (id) => {
 
 onMounted(() => {
   getData();
+  tasks()
 });
 </script>
 
@@ -592,7 +624,7 @@ onMounted(() => {
                           @click="openReasonModal(getLatestRejectionComment(doc.history))">
                           {{ dat === 'datakril' ? translateText('Sababni Ko\'rish') : 'Sababni Ko\'rish' }}
                         </button>
-                        <button class="btn bg-red-500 text-white text-sm" @click="openRejectModal(doc)">
+                        <button v-if="activeSection !== 'status1'" class="btn bg-red-500 text-white text-sm" @click="openRejectModal(doc)">
                           {{ dat === 'datakril' ? translateText('Rad etish') : 'Rad etish' }}
                         </button>
                         <button v-if="activeSection !== 'status1'" class="btn btn-primary text-sm"
@@ -671,12 +703,17 @@ onMounted(() => {
                 <p class="text-black">
                   {{ dat === 'datakril' ? translateText(item.name) : item.name }}
                 </p>
-                <h1 class="text-black">
-                  {{ dat === 'datakril' ? translateText('holati:') : 'holati:' }}
-                  <span class="text-red-500">
-                    {{ dat === 'datakril' ? translateText('Kutish') : 'Kutish' }}
-                  </span>
-                </h1>
+                <h1 class="text-black">{{ dat=='datakril'? translateText('holati:'):'holati:' }} <span class="text-red-500">
+                        {{
+                          item.ClientFileStatusHistory[item.ClientFileStatusHistory.length - 1]?.status === 'status4' ?
+                            dat === 'datakril'?translateText('1-Bosqich'):'1-Bosqich' :
+                            item.ClientFileStatusHistory[item.ClientFileStatusHistory.length - 1]?.status === 'status6' ?
+                              '2-Bosqichda' :
+                              item.ClientFileStatusHistory[item.ClientFileStatusHistory.length - 1]?.status === 'status7' ?
+                        '3-Bosqichda' :
+                        ''
+                        }}
+                      </span></h1>
               </div>
             </div>
             <div v-else class="text-black text-center p-2">
