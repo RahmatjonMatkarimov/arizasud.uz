@@ -2,17 +2,17 @@
   <div class="bg-gray-100">
     <main class="container mx-auto px-4 py-10 flex flex-col items-center justify-center">
       <div v-if="isLoading" class="text-gray-600 text-lg md:text-xl animate-pulse tracking-wide">
-        Yuklanmoqda...
+        {{ dat === 'datakril'? translateText('Yuklanmoqda...'):'Yuklanmoqda...' }}
       </div>
       <div v-else-if="pdfPages.length" class="w-full max-w-5xl bg-white rounded-2xl shadow-2xl p-6">
         <!-- Download Button -->
         <button @click="downloadPdf"
           class="mb-4 px-4 py-2 m-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300">
-          PDF-ni Yuklab Olish
+          {{ dat === 'datakril'? translateText('PDF-ni Yuklab Olish'):'PDF-ni Yuklab Olish' }}
         </button>
         <button @click="downloadDocx"
           class="mb-4 px-4 m-1 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300">
-          Docx-ni Yuklab Olish
+          {{ dat === 'datakril'? translateText('Docx-ni Yuklab Olish'):'Docx-ni Yuklab Olish' }}
         </button>
 
         <!-- PDF Pages as Images -->
@@ -26,15 +26,17 @@
 </template>
   
   <script setup>
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, inject } from 'vue';
   import { useRoute } from 'vue-router';
   import axios from 'axios';
   import * as pdfjsLib from 'pdfjs-dist';
   import { URL } from '@/auth/url.js';
+  import translateText from '@/auth/Translate';
   
   // Set the PDF.js worker source
   pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
   
+  const dat = inject('dat')
   const route = useRoute();
   const id = route.params.id; // Client ID
   const id2 = Number(route.params.id2); // File ID as a number

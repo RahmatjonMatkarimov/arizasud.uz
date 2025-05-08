@@ -15,7 +15,7 @@
             <!-- 🖐️ Button -->
             <button @click="isOpen = true"
                 class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold px-5 py-2 rounded-md shadow-md transition duration-300 text-sm whitespace-nowrap">
-                Barmoq izi bilan qidirish
+                {{ dat === 'datakril'? translateText('Barmoq izi bilan qidirish'):'Barmoq izi bilan qidirish' }}
             </button>
         </div>
         <div v-if="filteredData.length > 0">

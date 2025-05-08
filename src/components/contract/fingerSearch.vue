@@ -1,7 +1,7 @@
 <template>
     <div v-if="isOpen" class="fixed inset-0 z-40 bg-black bg-opacity-60 flex items-center justify-center">
         <div class="bg-white rounded-2xl shadow-2xl w-[420px] p-6 relative">
-            <h2 class="text-xl font-semibold text-center text-gray-800 mb-4">Barmoq izini bilan qidirish</h2>
+            <h2 class="text-xl font-semibold text-center text-gray-800 mb-4">{{ dat === 'datakril' ? translateText('Barmoq izini bilan qidirish'):'Barmoq izini bilan qidirish' }}</h2>
 
             <!-- 🖼️ Barmoq izi rasmi -->
             <div v-if="imageData" class="flex justify-center mb-4">
@@ -13,30 +13,30 @@
             <div class="flex flex-col space-y-3 mt-4">
                 <button @click="fingerGet"
                     class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors duration-200">
-                    Barmoq izini olish (oʻng tomoni)
+                    {{ dat === 'datakril' ? translateText('Barmoq izini olish (oʻng tomoni)'):'Barmoq izini olish (oʻng tomoni)' }}
                 </button>
-                <button @click="fingerPost"
+                <button v-if="imageData" @click="fingerPost"
                     class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors duration-200">
-                    Barmoq izini qidirish
+                    {{ dat === 'datakril' ? translateText('Barmoq izini qidirish'):'Barmoq izini qidirish' }}
                 </button>
                 <button @click="$emit('close')"
                     class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg transition-colors duration-200">
-                    Yopish
+                    {{ dat === 'datakril' ? translateText('Yopish'):'Yopish' }}
                 </button>
             </div>
             <!-- ✅ Muvaffaqiyatli natija -->
             <div v-if="result" class="flex justify-center mt-4">
                 <div @click="router.push('/Check/' + usserIds)"
                     class="cursor-pointer bg-green-500 w-full text-green-800 px-6 py-4 rounded-xl shadow-md text-center hover:bg-green-600 transition duration-300">
-                    <p class="text-lg font-semibold">✅ Foydalanuvchi topildi:</p>
-                    <p class="mt-2 text-xl font-bold">{{ result }}</p>
-                    <p class="text-sm text-blue-600 mt-1">(Bosish orqali batafsil ko‘rish)</p>
+                    <p class="text-lg font-semibold">{{ dat === 'datakril' ? translateText('✅ Foydalanuvchi topildi:'):'✅ Foydalanuvchi topildi:' }}</p>
+                    <p class="mt-2 text-xl font-bold">{{ dat === 'datakril'? translateText(result):result }}</p>
+                    <p class="text-sm text-blue-600 mt-1">{{ dat === 'datakril' ? translateText('(Bosish orqali batafsil ko‘rish)') : '(Bosish orqali batafsil ko‘rish)' }}</p>
                 </div>
             </div>
             <div v-if="error" class="flex justify-center mt-4">
                 <div
                     class="cursor-pointer bg-red-500 w-full text-red-800 px-6 py-4 rounded-xl shadow-md text-center hover:bg-red-600 transition duration-300">
-                    <p class="mt-2 text-xl  font-bold">{{ error }}</p>
+                    <p class="mt-2 text-xl  font-bold">{{ dat === 'datakril' ? translateText(error) : error }}</p>
                 </div>
             </div>
         </div>
@@ -48,7 +48,9 @@ import { inject, ref, toRef } from "vue"
 import axios from "axios"
 import { URL } from '@/auth/url.js'
 import { useRouter } from "vue-router"
+import translateText from "@/auth/Translate"
 
+const dat = inject('dat')
 const props = defineProps(['isOpen'])
 const isOpen = toRef(props, 'isOpen')
 const bioId = ref("")

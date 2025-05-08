@@ -3,12 +3,12 @@
   <div class="bg-gray-100">
     <main class="container mx-auto px-4 py-10 flex flex-col items-center justify-center">
       <div v-if="isLoading" class="text-gray-600 text-lg md:text-xl animate-pulse tracking-wide">
-        Yuklanmoqda...
+        {{ dat === 'datakril'? translateText('Yuklanmoqda...'):'Yuklanmoqda...'  }}
       </div>
       <div v-else-if="pdfPages.length" class="w-full max-w-5xl bg-white rounded-2xl shadow-2xl p-6">
         <!-- Download Button -->
         <button @click="downloadPdf" class="mb-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300">
-          PDF-ni Yuklab Olish
+          {{ dat === 'datakril'? translateText('PDF-ni Yuklab Olish'):'PDF-ni Yuklab Olish'  }}
         </button>
         <!-- PDF Pages as Images -->
         <div v-for="(page, index) in pdfPages" :key="index" class="mb-4">
@@ -20,12 +20,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
 import * as pdfjsLib from 'pdfjs-dist';
 import { URL } from '@/auth/url.js';
 import Header from '@/components/header.vue'
+import translateText from '@/auth/Translate';
 
 // Set the PDF.js worker source
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
@@ -116,8 +117,22 @@ const getDataAndRender = async () => {
   isLoading.value = false;
 };
 
+const dat = ref(localStorage.getItem('til') || 'datalotin');
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem('til') || 'datalotin';
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+
 onMounted(() => {
   getDataAndRender();
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
 });
 </script>
 

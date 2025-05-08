@@ -649,7 +649,7 @@ const printReceipt = () => {
         </tr>
         <tr>
           <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Shartnomani umumiy bahosi</td>
-          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">${totalsumma.value} so'm</td>
+          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">${formatNumberWithDots(totalsumma.value)} so'm</td>
         </tr>
         <tr>
           <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Qoldiq qarzdorlik</td>
@@ -753,7 +753,7 @@ const generateCheckFile = async () => {
         </tr>
         <tr>
           <td style="width: 100px; text-align: center; font-size:12px; padding-bottom: 12px;color: black; border: 1px solid black;">Shartnomani umumiy bahosi</td>
-          <td style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black;">${totalsumma.value} so'm</td>
+          <td style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black;">${formatNumberWithDots(totalsumma.value)} so'm</td>
         </tr>
         <tr>
           <td style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black;">Qoldiq qarzdorlik</td>

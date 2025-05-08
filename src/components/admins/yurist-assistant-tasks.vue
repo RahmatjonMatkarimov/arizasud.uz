@@ -643,7 +643,7 @@ onMounted(() => {
                           </div>
                         </div>
                       </div>
-                      <div class="mt-4 -mr-[170px] flex justify-end space-x-2">
+                      <div class="mt-4 flex justify-end space-x-2">
                         <button @click="router.push('/Check/' + doc.clientFile.client.clientId)"
                           class="btn bg-indigo-400 text-sm">
                           {{ dat === 'datakril' ? translateText('Buyurtmachini shaxsiy kabinetiga otish') :

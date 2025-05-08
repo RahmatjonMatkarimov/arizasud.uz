@@ -1,39 +1,40 @@
 <template>
-    <Header /> 
-    <div class="bg-gray-100 min-h-screen flex items-center justify-center">
-      <!-- Main Container -->
-      <main class="container mx-auto px-4 py-10 max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden">
-        <!-- Loading State -->
-        <div v-if="isLoading" class="text-center text-gray-600 text-lg md:text-xl animate-pulse tracking-wide py-10">
-          <p>Yuklanmoqda...</p>
+  <header />
+  <div class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <!-- Main Container -->
+    <main class="container mx-auto px-4 py-10 max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden">
+      <!-- Loading State -->
+      <div v-if="isLoading" class="text-center text-gray-600 text-lg md:text-xl animate-pulse tracking-wide py-10">
+        <p>{{ dat === 'datakril' ? translateText('Iltimos kuting video yuklanmoqda...') : 
+        'Iltimos kuting video yuklanmoqda...' }}</p>
+      </div>
+
+      <!-- Video Player and Controls -->
+      <div v-else-if="videoUrl" class="p-6 space-y-6">
+        <!-- Video Player -->
+        <div class="rounded-lg overflow-hidden shadow-lg">
+          <video controls class="w-full h-auto rounded-lg">
+            <source :src="videoUrl" type="video/mp4">
+            {{ dat === 'datakril' ? translateText('Sizning brauzeringiz video formatini qoʻllab-quvvatlamaydi.') :
+             'Sizning brauzeringiz video formatini qoʻllab -quvvatlamaydi.' }}
+          </video>
         </div>
-  
-        <!-- Video Player and Controls -->
-        <div v-else-if="videoUrl" class="p-6 space-y-6">
-          <!-- Video Player -->
-          <div class="rounded-lg overflow-hidden shadow-lg">
-            <video controls class="w-full h-auto rounded-lg">
-              <source :src="videoUrl" type="video/webm">
-              Sizning brauzeringiz video formatini qoʻllab-quvvatlamaydi.
-            </video>
-          </div>
-  
-          <!-- Download Button -->
-          <button
-            @click="downloadVideo"
-            class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors duration-300 font-semibold"
-          >
-            Videoni Yuklab Olish
-          </button>
-        </div>
-  
-        <!-- Error Message -->
-        <div v-else class="text-center text-red-500 text-lg py-10">
-          <p>Videoni yuklashda xatolik yuz berdi.</p>
-        </div>
-      </main>
-    </div>
-  </template>
+
+        <!-- Download Button -->
+        <button @click="downloadVideo"
+          class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors duration-300 font-semibold">
+          {{ dat === 'datakril' ? translateText('Videoni Yuklab Olish') : 'Videoni Yuklab Olish' }}
+        </button>
+      </div>
+
+      <!-- Error Message -->
+      <div v-else class="text-center text-red-500 text-lg py-10">
+        <p>{{ dat === 'datakril' ? translateText('Videoni yuklashda xatolik yuz berdi.') : 
+        'Videoni yuklashda xatolik yuz berdi.' }}</p>
+      </div>
+    </main>
+  </div>
+</template>
   
   <script setup>
   import { ref, onMounted } from 'vue';
