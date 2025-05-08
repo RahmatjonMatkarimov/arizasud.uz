@@ -633,7 +633,7 @@ const printReceipt = () => {
     <table style="border: 1px solid black; border-collapse: collapse;">
         <tr>
             <td rowspan="8" text-align: center; color: black; border: 1px solid black;"><img width="150px" src="${window.location.origin}/telegram-cloud.jpg" alt=""></td>
-            <td rowspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black; vertical-align: middle;">Korxona manzili</td>
+            <td rowspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black; vertical-align: middle;">Markaziy korxona manzili</td>
             <td rowspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black; vertical-align: middle;">Xorazm viloyati, Xiva shaxar, <br> Yangi-hayot mahallasi, Sportchilar ko'chasi 14-uy</td>
             <td rowspan="5" style="width: 70px; text-align: center; color: black; border: 1px solid black;"><img width="100%" src="${window.location.origin}/https___arizasud.uz_.png" alt=""></td>
         </tr>
@@ -645,19 +645,19 @@ const printReceipt = () => {
         </tr>
         <tr>
           <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Tolov maqsadi</td>
-          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Kansating xizmat</td>
+          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Kansalting xizmat</td>
         </tr>
         <tr>
           <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Shartnomani umumiy bahosi</td>
           <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">${formatNumberWithDots(totalsumma.value)} so'm</td>
         </tr>
         <tr>
-          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Qoldiq qarzdorlik</td>
-          <td colspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black;">${receiptData.value.remainingDebt <= 0 ? "To'landi" : formatNumberWithDots(receiptData.value.remainingDebt) + " so'm"}</td>
-        </tr>
-        <tr>
             <td style="width: 100px; text-align: center; color: black; border: 1px solid black; height:15px;">Joriy to'lov</td>
             <td colspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black;height:15px;">${formatNumberWithDots(receiptData.value.paymentAmount)} so'm</td>
+        </tr>
+        <tr>
+          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Qoldiq qarzdorlik</td>
+          <td colspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black;">${receiptData.value.remainingDebt <= 0 ? "To'landi" : formatNumberWithDots(receiptData.value.remainingDebt) + " so'm"}</td>
         </tr>
         <tr>
             <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Joriy to'lov qilingan sana</td>
@@ -668,7 +668,7 @@ const printReceipt = () => {
             <td colspan="3" style="width: 100px; text-align: center; color: black; border: 1px solid black;">${data.value.name} ${data.value.surname} ${data.value.dadname}</td>
         </tr>
         <tr>
-            <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">${selectedRegionForPrint.value.regionName || 'Tanlanmagan'} ${selectedRegionForPrint.value.districtName ? ' ' + selectedRegionForPrint.value.districtName : ''} bosh ofis binosi</td>
+            <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">${selectedRegionForPrint.value.regionName || 'Tanlanmagan'} ${selectedRegionForPrint.value.districtName ? ' ' + selectedRegionForPrint.value.districtName : ''} ofis binosi</td>
             <td colspan="3" style="width: 100px; text-align: center; color: black; border: 1px solid black;">STIR 307675491      MFO: 01037</td>
         </tr>
         <tr>
@@ -737,7 +737,7 @@ const generateCheckFile = async () => {
     <table style="border: 1px solid black; height:80px; width:100%; border-collapse: collapse;">
         <tr>
             <td rowspan="8" style="text-align: center; color: black; border: 1px solid black;"><img width="150px" src="/telegram-cloud.jpg" alt=""></td>
-            <td rowspan="2" style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black; vertical-align: middle;">Korxona manzili</td>
+            <td rowspan="2" style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black; vertical-align: middle;">Markaziy korxona manzili</td>
             <td rowspan="2" style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black; vertical-align: middle;">Xorazm viloyati, Xiva shaxar, <br> Yangi-hayot mahallasi, Sportchilar ko'chasi 14-uy</td>
             <td rowspan="5" style="width: 70px; text-align: center; color: black; border: 1px solid black;"><img width="100%" src="/https___arizasud.uz_.png" alt=""></td>
         </tr>
@@ -749,20 +749,20 @@ const generateCheckFile = async () => {
         </tr>
         <tr>
           <td style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black;">Tolov maqsadi</td>
-          <td style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black;">Kansating xizmat</td>
+          <td style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black;">Kansalting xizmat</td>
         </tr>
         <tr>
           <td style="width: 100px; text-align: center; font-size:12px; padding-bottom: 12px;color: black; border: 1px solid black;">Shartnomani umumiy bahosi</td>
           <td style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black;">${formatNumberWithDots(totalsumma.value)} so'm</td>
         </tr>
         <tr>
-          <td style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black;">Qoldiq qarzdorlik</td>
-          <td colspan="2" style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black;">${receiptData.value.remainingDebt <= 0 ? "To'landi" : formatNumberWithDots(receiptData.value.remainingDebt) + " so'm"}</td>
-        </tr>
-        <tr>
-            <td style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black; height:15px;">Joriy to'lov</td>
-            <td colspan="2" style="width: 100px;font-size:12px; padding-bottom: 12px; text-align: center; color: black; border: 1px solid black;height:15px;">${formatNumberWithDots(receiptData.value.paymentAmount)} so'm</td>
-        </tr>
+          <td style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black; height:15px;">Joriy to'lov</td>
+          <td colspan="2" style="width: 100px;font-size:12px; padding-bottom: 12px; text-align: center; color: black; border: 1px solid black;height:15px;">${formatNumberWithDots(receiptData.value.paymentAmount)} so'm</td>
+          </tr>
+          <tr>
+            <td style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black;">Qoldiq qarzdorlik</td>
+            <td colspan="2" style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black;">${receiptData.value.remainingDebt <= 0 ? "To'landi" : formatNumberWithDots(receiptData.value.remainingDebt) + " so'm"}</td>
+          </tr>
         <tr>
             <td style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black;">Joriy to'lov qilingan sana</td>
             <td colspan="2" style="width: 100px;font-size:12px; padding-bottom: 12px; text-align: center; color: black; border: 1px solid black;">${formattedDate}</td>
@@ -772,7 +772,7 @@ const generateCheckFile = async () => {
             <td colspan="3" style="width: 100px;font-size:12px; padding-bottom: 12px; text-align: center; color: black; border: 1px solid black;">${data.value.name} ${data.value.surname} ${data.value.dadname}</td>
         </tr>
         <tr>
-            <td style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black;">${selectedRegionForPrint.value.regionName || 'Tanlanmagan'} ${selectedRegionForPrint.value.districtName ? ' ' + selectedRegionForPrint.value.districtName : ''} bosh ofis binosi</td>
+            <td style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black;">${selectedRegionForPrint.value.regionName || 'Tanlanmagan'} ${selectedRegionForPrint.value.districtName ? ' ' + selectedRegionForPrint.value.districtName : ''} ofis binosi</td>
             <td colspan="3" style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black;">STIR 307675491      MFO: 01037</td>
         </tr>
         <tr>

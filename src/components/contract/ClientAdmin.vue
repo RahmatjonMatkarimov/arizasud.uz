@@ -1523,7 +1523,7 @@ const generateCheckFile = async () => {
        <table style="border: 1px solid black; height:80px; width:100%; border-collapse: collapse;">
         <tr>
             <td rowspan="8" style="text-align: center; color: black; border: 1px solid black;"><img width="150px" src="${window.location.origin}/telegram-cloud.jpg" alt=""></td>
-            <td rowspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px; vertical-align: middle;">Korxona manzili</td>
+            <td rowspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px; vertical-align: middle;">Markaziy korxona manzili</td>
             <td rowspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px; vertical-align: middle;">Xorazm viloyati, Xiva shaxar, <br> Yangi-hayot mahallasi, Sportchilar ko'chasi 14-uy</td>
             <td rowspan="5" style="width: 70px; text-align: center; color: black; border: 1px solid black;"><img width="100%" src="${window.location.origin}/https___arizasud.uz_.png" alt=""></td>
         </tr>
@@ -1535,19 +1535,19 @@ const generateCheckFile = async () => {
         </tr>
         <tr>
           <td style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">Tolov maqsadi</td>
-          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">Kansating xizmat</td>
+          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">Kansalting xizmat</td>
         </tr>
         <tr>
           <td style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">Shartnomani umumiy bahosi</td>
           <td style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">${formatNumberWithDots(totalsumma.value)} so'm</td>
         </tr>
         <tr>
-          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">Qoldiq qarzdorlik</td>
-          <td colspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">${qarz.value <= 0 ? "To'landi" : formatNumberWithDots(qarz.value) + " so'm"}</td>
+          <td style="width: 100px; text-align: center; color: black; border: 1px solid black; height:15px;font-size:12px; padding-bottom: 12px;">Joriy to'lov</td>
+          <td colspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black;height:15px;font-size:12px; padding-bottom: 12px;">${formatNumberWithDots(paid.value)} so'm</td>
         </tr>
         <tr>
-            <td style="width: 100px; text-align: center; color: black; border: 1px solid black; height:15px;font-size:12px; padding-bottom: 12px;">Joriy to'lov</td>
-            <td colspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black;height:15px;font-size:12px; padding-bottom: 12px;">${formatNumberWithDots(paid.value)} so'm</td>
+          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">Qoldiq qarzdorlik</td>
+          <td colspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">${qarz.value <= 0 ? "To'landi" : formatNumberWithDots(qarz.value) + " so'm"}</td>
         </tr>
         <tr>
             <td style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">Joriy to'lov qilingan sana</td>
@@ -1558,7 +1558,7 @@ const generateCheckFile = async () => {
             <td colspan="3" style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">${name.value} ${surname.value} ${dadname.value}</td>
         </tr>
         <tr>
-            <td style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">${paymentTuman.value} bosh ofis binosi</td>
+            <td style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">${paymentTuman.value}</td>
             <td colspan="3" style="width: 100px; text-align: center; color: black; border: 1px solid black;font-size:12px; padding-bottom: 12px;">STIR 307675491      MFO: 01037</td>
         </tr>
         <tr>
@@ -1684,7 +1684,7 @@ const printReceipt = async () => {
     <table style="border: 1px solid black; border-collapse: collapse;">
         <tr>
             <td rowspan="8" text-align: center; color: black; border: 1px solid black;"><img width="150px" src="${window.location.origin}/telegram-cloud.jpg" alt=""></td>
-            <td rowspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black; vertical-align: middle;">Korxona manzili</td>
+            <td rowspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black; vertical-align: middle;">Markaziy korxona manzili</td>
             <td rowspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black; vertical-align: middle;">Xorazm viloyati, Xiva shaxar, <br> Yangi-hayot mahallasi, Sportchilar ko'chasi 14-uy</td>
             <td rowspan="5" style="width: 70px; text-align: center; color: black; border: 1px solid black;"><img width="100%" src="${window.location.origin}/https___arizasud.uz_.png" alt=""></td>
         </tr>
@@ -1703,13 +1703,13 @@ const printReceipt = async () => {
           <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">${formatNumberWithDots(totalsumma.value)} so'm</td>
         </tr>
         <tr>
-          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Qoldiq qarzdorlik</td>
-          <td colspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black;">${qarz.value <= 0 ? "To'landi" : formatNumberWithDots(qarz.value) + " so'm"}</td>
+          <td style="width: 100px; text-align: center; color: black; border: 1px solid black; height:15px;">Joriy to'lov</td>
+          <td colspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black;height:15px">${formatNumberWithDots(paid.value)} so'm</td>
         </tr>
-        <tr>
-            <td style="width: 100px; text-align: center; color: black; border: 1px solid black; height:15px;">Joriy to'lov</td>
-            <td colspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black;height:15px">${formatNumberWithDots(paid.value)} so'm</td>
-        </tr>
+         <tr>
+            <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Qoldiq qarzdorlik</td>
+            <td colspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black;">${qarz.value <= 0 ? "To'landi" : formatNumberWithDots(qarz.value) + " so'm"}</td>
+         </tr>
         <tr>
             <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Joriy to'lov qilingan sana</td>
             <td colspan="2" style="width: 100px; text-align: center; color: black; border: 1px solid black;">${formattedDate}</td>
@@ -1719,7 +1719,7 @@ const printReceipt = async () => {
             <td colspan="3" style="width: 100px; text-align: center; color: black; border: 1px solid black;">${name.value} ${surname.value} ${dadname.value}</td>
         </tr>
         <tr>
-            <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">${paymentTuman.value} bosh ofis binosi</td>
+            <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">${paymentTuman.value}</td>
             <td colspan="3" style="width: 100px; text-align: center; color: black; border: 1px solid black;">STIR 307675491      MFO: 01037</td>
         </tr>
         <tr>
