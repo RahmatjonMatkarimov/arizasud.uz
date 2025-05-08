@@ -647,7 +647,7 @@ onMounted(() => {
       </h2>
       <textarea v-model="comment"
         :placeholder="dat === 'datakril' ? translateText('Izoh kiriting...') : 'Izoh kiriting...'"
-        class="w-full border p-2 rounded mb-4 text-gray-600"></textarea>
+        class="w-full border p-2 rounded mb-4 text-gray-600"required></textarea>
       <div class="flex justify-end">
         <button @click="cancelReject" class="btn btn-secondary text-sm mr-2">
           {{ dat === 'datakril' ? translateText('Bekor qilish') : 'Bekor qilish' }}
