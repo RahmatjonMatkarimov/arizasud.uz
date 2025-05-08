@@ -296,36 +296,39 @@ const getUniqueStatuses = (statusHistory) => {
             const comment = item.comment || '';
             statusMap.set(item.status, {
                 id: item.id,
+                status: item.status,
                 title: dat.value === 'datakril' ? translateText(item.status) : item.status,
                 date: item.createdAt,
                 completed: true,
-                isLatestRejectionWithComment: false, // Dastlab hamma statuslar yashil
+                isLatestRejectionWithComment: false,
                 comment: comment
             });
         }
     });
 
-    const statuses = Array.from(statusMap.values()).sort((a, b) => a.id - b.id);
+    const extractNumber = (statusStr) => {
+        const match = statusStr.match(/\d+$/);
+        return match ? parseInt(match[0], 10) : 0;
+    };
+
+    const statuses = Array.from(statusMap.values()).sort(
+        (a, b) => extractNumber(a.status) - extractNumber(b.status)
+    );
 
     // Oxirgi statusni tekshiramiz
     if (statuses.length > 0) {
         const lastStatus = statuses[statuses.length - 1];
         const isLastCommentEmpty = !lastStatus.comment || lastStatus.comment.trim() === '';
 
-        // Har bir statusni qayta ko'rib chiqamiz
         statuses.forEach((status, index) => {
-            if (index === statuses.length - 1) {
-                // Faqat oxirgi statusni ranglaymiz
-                status.isLatestRejectionWithComment = !isLastCommentEmpty;
-            } else {
-                // Undan oldingi barcha statuslar yashil bo'ladi
-                status.isLatestRejectionWithComment = false;
-            }
+            status.isLatestRejectionWithComment = index === statuses.length - 1 && !isLastCommentEmpty;
         });
     }
 
     return statuses;
 };
+
+
 
 const filteredFiles = computed(() => {
     const query = searchQuery.value.toLowerCase();
