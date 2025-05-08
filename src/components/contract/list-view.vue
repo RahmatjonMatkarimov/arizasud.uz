@@ -10,7 +10,7 @@
           class="mb-4 px-4 py-2 m-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300">
           {{ dat === 'datakril'? translateText('PDF-ni Yuklab Olish'):'PDF-ni Yuklab Olish' }}
         </button>
-        <button @click="downloadDocx"
+        <button v-if="docxFileUrl" @click="downloadDocx"
           class="mb-4 px-4 m-1 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300">
           {{ dat === 'datakril'? translateText('Docx-ni Yuklab Olish'):'Docx-ni Yuklab Olish' }}
         </button>
