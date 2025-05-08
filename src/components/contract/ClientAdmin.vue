@@ -1696,7 +1696,7 @@ const printReceipt = async () => {
         </tr>
         <tr>
           <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Tolov maqsadi</td>
-          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Kansating xizmat</td>
+          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Kansalting xizmat</td>
         </tr>
         <tr>
           <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Shartnomani umumiy bahosi</td>
