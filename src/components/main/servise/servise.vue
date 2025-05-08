@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, inject } from "vue";
+import { ref, onMounted, inject, onUnmounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from 'vue-i18n'; 
 import Header from "../../header.vue";
@@ -55,7 +55,7 @@ const folderContents = ref({});
 const route = useRoute();
 const router = useRouter();
 const numericId = ref(parseInt(route.params.id));
-const dat = inject("dat");
+
 
 const translitMap = {
   "ch": "ч", "sh": "ш", "yo": "ё", "yu": "ю", "ya": "я", "ye": "е", "oʻ": "ў", "g‘": "ғ",
@@ -119,7 +119,22 @@ const toggleFolder = async (item) => {
     await getFolderContents(item.id);
   }
 };
+const dat = ref(localStorage.getItem('til') || 'datalotin');
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem('til') || 'datalotin';
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
 
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
 const goToCard = (id) => {
   router.push(`/edit/${id}`);
 };

@@ -14,7 +14,7 @@
         <!-- Video Player -->
         <div class="rounded-lg overflow-hidden shadow-lg">
           <video controls class="w-full h-auto rounded-lg">
-            <source :src="videoUrl" type="video/mp4">
+            <source :src="videoUrl">
             {{ dat === 'datakril' ? translateText('Sizning brauzeringiz video formatini qoʻllab-quvvatlamaydi.') :
              'Sizning brauzeringiz video formatini qoʻllab -quvvatlamaydi.' }}
           </video>
