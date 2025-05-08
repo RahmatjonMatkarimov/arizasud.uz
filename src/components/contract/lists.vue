@@ -644,8 +644,8 @@ const printReceipt = () => {
           <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">№${clientFiles.value[0]?.contractId || 'Mavjud emas'}</td>
         </tr>
         <tr>
-          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Tolov maqsadi</td>
-          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Kansalting xizmat</td>
+          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">To'lov maqsadi</td>
+          <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Konsalting xizmat</td>
         </tr>
         <tr>
           <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">Shartnomani umumiy bahosi</td>
@@ -748,8 +748,8 @@ const generateCheckFile = async () => {
           <td style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black;">№${clientFiles.value[0]?.contractId || 'Mavjud emas'}</td>
         </tr>
         <tr>
-          <td style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black;">Tolov maqsadi</td>
-          <td style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black;">Kansalting xizmat</td>
+          <td style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black;">To'lov maqsadi</td>
+          <td style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black;">Konsalting xizmat</td>
         </tr>
         <tr>
           <td style="width: 100px; text-align: center; font-size:12px; padding-bottom: 12px;color: black; border: 1px solid black;">Shartnomani umumiy bahosi</td>
