@@ -3,7 +3,7 @@
         <Header />
         <div class="flex justify-end">
             <input v-model="searchQuery" type="text"
-                :placeholder="dat === 'datakril' ? translateText($t('qidiruv')) : $t('qidiruv')"
+                :placeholder="$t('qidiruv')"
                 class="border p-2 rounded text-black focus:outline-none border-black mt-4 mx-4 focus:ring focus:ring-blue-300 w-full sm:w-auto" />
         </div>
         <div class="flex justify-center p-5 rounded-lg max-w-full overflow-x-auto">
@@ -297,7 +297,7 @@ const getUniqueStatuses = (statusHistory) => {
             statusMap.set(item.status, {
                 id: item.id,
                 status: item.status,
-                title: dat.value === 'datakril' ? translateText(item.status) : item.status,
+                title: item.status,
                 date: item.createdAt,
                 completed: true,
                 isLatestRejectionWithComment: false,
