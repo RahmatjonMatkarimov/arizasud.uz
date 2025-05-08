@@ -170,28 +170,19 @@
         <div class="flex flex-col gap-4">
           <!-- Region Dropdown -->
           <select
-            v-model="regionFormData.regionId"
+            v-model="ofis"
             class="p-3 border rounded-lg focus:outline-none text-black border-black focus:ring-2 focus:ring-blue-500"
-            @change="fetchDistricts"
           >
             <option class=" text-black" value="" disabled>
-              {{ dat === 'datakril' ? translateText('Viloyatni tanlang') : 'Viloyatni tanlang' }}
+              {{ dat === 'datakril' ? translateText('To\'lov qaysi ofisdan amalga oshirilmoqda') : 'To\'lov qaysi ofisdan amalga oshirilmoqda' }}
             </option>
-            <option class=" text-black" v-for="region in regions" :key="region.id" :value="region.id">
-              {{ dat === 'datakril' ? region.name_ru : region.name_uz }}
+            <option class="text-black" value="Xorazm viloyati Urganch shaxar 1-son filiali">
+              {{ dat === 'datakril' ? translateText('Xorazm viloyati Urganch shaxar 1-son filiali')
+                : 'Xorazm viloyati Urganch shaxar 1-son filiali' }}
             </option>
-          </select>
-          <!-- District Dropdown -->
-          <select
-            v-model="regionFormData.districtId"
-            class="p-3 border rounded-lg focus:outline-none text-black border-black focus:ring-2 focus:ring-blue-500"
-            :disabled="!regionFormData.regionId"
-          >
-            <option class=" text-black" value="" disabled>
-              {{ dat === 'datakril' ? translateText('Tumanni tanlang') : 'Tumanni tanlang' }}
-            </option>
-            <option class=" text-black" v-for="district in districts" :key="district.id" :value="district.id">
-              {{ dat === 'datakril' ? district.name_ru : district.name_uz }}
+            <option class="text-black" value="Xorazm viloyati Xiva shaxar markaziy binosi">
+              {{ dat === 'datakril' ? translateText('Xorazm viloyati Xiva shaxar markaziy binosi')
+                : 'Xorazm viloyati Xiva shaxar markaziy binosi' }}
             </option>
           </select>
           <div class="flex justify-end gap-3">
@@ -203,9 +194,7 @@
             </button>
             <button
               @click="submitRegionSelection"
-              class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-              :disabled="!regionFormData.regionId"
-            >
+              class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
               {{ dat === 'datakril' ? translateText('Yuborish') : 'Yuborish' }}
             </button>
           </div>
@@ -311,9 +300,6 @@ import { useRoute, useRouter } from 'vue-router';
 import html2pdf from 'html2pdf.js';
 import { URL } from '@/auth/url.js';
 import translateText from '@/auth/Translate';
-import regionsData from '@/assets/regions.json';
-import districtsData from '@/assets/districts.json';
-
 const dat = inject('dat');
 const route = useRoute();
 const router = useRouter();
@@ -326,61 +312,31 @@ const showRegionModal = ref(false);
 const summa = ref(0);
 const modal = ref(false);
 const searchQuery = ref('');
-const regions = ref([]);
 const totalsumma= ref(null)
 const districts = ref([]);
 const formData = ref({
   name: '',
   file: null,
 });
-const regionFormData = ref({
-  regionId: '',
-  districtId: '',
-});
+
 const selectedItem = ref(null);
 const receiptData = ref({});
-const showReceipt = ref(false);
 const paymentDetailsModal = ref(false);
 const selectedPaymentDetails = ref(null);
 const data = ref(null);
 const modalPosition = ref({ top: 0, left: 0});
 const selectedRegionForPrint = ref({ regionName: '', districtName: '' });
 const pendingPrint = ref(false);
+const ofis = ref('')
 
 onMounted(() => {
   fetchClientFiles();
-  regions.value = regionsData;
-  regions.value.sort((a, b) =>
-    dat === 'datakril'
-      ? a.name_ru.localeCompare(b.name_ru)
-      : a.name_uz.localeCompare(b.name_uz)
-  );
 });
 
-const fetchDistricts = () => {
-  if (regionFormData.value.regionId) {
-    districts.value = districtsData.filter(
-      (district) => district.region_id === parseInt(regionFormData.value.regionId)
-    );
-    districts.value.sort((a, b) =>
-      dat === 'datakril'
-        ? a.name_ru.localeCompare(b.name_ru)
-        : a.name_uz.localeCompare(b.name_uz)
-    );
-    regionFormData.value.districtId = '';
-  } else {
-    districts.value = [];
-    regionFormData.value.districtId = '';
-  }
-};
 
 const closeRegionModal = () => {
   showRegionModal.value = false;
-  // Reset form
-  regionFormData.value = {
-    regionId: '',
-    districtId: '',
-  };
+ofis.value = ''
   districts.value = [];
   // If pending print, cancel the print process
   if (pendingPrint.value) {
@@ -389,41 +345,8 @@ const closeRegionModal = () => {
 };
 
 const submitRegionSelection = () => {
-  // Validate region selection
-  if (!regionFormData.value.regionId) {
-    alert("Iltimos, viloyatni tanlang!");
-    return;
-  }
-
-  // Save selected region and district names
-  const selectedRegion = regions.value.find(
-    (r) => r.id === parseInt(regionFormData.value.regionId)
-  );
-  const selectedDistrict = districts.value.find(
-    (d) => d.id === parseInt(regionFormData.value.districtId)
-  );
-  selectedRegionForPrint.value = {
-    regionName: selectedRegion
-      ? dat === 'datakril'
-        ? selectedRegion.name_uz
-        : selectedRegion.name_uz
-      : '',
-    districtName: selectedDistrict
-      ? dat === 'datakril'
-        ? selectedDistrict.name_uz
-        : selectedDistrict.name_uz
-      : '',
-  };
-
   showRegionModal.value = false;
-  // Reset form
-  regionFormData.value = {
-    regionId: '',
-    districtId: '',
-  };
-  districts.value = [];
-
-  // If printing is pending, proceed with printing
+  
   if (pendingPrint.value) {
     pendingPrint.value = false;
     printReceipt();
@@ -668,7 +591,7 @@ const printReceipt = () => {
             <td colspan="3" style="width: 100px; text-align: center; color: black; border: 1px solid black;">${data.value.name} ${data.value.surname} ${data.value.dadname}</td>
         </tr>
         <tr>
-            <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">${selectedRegionForPrint.value.regionName || 'Tanlanmagan'} ${selectedRegionForPrint.value.districtName ? ' ' + selectedRegionForPrint.value.districtName : ''} ofis binosi</td>
+            <td style="width: 100px; text-align: center; color: black; border: 1px solid black;">${ofis.value || 'Tanlanmagan'}</td>
             <td colspan="3" style="width: 100px; text-align: center; color: black; border: 1px solid black;">STIR 307675491      MFO: 01037</td>
         </tr>
         <tr>
@@ -772,7 +695,7 @@ const generateCheckFile = async () => {
             <td colspan="3" style="width: 100px;font-size:12px; padding-bottom: 12px; text-align: center; color: black; border: 1px solid black;">${data.value.name} ${data.value.surname} ${data.value.dadname}</td>
         </tr>
         <tr>
-            <td style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black;">${selectedRegionForPrint.value.regionName || 'Tanlanmagan'} ${selectedRegionForPrint.value.districtName ? ' ' + selectedRegionForPrint.value.districtName : ''} ofis binosi</td>
+            <td style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black;">${ofis.value || 'Tanlanmagan'}</td>
             <td colspan="3" style="width: 100px; text-align: center;font-size:12px; padding-bottom: 12px; color: black; border: 1px solid black;">STIR 307675491      MFO: 01037</td>
         </tr>
         <tr>
