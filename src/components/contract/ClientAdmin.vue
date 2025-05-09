@@ -1203,10 +1203,10 @@ const saveAndGenerate = async () => {
         }
         formData.surname = fullName[0] || "";
         formData.name = fullName[1] || "";
-        formData.dadname = fullName[2] || "";
+        formData.dadname = `${fullName[2]} ${fullName[3]}` || "";
         surname.value = fullName[0] || "";
         name.value = fullName[1] || "";
-        dadname.value = fullName[2] || "";
+        dadname.value = `${fullName[2]} ${fullName[3]}` || "";
         data["Familya"] = 'Raxbar: ' + fullName[0] || "";
         data["Ism"] = fullName[1] || "";
         data["Otasining ismi"] = `${fullName[2]} ${fullName[3]}` || "";
