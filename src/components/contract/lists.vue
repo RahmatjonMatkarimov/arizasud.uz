@@ -23,7 +23,7 @@
           v-for="file in filteredFiles"
           @click="router.push(file.type === 'video' ? '/video-open/' + file.id : '/lists-view/' + file.id)"
           :key="file.id"
-          class="py-2 flex justify-between items-center relative z-20 bg-white p-2 my-2"
+          class="py-2 flex justify-between items-center relative z-10 bg-white p-2 my-2"
         >
           <a target="_blank" class="text-gray-800 hover:underline">
             {{ dat === 'datakril' ? translateText(file.name) : file.name }}
@@ -78,7 +78,7 @@
     <!-- File Upload Modal -->
     <div
       v-if="showModal"
-      class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+      class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-40"
     >
       <div class="bg-white p-6 rounded-lg w-full max-w-lg shadow-lg relative">
         <button
@@ -306,7 +306,7 @@ const router = useRouter();
 const id = route.params.id;
 const SectionId = route.params.id1;
 const clientFiles = ref([]);
-const isLoading = ref(true);
+const isLoading = inject('isLoading');
 const showModal = ref(false);
 const showRegionModal = ref(false);
 const summa = ref(0);
@@ -378,6 +378,7 @@ const handleFileUpload = (event) => {
 };
 
 const uploadFile = async () => {
+    isLoading.value = true;
   const uploadData = new FormData();
   uploadData.append('name', formData.value.name);
   uploadData.append('file', formData.value.file);
@@ -395,6 +396,8 @@ const uploadFile = async () => {
     };
   } catch (error) {
     console.error('Error uploading file:', error);
+  } finally {
+    isLoading.value = false;
   }
 };
 
