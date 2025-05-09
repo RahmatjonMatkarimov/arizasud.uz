@@ -1,15 +1,18 @@
 <template>
-    <div class="flex flex-col pr-2 items-end">
-        <button @click="showModal = true" class="create-section-btn">{{ dat === 'datakril' ? translateText('Yangi bo\'lim yaratish') : 'Yangi bo\'lim yaratish' }}</button>
-    </div>
     <div class="content-container">
         <div v-if="clientData" class="p-2">
-            <div v-for="(section, index) in clientData.ClientSectionBody" :key="index" class="client-section m-2 flex flex-wrap">
-                <div v-for="item in section.clientSections">
-                    <img
-                    @click="item.type !== 'datastatus' ? router.push('/lists/' + id + '/' + item.id) : router.push('/room-statusAdmin/' + id + '/' + item.id)"
-                      src="../../../public/folder.ico" alt="">
-                    <h1 class="text-center">{{ dat === 'datakril' ? translateText(item.name) : item.name }}</h1>
+            <div v-for="(section, index) in clientData.ClientSectionBody" :key="index" class="client-section relative bg-gray-300 rounded-md p-5 justify-between m-2 flex flex-wrap">
+                <div class="client-section flex flex-wrap">
+                    <div v-for="item in section.clientSections">
+                        <img
+                        @click="item.type !== 'datastatus' ? router.push('/lists/' + id + '/' + item.id) : router.push('/room-statusAdmin/' + id + '/' + item.id)"
+                        src="../../../public/folder.ico" alt="">
+                        <h1 class="text-center">{{ dat === 'datakril' ? translateText(item.name) : item.name }}</h1>
+                    </div>
+                </div>
+                <div>
+                    <button @click="openModal(section.id)" class="create-section-btn absolute top-2 right-2">{{ dat === 'datakril' ? translateText('Yangi bo\'lim yaratish') : 'Yangi bo\'lim yaratish' }}</button><br>
+                    <h1 class="absolute bottom-2 right-3">{{ formatDate(section.createdAt) }}</h1>
                 </div>
             </div>
         </div>
@@ -35,7 +38,6 @@ import { useRoute, useRouter } from 'vue-router';
 import { URL } from '@/auth/url.js';
 import translateText from '@/auth/Translate';
 import { inject } from 'vue';
-import { is } from 'date-fns/locale';
 
 const route = useRoute();
 const isLoading = inject('isLoading');
@@ -45,6 +47,20 @@ const id = parseInt(route.params.id); // Ensure id is a number
 const clientData = ref(null);
 const showModal = ref(false);
 const newSectionName = ref("");
+const sectionId = ref(0)
+
+const openModal = async (item) =>{
+    showModal.value = true
+    sectionId.value = item
+}
+
+function formatDate(isoString) {
+  const date = new Date(isoString);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Oylar 0dan boshlanadi
+  const year = date.getFullYear();
+  return `${day}.${month}.${year}`;
+}
 
 const fetchClientById = async () => {
     isLoading.value = true;
@@ -60,16 +76,16 @@ const fetchClientById = async () => {
 };
 
 // Function to create a new client section
-const createClientSection = async () => {
+const createClientSection = async (id) => {
     isLoading.value = true;
     try {
         if (!newSectionName.value.trim()) {
             alert("Section name cannot be empty.");
             return;
         }
-        const newSection = { clientId: id, name: newSectionName.value,type: "other" };
+        const newSection = { sectionBodyId: sectionId.value, name: newSectionName.value,type: "other" };
         const response = await axios.post(`${URL}/client-sections`, newSection);
-        clientData.value.ClientSection.push(response.data);
+        await fetchClientById()
         newSectionName.value = "";
         showModal.value = false;
     } catch (error) {
