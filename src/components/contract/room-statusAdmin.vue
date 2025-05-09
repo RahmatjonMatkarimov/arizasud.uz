@@ -1,11 +1,18 @@
 <template>
     <div class="bg-gradient-to-r  min-h-[100vh] to-[#d2ffd7] from-[#e6ffe9]">
+        <div class="flex justify-center mt-8 items-center">
+        <h1
+            class="text-black text-[40px] font-bold text-center bg-lime-500 border-[3px] border-black rounded-lg py-2 px-[100px]">
+            {{ dat === 'datakril' ? translateText('Ish jarayoni holati') : 'Ish jarayoni holati' }}
+        </h1>
+    </div>
       <div class="flex justify-center p-5 rounded-lg max-w-full overflow-x-auto">
         <div class="w-full max-w-[1000px] xl:max-w-[1300px] p-4 rounded-lg">
           <ul class="list-none p-0 m-0">
+            
             <li class="relative">
-              <div @click.stop class="mt-6">
-                <h4 class="text-sm font-semibold text-gray-800 mb-2">{{ dat === 'datakril' ? translateText('Ish jarayoni holati') : 'Ish jarayoni holati' }}</h4>
+              <div @click.stop class="">
+                <h4 class="text-[30px] mb-6 font-semibold text-center text-gray-800 ">{{ dat === 'datakril' ? translateText('Ish jarayoni holat "Sudga taqdim etildi" bo\'lganida to\'liq tugallangan hisoblanadi!') : 'Ish jarayoni holat "Sudga taqdim etildi" bo\'lganida to\'liq tugallangan hisoblanadi!' }}</h4>
                 <div class="overflow-x-auto min-w-[100%]">
                   <div class="inline-block min-w-full">
                     <!-- Iterate over filteredFiles to access each file -->
