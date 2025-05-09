@@ -1,9 +1,9 @@
 <template>
 
     <Header />
-    <div class="bg-gradient-to-r min-h-screen to-[#d2ffd7] from-[#e6ffe9]">
+    <div class="bg-gradient-to-r h-screen to-[#d2ffd7] from-[#e6ffe9]">
       <div class="flex justify-center p-5 rounded-lg max-w-full overflow-x-auto">
-        <div class="w-full p-4 rounded-lg">
+        <div class="w-full max-w-[100%] p-4 rounded-lg">
           <ul class="list-none p-0 m-0">
             <li class="relative">
               <div @click.stop class="mt-6">
@@ -16,7 +16,7 @@
                         <!-- Iterate over statuses for the current file -->
                         <template v-for="(step, index) in getUniqueStatuses(file.LawyerTask)" :key="step.id">
                           <div :class="[
-                            'relative flex lg:flex-col rounded-xl z-30 lg:bg-white my-1 lg:my-0 h-[100px] lg:h-[170px] items-center p-1 lg:w-full',
+                            'relative flex lg:flex-col rounded-xl z-30 lg:bg-white my-1 lg:my-0 h-[100px] lg:h-[170px] items-center p-1 lg:w-[135px]',
                             step.isLatestRejectionWithComment
                               ? 'lg:border-[6px] border-b-2 bg-gradient-to-r from-[#ffd2d2] to-[#ffe6e6] border-l-2 border-red-600'
                               : 'lg:border-[6px] bg-gradient-to-r from-[#d2ffd7] to-[#e6ffe9] border-b-2 border-l-2 border-lime-600'

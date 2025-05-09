@@ -1,12 +1,12 @@
 <template>
-    <div class="bg-gradient-to-r to-[#d2ffd7] from-[#e6ffe9]">
+    <div class="bg-gradient-to-r  min-h-[100vh] to-[#d2ffd7] from-[#e6ffe9]">
       <div class="flex justify-center p-5 rounded-lg max-w-full overflow-x-auto">
-        <div class="w-full max-w-[1140px] p-4 rounded-lg">
+        <div class="w-full max-w-[1000px] xl:max-w-[1300px] p-4 rounded-lg">
           <ul class="list-none p-0 m-0">
             <li class="relative">
               <div @click.stop class="mt-6">
                 <h4 class="text-sm font-semibold text-gray-800 mb-2">{{ dat === 'datakril' ? translateText('Ish jarayoni holati') : 'Ish jarayoni holati' }}</h4>
-                <div class="overflow-x-auto max-w-[100%]">
+                <div class="overflow-x-auto min-w-[100%]">
                   <div class="inline-block min-w-full">
                     <!-- Iterate over filteredFiles to access each file -->
                     <template v-for="(file, fileIndex) in filteredFiles" :key="file.id">
