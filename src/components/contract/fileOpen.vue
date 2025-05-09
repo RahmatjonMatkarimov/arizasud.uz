@@ -7,7 +7,7 @@
             <div v-for="(section, index) in clientData.ClientSectionBody" :key="index" class="client-section m-2 flex flex-wrap">
                 <div v-for="item in section.clientSections">
                     <img
-                    @click="item.type !== 'datastatus' ? router.push('/lists/' + id + '/' + item.id) : router.push('/room-status/' + id + '/' + item.id)"
+                    @click="item.type !== 'datastatus' ? router.push('/lists/' + id + '/' + item.id) : router.push('/room-statusAdmin/' + id + '/' + item.id)"
                       src="../../../public/folder.ico" alt="">
                     <h1 class="text-center">{{ dat === 'datakril' ? translateText(item.name) : item.name }}</h1>
                 </div>

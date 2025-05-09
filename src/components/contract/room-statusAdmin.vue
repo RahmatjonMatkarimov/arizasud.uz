@@ -1,6 +1,4 @@
 <template>
-
-    <Header />
     <div class="bg-gradient-to-r to-[#d2ffd7] from-[#e6ffe9]">
       <div class="flex justify-center p-5 rounded-lg max-w-full overflow-x-auto">
         <div class="w-full max-w-[1140px] p-4 rounded-lg">
@@ -34,7 +32,7 @@
                               </div>
                             </div>
                             <div class="mt-2 lg:text-center">
-                              <div class="lg:asd relative">
+                              <div class="lg:asd group relative">
                                 <p
                                   :class="[
                                     'text-[16px] font-medium lg:p-1 line-clamp-2 lg:w-[120px] mb-1',
@@ -135,7 +133,6 @@
   import { useRoute, useRouter } from 'vue-router';
   import { URL } from '@/auth/url.js';
   import translateText from '@/auth/Translate';
-  import Header from '../header.vue';
   
   const route = useRoute();
   const router = useRouter();
@@ -147,6 +144,7 @@
   const selectedPaymentDetails = ref(null);
   const modalPosition = ref({ top: 0, left: 0 });
   const data = ref(null);
+  const dat = inject('dat');
   const taskSectionOpen = reactive({});
   const isMobile = ref(window.innerWidth <= 640);
   
@@ -303,23 +301,6 @@
       file.fileName?.toLowerCase().includes(query)
     );
   });
-
-  const dat = ref(localStorage.getItem('til') || 'datalotin');
-let intervalId = null;
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem('til') || 'datalotin';
-  if (currentLang !== dat.value) {
-    dat.value = currentLang;
-  }
-};
-
-onMounted(() => {
-  intervalId = setInterval(checkLanguageChange, 0);
-});
-
-onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
-});
   </script>
   
   <style>

@@ -364,7 +364,7 @@ const fetchClientFiles = async () => {
   try {
     const response = await axios.get(`${URL}/client-sections/${id}`);
     clientFiles.value = response.data.ClientFile || [];
-    data.value = response.data.client;
+    data.value = response.data.clientSectionBody.client;
     console.log(response.data)
   } catch (error) {
     console.error('Error fetching client files:', error);

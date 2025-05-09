@@ -71,6 +71,7 @@ export const routes = [
         { path: '/CliendList', component: () => import('@/components/contract/cliendList.vue') },
         { path: '/Check/:id', component: () => import('@/components/contract/fileOpen.vue') },
         { path: '/lists/:id1/:id', component: () => import('@/components/contract/lists.vue') },
+        { path: '/room-statusAdmin/:id1/:id', name: 'room-status-Admin', component: () => import('@/components/contract/room-statusAdmin.vue') },
         { path: '/lists-view/:id', component: () => import('@/components/contract/list-view.vue') },
         { path: '/admin-list', component: () => import('@/components/admins/all.vue') },
         { path: '/all-contract', component: () => import('@/components/contract/all.vue') },
