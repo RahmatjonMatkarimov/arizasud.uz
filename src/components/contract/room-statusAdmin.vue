@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-gradient-to-r  min-h-[100vh] to-[#d2ffd7] from-[#e6ffe9]">
+    <div class="bg-gradient-to-r p-2 -mt-8 min-h-[100vh] to-[#d2ffd7] from-[#e6ffe9]">
         <div class="flex justify-center mt-8 items-center">
         <h1
             class="text-black text-[40px] font-bold text-center bg-lime-500 border-[3px] border-black rounded-lg py-2 px-[100px]">
@@ -9,7 +9,6 @@
       <div class="flex justify-center p-5 rounded-lg max-w-full overflow-x-auto">
         <div class="w-full max-w-[1000px] xl:max-w-[1300px] p-4 rounded-lg">
           <ul class="list-none p-0 m-0">
-            
             <li class="relative">
               <div @click.stop class="">
                 <h4 class="text-[30px] mb-6 font-semibold text-center text-gray-800 ">{{ dat === 'datakril' ? translateText('Ish jarayoni holat "Sudga taqdim etildi" bo\'lganida to\'liq tugallangan hisoblanadi!') : 'Ish jarayoni holat "Sudga taqdim etildi" bo\'lganida to\'liq tugallangan hisoblanadi!' }}</h4>
@@ -21,7 +20,7 @@
                         <!-- Iterate over statuses for the current file -->
                         <template v-for="(step, index) in getUniqueStatuses(file.LawyerTask)" :key="step.id">
                           <div :class="[
-                            'relative flex lg:flex-col rounded-xl z-40 lg:bg-white my-1 lg:my-0 h-[100px] lg:h-[170px] items-center p-1 lg:max-w-[135px]',
+                            'relative flex lg:flex-col rounded-xl z-10 lg:bg-white my-1 lg:my-0 h-[100px] lg:h-[170px] items-center p-1 lg:max-w-[135px]',
                             step.isLatestRejectionWithComment
                               ? 'lg:border-[6px] border-b-2 bg-gradient-to-r from-[#ffd2d2] to-[#ffe6e6] border-l-2 border-red-600'
                               : 'lg:border-[6px] bg-gradient-to-r from-[#d2ffd7] to-[#e6ffe9] border-b-2 border-l-2 border-lime-600'

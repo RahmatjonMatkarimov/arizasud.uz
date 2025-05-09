@@ -1,7 +1,7 @@
 <template>
 
     <Header />
-    <div class="bg-gradient-to-r h-screen to-[#d2ffd7] from-[#e6ffe9]">
+    <div class="bg-gradient-to-r -mt-8 p-2 h-screen to-[#d2ffd7] from-[#e6ffe9]">
         <div class="flex justify-center mt-8 items-center">
         <h1
             class="text-black text-[20px] md:text-[40px] font-bold text-center bg-lime-500 border-[3px] border-black rounded-lg py-2 px-[50px] md:px-[100px]">
