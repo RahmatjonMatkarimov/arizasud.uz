@@ -1171,6 +1171,11 @@ const saveAndGenerate = async () => {
       isWarningModalOpen.value = true;
       return;
     }
+    if (!paymentTuman.value) {
+      errorMessage.value = "Iltimos YKK filialini belgilang!";
+      isWarningModalOpen.value = true;
+      return;
+    }
 
     // Clear previous errors
     errors.value = new Array(uniqueFields.value.length).fill("");
