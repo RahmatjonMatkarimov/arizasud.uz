@@ -16,7 +16,7 @@
                         <!-- Iterate over statuses for the current file -->
                         <template v-for="(step, index) in getUniqueStatuses(file.LawyerTask)" :key="step.id">
                           <div :class="[
-                            'relative flex lg:flex-col rounded-xl z-40 lg:bg-white my-1 lg:my-0 h-[100px] lg:h-[170px] items-center p-1 lg:max-w-[135px]',
+                            'relative flex lg:flex-col rounded-xl z-30 lg:bg-white my-1 lg:my-0 h-[100px] lg:h-[170px] items-center p-1 lg:max-w-[135px]',
                             step.isLatestRejectionWithComment
                               ? 'lg:border-[6px] border-b-2 bg-gradient-to-r from-[#ffd2d2] to-[#ffe6e6] border-l-2 border-red-600'
                               : 'lg:border-[6px] bg-gradient-to-r from-[#d2ffd7] to-[#e6ffe9] border-b-2 border-l-2 border-lime-600'
@@ -34,7 +34,7 @@
                               </div>
                             </div>
                             <div class="mt-2 lg:text-center">
-                              <div class="lg:asd relative">
+                              <div class="group relative">
                                 <p
                                   :class="[
                                     'text-[16px] font-medium lg:p-1 line-clamp-2 lg:w-[120px] mb-1',
@@ -44,7 +44,7 @@
                                   {{ dat === 'datakril' ? translateText(getStatus(step.title)) : getStatus(step.title) }}
                                 </p>
                                 <p
-                                  class="absolute das -mt-2 rounded-md z-40 bg-gray-600 min-w-[300px] text-center text-white"
+                                  class="absolute hidden group-hover:block -mt-2 rounded-md z-50 bg-gray-600 px-2 min-w-[100px] text-center text-white"
                                 >
                                   {{ dat === 'datakril' ? translateText(getStatus(step.title)) : getStatus(step.title) }}
                                 </p>

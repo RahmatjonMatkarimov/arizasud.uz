@@ -32,7 +32,7 @@
                               </div>
                             </div>
                             <div class="mt-2 lg:text-center">
-                              <div class="lg:asd group relative">
+                              <div class="group relative">
                                 <p
                                   :class="[
                                     'text-[16px] font-medium lg:p-1 line-clamp-2 lg:w-[120px] mb-1',
@@ -42,7 +42,7 @@
                                   {{ dat === 'datakril' ? translateText(getStatus(step.title)) : getStatus(step.title) }}
                                 </p>
                                 <p
-                                  class="absolute das -mt-2 rounded-md z-40 bg-gray-600 min-w-[300px] text-center text-white"
+                                  class="absolute group-hover:block -mt-2 hidden rounded-md z-40 bg-gray-600 min-w-[100px] px-2 text-center text-white"
                                 >
                                   {{ dat === 'datakril' ? translateText(getStatus(step.title)) : getStatus(step.title) }}
                                 </p>
@@ -343,14 +343,6 @@
     to {
       background-position: 0 0;
     }
-  }
-  
-  .das {
-    display: none;
-  }
-  
-  .asd:hover .das {
-    display: block;
   }
   
   .bg-stripes {
