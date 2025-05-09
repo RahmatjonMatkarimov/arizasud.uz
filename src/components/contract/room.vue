@@ -5,8 +5,9 @@
                 <div v-for="item in section.clientSections">
                     <img 
                     @click="item.type !== 'datastatus' ? router.push('/room-lists/' + id + '/' + item.id) : router.push('/room-status/' + id + '/' + item.id)"
-                    src="../../../public/folder.ico" alt="">
-                    <h1 class="text-center">{{ dat === 'datakril' ? translateText(item.name) : item.name }}</h1>
+                    src="../../../public/folder.ico" alt=""
+                    class="w-[70px] md:w-[100px] lg:w-[120px] xl:w-[140px]">
+                    <h1 class="text-center w-[70px] md:w-[100px] lg:w-[120px] xl:w-[140px] text-[10px]  md:text-[15px] lg:text-[16px]">{{ dat === 'datakril' ? translateText(item.name) : item.name }}</h1>
                 </div>
             </div>
         </div>
