@@ -42,7 +42,7 @@
                                   {{ dat === 'datakril' ? translateText(getStatus(step.title)) : getStatus(step.title) }}
                                 </p>
                                 <p
-                                  class="absolute group-hover:block -mt-2 hidden rounded-md z-40 bg-gray-600 min-w-[100px] px-2 text-center text-white"
+                                  class="absolute group-hover:block bottom-0 hidden rounded-md z-40 bg-gray-600 min-w-[100px] px-2 text-center text-white"
                                 >
                                   {{ dat === 'datakril' ? translateText(getStatus(step.title)) : getStatus(step.title) }}
                                 </p>
