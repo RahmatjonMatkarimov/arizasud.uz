@@ -1124,9 +1124,6 @@ const saveAndGenerate = async () => {
   try {
     submitSelection();
 
-    // Validate region and district selections
-    if (!contractRegion.value.regionId || !contractRegion.value.districtId) {
-    }
 
     if (!contractRegion.value.regionId || !contractRegion.value.districtId) {
       errorMessage.value = " Shartnoma uchun viloyat va tuman tanlanishi shart!";
@@ -1204,7 +1201,8 @@ const saveAndGenerate = async () => {
         const fullName = fieldValues.value[index].trim().split(/\s+/).filter(part => part.length > 0);
         if (fullName.length < 3) {
           errorMessage.value = " Korxona rahbarini F.I.SH. to'liq kiritilishi kerak (Familiya, Ism, Otasining ismi)!";
-          throw new Error("Incomplete full name");
+          isWarningModalOpen.value = true;
+return
         }
         formData.surname = fullName[0] || "";
         formData.name = fullName[1] || "";
