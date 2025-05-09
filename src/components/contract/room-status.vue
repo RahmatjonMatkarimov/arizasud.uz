@@ -1,56 +1,11 @@
 <template>
     <div class=" bg-gradient-to-r to-[#d2ffd7] from-[#e6ffe9]">
         <Header />
-        <div class="flex justify-end">
-            <input v-model="searchQuery" type="text"
-                :placeholder="$t('qidiruv')"
-                class="border p-2 rounded text-black focus:outline-none border-black mt-4 mx-4 focus:ring focus:ring-blue-300 w-full sm:w-auto" />
-        </div>
         <div class="flex justify-center p-5 rounded-lg max-w-full overflow-x-auto">
             <div class="w-full max-w-[1140px] p-4 rounded-lg">
                 <ul class="list-none p-0 m-0">
                     <li v-for="file in filteredFiles"
-                        @click="router.push(file.type === 'video' ? '/video/' + file.id : '/room-file/' + file.id)"
-                        :key="file.id" class="relative duration-200 rounded-xl border-4 border-blue-500 z-20 p-2 my-2 cursor-pointer">
-                        <div class="py-2 flex  hover:bg-white border-4 rounded-xl  border-blue-500 bg-blue-500 group justify-between items-center">
-                            <a target="_blank" class="text-white ml-1 group-hover:text-blue-500 px-0 lg:px-4 text-md lg:text-xl lg:w-auto w-[200px] lg:hover:underline">
-                                {{ dat === 'datakril' ? translateText(file.name) : file.name }}
-                            </a>
-                            <div class="flex gap-4">
-                                <div class="lg:flex items-center relative z-50 gap-4">
-                                    <div v-if="file.ClientPayment && file.ClientPayment.length" class="text-lg">
-                                        <span class="text-green-600"
-                                            v-if="file.ClientPayment[file.ClientPayment.length - 1]?.remainingSum <= 0">
-                                            {{ dat === 'datakril' ? translateText("To'langan") : "To'langan" }}
-                                        </span>
-                                        <span v-else
-                                            @click.stop="openPaymentDetailsModal(file, $event)">
-                                            <span class="block text-red-400 cursor-pointer sm:hidden">
-                                                {{ dat === 'datakril' ? translateText("Qarzlar") : "Qarzlar" }}
-                                            </span>
-                                            <span class="hidden text-red-400 cursor-pointer sm:inline">
-                                                {{ dat === 'datakril' ? translateText("Qarzi") : "Qarzi" }}:
-                                                {{ file.ClientPayment[file.ClientPayment.length - 1]?.remainingSum || 0
-                                                }}
-                                                {{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
-                                            </span>
-                                        </span>
-
-                                    </div>
-                                    <div class="group-hover:text-blue-500 mr-2 text-white">
-                                        {{ formatDate(file.createdAt) }}
-                                    </div>
-                                </div>
-                                <div v-if="file.LawyerTask[0]"
-                                    class="mt-2 rounded-full bg-white text-blue-500 w-9 rotate-90 h-9 flex justify-center items-center sm:hidden">
-                                    <button @click.stop="toggleTaskSection(file.id)"
-                                        :class="{ 'rotate-180': taskSectionOpen[file.id] }"
-                                        class="text-blue-500 text-xl font-bold  transition-transform duration-300">
-                                        < </button>
-                                </div>
-                            </div>
-
-                        </div>
+                        :key="file.id" class="relative">
                         <div v-if="file.LawyerTask[0] && (taskSectionOpen[file.id] || !isMobile)" @click.stop
                             class="mt-6">
                             <h4 class="text-sm font-semibold text-gray-800 mb-2">Ish jarayoni holati</h4>

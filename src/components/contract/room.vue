@@ -1,9 +1,11 @@
 <template>
     <div class="content-container">
-        <div v-if="clientData" class="flex p-5">
-            <div v-for="(section, index) in clientData.ClientSection" :key="index" class="client-section">
-                <img @click="router.push('/room-lists/' + id + '/' + section.id)" src="../../../public/folder.ico" alt="">
-                <h1 class="text-center">{{ dat === 'datakril' ? translateText(section.name) : section.name }}</h1>
+        <div v-if="clientData" class="p-2">
+            <div v-for="(section, index) in clientData.ClientSectionBody" :key="index" class="client-section m-2 flex flex-wrap">
+                <div v-for="item in section.clientSections">
+                    <img @click="router.push('/room-lists/' + id + '/' + item.id)" src="../../../public/folder.ico" alt="">
+                    <h1 class="text-center">{{ dat === 'datakril' ? translateText(item.name) : item.name }}</h1>
+                </div>
             </div>
         </div>
     </div>

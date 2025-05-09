@@ -14,6 +14,7 @@ export const routes = [
     { path: '/appeals', name: 'appeals', component: () => import('@/components/appeal/appeal.vue') },
     { path: '/clientOpenFile/:id', name: 'clientOpenFile', component: () => import('@/components/contract/htmlView.vue') },
     { path: '/clientOpenRoom/:id', name: 'clientOpenRoom', component: () => import('@/components/contract/room.vue') },
+    { path: '/room-status/:id1/:id', name: 'room-status', component: () => import('@/components/contract/room-status.vue') },
     { path: '/room-file/:id', name: 'clientOpenfile', component: () => import('@/components/contract/room-file.vue') },
     { path: '/aplications/:id', name: 'aplications', component: () => import('@/components/main/aplications/aplications.vue') },
     { path: '/screen', name: 'screen', component: () => import('@/components/filePage/dakument.vue') },

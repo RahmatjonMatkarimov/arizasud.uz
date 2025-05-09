@@ -1209,7 +1209,7 @@ const saveAndGenerate = async () => {
         dadname.value = fullName[2] || "";
         data["Familya"] = 'Raxbar: ' + fullName[0] || "";
         data["Ism"] = fullName[1] || "";
-        data["Otasining ismi"] = fullName[2] || "";
+        data["Otasining ismi"] = `${fullName[2]} ${fullName[3]}` || "";
         data["Korxona rahbarini F.I.SH.:"] = "Yuridik shaxs ";
       }
       // Handle individual fields for Jismoniy
