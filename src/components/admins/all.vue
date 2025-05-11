@@ -78,6 +78,14 @@ const cards = ref([
         routerLink: '/deliverer',
         condition: () => data.value?.admins
     },
+    {
+        title: 'Bugalter Yaratish Bo\'limi',
+        icon: ['fas', 'user'],
+        bgColor: 'linear-gradient(330deg, #5ee7df 5%, #b490ca 90%)',
+        iconColor: '#ffffff',
+        routerLink: '/bugalter',
+        condition: () => data.value?.admins
+    },
 ])
 
 const filteredMenu = computed(() => {

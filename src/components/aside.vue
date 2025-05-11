@@ -40,6 +40,7 @@ const menuItems = [
   { to: "/deliverer-task", label: "Yangi shartnomalar ", condition: localStorage.getItem('role')==='deliverer' },
   { to: "/remindersAdmin", label: "Ishchilarni bajargan ishlari", condition: () => data.value?.workDone },
   { to: "/Requirefiles", label: "Imzolanishi kerak boʻlgan fayllar", condition: () => data.value?.userFiles },
+  { to: "/Dashboard", label: "Bugalteriya", condition:true },
   { to: "/payment", label: "Tizim toʻlovlari", condition: true },
   { to: "/smile", label: "Stikker qoʻshish", condition: true },
   { to: "/companyFile", label: "Kampaniya fayllari", condition: () => data.value?.companyDocs },

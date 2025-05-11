@@ -1,11 +1,35 @@
 import { createApp } from 'vue';
-import './style.css';
+import '@/style.css';
 import App from './App.vue';
 import router from './router';
 import { createI18n } from 'vue-i18n';
 import ўзб from "@/kril.json";
 import uzb from "@/lotin.json";
 import axios from "axios"; 
+
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { 
+  faChartLine, 
+  faFileInvoice, 
+  faMoneyBillTransfer, 
+  faMoneyCheckDollar, 
+  faChartPie,
+  faUser,
+  faSearch,
+  faBell
+} from '@fortawesome/free-solid-svg-icons'
+
+library.add(
+  faChartLine, 
+  faFileInvoice, 
+  faMoneyBillTransfer, 
+  faMoneyCheckDollar, 
+  faChartPie,
+  faUser,
+  faSearch,
+  faBell
+)
 
 const i18n = createI18n({
     legacy: false,
@@ -25,6 +49,7 @@ const checkLocation = async () => {
     }
 };
 const app = createApp(App);
+app.component('font-awesome-icon', FontAwesomeIcon)
 app.use(i18n);
 app.use(router);
 app.provide("globalError", null); 

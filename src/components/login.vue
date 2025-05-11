@@ -113,7 +113,7 @@ const setData = async () => {
         error.value = "Foydalanuvchi roli aniqlanmadi.";
       } else if (typeof role !== "string") {
         error.value = "Noto‘g‘ri rol formati.";
-      } else if (["admin", "bigAdmin", "yuristAssistant",'deliverer', "yurist", "manager"].includes(role.trim())) {
+      } else if (["admin", "bigAdmin", "yuristAssistant",'accauntant','deliverer', "yurist", "manager"].includes(role.trim())) {
         router.push(`/admin-list`);
       } else {
         error.value = "Bu rolda tizimga kirish taqiqlangan.";
