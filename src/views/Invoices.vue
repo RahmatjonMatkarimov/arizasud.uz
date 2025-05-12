@@ -262,22 +262,22 @@ onMounted(() => {
           <thead>
             <tr>
               <th>Description</th>
-              <th class="text-right">Quantity</th>
-              <th class="text-right">Rate</th>
-              <th class="text-right">Amount</th>
+              <th class="text-right text-black">Quantity</th>
+              <th class="text-right text-black">Rate</th>
+              <th class="text-right text-black">Amount</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(item, index) in selectedInvoice.items" :key="index">
               <td>{{ item.description }}</td>
-              <td class="text-right">{{ item.id }}</td>
-              <td class="text-right">${{ item.totalSum.toFixed(2) }}</td>
+              <td class="text-right text-black">{{ item.id }}</td>
+              <td class="text-right text-black">${{ item.totalSum.toFixed(2) }}</td>
             </tr>
           </tbody>
           <tfoot>
             <tr>
-              <td colspan="3" class="text-right"><strong>Total:</strong></td>
-              <td class="text-right"><strong>${{ selectedInvoice.totalSum.toFixed(2) }}</strong></td>
+              <td colspan="3" class="text-right text-black"><strong>Total:</strong></td>
+              <td class="text-right text-black"><strong>${{ selectedInvoice.totalSum.toFixed(2) }}</strong></td>
             </tr>
           </tfoot>
         </table>
@@ -335,7 +335,9 @@ input {
   font-weight: 500;
   font-size: 0.875rem;
 }
-
+span,p{
+  color: black;
+}
 .form-input,
 .form-select {
   padding: var(--space-2);
