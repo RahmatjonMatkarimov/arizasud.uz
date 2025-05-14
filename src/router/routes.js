@@ -4,8 +4,11 @@ import Invoices from '../views/Invoices.vue'
 import Payroll from '../views/Payroll.vue'
 import Reports from '../views/Reports.vue'
 import Profile from '../views/Profile.vue'
+import invoicesChild from '../views/InvoicesChildren.vue'
 import main from '@/components/Templates/template.vue'
-
+import salaryCalculator from '@/components/admins/salaryCalculator.vue'
+import salary from '@/components/Salery/index.vue'
+import salaryChange from '@/components/Salery/Salerychange.vue'
 
 export const routes = [
   { path: '/edit/:id/:id2?', name: 'editFile', component: () => import('@/components/main/file/file.vue') },
@@ -50,6 +53,30 @@ export const routes = [
         name: 'Transactions',
         component: Transactions,
         meta: { title: 'Transactions' }
+      },
+      {
+        path: '/invoicesChild',
+        name: 'invoicesChild',
+        component: invoicesChild,
+        meta: { title: 'invoicesChild' }
+      },
+      {
+        path: '/salaryCalculator',
+        name: 'salaryCalculator',
+        component: salaryCalculator,
+        meta: { title: 'salaryCalculator' }
+      },
+      {
+        path: '/salaryChange',
+        name: 'salaryChange',
+        component: salaryChange,
+        meta: { title: 'salaryChange' }
+      },
+      {
+        path: '/salary',
+        name: 'salary',
+        component: salary,
+        meta: { title: 'salary' }
       },
       {
         path: '/invoices',

@@ -1,601 +1,509 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import { Pie, Bar } from 'vue-chartjs'
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js'
+import translateText from '@/auth/Translate'
+import axios from 'axios'
+import { URL } from '@/auth/url'
+import { ref, inject, onMounted, watch } from 'vue'
+import * as XLSX from 'xlsx'
+import { useRoute, useRouter } from 'vue-router';
+import PDFViewer from '../components/ppdf.vue'
 
-ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title)
+const selectedFilePath = ref(null)
+const router = useRouter()
+const dat = inject('dat')
+const Showmodal = ref(false)
+const showChekbox = ref(false)
+const modal = ref(false)
+const name = ref('')
+const startDate = ref('')
+const endDate = ref('')
+const totalSum = ref(null)
+const file = ref('')
+const chek = ref(null)
+const ids = ref([])
+const isLoading = inject('isLoading');
+const accauntantFilesId = ref(null)
 
-// Report selection
-const selectedReport = ref('income')
-const selectedPeriod = ref('year')
+const invoices = ref([])
 
-// Chart data for expense categories
-const expenseData = ref({
-  labels: ['Rent', 'Utilities', 'Salaries', 'Marketing', 'Software', 'Office Supplies', 'Other'],
-  datasets: [
-    {
-      data: [2000, 450, 4200, 1200, 800, 350, 600],
-      backgroundColor: [
-        '#26a69a', 
-        '#42b3a5', 
-        '#5ec0b1', 
-        '#79ccbd', 
-        '#95d8c9', 
-        '#b1e4d5', 
-        '#cdeee1'
-      ],
-      borderWidth: 0
-    }
-  ]
+// Filters
+const filters = ref({
+  search: '',
+  status: '',
+  dateFrom: '',
+  dateTo: ''
 })
 
-// Chart data for income by client
-const incomeData = ref({
-  labels: ['Acme Corp', 'Globex Inc', 'Stark Industries', 'Wonka Co', 'Wayne Enterprises', 'Other'],
-  datasets: [
-    {
-      data: [3500, 2500, 1800, 1200, 4200, 1500],
-      backgroundColor: [
-        '#3182ce', 
-        '#4a90e2', 
-        '#639fee', 
-        '#7badf2', 
-        '#93bbf5', 
-        '#accaf8'
-      ],
-      borderWidth: 0
-    }
-  ]
-})
+// Selected invoice for details view
+const selectedInvoice = ref(null)
+const showDetails = ref(false)
 
-// Chart data for revenue over time
-const revenueTimeData = ref({
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
-  datasets: [
-    {
-      label: 'Revenue',
-      data: [15000, 22000, 19000, 23000, 21000, 25000, 24000, 26000, 27000],
-      backgroundColor: 'rgba(50, 131, 210, 1)',
-    },
-    {
-      label: 'Expenses',
-      data: [8000, 9000, 8500, 10000, 9500, 11000, 10500, 12000, 11500],
-      backgroundColor: 'rgba(40, 169, 156, 1)',
-    }
-  ]
-})
+const handleImageUpload = (event) => {
+  file.value = event.target.files[0]
+}
+const handleCkekUpload = (event) => {
+  chek.value = event.target.files[0]
+}
 
-// Chart options
-const pieOptions = ref({
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      position: 'right',
-      labels: {
-        padding: 20,
-        usePointStyle: true
+const upload = async () => {
+  isLoading.value = true
+  try {
+    const formData = new FormData()
+    formData.append('name', name.value)
+    formData.append('userId', parseInt(localStorage.getItem('id')))
+    formData.append('startDate', new Date(startDate.value).toISOString())
+    formData.append('endDate', new Date(endDate.value).toISOString())
+    formData.append('totalSum', parseInt(totalSum.value))
+    formData.append('type', 'reports')
+    formData.append('file', file.value)
+    formData.append('check', chek.value)
+    const res = await axios.post(URL + '/accountant-files', formData, {
+      headers: {
+        "Content-Type": 'multipart/form-data' // Fixed typo in Content-Type
       }
-    },
-    tooltip: {
-      callbacks: {
-        label: function(context) {
-          let label = context.label || '';
-          if (label) {
-            label += ': ';
-          }
-          if (context.parsed !== null) {
-            label += '$' + context.parsed.toFixed(2);
-          }
-          return label;
-        }
-      }
-    }
+    })
+    name.value = ''
+    file.value = ''
+    startDate.value = ''
+    endDate.value = ''
+    totalSum.value = null
+    Showmodal.value = false
+    getFiles()
+    console.log(res)
+  } catch (err) {
+    console.log(err)
   }
-})
-
-const barOptions = ref({
-  responsive: true,
-  maintainAspectRatio: false,
-  scales: {
-    y: {
-      beginAtZero: true,
-      grid: {
-        color: 'rgba(0, 0, 0, 0.05)'
-      },
-      ticks: {
-        callback: function(value) {
-          return '$' + value.toLocaleString();
-        }
-      }
-    },
-    x: {
-      grid: {
-        display: false
-      }
-    }
-  },
-  plugins: {
-    legend: {
-      position: 'top',
-      labels: {
-        usePointStyle: true,
-        padding: 20
-      }
-    },
-    tooltip: {
-      callbacks: {
-        label: function(context) {
-          let label = context.dataset.label || '';
-          if (label) {
-            label += ': ';
-          }
-          if (context.parsed.y !== null) {
-            label += '$' + context.parsed.y.toFixed(2);
-          }
-          return label;
-        }
-      }
-    }
+  finally {
+    isLoading.value = false
   }
+}
+
+const getFiles = async () => {
+  const res = await axios.get(URL + '/accountant-files')
+  console.log(res)
+  let sortedData = res.data.slice().filter(item => item.type === 'reports') // Clone data
+
+  switch (filters.value.status) {
+    case 'az':
+      sortedData.sort((a, b) =>
+        a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
+      )
+      break
+    case 'Paid':
+      sortedData.sort((a, b) => b.id - a.id)
+      break
+    case 'total':
+      sortedData.sort((a, b) => {
+        const endDateA = new Date(a.History[a.History.length - 1].endDate)
+        const endDateB = new Date(b.History[b.History.length - 1].endDate)
+        const now = new Date()
+        const diffA = Math.abs(endDateA - now)
+        const diffB = Math.abs(endDateB - now)
+        return diffA - diffB
+      })
+
+      break
+    default:
+      break
+  }
+
+  invoices.value = sortedData
+}
+
+// View invoice details
+function viewInvoice(invoice) {
+  selectedInvoice.value = invoice
+  showDetails.value = true
+}
+
+// Close invoice details
+function closeDetails() {
+  showDetails.value = false
+}
+
+const filteridTime = (date) => {
+  let years = date.slice(0, 4)
+  let month = date.slice(5, 7)
+  let day = date.slice(8, 10)
+  return `${day}.${month}.${years}`
+}
+
+const FilteredDots = (num) => {
+  return Number(num).toLocaleString('uz-UZ', { minimumFractionDigits: 0 }).replace(/,/g, '.')
+}
+
+async function deleteManyFiles() {
+  removeFiles(ids.value)
+}
+
+const removeFiles = async (ids) => {
+  try {
+    const response = await axios.delete(URL + '/accountant-files/many', {
+      data: { ids }
+    })
+    console.log('Deleted:', response.data)
+    showChekbox = false
+    getFiles()
+  } catch (error) {
+    console.error('Error deleting files:', error.response?.data || error.message)
+  }
+}
+
+const selectedAll = () => {
+  invoices.value.forEach((el) => {
+    ids.value.push(el.id)
+  })
+}
+
+const openModal = (id) => {
+  modal.value = true
+  accauntantFilesId.value = id
+}
+
+const postHistory = async () => {
+  isLoading.value = true
+  try {
+    const formData = new FormData()
+    formData.append('file', chek.value)
+    formData.append('accauntantFilesId', parseInt(accauntantFilesId.value))
+    formData.append('startDate', new Date(startDate.value).toISOString())
+    formData.append('endDate', new Date(endDate.value).toISOString())
+    formData.append('totalSum', parseInt(totalSum.value))
+    const res = await axios.post(URL + '/accauntant-files-history', formData, {
+      headers: {
+        "Content-Type": 'multipart/form-data' // Fixed typo in Content-Type
+      }
+    })
+    modal.value = false
+    getFiles()
+    console.log(res)
+  } catch (err) {
+    console.log(err)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const getBorderClass = (endDate) => {
+  if (!endDate) return 'border-black'
+  const today = new Date()
+  const end = new Date(endDate)
+  const timeDiff = end - today
+  const daysRemaining = Math.ceil(timeDiff / (1000 * 60 * 60 * 24))
+
+  if (daysRemaining > 15) {
+    return 'bg-green-600'
+  } else if (daysRemaining <= 15 && daysRemaining > 10) {
+    return 'bg-yellow-400'
+  } else if (daysRemaining <= 10) {
+    return 'bg-red-700'
+  }
+  return 'border-black'
+}
+const getStatusClass = (endDate) => {
+  if (!endDate) return 'Nomalum'
+  const today = new Date()
+  const end = new Date(endDate)
+  const timeDiff = end - today
+  const daysRemaining = Math.ceil(timeDiff / (1000 * 60 * 60 * 24))
+
+  if (daysRemaining > 15) {
+    return 'To\'langan'
+  } else if (daysRemaining <= 15 && daysRemaining > 10) {
+    return 'Qayla to\'lov yaqinlashmoqda'
+  } else if (daysRemaining <= 10) {
+    return 'Qayta to\'lov qilish'
+  }
+  return 'border-black'
+}
+
+
+
+const downloadExcel = () => {
+  const today = new Date()
+  const excelRows = []
+
+  invoices.value.forEach((item) => {
+    // Fayl ustunlari
+    excelRows.push([
+      { v: item.name, s: { fill: { fgColor: { rgb: "FFFF00" } } } },  // Sariq fon
+      { v: new Date(item.createdAt).toLocaleDateString() },
+      '', '', ''
+    ])
+
+    // History qatorlari
+    item.History.forEach((history) => {
+      const endDate = new Date(history.endDate)
+      const diffTime = endDate.getTime() - today.getTime()
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
+      const rowStyle = diffDays <= 10
+        ? { fill: { fgColor: { rgb: "FF0000" } } } // Qizil fon (10 kun yoki kamroq qolgan bo‘lsa)
+        : {}
+
+      excelRows.push([
+        '',
+        '',
+        { v: history.totalSum },
+        { v: new Date(history.startDate).toLocaleDateString() },
+        { v: new Date(history.endDate).toLocaleDateString(), s: rowStyle }
+      ])
+    })
+
+    // Bo‘sh qator ajratish uchun
+    excelRows.push(['', '', '', '', ''])
+  })
+
+  const ws = XLSX.utils.aoa_to_sheet(excelRows)
+  const wb = XLSX.utils.book_new()
+  XLSX.utils.book_append_sheet(wb, ws, 'Invoices')
+  XLSX.writeFile(wb, 'hisobot.xlsx')
+}
+
+const handleViewInvoice = (item) => {
+  if (item.pdfPath) {
+    selectedFilePath.value = URL + item.pdfPath;
+    console.log('ishladi' + item.pdfPath);
+
+  }
+  console.log(item)
+};
+
+
+watch(() => filters.value.status, () => {
+  getFiles()
 })
 
-// Report periods
-const periods = [
-  { id: 'month', label: 'This Month' },
-  { id: 'quarter', label: 'This Quarter' },
-  { id: 'year', label: 'This Year' },
-  { id: 'custom', label: 'Custom Range' }
-]
-
-// Report types
-const reportTypes = [
-  { id: 'income', label: 'Income by Client' },
-  { id: 'expenses', label: 'Expenses by Category' },
-  { id: 'revenue', label: 'Revenue vs Expenses' },
-  { id: 'profit', label: 'Profit Margin' }
-]
+onMounted(() => {
+  getFiles()
+})
 </script>
 
 <template>
-  <div>
-    <div class="card report-controls">
-      <div class="controls-row">
-        <div class="control-group">
-          <label for="report-type">Report Type:</label>
-          <select id="report-type" v-model="selectedReport" class="form-select">
-            <option v-for="type in reportTypes" :key="type.id" :value="type.id">
-              {{ type.label }}
-            </option>
-          </select>
+  <div class="animated-gradient p-7 min-h-screen">
+    <!-- Invoices List View -->
+    <div v-if="!showDetails" class="rounded-lg p-6">
+      <div class="mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <div class="flex flex-col">
+            <div class="relative z-0 w-full mb-6 group">
+              <input type="text" name="text" id="text"
+                class="block py-2.5 px-0 w-[300px] focus:w-[500px] duration-200 focus:text-lg bg-transparent rounded-md border-2 focus:border-0 focus:border-b-2 border-gray-300 appearance-none outline-none focus:ring-0 peer"
+                placeholder=" " />
+              <label for="text"
+                class="absolute text-lg text-white duration-300 transform -translate-y-6 scale-75 top-2 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 pl-3 peer-focus:pl-0 peer-focus:-translate-y-6">
+                {{ dat === 'datakril' ? translateText('Qidiruv:') : 'Qidiruv:' }}
+              </label>
+            </div>
+          </div>
+          <div class="flex justify-end md:col-span-2">
+            <div class="mb-3">
+              <select id="status" v-model="filters.status"
+                class="block w-full px-4 py-3 border border-gray-300 bg-[#fff0] text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                <option value="">{{ dat === 'datakril' ? translateText('Tartib raqam') : 'Tartib raqam' }}</option>
+                <option value="Paid">{{ dat === 'datakril' ? translateText('Teskari Yaratilish vaqti') : 'Teskari Yaratilish vaqti' }}</option>
+                <option value="az">{{ dat === 'datakril' ? translateText('A-Z nom bo‘yicha') : 'A-Z nom bo‘yicha' }}</option>
+                <option value="total">{{ dat === 'datakril' ? translateText('Tugash vaqti kelganlar') : 'Tugash vaqti kelganlar' }}</option>
+              </select>
+            </div>
+          </div>
         </div>
-        
-        <div class="control-group">
-          <label for="report-period">Period:</label>
-          <select id="report-period" v-model="selectedPeriod" class="form-select">
-            <option v-for="period in periods" :key="period.id" :value="period.id">
-              {{ period.label }}
-            </option>
-          </select>
+        <div class="flex justify-end gap-4">
+          <button @click="Showmodal = !Showmodal"
+            class="bg-lime-600 text-white px-4 py-2 rounded-md hover:bg-lime-700 transition">
+            {{ dat === 'datakril' ? translateText('Yangi hisobot yaratish') : 'Yangi hisobot yaratish' }}
+          </button>
+          <!-- New Excel Download Button -->
+          <button @click="downloadExcel"
+            class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
+            {{ dat === 'datakril' ? translateText('Download Excel') : 'Download Excel' }}
+          </button>
         </div>
-        
-        <div class="control-actions">
-          <button class="btn-primary">Generate Report</button>
-          <button class="btn-secondary">Download PDF</button>
+      </div>
+      <div class="flex justify-end gap-2 mb-4">
+        <div v-if="showChekbox" @click="deleteManyFiles()"
+          class="py-2 px-4 bg-red-700 hover:bg-red-800 rounded-lg cursor-pointer transition">
+          {{ dat === 'datakril' ? translateText('O\'chirish') : 'O\'chirish' }}
         </div>
+        <div v-if="!showChekbox" @click="showChekbox = true"
+          class="py-2 px-4 bg-red-700 hover:bg-red-800 rounded-lg cursor-pointer transition">
+          {{ dat === 'datakril' ? translateText('O\'chirishni rejimini yoqish') : 'O\'chirishni rejimini yoqish' }}
+        </div>
+        <div v-if="showChekbox" @click="showChekbox = false"
+          class="py-2 px-4 bg-yellow-600 hover:bg-yellow-700 rounded-lg cursor-pointer transition">
+          {{ dat === 'datakril' ? translateText('O\'chirishni rejimini bekor qilish') : 'O\'chirishni rejimini bekor qilish' }}
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse">
+          <thead>
+            <tr class="bg-gray-100 w-full grid grid-cols-8 gap-2 items-center">
+              <th class="p-3 text-center font-semibold text-black">{{ dat === 'datakril' ? translateText('Hisob-faktura #') : 'Hisob-faktura #' }}</th>
+              <th class="p-3 text-center font-semibold text-black">{{ dat === 'datakril' ? translateText('Korxona') : 'Korxona' }}</th>
+              <th class="p-3 text-center font-semibold text-black">{{ dat === 'datakril' ? translateText('To\'langan sana') : 'To\'langan sana' }}</th>
+              <th class="p-3 text-center font-semibold text-black">{{ dat === 'datakril' ? translateText('Qayta to\'lov sanasi') : 'Qayta to\'lov sanasi' }}</th>
+              <th class="p-3 text-center font-semibold text-black">{{ dat === 'datakril' ? translateText('Narx') : 'Narx' }}</th>
+              <th class="p-3 text-center font-semibold text-black">{{ dat === 'datakril' ? translateText('Holati') : 'Holati' }}</th>
+              <th class="p-3 text-center font-semibold text-black flex justify-center items-center gap-4">
+                {{ dat === 'datakril' ? translateText('Harakatlar') : 'Harakatlar' }}
+                <div v-if="ids.length" @click="selectedAll()"
+                  class="py-2 px-4 bg-lime-500 hover:bg-lime-600 rounded-lg cursor-pointer transition">
+                  {{ dat === 'datakril' ? translateText('Barchasini belgilash') : 'Barchasini belgilash' }}
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in invoices" :key="item.id" class="text-center">
+              <td colspan="7" class="py-1">
+                <div :class="[getBorderClass(item.History[item.History.length - 1].endDate), 'rounded-lg p-2']"
+                  class="flex justify-between items-center">
+                  <div class="w-full grid grid-cols-8 gap-2 items-center">
+                    <div class="text-center">{{ item.id }}</div>
+                    <div class="text-center">{{ item.name }}</div>
+                    <div class="text-center">{{ filteridTime(item.History[item.History.length - 1].startDate) }}</div>
+                    <div class="text-center">{{ filteridTime(item.History[item.History.length - 1].endDate) }}</div>
+                    <div class="text-center">{{ FilteredDots(item.History[item.History.length - 1].totalSum) }} {{ dat === 'datakril' ? translateText('So\'m') : 'So\'m' }}</div>
+                    <div>
+                      <span class="inline-block px-2 py-1 text-center rounded-lg text-sm font-medium bg-black bg-opacity-20">
+                        {{ dat === 'datakril'? translateText(getStatusClass(item.History[item.History.length - 1].endDate)):getStatusClass(item.History[item.History.length - 1].endDate) }}
+                      </span>
+                    </div>
+                    <button class="border border-gray-300 px-2 py-1 rounded text-sm bg-blue-500 hover:bg-blue-600"
+                      @click="handleViewInvoice(item)">
+                      {{ dat === 'datakril' ? translateText('Shartnomani ko\'rish') : 'Shartnomani ko\'rish' }}
+                    </button>
+                    <div class="flex justify-evenly items-center">
+                      <button class="border border-gray-300 px-2 py-1 rounded text-sm bg-blue-500 hover:bg-blue-600"
+                        @click="router.push({
+                          path: '/invoicesChild',
+                          query: { addressId: item.id }
+                        })">{{ dat === 'datakril' ? translateText('Ko\'rish') : 'Ko\'rish' }}</button>
+                      <button @click="openModal(item.id)"
+                        class="border border-gray-300 px-2 py-1 rounded text-sm text-black bg-yellow-500 hover:bg-yellow-600">{{ dat === 'datakril' ? translateText('Qayta to\'lash') : 'Qayta to\'lash' }}</button>
+                      <div v-if="showChekbox">
+                        <input type="checkbox" v-model="ids" :value="item.id" :id="'checkbox-' + item.id"
+                          class="hidden peer" />
+                        <label :for="'checkbox-' + item.id"
+                          class="inline-flex items-center justify-center w-5 h-5 rounded border border-gray-400 peer-checked:bg-blue-600 peer-checked:border-blue-600 cursor-pointer transition">
+                          <svg v-if="ids.includes(item.id)" class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="3">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
-    
-    <div class="report-grid">
-      <!-- Income by Client -->
-      <div v-if="selectedReport === 'income'" class="card chart-card">
-        <h3>Income by Client - {{ periods.find(p => p.id === selectedPeriod).label }}</h3>
-        <div class="chart-container">
-          <Pie :data="incomeData" :options="pieOptions" />
-        </div>
-        <div class="summary-stats">
-          <div class="stat-item">
-            <span class="stat-label">Total Income:</span>
-            <span class="stat-value">$14,700.00</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Top Client:</span>
-            <span class="stat-value">Wayne Enterprises ($4,200.00)</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Average Invoice:</span>
-            <span class="stat-value">$2,450.00</span>
-          </div>
+    <!-- Invoice Details View -->
+    <div v-else class="bg-white rounded-lg shadow-lg p-6">
+      <div class="flex justify-between items-center mb-6 pb-4 border-b">
+        <div class="text-blue-600 font-medium cursor-pointer" @click="closeDetails">
+          {{ dat === 'datakril' ? translateText('← Orqaga qaytish') : '← Orqaga qaytish' }}
         </div>
       </div>
-      
-      <!-- Expenses by Category -->
-      <div v-if="selectedReport === 'expenses'" class="card chart-card">
-        <h3>Expenses by Category - {{ periods.find(p => p.id === selectedPeriod).label }}</h3>
-        <div class="chart-container">
-          <Pie :data="expenseData" :options="pieOptions" />
+
+      <div class="flex justify-end gap-4">
+        <button @click="closeDetails"
+          class="border border-gray-300 px-4 py-2 rounded-md text-black hover:bg-gray-100">{{ dat === 'datakril' ? translateText('Chiqish') : 'Chiqish' }}</button>
+        <button class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">{{ dat === 'datakril' ? translateText('Excel qilib yuklab olish') : 'Excel qilib yuklab olish' }}</button>
+      </div>
+    </div>
+  </div>
+  <div v-if="selectedFilePath"
+    class="fixed max-h-[100vh] overflow-auto flex justify-center animated-gradient z-40 items-center min-w-full inset-0">
+    <div class="text-blue-600 font-medium cursor-pointer" @click="selectedFilePath = false">
+      <img src="../../public/reject-White.png" class="absolute top-4 right-4 w-[50px]" alt="{{ dat === 'datakril' ? translateText('Yopish') : 'Yopish' }}">
+    </div>
+    <PDFViewer :file-path="selectedFilePath" />
+  </div>
+  <!-- Create Report Modal -->
+  <div v-if="Showmodal" class="fixed inset-0 bg-black bg-opacity-80 z-40 flex justify-center items-center">
+    <div class="bg-slate-800 w-[500px] top-0 duration-500 rounded-lg p-6 relative flex flex-col gap-2">
+      <img @click="Showmodal = false" src="../../public/reject-White.png"
+        class="absolute top-2 right-2 w-8 cursor-pointer" alt="{{ dat === 'datakril' ? translateText('Yopish') : 'Yopish' }}" />
+      <h4 class="text-lg text-white font-semibold">{{ dat === 'datakril' ? translateText('Hisobot yaratish') : 'Hisobot yaratish' }}</h4>
+      <label>{{ dat === 'datakril' ? translateText('Korxona nomini kiriting') : 'Korxona nomini kiriting' }}</label>
+      <input v-model="name" type="text" class="text-black outline-none p-2 rounded-md"
+        :placeholder="dat === 'datakril' ? translateText('Hisobot nomi kiriting') : 'Hisobot nomi kiriting'" />
+
+      <label>{{ dat === 'datakril' ? translateText('To\'lanadigan summani') : 'To\'lanadigan summani' }}</label>
+      <input v-model="totalSum" type="number" class="text-black outline-none p-2 rounded-md"
+        :placeholder="dat === 'datakril' ? translateText('To\'lanadigan summani') : 'To\'lanadigan summani'" />
+
+      <label>{{ dat === 'datakril' ? translateText('Shartnoma amal qilishni boshlagan sanani kiriting') : 'Shartnoma amal qilishni boshlagan sanani kiriting' }}</label>
+      <input v-model="startDate" type="date" class="text-black outline-none p-2 rounded-md" />
+
+      <label>{{ dat === 'datakril' ? translateText('Shartnoma amal qilishdan tugaydigan sanani kiriting') : 'Shartnoma amal qilishdan tugaydigan sanani kiriting' }}</label>
+      <input v-model="endDate" type="date" class="text-black outline-none p-2 rounded-md" />
+      <div class="flex">
+        <div>
+          <label>{{ dat === 'datakril' ? translateText('Shartnomani kiriting') : 'Shartnomani kiriting' }}</label>
+          <input @change="handleImageUpload" type="file" class="outline-none p-2 rounded-md" />
         </div>
-        <div class="summary-stats">
-          <div class="stat-item">
-            <span class="stat-label">Total Expenses:</span>
-            <span class="stat-value">$9,600.00</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Largest Category:</span>
-            <span class="stat-value">Salaries ($4,200.00)</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Smallest Category:</span>
-            <span class="stat-value">Office Supplies ($350.00)</span>
-          </div>
+        <div>
+          <label>{{ dat === 'datakril' ? translateText('Chekni kiriting') : 'Chekni kiriting' }}</label>
+          <input @change="handleCkekUpload" type="file" class="outline-none p-2 rounded-md" />
         </div>
       </div>
-      
-      <!-- Revenue vs Expenses -->
-      <div v-if="selectedReport === 'revenue'" class="card chart-card">
-        <h3>Revenue vs Expenses - {{ periods.find(p => p.id === selectedPeriod).label }}</h3>
-        <div class="chart-container">
-          <Bar :data="revenueTimeData" :options="barOptions" />
-        </div>
-        <div class="summary-stats">
-          <div class="stat-item">
-            <span class="stat-label">Total Revenue:</span>
-            <span class="stat-value">$202,000.00</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Total Expenses:</span>
-            <span class="stat-value">$89,500.00</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Net Profit:</span>
-            <span class="stat-value">$112,500.00</span>
-          </div>
-        </div>
+      <div class="flex gap-2">
+        <button @click="Showmodal = false"
+          class="bg-red-600 text-white px-4 py-2 w-full rounded-md hover:bg-red-700">{{ dat === 'datakril' ? translateText('Bekor qilish') : 'Bekor qilish' }}</button>
+        <button @click="upload"
+          class="bg-blue-600 text-white px-4 py-2 w-full rounded-md hover:bg-blue-700">{{ dat === 'datakril' ? translateText('Yuborish') : 'Yuborish' }}</button>
       </div>
-      
-      <!-- Profit Margin -->
-      <div v-if="selectedReport === 'profit'" class="card chart-card">
-        <h3>Profit Margin - {{ periods.find(p => p.id === selectedPeriod).label }}</h3>
-        <div class="profit-summary">
-          <div class="profit-kpi">
-            <div class="kpi-circle">
-              <span class="kpi-percentage">55.7%</span>
-            </div>
-            <p class="kpi-label">Profit Margin</p>
-          </div>
-          
-          <div class="profit-details">
-            <div class="profit-detail-item">
-              <span class="detail-label">Total Revenue:</span>
-              <span class="detail-value">$202,000.00</span>
-            </div>
-            <div class="profit-detail-item">
-              <span class="detail-label">Total Expenses:</span>
-              <span class="detail-value">$89,500.00</span>
-            </div>
-            <div class="profit-detail-item">
-              <span class="detail-label">Net Profit:</span>
-              <span class="detail-value">$112,500.00</span>
-            </div>
-            <div class="profit-detail-item">
-              <span class="detail-label">Previous Period:</span>
-              <span class="detail-value">52.3% (+3.4%)</span>
-            </div>
-          </div>
-        </div>
+    </div>
+  </div>
+
+  <!-- Repayment Modal -->
+  <div v-if="modal" class="fixed inset-0 group bg-black bg-opacity-80 z-40 flex justify-center items-center">
+    <div class="bg-slate-800 w-[500px] top-0 rounded-lg p-6 relative flex flex-col gap-2">
+      <img @click="modal = false" src="../../public/reject-White.png" class="absolute top-2 right-2 w-8 cursor-pointer"
+        alt="{{ dat === 'datakril' ? translateText('Yopish') : 'Yopish' }}" />
+      <h4 class="text-lg font-semibold">{{ dat === 'datakril' ? translateText('Qayta to\'lash') : 'Qayta to\'lash' }}</h4>
+      <label>{{ dat === 'datakril' ? translateText('To\'lanadigan summani') : 'To\'lanadigan summani' }}</label>
+      <input v-model="totalSum" type="number" class="outline-none text-black p-2 rounded-md"
+        :placeholder="dat === 'datakril' ? translateText('To\'lanadigan summani') : 'To\'lanadigan summani'" />
+      <label>{{ dat === 'datakril' ? translateText('Shartnoma amal qilishni boshlagan sanani kiriting') : 'Shartnoma amal qilishni boshlagan sanani kiriting' }}</label>
+      <input v-model="startDate" type="date" class="outline-none text-black p-2 rounded-md" />
+      <label>{{ dat === 'datakril' ? translateText('Shartnoma amal qilishdan tugaydigan sanani kiriting') : 'Shartnoma amal qilishdan tugaydigan sanani kiriting' }}</label>
+      <input v-model="endDate" type="date" class="outline-none text-black p-2 rounded-md" />
+      <label>{{ dat === 'datakril' ? translateText('Chekni kiriting') : 'Chekni kiriting' }}</label>
+      <input @change="handleCkekUpload" type="file" class="outline-none p-2 rounded-md" />
+      <div class="flex gap-2">
+        <button @click="modal = false" class="bg-red-600 text-white px-4 py-2 w-full rounded-md hover:bg-red-700">{{ dat === 'datakril' ? translateText('Bekor qilish') : 'Bekor qilish' }}</button>
+        <button @click="postHistory"
+          class="bg-blue-600 text-white px-4 py-2 w-full rounded-md hover:bg-blue-700">{{ dat === 'datakril' ? translateText('Yuborish') : 'Yuborish' }}</button>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.report-controls {
-  margin-bottom: var(--space-4);
-}
-
-.controls-row {
-  display: flex;
-  align-items: flex-end;
-  gap: var(--space-3);
-}
-
-.control-group {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.control-group label {
-  margin-bottom: var(--space-1);
-  font-weight: 500;
-  font-size: 0.875rem;
-}
-
-.form-select {
-  padding: var(--space-2);
-  border: 1px solid var(--color-bg-tertiary);
-  border-radius: var(--radius-md);
-  font-size: 0.95rem;
-}
-
-.form-select:focus {
-  outline: none;
-  border-color: var(--color-accent);
-}
-
-.control-actions {
-  display: flex;
-  gap: var(--space-2);
-}
-
-.btn-primary {
-  background-color: var(--color-accent);
-  color: white;
-}
-
-.btn-secondary {
-  background-color: var(--color-bg-secondary);
-  color: var(--color-text-primary);
-  border: 1px solid var(--color-bg-tertiary);
-}
-
-.chart-card {
-  margin-bottom: var(--space-4);
-}
-
-.chart-card h3 {
-  margin-bottom: var(--space-3);
-}
-
-.chart-container {
-  height: 300px;
-  margin-bottom: var(--space-4);
-}
-
-.summary-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-3);
-  padding-top: var(--space-3);
-  border-top: 1px solid var(--color-bg-tertiary);
-}
-
-.stat-item {
-  display: flex;
-  flex-direction: column;
-}
-
-.stat-label {
-  font-size: 0.875rem;
-  color: var(--color-text-secondary);
-  margin-bottom: var(--space-1);
-}
-
-.stat-value {
-  font-weight: 600;
-  font-size: 1.1rem;
-}
-
-/* Profit Margin Styles */
-.profit-summary {
-  display: flex;
-  gap: var(--space-5);
-  align-items: center;
-  padding: var(--space-3) 0;
-}
-
-.profit-kpi {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.kpi-circle {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  background-color: var(--color-success);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: var(--space-2);
-  position: relative;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.kpi-circle::before {
-  content: '';
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  right: 10px;
-  bottom: 10px;
-  border-radius: 50%;
-  border: 5px solid rgba(255, 255, 255, 0.2);
-}
-
-.kpi-percentage {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: white;
-}
-
-.kpi-label {
-  font-weight: 500;
-  font-size: 1.1rem;
-}
-
-.profit-details {
-  flex: 1;
-}
-
-.profit-detail-item {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: var(--space-2);
-  padding-bottom: var(--space-2);
-  border-bottom: 1px solid var(--color-bg-tertiary);
-}
-
-.profit-detail-item:last-child {
-  border-bottom: none;
-}
-*{
-  color: black;
-  }
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  min-width: 320px;
+.animated-gradient {
+  background: linear-gradient(45deg, #1a3c34, #4a5568, #2f855a, #2d3748);
+  background-size: 400% 400%;
+  animation: gradientAnimation 15s ease infinite;
+  padding: 1.75rem;
   min-height: 100vh;
-  background-color: var(--color-bg-secondary);
-  color: var(--color-text-primary);
 }
 
-h1 {
-  font-size: 2rem;
-  line-height: 1.2;
-  font-weight: 600;
-  margin-bottom: var(--space-4);
-}
-
-h2 {
-  font-size: 1.5rem;
-  line-height: 1.3;
-  font-weight: 600;
-  margin-bottom: var(--space-3);
-}
-
-h3 {
-  font-size: 1.25rem;
-  line-height: 1.4;
-  font-weight: 600;
-  margin-bottom: var(--space-2);
-}
-
-a {
-  text-decoration: none;
-  color: var(--color-accent);
-}
-
-button, .btn {
-  border-radius: var(--radius-md);
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: var(--color-accent);
-  color: white;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-button:hover, .btn:hover {
-  background-color: #2c73b4;
-}
-
-.card {
-  background-color: var(--color-bg-primary);
-  border-radius: var(--radius-md);
-  padding: var(--space-4);
-  box-shadow: var(--shadow-md);
-}
-
-.text-success {
-  color: var(--color-success);
-}
-
-.text-warning {
-  color: var(--color-warning);
-}
-
-.text-error {
-  color: var(--color-error);
-}
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.table th, .table td {
-  padding: var(--space-2) var(--space-3);
-  text-align: left;
-}
-
-.table th {
-  background-color: var(--color-bg-secondary);
-  font-weight: 600;
-}
-
-.table tr {
-  border-bottom: 1px solid var(--color-bg-tertiary);
-}
-
-.table tr:last-child {
-  border-bottom: none;
-}
-
-.table tr:hover {
-  background-color: var(--color-bg-secondary);
-}
-
-.badge {
-  display: inline-block;
-  padding: var(--space-1) var(--space-2);
-  border-radius: var(--radius-sm);
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.badge-success {
-  background-color: rgba(56, 161, 105, 0.1);
-  color: var(--color-success);
-}
-
-.badge-pending {
-  background-color: rgba(237, 137, 54, 0.1);
-  color: var(--color-warning);
-}
-
-.negative {
-  color: var(--color-error);
-}
-
-.positive {
-  color: var(--color-success);
-}
-.detail-label {
-  font-weight: 500;
-}
-
-.detail-value {
-  font-weight: 600;
-}
-
-@media (max-width: 768px) {
-  .controls-row {
-    flex-direction: column;
-    gap: var(--space-2);
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
   }
-  
-  .control-actions {
-    margin-top: var(--space-2);
+
+  50% {
+    background-position: 100% 50%;
   }
-  
-  .summary-stats {
-    grid-template-columns: 1fr;
-  }
-  
-  .profit-summary {
-    flex-direction: column;
+
+  100% {
+    background-position: 0% 50%;
   }
 }
 </style>

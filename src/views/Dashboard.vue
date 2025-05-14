@@ -23,7 +23,7 @@ const invoices = ref([
 </script>
 
 <template>
-  <div>
+  <div class="m-6">
     <div class="kpi-grid">
       <KpiCard title="Revenue" value="$25,000" color="success" />
       <KpiCard title="Expenses" value="$10,500" color="warning" />
@@ -58,11 +58,7 @@ const invoices = ref([
 *{
   color: black;
   }
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+
 
 body {
   margin: 0;

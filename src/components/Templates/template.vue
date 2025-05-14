@@ -10,7 +10,7 @@
           :class="['w-6 h-6 transition-transform duration-500', isAsideVisible ? 'rotate-180' : 'rotate-0']" />
       </button>
 
-      <div v-if="dat === 'datakril'" class="bg-[var(--color-primary)]  flex h-[200px] p-2">
+      <div v-if="dat === 'datakril'" class="bg-[var(--color-primary)]  flex h-[150px] p-2">
         <!-- Existing content for datakril -->
         <div class="flex items-start gap-6 mb-8">
           <div @click="router.push(`/profileUser/${userInfoLotin.id}`)"
@@ -119,7 +119,7 @@
           </div>
         </div>
       </div>
-      <div v-if="dat === 'datalotin'" class="bg-[var(--color-primary)]  flex h-[200px] p-2">
+      <div v-if="dat === 'datalotin'" class="bg-[var(--color-primary)]  flex h-[150px] p-2">
         <!-- Existing content for datalotin -->
         <div class="flex items-start gap-6 mb-8">
           <div @click="router.push(`/profileUser/${userInfoLotin.id}`)"
@@ -233,7 +233,7 @@
       <Aside class="fixed left-0 top-0 h-full w-64 transition-all duration-700 ease-in-out"
         :class="{ 'translate-x-0 opacity-100': isAsideVisible, '-translate-x-full opacity-0': !isAsideVisible }" />
       <main
-        :class="['flex-1 mt-[200px] transition-all duration-700 p-7 ease-in-out', isAsideVisible ? 'ml-[260px]' : 'ml-[0px]']">
+        :class="['flex-1 mt-[150px] transition-all duration-700 ease-in-out', isAsideVisible ? 'ml-[260px]' : 'ml-[0px]']">
         <router-view />
       </main>
     </div>

@@ -14,7 +14,7 @@ const user = ref(null)
 const menuItems = [
   { name: 'Bosh sahifa', icon: 'chart-line', path: '/dashboard' },
   { name: 'Soliqlar', icon: 'file-invoice', path: '/invoices' },
-  { name: 'Ishchilar oyligini hisoblash', icon: 'money-check-dollar', path: '/payroll' },
+  { name: 'Ishchilar oyligini hisoblash', icon: 'money-check-dollar', path: '/salary' },
   { name: 'Xarajatlar', icon: 'chart-pie', path: '/reports' },
 ]
 
@@ -62,9 +62,9 @@ onMounted(() => {
   color: white;
   display: flex;
   flex-direction: column;
-  height: 79vh;
+  height: 84vh;
   position: fixed;
-  margin-top: 200px;
+  margin-top: 150px;
   top: 0;
 }
 
