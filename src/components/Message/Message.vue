@@ -33,7 +33,7 @@
                       :src="URL + replyMessages[msg.replyToMessageId]?.attachmentUrl" class="w-24 h-24 rounded-md p-2"
                       controls></video>
                     <div v-else-if="replyMessages[msg.replyToMessageId]?.attachmentUrl?.endsWith('.mp3')">{{ $t('media')
-                      }}</div>
+                    }}</div>
                     <div v-else-if="replyMessages[msg.replyToMessageId]?.attachmentUrl?.endsWith('.pdf')"
                       class="text-red-500 underline">{{ $t('pdf') }}</div>
                     <div v-else-if="replyMessages[msg.replyToMessageId]?.attachmentUrl?.match(/\.(doc|docx)$/i)"
@@ -126,7 +126,8 @@
       </div>
     </div>
   </div>
-  <div class="bg-blue-800 border-[5px] border-[#ffcc00] rounded-xl fixed top-0 right-0 h-[100vh] w-[460px] overflow-y-auto">
+  <div
+    class="bg-blue-800 border-[5px] border-[#ffcc00] rounded-xl fixed top-0 right-0 h-[100vh] w-[460px] overflow-y-auto">
     <div class="mt-[195px] border-t-[5px] border-[#ffcc00]">
       <div v-for="(item, index) in admins"
         class="bg-white m-3 flex items-center hover:bg-lime-500 border-4 rounded-xl border-[#ffcc00] p-3" :key="index">
@@ -148,9 +149,9 @@
       <input v-model="editedContent" class="w-full border-2 text-black rounded px-2 py-1 mb-4" />
       <div class="flex justify-end space-x-2">
         <button @click="handleUpdateMessage" class="bg-blue-500 text-white w-full px-4 py-2 rounded">{{ $t('yuklash')
-          }}</button>
+        }}</button>
         <button @click="showModal = false" class="bg-red-500 text-white px-4 py-2 w-full rounded">{{ $t('Bekor_qilish')
-          }}</button>
+        }}</button>
       </div>
     </div>
   </div>
@@ -159,7 +160,7 @@
     <div class="bg-white p-6 rounded-lg shadow-lg w-80">
       <div class="flex justify-end space-x-2">
         <button @click="confirmDelete" class="bg-red-500 text-white w-full px-4 py-2 rounded">{{ $t('remove')
-          }}</button>
+        }}</button>
         <button @click="showDeleteConfirm = false" class="bg-gray-500 text-white px-4 py-2 w-full rounded">{{
           $t('Bekor_qilish') }}</button>
       </div>

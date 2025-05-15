@@ -5,7 +5,7 @@ import { URL } from "@/auth/url.js";
 const API_URL = `${URL}/messages`;
 
 export const socket = io(URL, {
-  path: '/socket.io',
+  path: '/messages',
   transports: ['websocket'], // O'ZGARTIRISH: Faqat WebSocket ishlatiladi
   withCredentials: true,
   reconnection: true,
