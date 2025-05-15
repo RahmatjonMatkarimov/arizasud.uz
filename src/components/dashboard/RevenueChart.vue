@@ -2,31 +2,24 @@
 import { ref, onMounted } from 'vue'
 import { Line } from 'vue-chartjs'
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js'
+import axios from 'axios'
+import { URL } from '@/auth/url'
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
 
 const chartData = ref({
-  labels: ['Yan', 'Fev', 'Mar', 'Apr', 'May', 'Iyn', 'Iyl', 'Aug', 'Sen'],
+  labels: ['Yan', 'Fev', 'Mar', 'Apr', 'May', 'Iyn', 'Iyl', 'Aug', 'Sen', 'Okt', 'Noy', 'Dek'],
   datasets: [
     {
       label: 'Revenue',
-      data: [10000, 18000, 14000, 16000, 20000, 18000, 22000, 26000, 322, ],
+      data: Array(12).fill(0), // Initialize with zeros for 12 months
       borderColor: '#3182ce',
       backgroundColor: 'rgba(49, 130, 206, 0.1)',
       borderWidth: 2,
       tension: 0.3,
       pointBackgroundColor: '#3182ce',
     },
-    {
-      label: 'Expenses',
-      data: [5000, 7000, 6500, 9500, 8000, 8500, 9000, 9500, 8000],
-      borderColor: '#26a69a',
-      backgroundColor: 'rgba(38, 166, 154, 0.05)',
-      borderWidth: 2,
-      tension: 0.3,
-      pointBackgroundColor: '#26a69a',
-    }
-  ]
+  ],
 })
 
 const chartOptions = ref({
@@ -35,37 +28,87 @@ const chartOptions = ref({
   scales: {
     y: {
       beginAtZero: true,
+      ticks: {
+        stepSize: 5000, // Initial step size, will adjust dynamically
+      },
       grid: {
-        color: 'rgba(0, 0, 0, 0.05)'
-      }
+        color: 'rgba(0, 0, 0, 0.05)',
+      },
     },
     x: {
       grid: {
-        display: false
-      }
-    }
+        display: false,
+      },
+    },
   },
   plugins: {
     legend: {
       position: 'top',
       labels: {
         usePointStyle: true,
-        padding: 20
-      }
+        padding: 20,
+      },
     },
     tooltip: {
       mode: 'index',
       intersect: false,
-    }
+    },
   },
   interaction: {
     mode: 'nearest',
     axis: 'x',
-    intersect: false
+    intersect: false,
   },
   animation: {
-    duration: 1000
+    duration: 1000,
+  },
+})
+
+const getDATA = async () => {
+  try {
+    const revenueSums = Array(12).fill(0)
+
+    // 1. accountant-files
+    const res = await axios.get(URL + '/accountant-files')
+    res.data.forEach((item) => {
+      if (Array.isArray(item.History)) {
+        item.History.forEach((history) => {
+          if (history.createdAt && !isNaN(Number(history.totalSum))) {
+            const monthIndex = new Date(history.createdAt).getMonth()
+            revenueSums[monthIndex] += Number(history.totalSum)
+          }
+        })
+      }
+    })
+
+    // 2. client-files — faqat birinchi ClientPayment[0]
+    const clientRes = await axios.get(URL + '/client-files')
+    clientRes.data.forEach((file) => {
+      const payment = file.ClientPayment?.[0]
+      if (payment && payment.createdAt && !isNaN(Number(payment.TotalSum))) {
+        const monthIndex = new Date(payment.createdAt).getMonth()
+        revenueSums[monthIndex] += Number(payment.TotalSum)
+      }
+    })
+
+    // Calculate the maximum value for dynamic scaling
+    const maxRevenue = Math.max(...revenueSums)
+    const yMax = maxRevenue > 0 ? Math.ceil(maxRevenue * 1.1 / 5000) * 5000 : 20000 // Default to 20000 if no data
+
+    // Update chartOptions with dynamic y-axis max
+    chartOptions.value.scales.y.max = yMax
+    chartOptions.value.scales.y.ticks.stepSize = Math.ceil(yMax / 5) // Adjust stepSize for 5 ticks
+
+    // Update chart data
+    chartData.value.datasets[0].data = [...revenueSums]
+    console.log('Revenue Sums:', revenueSums) // Debug log
+  } catch (error) {
+    console.error('Error fetching data:', error)
   }
+}
+
+onMounted(() => {
+  getDATA()
 })
 </script>
 
@@ -73,7 +116,8 @@ const chartOptions = ref({
   <div class="chart-container">
     <h3>Revenue & Expenses</h3>
     <div class="chart">
-      <Line :data="chartData" :options="chartOptions" />
+      <Line v-if="chartData.datasets[0].data.some(val => val > 0)" :data="chartData" :options="chartOptions" />
+      <p v-else>No data available to display the chart.</p>
     </div>
   </div>
 </template>
@@ -84,15 +128,21 @@ const chartOptions = ref({
   padding: var(--space-4);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
+  width: 100%;
+  position: relative;
 }
 
 .chart-container h3 {
   margin-bottom: var(--space-3);
 }
-*{
-  color: black;
-  }
+
+.chart {
+  min-height: 300px; /* Allow growth beyond 300px */
+  width: 100%;
+}
+
 * {
+  color: black;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -128,7 +178,7 @@ h3 {
 }
 
 a {
-  text-decoration: none;
+  text-decorationprinter-friendly: none;
   color: var(--color-accent);
 }
 
@@ -219,8 +269,5 @@ button:hover, .btn:hover {
 
 .positive {
   color: var(--color-success);
-}
-.chart {
-  height: 300px;
 }
 </style>
