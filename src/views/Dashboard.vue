@@ -24,19 +24,21 @@ const invoices = ref([
 
 <template>
   <div class="p-6 min-h-screen bg-gray-200">
-    <div class="kpi-grid">
-      <KpiCard title="Revenue" value="$25,000" color="success" />
-      <KpiCard title="Expenses" value="$10,500" color="warning" />
-      <KpiCard title="Profit" value="$14,500" color="success" />
-      <KpiCard title="Accounts Receivable" value="$8,200" color="primary" />
-    </div>
-    
-    <div class="dashboard-grid mt-4">
-      <RevenueChart />
-      
-      <div class="dashboard-tables">
-        <TransactionsTable :transactions="transactions" />
-        <InvoicesTable :invoices="invoices" class="mt-4" />
+    <div class="container mx-auto">
+      <div class="kpi-grid">
+        <KpiCard title="Revenue" value="$25,000" color="success" />
+        <KpiCard title="Expenses" value="$10,500" color="warning" />
+        <KpiCard title="Profit" value="$14,500" color="success" />
+        <KpiCard title="Accounts Receivable" value="$8,200" color="primary" />
+      </div>
+
+      <div class="dashboard-grid mt-4">
+        <RevenueChart />
+
+        <div class="dashboard-tables">
+          <TransactionsTable :transactions="transactions" />
+          <InvoicesTable :invoices="invoices" class="mt-4" />
+        </div>
       </div>
     </div>
   </div>
@@ -55,9 +57,10 @@ const invoices = ref([
   grid-template-columns: 1fr 1fr;
   gap: var(--space-4);
 }
-*{
+
+* {
   color: black;
-  }
+}
 
 
 body {
@@ -94,7 +97,8 @@ a {
   color: var(--color-accent);
 }
 
-button, .btn {
+button,
+.btn {
   border-radius: var(--radius-md);
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
@@ -107,7 +111,8 @@ button, .btn {
   transition: all 0.2s ease;
 }
 
-button:hover, .btn:hover {
+button:hover,
+.btn:hover {
   background-color: #2c73b4;
 }
 
@@ -135,7 +140,8 @@ button:hover, .btn:hover {
   border-collapse: collapse;
 }
 
-.table th, .table td {
+.table th,
+.table td {
   padding: var(--space-2) var(--space-3);
   text-align: left;
 }
@@ -182,11 +188,12 @@ button:hover, .btn:hover {
 .positive {
   color: var(--color-success);
 }
+
 @media (max-width: 1200px) {
   .kpi-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .dashboard-grid {
     grid-template-columns: 1fr;
   }

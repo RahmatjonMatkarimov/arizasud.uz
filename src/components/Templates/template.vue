@@ -89,6 +89,16 @@
               <h1 class="-mt-1 capitalize">{{ messageCount }}</h1>
             </span>
           </div>
+          <div @click="gochat2(userInfo.id)"
+            class="relative bg-lime-600 hover:bg-lime-700 duration-500 flex border items-center capitalize px-6 m-2 rounded">
+            <img class="w-10 -ml-4 mr-9" src="/chat.png" alt="">
+            {{ dat === 'datakril' ? translateText('To\'lov vaqti kelgan hujjatlar') : 'To\'lov vaqti kelgan hujjatlar'
+            }}
+            <span v-if="messageCount > 0"
+              class="ml-2 absolute top-[2px] left-[37px] bg-red-500 text-white rounded-full px-2 py-1 h-5 text-[13px]">
+              <h1 class="-mt-1 capitalize">{{ messageCount }}</h1>
+            </span>
+          </div>
           <div class="absolute top-1 right-1">
             <div class="relative">
               <button @click="toggleDropdown"
@@ -193,6 +203,16 @@
             class="relative bg-lime-600 hover:bg-lime-700 duration-500 flex border items-center capitalize px-6 m-2 rounded">
             <img class="w-10 -ml-4 mr-9" src="/chat.png" alt="">
             {{ $t('chat-guruh') }}
+            <span v-if="messageCount > 0"
+              class="ml-2 absolute top-[2px] left-[37px] bg-red-500 text-white rounded-full px-2 py-1 h-5 text-[13px]">
+              <h1 class="-mt-1 capitalize">{{ messageCount }}</h1>
+            </span>
+          </div>
+          <div @click="gochat2(userInfo.id)"
+            class="relative bg-lime-600 hover:bg-lime-700 duration-500 flex border items-center capitalize px-6 m-2 rounded">
+            <img class="w-10 -ml-4 mr-9" src="/chat.png" alt="">
+            {{ dat === 'datakril' ? translateText('To\'lov vaqti kelgan hujjatlar') : 'To\'lov vaqti kelgan hujjatlar'
+            }}
             <span v-if="messageCount > 0"
               class="ml-2 absolute top-[2px] left-[37px] bg-red-500 text-white rounded-full px-2 py-1 h-5 text-[13px]">
               <h1 class="-mt-1 capitalize">{{ messageCount }}</h1>
@@ -336,6 +356,7 @@ const go2 = (id) => router.push(`/requireUserobligationsFiles`);
 const go3 = (id) => router.push(`/requireUserTasksFiles`);
 const gonotif = (id) => router.push(`/notifications/${id}`);
 const gochat1 = (id) => router.push(`/chat/${id}`);
+const gochat2 = (id) => router.push(`/Notification/${id}`);
 
 // Foydalanuvchi ma'lumotlarini olish
 const getData = async () => {
