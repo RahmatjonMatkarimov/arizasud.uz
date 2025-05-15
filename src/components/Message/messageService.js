@@ -6,7 +6,7 @@ const API_URL = `${URL}/messages`;
 
 export const socket = io(URL, {
   path: '/socket.io',
-  transports: ['websocket', 'polling'],
+  transports: ['websocket'], // O'ZGARTIRISH: Faqat WebSocket ishlatiladi
   withCredentials: true,
   reconnection: true,
   reconnectionAttempts: Infinity,
@@ -17,10 +17,12 @@ export const socket = io(URL, {
 
 export const getMessages = async () => {
   try {
+    console.log('Xabarlarni olish:', API_URL); // YANGI: Debug log
     const response = await axios.get(API_URL);
+    console.log('Xabarlar olindi:', response.data); // YANGI: Debug log
     return response.data;
   } catch (error) {
-    console.error("Failed to fetch messages:", error);
+    console.error("Xabarlarni olishda xato:", error);
     return [];
   }
 };
@@ -29,22 +31,24 @@ export const loadMessages = async () => {
   try {
     return await getMessages();
   } catch (error) {
-    console.error("Failed to load messages:", error);
+    console.error("Xabarlarni yuklashda xato:", error);
     return [];
   }
 };
 
 export const onNewMessage = (callback) => {
+  socket.off('newMessage'); // O'ZGARTIRISH: Dublikat tinglovchilarni oldini olish
   socket.on("newMessage", (message) => {
-    console.log("Received new message:", message);
+    console.log("Socket.IO orqali yangi xabar qabul qilindi:", message); // YANGI: Debug log
     callback(message);
   });
 };
 
 export const markAsRead = async (id) => {
   try {
+    console.log('Xabar o‘qildi deb belgilandi:', id); // YANGI: Debug log
     await axios.put(`${API_URL}/${id}/read`);
   } catch (error) {
-    console.error("Failed to mark message as read:", error);
+    console.error("Xabarni o‘qildi deb belgilashda xato:", error);
   }
 };

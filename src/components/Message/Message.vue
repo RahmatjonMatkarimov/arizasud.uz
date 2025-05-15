@@ -185,7 +185,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, nextTick, inject, watch, computed } from "vue";
+import { ref, onMounted, onUnmounted, nextTick, inject, watch, computed, getCurrentInstance } from "vue"; // O'ZGARTIRISH: getCurrentInstance qo'shildi
 import { getMessages, onNewMessage, markAsRead, socket } from "./messageService";
 import moment from "moment";
 import { useRoute } from "vue-router";
@@ -221,6 +221,9 @@ const contextMenuX = ref(0);
 const contextMenuY = ref(0);
 const contextMenuMessage = ref(null);
 
+// YANGI: Vue instansiyasini olish uchun
+const { proxy } = getCurrentInstance();
+
 const open = (link) => window.open(link);
 const cancelReply = () => replyTo.value = null;
 const scrollToBottom = () => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
@@ -254,15 +257,20 @@ const formattedRecordingTime = computed(() => {
 });
 
 const loadMessages = async () => {
+  console.log('Xabarlarni yuklash'); // YANGI: Debug log
   try {
     messages.value = await getMessages();
     if (dat.value === 'datakril') {
       messages.value = messages.value.map(msg => ({ ...msg, content: latinToCyrillic(msg.content) }));
     }
+    // YANGI: Xabar ID'larini tekshirish
+    messages.value.forEach(msg => {
+      if (!msg.id) console.warn('Xabarda ID yo‘q:', msg);
+    });
     await nextTick();
     scrollToBottom();
   } catch (error) {
-    console.error('Failed to load messages:', error);
+    console.error('Xabarlarni yuklashda xato:', error);
   }
 };
 
@@ -288,7 +296,7 @@ const getData = async () => {
       }));
     }
   } catch (error) {
-    console.error('Failed to load admins:', error);
+    console.error('Adminlarni yuklashda xato:', error);
   }
 };
 
@@ -314,7 +322,7 @@ const handleSendMessage = async (type, smileyId) => {
     else if (selectedFile.value) {
       messageData.append("file", selectedFile.value);
     } else {
-      console.error("No file to send for type:", type);
+      console.error("Yuborish uchun fayl yo‘q:", type);
       return;
     }
   }
@@ -326,9 +334,10 @@ const handleSendMessage = async (type, smileyId) => {
       headers: messageData instanceof FormData ? {} : { "Content-Type": "application/json" },
     });
 
-    if (!response.ok) throw new Error(`Server error: ${response.status}`);
+    if (!response.ok) throw new Error(`Server xatosi: ${response.status}`);
     const savedMessage = await response.json();
-    socket.emit('sendMessage', savedMessage); // Emit to server for real-time broadcast
+    console.log('Xabar yuborildi, socketga emit:', savedMessage); // YANGI: Debug log
+    socket.emit('sendMessage', savedMessage);
     newMessage.value = "";
     replyTo.value = null;
     selectedFile.value = null;
@@ -336,7 +345,7 @@ const handleSendMessage = async (type, smileyId) => {
     await nextTick();
     scrollToBottom();
   } catch (error) {
-    console.error("Failed to send message:", error);
+    console.error("Xabar yuborishda xato:", error);
   }
 };
 
@@ -358,7 +367,7 @@ const startRecording = async () => {
         selectedFile.value = new File([audioBlob], `audio-${Date.now()}.mp3`, { type: "audio/mpeg" });
         await handleSendMessage("audio");
       } else {
-        console.error("No audio data recorded.");
+        console.error("Ovoz yozilmadi.");
       }
       recording.value = false;
       stream.getTracks().forEach(track => track.stop());
@@ -370,7 +379,7 @@ const startRecording = async () => {
     recordingInterval.value = setInterval(() => recordingTime.value++, 1000);
     mediaRecorder.value.start();
   } catch (error) {
-    console.error("Failed to start recording:", error);
+    console.error("Yozishni boshlashda xato:", error);
     recording.value = false;
     isClicked.value = false;
   }
@@ -389,7 +398,7 @@ const fetchSmileys = async () => {
     const response = await axios.get(`${URL}/smileys`);
     smileys.value = response.data;
   } catch (error) {
-    console.error('Failed to fetch smileys:', error);
+    console.error('Smayliklarni yuklashda xato:', error);
   }
 };
 
@@ -410,7 +419,7 @@ const handleUpdateMessage = async () => {
     await nextTick();
     scrollToBottom();
   } catch (error) {
-    console.error('Failed to update message:', error);
+    console.error('Xabarni tahrirlashda xato:', error);
   }
 };
 
@@ -429,7 +438,7 @@ const confirmDelete = async () => {
     await nextTick();
     scrollToBottom();
   } catch (error) {
-    console.error('Failed to delete message:', error);
+    console.error('Xabarni o‘chirishda xato:', error);
   }
 };
 
@@ -450,7 +459,7 @@ const getOneMassage = async (id) => {
         fileType: response.data.fileType || null,
       };
     } catch (error) {
-      console.error('Failed to fetch reply message:', error);
+      console.error('Javob xabarini olishda xato:', error);
     }
   }
 };
@@ -478,12 +487,12 @@ const handleFileUpload = (event) => {
   ];
 
   if (!validTypes.includes(file.type)) {
-    console.error("Unsupported file type:", file.type);
+    console.error("Qo‘llab-quvvatlanmaydigan fayl turi:", file.type);
     return;
   }
 
   if (file.size > 10 * 1024 * 1024) {
-    console.error("File too large:", file.size);
+    console.error("Fayl hajmi juda katta:", file.size);
     return;
   }
 
@@ -504,18 +513,36 @@ const closeContextMenu = () => {
 };
 
 onMounted(async () => {
-  socket.on('connect', () => console.log('Socket.IO connected'));
-  socket.on('connect_error', (error) => console.error('Socket.IO connection error:', error));
-  socket.on('error', (error) => console.error('Socket.IO error:', error));
+  // YANGI: Socket.IO ulanishini debug qilish
+  socket.on('connect', () => console.log('Socket.IO ulandi, userId:', localStorage.getItem('id')));
+  socket.on('connect_error', (error) => console.error('Socket.IO ulanish xatosi:', error));
+  socket.on('error', (error) => console.error('Socket.IO server xatosi:', error));
+
+  // O'ZGARTIRISH: Faqat bitta tinglovchi qo‘shilishini ta’minlash
+  socket.off('newMessage'); // Oldingi tinglovchilarni o‘chirish
+  console.log('newMessage tinglovchisi ro‘yxatdan o‘tmoqda'); // YANGI: Debug log
+  onNewMessage((message) => {
+    console.log('Yangi xabar qabul qilindi:', message); // YANGI: Debug log
+    if (!message.id) {
+      console.warn('Xabarda ID yo‘q:', message); // YANGI: ID tekshirish
+      return;
+    }
+    if (!messages.value.some(msg => msg.id === message.id)) {
+      messages.value = [...messages.value, { ...message }]; // O'ZGARTIRISH: To‘liq yangi obyekt
+      console.log('Yangilangan xabarlar:', messages.value); // YANGI: Debug log
+      nextTick(() => {
+        scrollToBottom();
+        // YANGI: UI ni majburan yangilash
+        proxy.$forceUpdate();
+        console.log('UI majburan yangilandi'); // YANGI: Debug log
+      });
+    } else {
+      console.log('Dublikat xabar e’tiborsiz qoldirildi:', message.id); // YANGI: Debug log
+    }
+  });
 
   await markAsRead(senderId);
   await loadMessages();
-  onNewMessage((message) => {
-    if (!messages.value.some(msg => msg.id === message.id)) {
-      messages.value = [...messages.value, message];
-      nextTick(scrollToBottom);
-    }
-  });
   await getData();
   await fetchSmileys();
   messages.value.forEach(msg => msg.replyToMessageId && getOneMassage(msg.replyToMessageId));
@@ -533,6 +560,7 @@ watch(dat, (newDatValue) => {
 });
 
 onUnmounted(() => {
+  console.log('Socket.IO tinglovchilari tozalanmoqda'); // YANGI: Debug log
   socket.off('newMessage');
   socket.off('connect');
   socket.off('connect_error');
