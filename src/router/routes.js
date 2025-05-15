@@ -46,7 +46,7 @@ export const routes = [
       {
         path: '/Dashboard',
         name: 'Dashboard',
-        component:()=> Dashboard,
+        component: Dashboard,
         meta: { title: 'Dashboard' }
       },
       {

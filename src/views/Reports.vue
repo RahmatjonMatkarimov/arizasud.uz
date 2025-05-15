@@ -25,13 +25,12 @@ const accauntantFilesId = ref(null)
 
 const invoices = ref([])
 
-// Filters
 const filters = ref({
   search: '',
   status: '',
   dateFrom: '',
   dateTo: ''
-})
+});
 
 // Selected invoice for details view
 const selectedInvoice = ref(null)
@@ -78,36 +77,53 @@ const upload = async () => {
 }
 
 const getFiles = async () => {
-  const res = await axios.get(URL + '/accountant-files')
-  console.log(res)
-  let sortedData = res.data.slice().filter(item => item.type === 'reports') // Clone data
+  try {
+    const res = await axios.get(URL + '/accountant-files');
+    console.log(res);
+    let sortedData = res.data.slice().filter(item => item.type === 'reports'); // Clone data
 
-  switch (filters.value.status) {
-    case 'az':
-      sortedData.sort((a, b) =>
-        a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
-      )
-      break
-    case 'Paid':
-      sortedData.sort((a, b) => b.id - a.id)
-      break
-    case 'total':
-      sortedData.sort((a, b) => {
-        const endDateA = new Date(a.History[a.History.length - 1].endDate)
-        const endDateB = new Date(b.History[b.History.length - 1].endDate)
-        const now = new Date()
-        const diffA = Math.abs(endDateA - now)
-        const diffB = Math.abs(endDateB - now)
-        return diffA - diffB
-      })
+    // Apply search filter
+    if (filters.value.search) {
+      const searchQuery = filters.value.search.toLowerCase();
+      sortedData = sortedData.filter(item => {
+        const lastHistory = item.History[item.History.length - 1];
+        const status = getStatusClass(lastHistory.endDate).toLowerCase();
+        return (
+          item.id.toString().includes(searchQuery) ||
+          item.name.toLowerCase().includes(searchQuery)
+        );
+      });
+    }
 
-      break
-    default:
-      break
+    // Apply sorting based on status filter
+    switch (filters.value.status) {
+      case 'az':
+        sortedData.sort((a, b) =>
+          a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
+        );
+        break;
+      case 'Paid':
+        sortedData.sort((a, b) => b.id - a.id);
+        break;
+      case 'total':
+        sortedData.sort((a, b) => {
+          const endDateA = new Date(a.History[a.History.length - 1].endDate);
+          const endDateB = new Date(b.History[b.History.length - 1].endDate);
+          const now = new Date();
+          const diffA = Math.abs(endDateA - now);
+          const diffB = Math.abs(endDateB - now);
+          return diffA - diffB;
+        });
+        break;
+      default:
+        break;
+    }
+
+    invoices.value = sortedData;
+  } catch (err) {
+    console.error('Error fetching files:', err);
   }
-
-  invoices.value = sortedData
-}
+};
 
 // View invoice details
 function viewInvoice(invoice) {
@@ -268,7 +284,9 @@ const handleViewInvoice = (item) => {
   console.log(item)
 };
 
-
+watch(() => filters.value.search, () => {
+  getFiles();
+});
 watch(() => filters.value.status, () => {
   getFiles()
 })
@@ -286,14 +304,21 @@ onMounted(() => {
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           <div class="flex flex-col">
             <div class="relative z-0 w-full mb-6 group">
-              <input type="text" name="text" id="text"
-                class="block py-2.5 px-0 w-[300px] focus:w-[500px] duration-200 focus:text-lg bg-transparent rounded-md border-2 focus:border-0 focus:border-b-2 border-gray-300 appearance-none outline-none focus:ring-0 peer"
-                placeholder=" " />
-              <label for="text"
-                class="absolute text-lg text-white duration-300 transform -translate-y-6 scale-75 top-2 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 pl-3 peer-focus:pl-0 peer-focus:-translate-y-6">
-                {{ dat === 'datakril' ? translateText('Qidiruv:') : 'Qidiruv:' }}
-              </label>
-            </div>
+  <input
+    type="text"
+    v-model="filters.search"
+    name="text"
+    id="text"
+    class="block py-2.5 px-0 w-[300px] focus:w-[500px] duration-200 focus:text-lg bg-transparent rounded-md border-2 focus:border-0 focus:border-b-2 border-gray-300 appearance-none outline-none focus:ring-0 peer"
+    placeholder=" "
+  />
+  <label
+    for="text"
+    class="absolute text-lg text-white duration-300 transform -translate-y-6 scale-75 top-[9px] -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus pl-3 peer-focus:pl-0 peer-focus:-translate-y-6"
+  >
+    {{ dat === 'datakril' ? translateText('Qidiruv:') : 'Qidiruv:' }}
+  </label>
+</div>
           </div>
           <div class="flex justify-end md:col-span-2">
             <div class="mb-3">
