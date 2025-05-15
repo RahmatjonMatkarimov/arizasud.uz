@@ -17,7 +17,7 @@ defineProps({
 
 <template>
   <div class="kpi-card" :class="`card-${color}`">
-    <h3 class="kpi-title">{{ title }}</h3>
+    <h3 class="kpi-title text-white">{{ title }}</h3>
     <p class="kpi-value">{{ value }}</p>
   </div>
 </template>
@@ -165,7 +165,6 @@ button:hover, .btn:hover {
 .kpi-title {
   font-size: 1.1rem;
   margin-bottom: var(--space-3);
-  color: var(--color-text-secondary);
 }
 
 .kpi-value {
