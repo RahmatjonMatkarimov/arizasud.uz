@@ -1,8 +1,11 @@
 <template>
-  <div id="asda" class="w-[1111111124px] top-[200px] h-[100vh] fixed border-4 rounded-xl border-[#ffcc00]"></div>
-  <div id="img" class="relative flex justify-between mb-28">
-    <div class="w-full mr-[460px] flex flex-col items-center justify-center p-4">
-      <div ref="messagesContainer" class="w-full p-4 space-y-4">
+  <!-- Adjusted #asda div to use reasonable width and relative units -->
+  <div id="asda" class="w-full max-w-[100vw] top-[200px] bottom-1 fixed border-[6px] rounded-xl border-[#ffcc00]"></div>
+  
+  <!-- Main chat container using flexbox for responsive layout -->
+  <div id="img" class="relative flex flex-col md:flex-row justify-between mb-28">
+    <div class="w-full flex flex-col items-center justify-center p-4 md:pr-0">
+      <div ref="messagesContainer" class="w-full p-4 space-y-4 overflow-y-auto max-h-[calc(100vh-200px)]">
         <template v-for="(msg, index) in messages" :key="msg.id">
           <div :ref="el => messageRefs[msg.id] = el"
             :class="['flex', isOwnMessage(msg) ? 'justify-end' : 'justify-start']"
@@ -13,14 +16,14 @@
               </div>
               <div class="flex flex-col space-y-1">
                 <div v-if="!isOwnMessage(msg) && msg.sender" class="flex items-center space-x-2">
-                  <span class="font-medium text-gray-900">
+                  <span class="font-medium text-gray-900 text-sm md:text-base">
                     {{ dat === 'datalotin' ? `${msg.sender?.name} ${msg.sender?.surname} ${msg.sender?.lavozimi}` :
                       `${latinToCyrillic(msg.sender?.name)} ${latinToCyrillic(msg.sender?.surname)}
                     ${latinToCyrillic(msg.sender?.lavozimi)}` }}
                   </span>
                 </div>
                 <div :class="[
-                  'rounded-3xl px-3 py-3 max-w-sm',
+                  'rounded-3xl px-3 py-3 max-w-[90%] md:max-w-sm',
                   isOwnMessage(msg) ? 'bg-blue-500 hover:bg-lime-500 border-2 rounded-br-none text-white' : 'bg-gray-500 hover:bg-lime-500 border-2 rounded-bl-none text-white'
                 ]">
                   <div v-if="msg.replyToMessageId" @click="scrollToRepliedMessage(msg.replyToMessageId)"
@@ -28,9 +31,9 @@
                     <p v-if="replyMessages[msg.replyToMessageId]?.content">{{
                       replyMessages[msg.replyToMessageId]?.content }}</p>
                     <img v-else-if="isImage(replyMessages[msg.replyToMessageId]?.attachmentUrl)"
-                      :src="URL + replyMessages[msg.replyToMessageId]?.attachmentUrl" class="w-24 h-24 rounded-md p-2">
+                      :src="URL + replyMessages[msg.replyToMessageId]?.attachmentUrl" class="w-16 md:w-24 h-16 md:h-24 rounded-md p-2">
                     <video v-else-if="isVideo(replyMessages[msg.replyToMessageId]?.attachmentUrl)"
-                      :src="URL + replyMessages[msg.replyToMessageId]?.attachmentUrl" class="w-24 h-24 rounded-md p-2"
+                      :src="URL + replyMessages[msg.replyToMessageId]?.attachmentUrl" class="w-16 md:w-24 h-16 md:h-24 rounded-md p-2"
                       controls></video>
                     <div v-else-if="replyMessages[msg.replyToMessageId]?.attachmentUrl?.endsWith('.mp3')">{{ $t('media')
                     }}</div>
@@ -40,20 +43,20 @@
                       class="text-blue-500 underline">{{ $t('word') }}</div>
                     <div v-else-if="replyMessages[msg.replyToMessageId]?.attachmentUrl" class="">{{ $t('file') }}</div>
                     <img v-else-if="replyMessages[msg.replyToMessageId]?.smiley"
-                      :src="URL + '/' + replyMessages[msg.replyToMessageId]?.smiley" class="w-24 p-1 h-24">
+                      :src="URL + '/' + replyMessages[msg.replyToMessageId]?.smiley" class="w-16 md:w-24 p-1 h-16 md:h-24">
                     <p v-else>{{ $t('nomalum') }}</p>
                   </div>
-                  <div class="px-2">{{ msg.content }}</div>
+                  <div class="px-2 text-sm md:text-base">{{ msg.content }}</div>
                   <img v-if="msg.fileType === 'smiley'" :src="URL + `/${msg?.smiley?.filePath}`"
-                    class="w-40 h-auto rounded-lg" />
+                    class="w-24 md:w-40 h-auto rounded-lg" />
                   <div v-if="msg.fileType === 'file' && msg.attachmentUrl" class="border p-2 rounded-lg">
                     <img v-if="isImage(msg.attachmentUrl)" :src="getMessageImageUrl(msg.attachmentUrl)"
-                      class="w-40 h-auto rounded-lg" />
+                      class="w-24 md:w-40 h-auto rounded-lg" />
                     <video v-else-if="isVideo(msg.attachmentUrl)" :src="getMessageImageUrl(msg.attachmentUrl)"
-                      class="w-40 h-auto rounded-lg" controls></video>
+                      class="w-24 md:w-40 h-auto rounded-lg" controls></video>
                     <div v-else @click="open(`${URL}${msg.attachmentUrl}`)"
-                      class="hover:text-blue-500 text-[17px] flex items-center gap-3">
-                      <img src="/file.png" width="40px" alt="">{{ $t('filelarni') }}
+                      class="hover:text-blue-500 text-[15px] md:text-[17px] flex items-center gap-3">
+                      <img src="/file.png" width="30px" md:width="40px" alt="">{{ $t('filelarni') }}
                     </div>
                   </div>
                   <audio v-if="msg.fileType === 'audio'" controls>
@@ -70,18 +73,20 @@
         </template>
       </div>
 
+      <!-- Scroll button with adjusted positioning -->
       <button v-if="showScrollButton" @click="scrollToBottom"
-        class="fixed bottom-[170px] bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600">
+        class="fixed bottom-[120px] md:bottom-[170px] bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600">
         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
         </svg>
       </button>
 
-      <div class="fixed bottom-4 w-[990px] bg-gray-300 shadow-md px-3 py-8 flex flex-col rounded-3xl">
+      <!-- Input bar with responsive width -->
+      <div class="fixed bottom-4 w-full max-w-[90%] md:max-w-[45%] bg-gray-300 shadow-md px-3 py-4 md:py-8 md:mr-[470px] flex flex-col rounded-3xl">
         <div v-if="replyTo" class="w-full bg-gray-200 p-2 rounded-lg mb-2 flex justify-between items-center">
           <div class="flex items-center space-x-2">
             <span class="text-green-500 font-semibold">{{ $t('javob') }}:</span>
-            <div class="text-black">
+            <div class="text-black text-sm md:text-base">
               {{ replyMessages[replyTo]?.content?.substring(0, 50) + (replyMessages[replyTo]?.content?.length > 50 ?
                 '...' :
                 '') ||
@@ -94,93 +99,99 @@
 
         <div v-if="recording" class="flex items-center justify-between">
           <div class="flex items-center">
-            <div class="w-5 h-5 bg-red-700 rounded-full mr-3 animate-pulse"></div>
-            <span class="text-black text-lg font-mono">00:{{ formattedRecordingTime }}</span>
+            <div class="w-4 md:w-5 h-4 md:h-5 bg-red-700 rounded-full mr-2 md:mr-3 animate-pulse"></div>
+            <span class="text-black text-base md:text-lg font-mono">00:{{ formattedRecordingTime }}</span>
           </div>
           <button @click="stopRecording"
-            class="text-red-600 rounded-xl border-4 px-2 font-semibold text-[20px] hover:text-red-700">
+            class="text-red-600 rounded-xl border-2 md:border-4 px-2 font-semibold text-sm md:text-[20px] hover:text-red-700">
             {{ $t('Bekor_qilish') }}
           </button>
           <button @click="stopRecording" :class="{ 'animate-bounce bg-white': isClicked, 'bg-gray-300': !isClicked }"
             class="hover:bg-blue-500 p-2 rounded-full">
-            <img src="/arrow.png" width="50px" alt="send">
+            <img src="/arrow.png" width="40px" md:width="50px" alt="send">
           </button>
         </div>
         <div v-else class="flex items-center w-full">
-          <h1 @click="openEmojiPicker" class="text-[35px]">🙂</h1>
-          <label class="cursor-pointer text-[30px] p-2">
-            <img src="/attach-file.png" width="40px" alt="attach">
+          <h1 @click="openEmojiPicker" class="text-[25px] md:text-[35px]">🙂</h1>
+          <label class="cursor-pointer text-[25px] md:text-[30px] p-2">
+            <img src="/attach-file.png" width="30px" md:width="40px" alt="attach">
             <input type="file" @change="handleFileUpload" class="hidden"
               accept="image/*,audio/*,video/*,application/pdf" />
           </label>
           <input v-model="newMessage" :placeholder="$t('yozish')"
-            class="flex-1 border border-gray-300 rounded-full text-black px-4 py-4 mx-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="flex-1 border border-gray-300 rounded-full text-black px-3 md:px-4 py-3 md:py-4 mx-2 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
             @keypress.enter="handleSendMessage('text')" />
-          <button @click="handleSendMessage('text')" class="text-blue-500 text-[40px] ml-2">➤</button>
+          <button @click="handleSendMessage('text')" class="text-blue-500 text-[30px] md:text-[40px] ml-2">➤</button>
           <button @click="startRecording"
             :class="{ 'animate-bounce bg-blue-500': isClicked, 'bg-gray-300': !isClicked }"
             class="hover:bg-blue-500 p-2 rounded-full">
-            <img src="/microfon.png" width="50px" alt="mic">
+            <img src="/microfon.png" width="40px" md:width="50px" alt="mic">
           </button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div
-    class="bg-blue-800 border-[5px] border-[#ffcc00] rounded-xl fixed top-0 right-0 h-[100vh] w-[460px] overflow-y-auto">
-    <div class="mt-[195px] border-t-[5px] border-[#ffcc00]">
-      <div v-for="(item, index) in admins"
-        class="bg-white m-3 flex items-center hover:bg-lime-500 border-4 rounded-xl border-[#ffcc00] p-3" :key="index">
-        <h1 class="text-black text-[20px] font-bold mr-2">{{ index + 1 }}</h1>
-        <div class="w-16 h-16 mr-2 flex-shrink-0 rounded-full overflow-hidden border border-gray-300">
-          <img :src="getImageUrl(item.img)" class="w-full h-full object-cover" alt="Admin Image" />
-        </div>
-        <div>
-          <h1 class="text-[18px] capitalize text-black">{{ item.name }} {{ item.surname }}</h1>
-          <span class="text-gray-700 capitalize text-[14px]">{{ item.lavozimi }}</span>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Sidebar with responsive width and mobile toggle -->
+  <div class="bg-blue-800 border-[5px] border-[#ffcc00] rounded-xl fixed top-0 right-0 h-[100vh] w-full md:w-[min(460px,30vw)] overflow-y-auto transition-transform duration-300"
+       :class="{ 'translate-x-full md:translate-x-0': !sidebarOpen }">
+    <button @click="toggleSidebar" class="md:hidden fixed top-4 right-4 text-white text-2xl">☰</button>
+    <div class="mt-[150px] md:mt-[195px] border-t-[5px] border-[#ffcc00]">
+      <div v-for="(item, index) in admins"
+        class="bg-white m-3 flex items-center hover:bg-lime-500 border-4 rounded-xl border-[#ffcc00] p-3" :key="index">
+        <h1 class="text-black text-[16px] md:text-[20px] font-bold mr-2">{{ index + 1 }}</h1>
+        <div class="w-12 md:w-16 h-12 md:h-16 mr-2 flex-shrink-0 rounded-full overflow-hidden border border-gray-300">
+          <img :src="getImageUrl(item.img)" class="w-full h-full object-cover" alt="Admin Image" />
+        </div>
+        <div>
+          <h1 class="text-[16px] md:text-[18px] capitalize text-black">{{ item.name }} {{ item.surname }}</h1>
+          <span class="text-gray-700 capitalize text-[12px] md:text-[14px]">{{ item.lavozimi }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modals with responsive widths -->
   <div v-if="showModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-80">
-      <h2 class="text-lg text-black font-bold mb-4">Xabarni tahrirlash</h2>
-      <input v-model="editedContent" class="w-full border-2 text-black rounded px-2 py-1 mb-4" />
+    <div class="bg-white p-4 md:p-6 rounded-lg shadow-lg w-[90vw] max-w-[320px] md:max-w-[400px]">
+      <h2 class="text-base md:text-lg text-black font-bold mb-4">Xabarni tahrirlash</h2>
+      <input v-model="editedContent" class="w-full border-2 text-black rounded px-2 py-1 mb-4 text-sm md:text-base" />
       <div class="flex justify-end space-x-2">
-        <button @click="handleUpdateMessage" class="bg-blue-500 text-white w-full px-4 py-2 rounded">{{ $t('yuklash')
+        <button @click="handleUpdateMessage" class="bg-blue-500 text-white w-full px-4 py-2 rounded text-sm md:text-base">{{ $t('yuklash')
         }}</button>
-        <button @click="showModal = false" class="bg-red-500 text-white px-4 py-2 w-full rounded">{{ $t('Bekor_qilish')
+        <button @click="showModal = false" class="bg-red-500 text-white px-4 py-2 w-full rounded text-sm md:text-base">{{ $t('Bekor_qilish')
         }}</button>
       </div>
     </div>
   </div>
 
   <div v-if="showDeleteConfirm" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-80">
+    <div class="bg-white p-4 md:p-6 rounded-lg shadow-lg w-[90vw] max-w-[320px] md:max-w-[400px]">
       <div class="flex justify-end space-x-2">
-        <button @click="confirmDelete" class="bg-red-500 text-white w-full px-4 py-2 rounded">{{ $t('remove')
+        <button @click="confirmDelete" class="bg-red-500 text-white w-full px-4 py-2 rounded text-sm md:text-base">{{ $t('remove')
         }}</button>
-        <button @click="showDeleteConfirm = false" class="bg-gray-500 text-white px-4 py-2 w-full rounded">{{
+        <button @click="showDeleteConfirm = false" class="bg-gray-500 text-white px-4 py-2 w-full rounded text-sm md:text-base">{{
           $t('Bekor_qilish') }}</button>
       </div>
     </div>
   </div>
 
+  <!-- Context menu with boundary checks -->
   <div v-if="showContextMenuModal" class="fixed bg-white border rounded-lg shadow-lg p-4 z-50 context-menu"
-    :style="{ top: contextMenuY + 'px', left: contextMenuX + 'px' }">
+    :style="{ top: contextMenuY + 'px', left: contextMenuX + 'px', transform: contextMenuX > window.innerWidth - 200 ? 'translateX(-100%)' : 'none' }">
     <button v-if="isOwnMessage(contextMenuMessage)" @click="startEditing(contextMenuMessage)"
-      class="block w-full text-left px-2 py-1 text-blue-500 hover:bg-gray-100">{{ $t('tahrirlash') }}</button>
+      class="block w-full text-left px-2 py-1 text-blue-500 hover:bg-gray-100 text-sm md:text-base">{{ $t('tahrirlash') }}</button>
     <button v-if="isOwnMessage(contextMenuMessage)" @click="deleteMessage(contextMenuMessage.id)"
-      class="block w-full text-left px-2 py-1 text-red-500 hover:bg-gray-100">{{ $t('remove') }}</button>
+      class="block w-full text-left px-2 py-1 text-red-500 hover:bg-gray-100 text-sm md:text-base">{{ $t('remove') }}</button>
     <button @click="handleReply(contextMenuMessage)"
-      class="block w-full text-left px-2 py-1 text-green-500 hover:bg-gray-100">{{ $t('javob') }}</button>
-    <button @click="closeContextMenu" class="block w-full text-left px-2 py-1 text-gray-500 hover:bg-gray-100">{{
+      class="block w-full text-left px-2 py-1 text-green-500 hover:bg-gray-100 text-sm md:text-base">{{ $t('javob') }}</button>
+    <button @click="closeContextMenu" class="block w-full text-left px-2 py-1 text-gray-500 hover:bg-gray-100 text-sm md:text-base">{{
       $t('Bekor_qilish') }}</button>
   </div>
 
-  <div v-if="showEmojiPicker" class="fixed bottom-[160px] flex gap-2 flex-wrap rounded-md z-50 bg-gray-300 p-6">
-    <img v-for="item in smileys" :key="item.id" width="90px" @click="handleSendMessage('smiley', item.id)"
+  <!-- Emoji picker with responsive positioning -->
+  <div v-if="showEmojiPicker" class="fixed bottom-[120px] md:bottom-[160px] left-0 right-0 mx-auto flex gap-2 flex-wrap rounded-md z-50 bg-gray-300 p-4 md:p-6 max-w-[90vw]">
+    <img v-for="item in smileys" :key="item.id" width="60px" md:width="90px" @click="handleSendMessage('smiley', item.id)"
       class="block rounded-md" :src="getSmileyUrl(item.filePath)" />
   </div>
 </template>
@@ -221,7 +232,12 @@ const showContextMenuModal = ref(false);
 const contextMenuX = ref(0);
 const contextMenuY = ref(0);
 const contextMenuMessage = ref(null);
+const sidebarOpen = ref(false);
 
+// Sidebar toggle funksiyasi
+function toggleSidebar() {
+  sidebarOpen.value = !sidebarOpen.value;
+}
 // YANGI: Vue instansiyasini olish uchun
 const { proxy } = getCurrentInstance();
 
@@ -582,5 +598,13 @@ onUnmounted(() => {
 
 .context-menu {
   min-width: 150px;
+  max-width: 200px;
 }
+
+/* Ensure images and videos scale properly */
+img, video {
+  max-width: 100%;
+  height: auto;
+}
+
 </style>
