@@ -450,7 +450,7 @@ onMounted(() => {
   </div>
   <!-- Create Report Modal -->
   <div v-if="Showmodal" class="fixed inset-0 bg-black bg-opacity-80 z-40 flex justify-center items-center">
-    <div class="bg-slate-800 w-[500px] top-0 duration-500 rounded-lg p-6 relative flex flex-col gap-2">
+    <div class="bg-slate-800 w-[600px] top-0 duration-500 rounded-lg p-6 relative flex flex-col gap-2">
       <img @click="Showmodal = false" src="../../public/reject-White.png"
         class="absolute top-2 right-2 w-8 cursor-pointer" alt="{{ dat === 'datakril' ? translateText('Yopish') : 'Yopish' }}" />
       <h4 class="text-lg text-white font-semibold">{{ dat === 'datakril' ? translateText('Hisobot yaratish') : 'Hisobot yaratish' }}</h4>
@@ -488,7 +488,7 @@ onMounted(() => {
 
   <!-- Repayment Modal -->
   <div v-if="modal" class="fixed inset-0 group bg-black bg-opacity-80 z-40 flex justify-center items-center">
-    <div class="bg-slate-800 w-[600px] top-0 rounded-lg p-6 relative flex flex-col gap-2">
+    <div class="bg-slate-800 w-[500px] top-0 rounded-lg p-6 relative flex flex-col gap-2">
       <img @click="modal = false" src="../../public/reject-White.png" class="absolute top-2 right-2 w-8 cursor-pointer"
         alt="{{ dat === 'datakril' ? translateText('Yopish') : 'Yopish' }}" />
       <h4 class="text-lg font-semibold">{{ dat === 'datakril' ? translateText('Qayta to\'lash') : 'Qayta to\'lash' }}</h4>

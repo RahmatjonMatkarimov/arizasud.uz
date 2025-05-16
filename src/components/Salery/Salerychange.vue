@@ -6,49 +6,49 @@
                     {{ dat === 'datakril' ? translateText('← Orqaga qaytish') : '← Orqaga qaytish' }}
                 </div>
             </div>
-            <h1>{{ dat === 'datakril' ? translateText('Ishchilar ma\'lumotlari') : 'Ishchilar ma\'lumotlari' }}</h1>
             <div>
                 <div v-for="item in users" :key="item.id">
                     <div class="flex gap-4">
-                        <img :src="URL + '/upload/' + item.img" class="size-[100px] border-2" alt="{{ dat === 'datakril' ? translateText('Ishchi rasmi') : 'Ishchi rasmi' }}">
-                        <div class="flex justify-between w-full">
-                            <div>
-                                <h1 class="text-lg">
-                                    <span class="text-lg font-bold">{{ dat === 'datakril' ? translateText('F.I.O:') : 'F.I.O:' }} </span> {{ item.name }} {{ item.surname }} {{ item.dadname }}
+                        <div class="flex relative justify-between w-full">
+                            <div class="flex flex-col gap-1">
+                                <img :src="URL + '/upload/' + item.img" class="size-[200px] border-2" alt="{{ dat === 'datakril' ? translateText('Ishchi rasmi') : 'Ishchi rasmi' }}">
+                                <h1 class="text-md">
+                                    <span class="text-md font-bold">{{ dat === 'datakril' ? translateText('F.I.O:') : 'F.I.O:' }} </span> {{ item.name }} {{ item.surname }} {{ item.dadname }}
                                 </h1>
-                                <h1 class="text-lg">
-                                    <span class="text-lg font-bold">{{ dat === 'datakril' ? translateText('Ishchini telefon raqami:') : 'Ishchini telefon raqami:' }} </span> {{ item.phone }}
+                                <h1 class="text-md">
+                                    <span class="text-md font-bold">{{ dat === 'datakril' ? translateText('Ishchini telefon raqami:') : 'Ishchini telefon raqami:' }} </span> {{ item.phone }}
                                 </h1>
-                                <h1 class="text-lg">
-                                    <span class="text-lg font-bold">{{ dat === 'datakril' ? translateText('Ishchini lavozimi:') : 'Ishchini lavozimi:' }} </span> {{ item.lavozimi }}
+                                <h1 class="text-md">
+                                    <span class="text-md font-bold">{{ dat === 'datakril' ? translateText('Ishchini lavozimi:') : 'Ishchini lavozimi:' }} </span> {{ item.lavozimi }}
                                 </h1>
                             </div>
                             <div class="flex gap-4">
                                 <div v-for="card in cards" :key="card.title"
                                     @click="card.modal ? openRejectModal() : null"
-                                    class="bg-white w-[300px] rounded-xl shadow p-6">
+                                    class="bg-white w-[300px] h-[180px] rounded-xl shadow p-6">
                                     <div class="flex items-center gap-2">
                                         <img class="w-[30px] " :src="card.icon" alt="{{ dat === 'datakril' ? translateText('Belgi') : 'Belgi' }}">
                                         <div class="flex items-center gap-2 mb-2">
-                                            <h2 class="text-2xl font-semibold text-gray-800">{{ dat === 'datakril' ? translateText(card.title) : card.title }}</h2>
+                                            <h2 class="text-xl font-semibold text-gray-800">{{ dat === 'datakril' ? translateText(card.title) : card.title }}</h2>
                                         </div>
                                     </div>
-                                    <p :class="card.colorClass + ' text-5xl font-bold'">{{ card.value }} {{ dat === 'datakril' ? translateText('so\'m') : 'so\'m' }}</p>
+                                    <p :class="card.colorClass + ' text-3xl font-bold'">{{ card.value }} {{ dat === 'datakril' ? translateText('so\'m') : 'so\'m' }}</p>
                                     <p class="text-sm text-gray-500 mt-1">
-                                        <span class="font-semibold text-lg text-gray-500">{{ dat === 'datakril' ? translateText(card.increase) : card.increase }}</span>
+                                        <span class="font-semibold text-md text-gray-500">{{ dat === 'datakril' ? translateText(card.increase) : card.increase }}</span>
                                     </p>
                                 </div>
                             </div>
-                            <div class="flex flex-col justify-end items-end">
+                            <div></div>
+                            <div class="flex absolute right-3 bottom-3 items-end">
+                                <div class="flex items-end gap-4">
                                 <button @click="bonus(item)"
-                                    class="bg-blue-600 mb-4 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                                    class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
                                     {{ dat === 'datakril' ? translateText('Bonus maoshni qo\'shish') : 'Bonus maoshni qo\'shish' }}
                                 </button>
                                 <button @click="handleCalculateSalary(item)"
-                                    class="bg-blue-600 mb-4 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                                    class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
                                     {{ dat === 'datakril' ? translateText('Oylik maoshni hisoblash') : 'Oylik maoshni hisoblash' }}
                                 </button>
-                                <div class="flex gap-4">
                                     <select v-model="selectedYear" class="border bg-[#fff0] rounded-md p-2">
                                         <option value="">{{ dat === 'datakril' ? translateText('Yil tanlang') : 'Yil tanlang' }}</option>
                                         <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
@@ -96,8 +96,6 @@
                 </div>
             </div>
             <div class="flex justify-end mt-4 gap-4">
-                <button @click="router.push('/invoices')"
-                    class="border border-gray-300 px-4 py-2 rounded-md">{{ dat === 'datakril' ? translateText('Salary') : 'Salary' }}</button>
                 <button @click="downloadExcel" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
                     {{ dat === 'datakril' ? translateText('Excel qilib yuklab olish') : 'Excel qilib yuklab olish' }}
                 </button>
@@ -120,13 +118,13 @@
             <!-- Modal oynasi -->
             <div v-if="modals" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                 <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm space-y-4">
-                    <h2 class="text-lg font-semibold text-gray-700">{{ dat === 'datakril' ? translateText('Bonus yoki jarima qo‘shish') : 'Bonus yoki jarima qo‘shish' }}</h2>
+                    <h2 class="text-md font-semibold text-gray-700">{{ dat === 'datakril' ? translateText('Bonus yoki jarima qo‘shish') : 'Bonus yoki jarima qo‘shish' }}</h2>
                     <div class="space-y-2">
-                        <label class="block text-lg font-medium text-gray-600">{{ dat === 'datakril' ? translateText('Summa') : 'Summa' }}</label>
+                        <label class="block text-md font-medium text-gray-600">{{ dat === 'datakril' ? translateText('Summa') : 'Summa' }}</label>
                         <input v-model="total" type="number"
                             class="w-full border border-gray-300 text-black rounded text-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             :placeholder="dat === 'datakril' ? translateText('Masalan: 50000') : 'Masalan: 50000'" />
-                        <label class="block text-lg font-medium text-gray-600">{{ dat === 'datakril' ? translateText('Sabab') : 'Sabab' }}</label>
+                        <label class="block text-md font-medium text-gray-600">{{ dat === 'datakril' ? translateText('Sabab') : 'Sabab' }}</label>
                         <input v-model="sabab" type="text"
                             class="w-full border border-gray-300 text-black rounded text-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             :placeholder="dat === 'datakril' ? translateText('Sabab kiriting') : 'Sabab kiriting'" />
@@ -155,7 +153,7 @@
                 <div v-for="(item, index) in users[0].Bonus" :key="item.id"
                     class="bg-gray-600 text-white rounded-lg p-4 shadow flex justify-between items-center hover:bg-gray-500 transition">
                     <div>
-                        <p class="text-lg text-gray-300">#{{ index + 1 }}</p>
+                        <p class="text-md text-gray-300">#{{ index + 1 }}</p>
                         <p class="text-xl font-medium">{{ item.description }}</p>
                     </div>
                     <p class="text-green-400 font-semibold text-xl">{{ item.amount }} {{ dat === 'datakril' ? translateText('so\'m') : 'so\'m' }}</p>
