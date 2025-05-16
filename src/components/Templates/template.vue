@@ -308,11 +308,12 @@ const isOnline = ref(false);
 const notificationCount = ref(0);
 const unreadCount = ref(0);
 const messageCount = ref(parseInt(localStorage.getItem('messageCount')) || 0);
-
 const fetchUnreadCount = async () => {
   try {
-    const response = await axios.get(URL + '/accauntant-notification/unread/count');
+    const userId = parseInt(localStorage.getItem('id')); // foydalanuvchining IDsi
+    const response = await axios.get(`${URL}/accauntant-notification/unread/count?userId=${userId}`);
     unreadCount.value = response.data;
+    console.log(response.data)
   } catch (error) {
     console.error('Error fetching unread count:', error);
   }
@@ -483,9 +484,10 @@ onMounted(() => {
 
   fetchNotifications();
 
-  // Bildirishnomalarni vaqti-vaqti bilan yangilash
   const intervalId = setInterval(fetchNotifications, 10000);
+  const intervalId1 = setInterval(fetchUnreadCount, 1000);
   provide('intervalId', intervalId);
+  provide('intervalId1', intervalId1);
 });
 
 onUnmounted(() => {

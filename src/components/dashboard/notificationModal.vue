@@ -13,17 +13,18 @@
                     class="notification-item relative"
                     :class="{ critical: notification.urgency === 'Due today!', soon: notification.urgency === 'Due tomorrow!' }">
                     <p class="message">
-                    {{ dat === 'datakril' ? translateText(notification.message) : notification.message }}
+                        {{ dat === 'datakril' ? translateText(notification.message) : notification.message }}
                     </p>
                     <p>{{ formatDate(notification.createdAt) }}</p>
                     <button v-if="!notification.isRead" @click="markAsRead(notification.id)"
                         class="bg-lime-500 text-white px-2 py-1 absolute bottom-2 right-2 rounded hover:bg-lime-600">
-                    {{ dat === 'datakril' ? translateText('Tushundim') : 'Tushundim' }}
+                        {{ dat === 'datakril' ? translateText('Tushundim') : 'Tushundim' }}
                     </button>
                 </div>
 
                 <div v-if="filteredNotifications.length === 0" class="no-notifications">
-                    {{ dat === 'datakril' ? translateText('Hozircha bildirishnimalar yoq') : 'Hozircha bildirishnimalar yoq' }}
+                    {{ dat === 'datakril' ? translateText('Hozircha bildirishnimalar yoq') :
+                        'Hozircha bildirishnimalar yoq' }}
                 </div>
             </div>
         </div>
@@ -68,7 +69,8 @@ const fetchNotifications = async () => {
 // Fetch unread count
 const fetchUnreadCount = async () => {
     try {
-        const response = await axios.get(URL + '/accauntant-notification/unread/count');
+        const userId = parseInt(localStorage.getItem('id')); // foydalanuvchining IDsi
+        const response = await axios.get(`${URL}/accauntant-notification/unread/count?userId=${userId}`);
         unreadCount.value = response.data;
     } catch (error) {
         console.error('Error fetching unread count:', error);
