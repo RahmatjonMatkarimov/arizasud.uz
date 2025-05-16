@@ -5,6 +5,7 @@ import Payroll from '../views/Payroll.vue'
 import Reports from '../views/Reports.vue'
 import Profile from '../views/Profile.vue'
 import invoicesChild from '../views/InvoicesChildren.vue'
+import reportsChild from '../views/ReportsChildren.vue'
 import main from '@/components/Templates/template.vue'
 import salaryCalculator from '@/components/admins/salaryCalculator.vue'
 import salary from '@/components/Salery/index.vue'
@@ -59,6 +60,12 @@ export const routes = [
         name: 'invoicesChild',
         component: invoicesChild,
         meta: { title: 'invoicesChild' }
+      },
+      {
+        path: '/reportsChild',
+        name: 'reportsChild',
+        component: reportsChild,
+        meta: { title: 'reportsChild' }
       },
       {
         path: '/salaryCalculator',

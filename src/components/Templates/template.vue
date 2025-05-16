@@ -224,8 +224,8 @@
             {{ dat === 'datakril' ? translateText('To\'lov vaqti kelgan hujjatlar') : 'To\'lov vaqti kelgan hujjatlar'
             }}
             <span v-if="unreadCount > 0" :class="[
-              'text-[10px] absolute ml-[4px] flex justify-center items-center top-[1px] bg-red-500 text-white rounded-full',
-              unreadCount.toString().length === 1 ? 'px-2' : 'px-1'
+              'text-[12px] absolute ml-[5px] flex justify-center items-center top-[3px] bg-red-500 text-white rounded-full',
+              unreadCount.toString().length === 1 ? 'px-2' : 'px-1 py-[1px]'
             ]">
               <h1 class="capitalize">{{ unreadCount }}</h1>
             </span>

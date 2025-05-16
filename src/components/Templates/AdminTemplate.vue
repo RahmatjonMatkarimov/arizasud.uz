@@ -385,6 +385,14 @@ const fetchNotifications = async () => {
     console.error("Xatolik o'qilmagan xabarnomalar sonini olishda:", error);
   }
 };
+const fetchMassage = async () => {
+  try {
+    const response = await axios.get(`${URL}/messages/unread/${newId}`,);
+    console.log(response.data)
+  } catch (error) {
+    console.error("Xatolik o'qilmagan xabarnomalar sonini olishda:", error);
+  }
+};
 
 // Tug'ilgan kunni formatlash
 const formattedBirthday = computed(() => {
@@ -433,14 +441,18 @@ onMounted(() => {
 
   socket.on('unreadMessageCount', (count) => {
     messageCount.value += count;
+    fetchMassage()
     console.log(count)
   });
 
   fetchNotifications();
+  fetchMassage()
 
   // Bildirishnomalarni vaqti-vaqti bilan yangilash
   const intervalId = setInterval(fetchNotifications, 10000);
+  const intervalId1 = setInterval(fetchMassage, 10000);
   provide('intervalId', intervalId);
+  provide('intervalId1', intervalId1);
 });
 
 onUnmounted(() => {

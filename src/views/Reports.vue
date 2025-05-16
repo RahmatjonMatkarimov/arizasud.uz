@@ -340,7 +340,7 @@ onMounted(() => {
           <!-- New Excel Download Button -->
           <button @click="downloadExcel"
             class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
-            {{ dat === 'datakril' ? translateText('Download Excel') : 'Download Excel' }}
+            {{ dat === 'datakril' ? translateText('Excel qilib yuklab olish') : 'Excel qilib yuklab olish' }}
           </button>
         </div>
       </div>
@@ -402,7 +402,7 @@ onMounted(() => {
                     <div class="flex justify-evenly items-center">
                       <button class="border border-gray-300 px-2 py-1 rounded text-sm bg-blue-500 hover:bg-blue-600"
                         @click="router.push({
-                          path: '/invoicesChild',
+                          path: '/reportsChild',
                           query: { addressId: item.id }
                         })">{{ dat === 'datakril' ? translateText('Ko\'rish') : 'Ko\'rish' }}</button>
                       <button @click="openModal(item.id)"
@@ -451,7 +451,7 @@ onMounted(() => {
   </div>
   <!-- Create Report Modal -->
   <div v-if="Showmodal" class="fixed inset-0 bg-black bg-opacity-80 z-40 flex justify-center items-center">
-    <div class="bg-slate-800 w-[500px] top-0 duration-500 rounded-lg p-6 relative flex flex-col gap-2">
+    <div class="bg-slate-800 w-[600px] top-0 duration-500 rounded-lg p-6 relative flex flex-col gap-2">
       <img @click="Showmodal = false" src="../../public/reject-White.png"
         class="absolute top-2 right-2 w-8 cursor-pointer" alt="{{ dat === 'datakril' ? translateText('Yopish') : 'Yopish' }}" />
       <h4 class="text-lg text-white font-semibold">{{ dat === 'datakril' ? translateText('Hisobot yaratish') : 'Hisobot yaratish' }}</h4>

@@ -5,13 +5,14 @@
     <div v-else-if="pdfPages.length" class="pdf-pages">
       <img v-for="(page, index) in pdfPages" :key="index" :src="page" class="pdf-page" />
     </div>
-    <div v-else class="text-center text-gray-500">PDF topilmadi</div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import * as pdfjsLib from 'pdfjs-dist'
+import { inject } from 'vue';
+const isLoading = inject('isLoading');
 
 // Worker manzili
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js '
@@ -26,6 +27,7 @@ const props = defineProps({
 const pdfPages = ref([])
 
 const renderPdf = async (url) => {
+  isLoading.value = true
   try {
     const loadingTask = pdfjsLib.getDocument(url);
     const pdf = await loadingTask.promise;
@@ -54,6 +56,8 @@ const renderPdf = async (url) => {
     console.error('PDF yuklashda xatolik:', error);
     emit('error', error);
     pdfPages.value = [];
+  }finally {
+    isLoading.value = false
   }
 };
 

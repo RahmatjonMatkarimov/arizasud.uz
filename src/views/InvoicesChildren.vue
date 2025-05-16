@@ -5,7 +5,7 @@ import { URL } from '@/auth/url'
 import { ref, inject, onMounted } from 'vue'
 import * as XLSX from 'xlsx'
 import { useRoute, useRouter } from 'vue-router'
-import PDFViewer from '../components/ppdf.vue' // ✅ Import qilindi
+import PDFViewer from '../components/ppdf.vue'
 
 const dat = inject('dat')
 const router = useRouter()
@@ -105,22 +105,22 @@ onMounted(() => {
     <div class="bg-black bg-opacity-20 rounded-lg shadow-lg p-6">
       <div class="flex justify-between items-center mb-6 pb-4 border-b">
         <div class="text-blue-400 font-medium cursor-pointer" @click="router.push('/invoices')">
-          ← Orqaga qaytish
+          ← {{ dat === 'datakril' ? translateText('Orqaga qaytish') : 'Orqaga qaytish' }}
         </div>
       </div>
 
       <div>
         <div v-for="item in invoices" :key="item.id">
-          <h1><span class="font-bold">Korxona nomi:</span> {{ item.name }}</h1>
-          <h1><span class="font-bold">Hisob-fakturasi:</span> {{ item.id }}</h1>
+          <h1><span class="font-bold">{{ dat === 'datakril' ? translateText('Korxona nomi') : 'Korxona nomi' }}:</span> {{ item.name }}</h1>
+          <h1><span class="font-bold">{{ dat === 'datakril' ? translateText('Hisob-fakturasi') : 'Hisob-fakturasi' }}:</span> {{ item.id }}</h1>
 
           <table class="w-full border-collapse mt-4">
             <thead>
               <tr class="grid cardGradent grid-cols-4 gap-2 items-center">
-                <th class="p-3 text-center font-semibold">Shartnoma tuzilgan vaqt</th>
-                <th class="p-3 text-center font-semibold">Keyingi to'lov vaqti</th>
-                <th class="p-3 text-center font-semibold">Keyingi to'lov qilinadigan narx</th>
-                <th class="p-3 text-center font-semibold">Chekni ko'rish</th>
+                <th class="p-3 text-center font-semibold">{{ dat === 'datakril' ? translateText('Shartnoma tuzilgan vaqt') : 'Shartnoma tuzilgan vaqt' }}</th>
+                <th class="p-3 text-center font-semibold">{{ dat === 'datakril' ? translateText('Keyingi to\'lov vaqti') : 'Keyingi to\'lov vaqti' }}</th>
+                <th class="p-3 text-center font-semibold">{{ dat === 'datakril' ? translateText('Keyingi to\'lov qilinadigan narx') : 'Keyingi to\'lov qilinadigan narx' }}</th>
+                <th class="p-3 text-center font-semibold">{{ dat === 'datakril' ? translateText('Chekni ko\'rish') : 'Chekni ko\'rish' }}</th>
               </tr>
             </thead>
             <tbody>
@@ -133,7 +133,7 @@ onMounted(() => {
                       <div class="text-center text-[16px]">{{ FilteredDots(history.totalSum) }}</div>
                       <button class="border border-gray-300 px-2 py-1 rounded text-sm bg-blue-500 hover:bg-blue-600"
                         @click="handleViewInvoice(history)">
-                        Ko'rish
+                        {{ dat === 'datakril' ? translateText('Ko\'rish') : 'Ko\'rish' }}
                       </button>
                     </div>
                   </div>
@@ -146,9 +146,10 @@ onMounted(() => {
 
       <div class="flex justify-end mt-4 gap-4">
         <button @click="router.push('/invoices')"
-          class="border border-gray-300 px-4 py-2 rounded-md">Chiqish</button>
-        <button @click="downloadExcel" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Excel qilib
-          yuklab olish</button>
+          class="border border-gray-300 px-4 py-2 rounded-md">{{ dat === 'datakril' ? translateText('Chiqish') : 'Chiqish' }}</button>
+        <button @click="downloadExcel" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+          {{ dat === 'datakril' ? translateText('Excel qilib yuklab olish') : 'Excel qilib yuklab olish' }}
+        </button>
       </div>
     </div>
   </div>
@@ -156,7 +157,7 @@ onMounted(() => {
   <!-- PDF Viewer Modal -->
   <div v-if="selectedFilePath" class="fixed inset-0 z-40 flex min-h-[100vh] justify-center animated-gradient items-center">
     <div class="absolute top-4 right-4 cursor-pointer" @click="selectedFilePath = null">
-      <img src="../../public/reject-White.png" class="w-10 h-10" alt="Yopish">
+      <img src="../../public/reject-White.png" class="w-10 h-10" alt="{{ dat === 'datakril' ? translateText('Yopish') : 'Yopish' }}">
     </div>
     <div class="w-full max-w-5xl max-h-[100vh] overflow-auto">
       <PDFViewer v-if="selectedFilePath" :file-path="selectedFilePath" />
