@@ -13,13 +13,13 @@
                             <div class="flex flex-col gap-1">
                                 <img :src="URL + '/upload/' + item.img" class="size-[200px] border-2" alt="{{ dat === 'datakril' ? translateText('Ishchi rasmi') : 'Ishchi rasmi' }}">
                                 <h1 class="text-md">
-                                    <span class="text-md font-bold">{{ dat === 'datakril' ? translateText('F.I.O:') : 'F.I.O:' }} </span> {{ item.name }} {{ item.surname }} {{ item.dadname }}
+                                    <span class="text-md font-bold">{{ dat === 'datakril' ? translateText('F.I.O:') : 'F.I.O:' }} </span> {{ dat === 'datakril' ? translateText(`${item.name} ${item.surname} ${item.dadname}`) : `${item.name} ${item.surname} ${item.dadname}` }}
                                 </h1>
                                 <h1 class="text-md">
                                     <span class="text-md font-bold">{{ dat === 'datakril' ? translateText('Ishchini telefon raqami:') : 'Ishchini telefon raqami:' }} </span> {{ item.phone }}
                                 </h1>
                                 <h1 class="text-md">
-                                    <span class="text-md font-bold">{{ dat === 'datakril' ? translateText('Ishchini lavozimi:') : 'Ishchini lavozimi:' }} </span> {{ item.lavozimi }}
+                                    <span class="text-md font-bold">{{ dat === 'datakril' ? translateText('Ishchini lavozimi:') : 'Ishchini lavozimi:' }} </span> {{ dat === 'datakril' ? translateText(item.lavozimi) : item.lavozimi }}
                                 </h1>
                             </div>
                             <div class="flex gap-4">
