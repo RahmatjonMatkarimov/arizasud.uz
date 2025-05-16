@@ -26,13 +26,14 @@ const users = ref([])
 
 const getUsers = async () => {
   try {
-    const response = await axios.get(`${URL}/deliverer/allUsers`, {
-      headers: {
-        Accept: 'application/json'
+    const response = await axios.get(`${URL}/deliverer/allUsers`);
+    const filteredUsers = [];
+    response.data.forEach(user => {
+      if (user.role !== "bigAdmin") {
+        filteredUsers.push(user);
       }
     });
-    console.log('Fetched users:', response.data);
-    users.value = response.data;
+    users.value = filteredUsers;
   } catch (error) {
     console.error("Error fetching users:", error.message);
     if (error.response?.data) {
@@ -40,7 +41,6 @@ const getUsers = async () => {
     }
   }
 };
-
 getUsers()
 </script>
 
