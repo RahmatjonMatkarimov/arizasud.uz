@@ -5,36 +5,143 @@ import TransactionsTable from '../components/dashboard/TransactionsTable.vue'
 import InvoicesTable from '../components/dashboard/InvoicesTable.vue'
 import { ref } from 'vue'
 import '@/style.css'
+import { onMounted } from 'vue'
+import axios from 'axios'
+import { URL, URL1 } from '@/auth/url'
 
-// Mock data
-const transactions = ref([
-  { id: 1, date: 'Sep 21, 2023', description: 'Office Supplies', amount: -200.00 },
-  { id: 2, date: 'Sep 19, 2023', description: 'Monthly Subscription', amount: -99.00 },
-  { id: 3, date: 'Sep 17, 2023', description: 'Invoice Payment', amount: 2500.00 },
-  { id: 4, date: 'Sep 15, 2023', description: 'Invoice Payment', amount: 1000.00 }
-])
+const data = ref(0) 
+const data1 = ref(0) 
+const data2 = ref(0) 
+const data3 = ref(0) 
 
-const invoices = ref([
-  { id: 1, number: '#1001', client: 'Acme Corp', status: 'Pending' },
-  { id: 2, number: '#1002', client: 'Globex Inc', status: 'Paid' },
-  { id: 3, number: '#1003', client: 'Stark Industries', status: 'Paid' },
-  { id: 4, number: '#1004', client: 'Wonka Co', status: 'Paid' }
-])
+const chartData = ref(Array(12).fill(0)) 
+const chartData1 = ref(Array(12).fill(0)) 
+const transactions = ref([])
+const invoices = ref([])
+const chartOptions = ref({
+  scales: {
+    y: {
+      max: 20000,
+      ticks: { stepSize: 4000 }
+    }
+  }
+})
+
+const GetClient = async () => {
+    try {
+        const response = await axios.get(`${URL1}/commoners`);
+        invoices.value = response.data.slice(-5);
+    } catch (error) {
+        console.error("Xatolik yuz berdi:", error);
+    }
+};
+const GetClient1 = async () => {
+    try {
+        const response = await axios.get(`${URL}/client`);
+        transactions.value = response.data.slice(-5);
+    } catch (error) {
+        console.error("Xatolik yuz berdi:", error);
+    }
+};
+
+const getDATA = async () => {
+  try {
+    let totalRevenue = 0
+    let totalExpense = 0
+    let totalExpense1 = 0
+    let totalExpense2 = 0
+    const revenueSums = Array(12).fill(0)
+    const expenseSums = Array(12).fill(0)
+    const expenseSums1 = Array(12).fill(0)
+    const expenseSums2 = Array(12).fill(0)
+
+    const res = await axios.get(URL + '/accountant-files')
+    res.data.forEach((item) => {
+      if (Array.isArray(item.History)) {
+        item.History.forEach((history) => {
+          if (history.createdAt && !isNaN(Number(history.totalSum))) {
+            const monthIndex = new Date(history.createdAt).getMonth()
+            expenseSums[monthIndex] += Number(history.totalSum)
+            totalExpense += Number(history.totalSum)
+          }
+        })
+      }
+    })
+    const filter1 = res.data.filter(item => item.type === 'reports');
+    filter1.forEach((item) => {
+      if (Array.isArray(item.History)) {
+        item.History.forEach((history) => {
+          if (history.createdAt && !isNaN(Number(history.totalSum))) {
+            const monthIndex = new Date(history.createdAt).getMonth()
+            expenseSums2[monthIndex] += Number(history.totalSum)
+            totalExpense2 += Number(history.totalSum)
+          }
+        })
+      }
+    })
+    const filter2 = res.data.filter(item => item.type === 'taxes');
+    filter2.forEach((item) => {
+      if (Array.isArray(item.History)) {
+        item.History.forEach((history) => {
+          if (history.createdAt && !isNaN(Number(history.totalSum))) {
+            const monthIndex = new Date(history.createdAt).getMonth()
+            expenseSums1[monthIndex] += Number(history.totalSum)
+            totalExpense1 += Number(history.totalSum)
+          }
+        })
+      }
+    })
+
+    const clientRes = await axios.get(URL + '/client-files')
+    clientRes.data.forEach((file) => {
+      const payment = file.ClientPayment?.[0]
+      if (payment && payment.createdAt && !isNaN(Number(payment.TotalSum))) {
+        const monthIndex = new Date(payment.createdAt).getMonth()
+        revenueSums[monthIndex] += Number(payment.TotalSum)
+        totalRevenue += Number(payment.TotalSum)
+      }
+    })
+
+    data.value = totalRevenue
+    data1.value = totalExpense
+    data2.value = totalExpense1
+    data3.value = totalExpense2
+    chartData.value = revenueSums
+    chartData1.value = expenseSums
+
+    const maxRevenue = Math.max(...revenueSums)
+    const maxExpense = Math.max(...expenseSums)
+    const maxValue = Math.max(maxRevenue, maxExpense)
+    const yMax = maxValue > 0 ? Math.ceil(maxValue * 1.1 / 5000) * 5000 : 20000
+    chartOptions.value.scales.y.max = yMax
+    chartOptions.value.scales.y.ticks.stepSize = Math.ceil(yMax / 5)
+  } catch (error) {
+    console.error('Error fetching data:', error.message)
+    if (error.response) {
+      console.error('Error response:', error.response.data)
+    }
+  }
+}
+
+onMounted(() => {
+  getDATA()
+  GetClient()
+  GetClient1()
+})
 </script>
 
 <template>
   <div class="p-6 min-h-screen bg-gray-200">
     <div class="container mx-auto">
       <div class="kpi-grid">
-        <KpiCard title="Revenue" value="$25,000" color="success" />
-        <KpiCard title="Expenses" value="$10,500" color="warning" />
-        <KpiCard title="Profit" value="$14,500" color="success" />
-        <KpiCard title="Accounts Receivable" value="$8,200" color="primary" />
+        <KpiCard title="Foyda" :value="data + ` so'm`" color="success" />
+        <KpiCard title="Umumiy Xarajatlar" :value="data1 + ` so'm`" color="warning" />
+        <KpiCard title="Soliq Xarajatlari" :value="data2 + ` so'm`" color="success" />
+        <KpiCard title="Korxona Xarajati" :value="data3 + ` so'm`" color="primary" />
       </div>
 
       <div class="dashboard-grid mt-4">
-        <RevenueChart />
-
+        <RevenueChart :revenueData="chartData" :expenseData="chartData1" :options="chartOptions" />
         <div class="dashboard-tables">
           <TransactionsTable :transactions="transactions" />
           <InvoicesTable :invoices="invoices" class="mt-4" />
@@ -54,7 +161,7 @@ const invoices = ref([
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 2fr 1fr;
   gap: var(--space-4);
 }
 

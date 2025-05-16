@@ -1,3 +1,4 @@
+
 <script setup>
 import { ref, onMounted } from 'vue'
 import { Line } from 'vue-chartjs'
@@ -11,13 +12,22 @@ const chartData = ref({
   labels: ['Yan', 'Fev', 'Mar', 'Apr', 'May', 'Iyn', 'Iyl', 'Aug', 'Sen', 'Okt', 'Noy', 'Dek'],
   datasets: [
     {
-      label: 'Revenue',
-      data: Array(12).fill(0), // Initialize with zeros for 12 months
+      label: 'Foyda',
+      data: Array(12).fill(0),
       borderColor: '#3182ce',
       backgroundColor: 'rgba(49, 130, 206, 0.1)',
       borderWidth: 2,
       tension: 0.3,
       pointBackgroundColor: '#3182ce',
+    },
+    {
+      label: 'Xarajatlar',
+      data: Array(12).fill(0),
+      borderColor: '#dc2626', // Red color for expenses
+      backgroundColor: 'rgba(220, 38, 38, 0.1)',
+      borderWidth: 2,
+      tension: 0.3,
+      pointBackgroundColor: '#dc2626',
     },
   ],
 })
@@ -29,7 +39,7 @@ const chartOptions = ref({
     y: {
       beginAtZero: true,
       ticks: {
-        stepSize: 5000, // Initial step size, will adjust dynamically
+        stepSize: 5000,
       },
       grid: {
         color: 'rgba(0, 0, 0, 0.05)',
@@ -67,6 +77,7 @@ const chartOptions = ref({
 const getDATA = async () => {
   try {
     const revenueSums = Array(12).fill(0)
+    const expenseSums = Array(12).fill(0)
 
     // 1. accountant-files
     const res = await axios.get(URL + '/accountant-files')
@@ -75,13 +86,13 @@ const getDATA = async () => {
         item.History.forEach((history) => {
           if (history.createdAt && !isNaN(Number(history.totalSum))) {
             const monthIndex = new Date(history.createdAt).getMonth()
-            revenueSums[monthIndex] += Number(history.totalSum)
+              expenseSums[monthIndex] += Number(history.totalSum)
           }
         })
       }
     })
 
-    // 2. client-files — faqat birinchi ClientPayment[0]
+    // 2. client-files — only first ClientPayment[0]
     const clientRes = await axios.get(URL + '/client-files')
     clientRes.data.forEach((file) => {
       const payment = file.ClientPayment?.[0]
@@ -93,15 +104,19 @@ const getDATA = async () => {
 
     // Calculate the maximum value for dynamic scaling
     const maxRevenue = Math.max(...revenueSums)
-    const yMax = maxRevenue > 0 ? Math.ceil(maxRevenue * 1.1 / 5000) * 5000 : 20000 // Default to 20000 if no data
+    const maxExpense = Math.max(...expenseSums)
+    const maxValue = Math.max(maxRevenue, maxExpense)
+    const yMax = maxValue > 0 ? Math.ceil(maxValue * 1.1 / 5000) * 5000 : 20000
 
     // Update chartOptions with dynamic y-axis max
     chartOptions.value.scales.y.max = yMax
-    chartOptions.value.scales.y.ticks.stepSize = Math.ceil(yMax / 5) // Adjust stepSize for 5 ticks
+    chartOptions.value.scales.y.ticks.stepSize = Math.ceil(yMax / 5)
 
     // Update chart data
     chartData.value.datasets[0].data = [...revenueSums]
-    console.log('Revenue Sums:', revenueSums) // Debug log
+    chartData.value.datasets[1].data = [...expenseSums]
+    console.log('Revenue Sums:', revenueSums)
+    console.log('Expense Sums:', expenseSums)
   } catch (error) {
     console.error('Error fetching data:', error)
   }
@@ -114,9 +129,13 @@ onMounted(() => {
 
 <template>
   <div class="chart-container">
-    <h3>Revenue & Expenses</h3>
+    <h3>Revenue vs Expenses</h3>
     <div class="chart">
-      <Line v-if="chartData.datasets[0].data.some(val => val > 0)" :data="chartData" :options="chartOptions" />
+      <Line
+        v-if="chartData.datasets[0].data.some(val => val > 0) || chartData.datasets[1].data.some(val => val > 0)"
+        :data="chartData"
+        :options="chartOptions"
+      />
       <p v-else>No data available to display the chart.</p>
     </div>
   </div>

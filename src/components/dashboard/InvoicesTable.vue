@@ -9,24 +9,20 @@ defineProps({
 
 <template>
   <div class="invoices-table card">
-    <h3>Latest Invoices</h3>
+    <h3> Ariza yozgan mijozlar ro'yxati</h3>
     <table class="table">
       <thead>
         <tr>
-          <th>Invoice#</th>
-          <th>Client</th>
-          <th>Status</th>
+          <th>
+            #
+          </th>
+          <th>F.I.SH:</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="invoice in invoices" :key="invoice.id">
-          <td>{{ invoice.number }}</td>
-          <td>{{ invoice.client }}</td>
-          <td>
-            <span class="badge" :class="invoice.status === 'Paid' ? 'badge-success' : 'badge-pending'">
-              {{ invoice.status }}
-            </span>
-          </td>
+        <tr v-for="(transaction,index) in invoices" :key="index+1">
+          <td>{{ index+1 }}</td>
+          <td>{{ `${transaction.name} ${transaction.surname} ${transaction.dadname}` }}</td>
         </tr>
       </tbody>
     </table>

@@ -9,22 +9,20 @@ defineProps({
 
 <template>
   <div class="transactions-table card">
-    <h3>Recent Transactions</h3>
+    <h3>Shartnoma tuzgan mijozlar ro'yxati</h3>
     <table class="table">
       <thead>
         <tr>
-          <th>Date</th>
-          <th>Description</th>
-          <th class="text-right">Amount</th>
+          <th>
+            #
+          </th>
+          <th>F.I.SH:</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="transaction in transactions" :key="transaction.id">
-          <td>{{ transaction.date }}</td>
-          <td>{{ transaction.description }}</td>
-          <td class="text-right" :class="{'negative': transaction.amount < 0, 'positive': transaction.amount > 0}">
-            {{ transaction.amount < 0 ? `-$${Math.abs(transaction.amount).toFixed(2)}` : `$${transaction.amount.toFixed(2)}` }}
-          </td>
+        <tr v-for="(transaction,index) in transactions" :key="index+1">
+          <td>{{ index+1 }}</td>
+          <td>{{ `${transaction.name} ${transaction.surname} ${transaction.dadname}` }}</td>
         </tr>
       </tbody>
     </table>

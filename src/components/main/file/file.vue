@@ -198,7 +198,7 @@ const fetchWordFile = async () => {
     const response = await fetch(`${API_URL}/files/${id.value}`);
     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
     const resData = await response.json();
-    const fileResponse = await fetch(`${API_URL}${resData.filePath}`);
+    const fileResponse = await fetch(`${API_URL}/uploads/${resData.filePath}`);
     if (!fileResponse.ok) throw new Error(`HTTP error! Status: ${fileResponse.status}`);
     const arrayBuffer = await fileResponse.arrayBuffer();
     const result = await mammoth.convertToHtml({ arrayBuffer });
