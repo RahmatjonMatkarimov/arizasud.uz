@@ -9,7 +9,6 @@ import main from '@/components/Templates/template.vue'
 import salaryCalculator from '@/components/admins/salaryCalculator.vue'
 import salary from '@/components/Salery/index.vue'
 import salaryChange from '@/components/Salery/Salerychange.vue'
-import Notification from '@/components/dashboard/Notifications.vue'
 
 export const routes = [
   { path: '/edit/:id/:id2?', name: 'editFile', component: () => import('@/components/main/file/file.vue') },
@@ -49,13 +48,6 @@ export const routes = [
         component: Dashboard,
         meta: { title: 'Dashboard' }
       },
-      {
-        path: '/Notification/:id',
-        name: 'Notification',
-        component: Notification,
-        meta: { title: 'Notification' }
-      },
-
       {
         path: '/transactions',
         name: 'Transactions',

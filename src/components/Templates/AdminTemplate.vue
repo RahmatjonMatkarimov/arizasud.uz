@@ -431,8 +431,9 @@ onMounted(() => {
     fetchNotifications();
   });
 
-  socket.on('unreadCount', (count) => {
+  socket.on('unreadMessageCount', (count) => {
     messageCount.value += count;
+    console.log(count)
   });
 
   fetchNotifications();
@@ -445,7 +446,7 @@ onMounted(() => {
 onUnmounted(() => {
   socket.off('adminOnlineUpdate');
   socket.off('newNotification');
-  socket.off('unreadCount');
+  socket.off('unreadMessageCount');
   socket.off('connect');
   socket.off('connect_error');
   socket.disconnect();

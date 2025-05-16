@@ -13,12 +13,15 @@ defineProps({
     default: 'primary'
   }
 })
+import translateText from '@/auth/Translate';
+import { inject } from 'vue';
+const dat = inject('dat')
 </script>
 
 <template>
   <div class="kpi-card" :class="`card-${color}`">
-    <h3 class="kpi-title text-white">{{ title }}</h3>
-    <p class="kpi-value">{{ value }}</p>
+    <h3 class="kpi-title text-white">{{dat =='datakril' ? translateText(title) : title }}</h3>
+    <p class="kpi-value">{{dat =='datakril' ? translateText(value) : value }}</p>
   </div>
 </template>
 

@@ -40,18 +40,6 @@ onMounted(() => {
         <span>{{ dat === 'datakril' ? translateText(item.name) : item.name }}</span>
       </router-link>
     </nav>
-    <div class="profile-menu">
-      <router-link to="/profile" class="profile-item">
-        <div class="avatar">
-          <img :src="URL + '/upload/' + user.img" alt="Profile">
-        </div>
-        <div class="user-info">
-          <h3>{{ dat === 'datakril' ? translateText(`${user.name} ${user.surname} ${user.dadname}`) : `${user.name}
-            ${user.surname} ${user.dadname}`}}</h3>
-          <p>{{ dat === 'datakril' ? translateText(user.lavozimi) : user.lavozimi }}</p>
-        </div>
-      </router-link>
-    </div>
   </div>
 </template>
 
@@ -62,9 +50,9 @@ onMounted(() => {
   color: white;
   display: flex;
   flex-direction: column;
-  height: 84vh;
+  height: 100vh;
   position: fixed;
-  margin-top: 150px;
+  margin-top: 200px;
   top: 0;
 }
 

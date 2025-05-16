@@ -10,7 +10,7 @@
           :class="['w-6 h-6 transition-transform duration-500', isAsideVisible ? 'rotate-180' : 'rotate-0']" />
       </button>
 
-      <div v-if="dat === 'datakril'" class="bg-[var(--color-primary)]  flex h-[150px] p-2">
+      <div v-if="dat === 'datakril'" class="bg-[var(--color-primary)]  flex h-[200px] p-2">
         <!-- Existing content for datakril -->
         <div class="flex items-start gap-6 mb-8">
           <div @click="router.push(`/profileUser/${userInfoLotin.id}`)"
@@ -75,28 +75,34 @@
             class="relative bg-lime-600 hover:bg-lime-700 duration-500 flex border items-center capitalize px-6 m-2 rounded">
             <img class="w-10 -ml-4 mr-9" src="/chat.png" alt="">
             {{ $t('muhim_sms') }}
-            <span v-if="notificationCount > 0"
-              class="ml-2 absolute top-[2px] left-[37px] bg-red-500 text-white rounded-full px-2 py-1 h-5 text-[13px]">
-              <h1 class="-mt-1 capitalize">{{ notificationCount }}</h1>
+            <span v-if="notificationCount > 0" :class="[
+              'text-[10px] absolute ml-[4px] flex justify-center items-center top-[1px] bg-red-500 text-white rounded-full',
+              notificationCount.toString().length === 1 ? 'px-2' : 'px-1'
+            ]">
+              <h1 class="capitalize">{{ notificationCount }}</h1>
             </span>
           </div>
           <div @click="gochat1(userInfo.id)"
             class="relative bg-lime-600 hover:bg-lime-700 duration-500 flex border items-center capitalize px-6 m-2 rounded">
             <img class="w-10 -ml-4 mr-9" src="/chat.png" alt="">
             {{ $t('chat-guruh') }}
-            <span v-if="messageCount > 0"
-              class="ml-2 absolute top-[2px] left-[37px] bg-red-500 text-white rounded-full px-2 py-1 h-5 text-[13px]">
-              <h1 class="-mt-1 capitalize">{{ messageCount }}</h1>
+            <span v-if="messageCount > 0" :class="[
+              'text-[10px] absolute ml-[4px] flex justify-center items-center top-[1px] bg-red-500 text-white rounded-full',
+              messageCount.toString().length === 1 ? 'px-2' : 'px-1'
+            ]">
+              <h1 class="capitalize">{{ messageCount }}</h1>
             </span>
           </div>
-          <div @click="gochat2(userInfo.id)"
+          <div @click="showModal = true"
             class="relative bg-lime-600 hover:bg-lime-700 duration-500 flex border items-center capitalize px-6 m-2 rounded">
             <img class="w-10 -ml-4 mr-9" src="/chat.png" alt="">
             {{ dat === 'datakril' ? translateText('To\'lov vaqti kelgan hujjatlar') : 'To\'lov vaqti kelgan hujjatlar'
             }}
-            <span v-if="messageCount > 0"
-              class="ml-2 absolute top-[2px] left-[37px] bg-red-500 text-white rounded-full px-2 py-1 h-5 text-[13px]">
-              <h1 class="-mt-1 capitalize">{{ messageCount }}</h1>
+            <span v-if="unreadCount > 0" :class="[
+              'text-[10px] absolute ml-[4px] flex justify-center items-center top-[1px] bg-red-500 text-white rounded-full',
+              unreadCount.toString().length === 1 ? 'px-2' : 'px-1'
+            ]">
+              <h1 class="capitalize">{{ unreadCount }}</h1>
             </span>
           </div>
           <div class="absolute top-1 right-1">
@@ -129,7 +135,7 @@
           </div>
         </div>
       </div>
-      <div v-if="dat === 'datalotin'" class="bg-[var(--color-primary)]  flex h-[150px] p-2">
+      <div v-if="dat === 'datalotin'" class="bg-[var(--color-primary)]  flex h-[200px] p-2">
         <!-- Existing content for datalotin -->
         <div class="flex items-start gap-6 mb-8">
           <div @click="router.push(`/profileUser/${userInfoLotin.id}`)"
@@ -194,28 +200,34 @@
             class="relative bg-lime-600 hover:bg-lime-700 duration-500 flex border items-center capitalize px-6 m-2 rounded">
             <img class="w-10 -ml-4 mr-9" src="/chat.png" alt="">
             {{ $t('muhim_sms') }}
-            <span v-if="notificationCount > 0"
-              class="ml-2 absolute top-[2px] left-[37px] bg-red-500 text-white rounded-full px-2 py-1 h-5 text-[13px]">
-              <h1 class="-mt-1 capitalize">{{ notificationCount }}</h1>
+            <span v-if="notificationCount > 0" :class="[
+              'text-[10px] absolute ml-[4px] flex justify-center items-center top-[1px] bg-red-500 text-white rounded-full',
+              notificationCount.toString().length === 1 ? 'px-2' : 'px-1'
+            ]">
+              <h1 class="capitalize">{{ notificationCount }}</h1>
             </span>
           </div>
           <div @click="gochat1(userInfo.id)"
             class="relative bg-lime-600 hover:bg-lime-700 duration-500 flex border items-center capitalize px-6 m-2 rounded">
             <img class="w-10 -ml-4 mr-9" src="/chat.png" alt="">
             {{ $t('chat-guruh') }}
-            <span v-if="messageCount > 0"
-              class="ml-2 absolute top-[2px] left-[37px] bg-red-500 text-white rounded-full px-2 py-1 h-5 text-[13px]">
-              <h1 class="-mt-1 capitalize">{{ messageCount }}</h1>
+            <span v-if="messageCount > 0" :class="[
+              'text-[10px] absolute ml-[4px] flex justify-center items-center top-[1px] bg-red-500 text-white rounded-full',
+              messageCount.toString().length === 1 ? 'px-2' : 'px-1'
+            ]">
+              <h1 class="capitalize">{{ messageCount }}</h1>
             </span>
           </div>
-          <div @click="gochat2(userInfo.id)"
+          <div @click="showModal = true"
             class="relative bg-lime-600 hover:bg-lime-700 duration-500 flex border items-center capitalize px-6 m-2 rounded">
             <img class="w-10 -ml-4 mr-9" src="/chat.png" alt="">
             {{ dat === 'datakril' ? translateText('To\'lov vaqti kelgan hujjatlar') : 'To\'lov vaqti kelgan hujjatlar'
             }}
-            <span v-if="messageCount > 0"
-              class="ml-2 absolute top-[2px] left-[37px] bg-red-500 text-white rounded-full px-2 py-1 h-5 text-[13px]">
-              <h1 class="-mt-1 capitalize">{{ messageCount }}</h1>
+            <span v-if="unreadCount > 0" :class="[
+              'text-[10px] absolute ml-[4px] flex justify-center items-center top-[1px] bg-red-500 text-white rounded-full',
+              unreadCount.toString().length === 1 ? 'px-2' : 'px-1'
+            ]">
+              <h1 class="capitalize">{{ unreadCount }}</h1>
             </span>
           </div>
         </div>
@@ -249,11 +261,12 @@
         </div>
       </div>
     </div>
+    <NotificationModal v-if="showModal" @close="showModal = false" />
     <div class="flex">
       <Aside class="fixed left-0 top-0 h-full w-64 transition-all duration-700 ease-in-out"
         :class="{ 'translate-x-0 opacity-100': isAsideVisible, '-translate-x-full opacity-0': !isAsideVisible }" />
       <main
-        :class="['flex-1 mt-[150px] transition-all duration-700 ease-in-out', isAsideVisible ? 'ml-[260px]' : 'ml-[0px]']">
+        :class="['flex-1 mt-[200px] transition-all duration-700 ease-in-out', isAsideVisible ? 'ml-[260px]' : 'ml-[0px]']">
         <router-view />
       </main>
     </div>
@@ -270,7 +283,9 @@ import { io } from "socket.io-client";
 import { useI18n } from "vue-i18n";
 import { provide } from "vue";
 import translateText from "@/auth/Translate";
+import NotificationModal from '../dashboard/notificationModal.vue';
 
+const showModal = ref(false);
 const { locale } = useI18n();
 const isOpen = ref(false);
 const selectedFlag = ref("/uzb.png");
@@ -291,8 +306,17 @@ const userInfo = ref({});
 const userInfoLotin = ref({});
 const isOnline = ref(false);
 const notificationCount = ref(0);
+const unreadCount = ref(0);
 const messageCount = ref(parseInt(localStorage.getItem('messageCount')) || 0);
 
+const fetchUnreadCount = async () => {
+  try {
+    const response = await axios.get(URL + '/accauntant-notification/unread/count');
+    unreadCount.value = response.data;
+  } catch (error) {
+    console.error('Error fetching unread count:', error);
+  }
+};
 // Socket.IO ulanishi
 const socket = io(URL, {
   path: '/socket.io',
@@ -430,6 +454,7 @@ const checkOnlineStatus = (onlineAdmins) => {
 onMounted(() => {
   getData();
   fetchAdminData();
+  fetchUnreadCount()
 
   // Validate ID before emitting
   if (!id || isNaN(parseInt(id))) {

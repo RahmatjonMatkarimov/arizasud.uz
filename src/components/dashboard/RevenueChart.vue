@@ -5,6 +5,10 @@ import { Line } from 'vue-chartjs'
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js'
 import axios from 'axios'
 import { URL } from '@/auth/url'
+import translateText from '@/auth/Translate'
+import { inject } from 'vue'
+
+const dat = inject('dat')
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
 
@@ -129,14 +133,14 @@ onMounted(() => {
 
 <template>
   <div class="chart-container">
-    <h3>Revenue vs Expenses</h3>
+    <h3>{{ dat === 'datakril' ? translateText('Xarajatlar va Foyda') :'Xarajatlar va Foyda' }}</h3>
     <div class="chart">
       <Line
         v-if="chartData.datasets[0].data.some(val => val > 0) || chartData.datasets[1].data.some(val => val > 0)"
         :data="chartData"
         :options="chartOptions"
       />
-      <p v-else>No data available to display the chart.</p>
+      <p v-else>{{ dat === 'datakril' ? translateText('Hech qanday malumot yo\'q') :'Hech qanday malumot yo\'q' }}</p>
     </div>
   </div>
 </template>

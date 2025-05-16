@@ -26,7 +26,18 @@ const chartOptions = ref({
     }
   }
 })
+function formatNumberWithDots(number) {
+  const numStr = number.toString();
+  const reversed = numStr.split('').reverse().join('');
+  const chunked = [];
 
+  for (let i = 0; i < reversed.length; i += 3) {
+    chunked.push(reversed.slice(i, i + 3));
+  }
+
+  const formatted = chunked.join('.').split('').reverse().join('');
+  return formatted;
+}
 const GetClient = async () => {
     try {
         const response = await axios.get(`${URL1}/commoners`);
@@ -134,10 +145,10 @@ onMounted(() => {
   <div class="p-6 min-h-screen bg-gray-200">
     <div class="container mx-auto">
       <div class="kpi-grid">
-        <KpiCard title="Foyda" :value="data + ` so'm`" color="success" />
-        <KpiCard title="Umumiy Xarajatlar" :value="data1 + ` so'm`" color="warning" />
-        <KpiCard title="Soliq Xarajatlari" :value="data2 + ` so'm`" color="success" />
-        <KpiCard title="Korxona Xarajati" :value="data3 + ` so'm`" color="primary" />
+        <KpiCard title="Foyda" :value="formatNumberWithDots(data) + ` so'm`" color="success" />
+        <KpiCard title="Umumiy Xarajatlar" :value="formatNumberWithDots(data1) + ` so'm`" color="warning" />
+        <KpiCard title="Soliq Xarajatlari" :value="formatNumberWithDots(data2) + ` so'm`" color="success" />
+        <KpiCard title="Korxona Xarajati" :value="formatNumberWithDots(data3) + ` so'm`" color="primary" />
       </div>
 
       <div class="dashboard-grid mt-4">

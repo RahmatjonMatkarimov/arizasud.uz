@@ -157,7 +157,7 @@ const removeFiles = async (ids) => {
       data: { ids }
     })
     console.log('Deleted:', response.data)
-    showChekbox = false
+    showChekbox.value = false
     getFiles()
   } catch (error) {
     console.error('Error deleting files:', error.response?.data || error.message)
@@ -370,6 +370,8 @@ onMounted(() => {
               <th class="p-3 text-center font-semibold text-black">{{ dat === 'datakril' ? translateText('Holati') : 'Holati' }}</th>
               <th class="p-3 text-center font-semibold text-black flex justify-center items-center gap-4">
                 {{ dat === 'datakril' ? translateText('Harakatlar') : 'Harakatlar' }}
+              </th>
+              <th class="p-1">
                 <div v-if="ids.length" @click="selectedAll()"
                   class="py-2 px-4 bg-lime-500 hover:bg-lime-600 rounded-lg cursor-pointer transition">
                   {{ dat === 'datakril' ? translateText('Barchasini belgilash') : 'Barchasini belgilash' }}

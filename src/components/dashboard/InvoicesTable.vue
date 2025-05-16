@@ -5,24 +5,31 @@ defineProps({
     required: true
   }
 })
+
+import translateText from '@/auth/Translate';
+import { inject } from 'vue';
+const dat = inject('dat')
 </script>
 
 <template>
   <div class="invoices-table card">
-    <h3> Ariza yozgan mijozlar ro'yxati</h3>
+    <h3>{{ dat === 'datakril' ? translateText('Ariza yozgan mijozlar ro\'yxati ') : 'Ariza yozgan mijozlar ro\'yxati ' }}</h3>
     <table class="table">
       <thead>
         <tr>
           <th>
             #
           </th>
-          <th>F.I.SH:</th>
+          <th>
+          </th>
+          <th>{{ dat === 'datakril' ? translateText('F.I.SH:') : 'F.I.SH:' }}</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(transaction,index) in invoices" :key="index+1">
           <td>{{ index+1 }}</td>
-          <td>{{ `${transaction.name} ${transaction.surname} ${transaction.dadname}` }}</td>
+          <td></td>
+          <td>{{ dat === 'datakril' ? translateText(`${transaction.name} ${transaction.surname} ${transaction.dadname}`) : `${transaction.name} ${transaction.surname} ${transaction.dadname}`}}</td>
         </tr>
       </tbody>
     </table>
