@@ -201,7 +201,6 @@ h3 {
 }
 
 a {
-  text-decorationprinter-friendly: none;
   color: var(--color-accent);
 }
 
