@@ -50,12 +50,12 @@
                                     {{ dat === 'datakril' ? translateText('Oylik maoshni hisoblash') : 'Oylik maoshni hisoblash' }}
                                 </button>
                                     <select v-model="selectedYear" class="border bg-[#fff0] rounded-md p-2">
-                                        <option value="">{{ dat === 'datakril' ? translateText('Yil tanlang') : 'Yil tanlang' }}</option>
-                                        <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+                                        <option class="text-black" value="">{{ dat === 'datakril' ? translateText('Yil tanlang') : 'Yil tanlang' }}</option>
+                                        <option class="text-black" v-for="year in years" :key="year" :value="year">{{ year }}</option>
                                     </select>
                                     <select v-model="selectedMonth" class="border bg-[#fff0] rounded-md p-2">
-                                        <option value="">{{ dat === 'datakril' ? translateText('Oy tanlang') : 'Oy tanlang' }}</option>
-                                        <option v-for="month in months" :key="month.value" :value="month.value">{{ month.name }}</option>
+                                        <option class="text-black" value="">{{ dat === 'datakril' ? translateText('Oy tanlang') : 'Oy tanlang' }}</option>
+                                        <option class="text-black" v-for="month in months" :key="month.value" :value="month.value">{{ month.name }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -209,6 +209,7 @@ const addBonus = async () => {
         modals.value = false; // Close modal after successful addition
         total.value = null; // Reset input
         sabab.value = ''; // Reset input
+        getSalery()
     } catch (err) {
         console.error('Error adding bonus:', err);
         alert('Bonus qo\'shishda xatolik yuz berdi!');
@@ -274,15 +275,15 @@ const getSalery = async () => {
         cards.value = [
             {
                 ...cards.value[0],
-                value: Number(res.data.lateDeductions).toFixed(3)
+                value: Math.floor(res.data.lateDeductions)
             },
             {
                 ...cards.value[1],
-                value: Number(res.data.totalBonus).toFixed(3)
+                value: Math.floor(res.data.totalBonus)
             },
             {
                 ...cards.value[2],
-                value: Number(res.data.finalSalary).toFixed(3)
+                value: Math.floor(res.data.finalSalary)
             }
         ];
         console.log(res.data)

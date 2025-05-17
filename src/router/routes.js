@@ -10,6 +10,7 @@ import main from '@/components/Templates/template.vue'
 import salaryCalculator from '@/components/admins/salaryCalculator.vue'
 import salary from '@/components/Salery/index.vue'
 import salaryChange from '@/components/Salery/Salerychange.vue'
+import clients from '@/components/dashboard/clents.vue'
 
 export const routes = [
   { path: '/edit/:id/:id2?', name: 'editFile', component: () => import('@/components/main/file/file.vue') },
@@ -54,6 +55,12 @@ export const routes = [
         name: 'Transactions',
         component: Transactions,
         meta: { title: 'Transactions' }
+      },
+      {
+        path: '/clients',
+        name: 'clients',
+        component: clients,
+        meta: { title: 'clients' }
       },
       {
         path: '/invoicesChild',

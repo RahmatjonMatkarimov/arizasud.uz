@@ -16,6 +16,7 @@ const menuItems = [
   { name: 'Soliqlar', icon: 'file-invoice', path: '/invoices' },
   { name: 'Ishchilar oyligini hisoblash', icon: 'money-check-dollar', path: '/salary' },
   { name: 'Xarajatlar', icon: 'chart-pie', path: '/reports' },
+  { name: 'Shartnoma qarzlari', icon: 'user', path: '/clients' },
 ]
 
 const getUser = async () => {
