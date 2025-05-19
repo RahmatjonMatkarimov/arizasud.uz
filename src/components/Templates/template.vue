@@ -8,7 +8,7 @@
       <!-- <h1 class="text-white ml-20 font-semibold"><img class="w-[190px]" src="/logo1.png" alt=""></h1> -->
 
       <router-link to="/profile">
-        <div class="w-10 h-10 rounded-full overflow-hidden">
+        <div class="w-[70px] h-[68px] rounded-full overflow-hidden">
           <img :src="getProfileImage(userInfoLotin.img)" alt="Profile" class="w-full h-full object-cover" />
         </div>
       </router-link>

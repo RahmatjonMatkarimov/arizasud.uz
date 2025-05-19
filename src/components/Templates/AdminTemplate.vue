@@ -1,6 +1,14 @@
 <template>
   <div>
     <div class="w-full fixed mb-32 top-0 z-20 mx-auto">
+      <!-- Toggle Button for Aside -->
+      <button @click="toggleAside" :class="[
+        'fixed z-30 bg-blue-800 hover:bg-blue-900 text-white w-11 h-11 flex items-center justify-center',
+        isAsideVisible ? 'left-[420px] top-[50%] duration-700 rounded-r-lg' : 'left-0 top-[50%] duration-700 rounded-r-lg'
+      ]">
+        <img src="/menu1.png"
+          :class="['w-6 h-6 transition-transform duration-500', isAsideVisible ? 'rotate-180' : 'rotate-0']" />
+      </button>
 
       <div v-if="dat === 'datakril'" class="bg-blue-800 flex h-[200px] p-2">
         <!-- Existing content for datakril -->
@@ -222,7 +230,8 @@
       </div>
     </div>
     <div class="flex">
-      <Aside class="fixed left-0 top-0 h-full  transition-all duration-500 ease-in-out" />
+      <Aside class="fixed left-0 top-0 h-full w-64 transition-all duration-700 ease-in-out"
+        :class="{ 'translate-x-0 opacity-100': isAsideVisible, '-translate-x-full opacity-0': !isAsideVisible }" />
       <main
         :class="['flex-1 mt-[200px] transition-all duration-700 ease-in-out', isAsideVisible ? 'ml-[420px]' : 'ml-[0px]']">
         <router-view />
@@ -246,6 +255,8 @@ const { locale } = useI18n();
 const isOpen = ref(false);
 const selectedFlag = ref("/uzb.png");
 const selectedLabel = ref("Uz");
+const dat = ref("datalotin");
+provide("dat", dat);
 const isLoading = inject('isLoading');
 const isAsideVisible = ref(false);
 const ids = localStorage.getItem("id");
@@ -261,8 +272,7 @@ const userInfoLotin = ref({});
 const isOnline = ref(false);
 const notificationCount = ref(0);
 const messageCount = ref(parseInt(localStorage.getItem('messageCount')) || 0);
-const dat = ref("datalotin");
-provide("dat", dat);
+
 // Socket.IO ulanishi
 const socket = io(URL, {
   path: '/socket.io',
@@ -460,9 +470,5 @@ onUnmounted(() => {
 <style scoped>
 aside {
   background-color: #1e3a8a;
-}
-.bgshadow{
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 </style>
