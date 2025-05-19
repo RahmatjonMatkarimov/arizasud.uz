@@ -1,5 +1,5 @@
 <template>
-    <div class="animated-gradient p-7 min-h-screen">
+    <div class="background p-7 min-h-screen">
         <div class="bg-black bg-opacity-20 container mx-auto rounded-lg shadow-lg p-6">
             <div class="flex justify-between items-center mb-6 pb-4 border-b">
                 <div class="text-blue-400 font-medium cursor-pointer" @click="router.push('/salary')">
@@ -32,7 +32,7 @@
                                             <h2 class="text-xl font-semibold text-gray-800">{{ dat === 'datakril' ? translateText(card.title) : card.title }}</h2>
                                         </div>
                                     </div>
-                                    <p :class="card.colorClass + ' text-3xl font-bold'">{{ card.value }} {{ dat === 'datakril' ? translateText('so\'m') : 'so\'m' }}</p>
+                                    <p :class="card.colorClass + ' text-3xl font-bold'">{{ dots(card.value) }} {{ dat === 'datakril' ? translateText('so\'m') : 'so\'m' }}</p>
                                     <p class="text-sm text-gray-500 mt-1">
                                         <span class="font-semibold text-md text-gray-500">{{ dat === 'datakril' ? translateText(card.increase) : card.increase }}</span>
                                     </p>
@@ -121,9 +121,12 @@
                     <h2 class="text-md font-semibold text-gray-700">{{ dat === 'datakril' ? translateText('Bonus yoki jarima qo‘shish') : 'Bonus yoki jarima qo‘shish' }}</h2>
                     <div class="space-y-2">
                         <label class="block text-md font-medium text-gray-600">{{ dat === 'datakril' ? translateText('Summa') : 'Summa' }}</label>
-                        <input v-model="total" type="number"
-                            class="w-full border border-gray-300 text-black rounded text-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            :placeholder="dat === 'datakril' ? translateText('Masalan: 50000') : 'Masalan: 50000'" />
+                        <input
+                          v-model="formattedTotal"
+                          type="text"
+                          class="w-full border border-gray-300 text-black rounded text-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          :placeholder="dat === 'datakril' ? translateText('Masalan: 50.000') : 'Masalan: 50.000'"
+                        />
                         <label class="block text-md font-medium text-gray-600">{{ dat === 'datakril' ? translateText('Sabab') : 'Sabab' }}</label>
                         <input v-model="sabab" type="text"
                             class="w-full border border-gray-300 text-black rounded text-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -171,6 +174,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useSalary } from './index.js'
 import * as XLSX from 'xlsx'
 import translateText from '@/auth/Translate.js'
+import dots from '@/auth/dots'
 import { ChartBar, CalendarDays, Users, Dot } from 'lucide-vue-next';
 const router = useRouter()
 const route = useRoute()
@@ -197,6 +201,18 @@ const bonus = (item) => {
     workdayId.value = item.workDays[item.workDays.length - 1].id;
     modals.value = true;
 };
+
+const formattedTotal = computed({
+  get() {
+    if (total.value === null || total.value === '') return ''
+    return formatNumberWithDots(total.value)
+  },
+  set(value) {
+    const cleanValue = value.replace(/\D/g, '')
+    total.value = cleanValue ? parseFloat(cleanValue) : null
+  }
+});
+
 const addBonus = async () => {
     try {
         const res = await axios.post(URL + '/bonus', {
@@ -206,10 +222,10 @@ const addBonus = async () => {
             description: sabab.value,
         });
         console.log('Bonus added:', res.data);
-        modals.value = false; // Close modal after successful addition
-        total.value = null; // Reset input
-        sabab.value = ''; // Reset input
-        getSalery()
+        modals.value = false;
+        total.value = null;
+        sabab.value = '';
+        getSalery();
     } catch (err) {
         console.error('Error adding bonus:', err);
         alert('Bonus qo\'shishda xatolik yuz berdi!');
@@ -242,23 +258,18 @@ const cards = ref([
         icon: '/coin.png'
     },
 ]);
+
 function formatNumberWithDots(number) {
-  // Raqamni stringga aylantiramiz
-  const str = number.toString();
-  
-  // Stringni teskari qilib, har 3ta belgidan keyin nuqta qo‘shamiz
-  const reversed = str.split('').reverse().join('');
-  const withDots = reversed.replace(/(\d{3})(?=\d)/g, '$1.');
-  
-  // Oxirgi natijani yana teskari qilib qaytaramiz
-  return withDots.split('').reverse().join('');
+  if (!number) return ''
+  const str = number.toString()
+  return str.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
 }
 
 const getSalery = async () => {
     try {
         const now = new Date();
         const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0'); // 0-based bo‘lganligi uchun +1
+        const month = String(now.getMonth() + 1).padStart(2, '0');
 
         const res = await axios.get(
             URL + '/salary/preview',
@@ -294,7 +305,6 @@ const getSalery = async () => {
 
 getSalery()
 
-
 const { calculateSalary, salary, error, loading } = useSalary()
 
 const form = ref({
@@ -314,7 +324,7 @@ const handleCalculateSalary = async (item) => {
         }
         const month = Number(selectedMonth.value) < 10 ? `0${selectedMonth.value}` : selectedMonth.value
         const dateString = `${selectedYear.value}-${month}`
-        console.log(dateString) // Should log e.g., "2025-01"
+        console.log(dateString)
         await calculateSalary(item.id, dateString)
         alert('Maosh hisoblandi!')
     } catch (err) {
@@ -323,16 +333,12 @@ const handleCalculateSalary = async (item) => {
     }
 }
 
-
-
-// Uzbek month names for display
 const monthNames = [
     'Yanvar', 'Fevral', 'Mart', 'Aprel',
     'May', 'Iyun', 'Iyul', 'Avgust',
     'Sentabr', 'Oktabr', 'Noyabr', 'Dekabr'
 ]
 
-// Compute unique years from workDays
 const years = computed(() => {
     const allYears = new Set()
     users.value.forEach(user => {
@@ -346,14 +352,13 @@ const years = computed(() => {
     return Array.from(allYears).sort((a, b) => a - b)
 })
 
-// Compute unique months from workDays
 const months = computed(() => {
     const allMonths = new Set()
     users.value.forEach(user => {
         user.workDays?.forEach(day => {
             const date = new Date(day.createdAt)
             if (!isNaN(date.getTime())) {
-                allMonths.add(date.getMonth() + 1) // 1-based month
+                allMonths.add(date.getMonth() + 1)
             }
         })
     })
@@ -365,7 +370,6 @@ const months = computed(() => {
         }))
 })
 
-// Filter workDays based on selected year and month
 const filteredWorkDays = (workDays) => {
     if (!workDays) return []
     return workDays.filter(day => {
@@ -376,21 +380,19 @@ const filteredWorkDays = (workDays) => {
         return yearMatch && monthMatch
     })
 }
+
 const downloadExcel = () => {
     const excelRows = []
 
     users.value.forEach((item) => {
-        // Ishchi ismini sarlavha sifatida qo'shish
         excelRows.push([
             { v: `${item.name} ${item.surname}  ${item.dadname}`, s: { font: { bold: true }, fill: { fgColor: { rgb: "FFFF00" } } } }
         ])
 
-        // Ustun nomlari
         excelRows.push([
             'Ishga kelgan', 'Tushlikka ketgan', 'Tushlikdan kelgan', 'Ishdan chiqqan', 'Sana'
         ])
 
-        // Ish kunlarini tekshirish
         if (Array.isArray(item.workDays)) {
             item.workDays.forEach((history) => {
                 excelRows.push([
@@ -403,16 +405,15 @@ const downloadExcel = () => {
             })
         }
 
-        // Bo'sh qator qo'shish
         excelRows.push([])
     })
 
-    // Excelga aylantirish
     const ws = XLSX.utils.aoa_to_sheet(excelRows)
     const wb = XLSX.utils.book_new()
     XLSX.utils.book_append_sheet(wb, ws, 'Ish kunlari')
     XLSX.writeFile(wb, 'ish_kunlari.xlsx')
 }
+
 function isoToUzbekistanTime(isoStr) {
     const monthsUz = [
         'Yanvar', 'Fevral', 'Mart', 'Aprel',
@@ -462,6 +463,7 @@ const getUser = async () => {
 
 getUser()
 </script>
+
 <style scoped>
 .animated-gradient {
     background: linear-gradient(45deg, #23385F, #3A4C76, #56688F, #23385F);

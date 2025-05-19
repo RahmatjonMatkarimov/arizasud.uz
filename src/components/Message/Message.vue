@@ -33,7 +33,7 @@
                       :src="URL + replyMessages[msg.replyToMessageId]?.attachmentUrl" class="w-24 h-24 rounded-md p-2"
                       controls></video>
                     <div v-else-if="replyMessages[msg.replyToMessageId]?.attachmentUrl?.endsWith('.mp3')">{{ $t('media')
-                      }}</div>
+                    }}</div>
                     <div v-else-if="replyMessages[msg.replyToMessageId]?.attachmentUrl?.endsWith('.pdf')"
                       class="text-red-500 underline">{{ $t('pdf') }}</div>
                     <div v-else-if="replyMessages[msg.replyToMessageId]?.attachmentUrl?.match(/\.(doc|docx)$/i)"
@@ -110,8 +110,7 @@
           <h1 @click="openEmojiPicker" class="text-[35px]">🙂</h1>
           <label class="cursor-pointer text-[30px] p-2">
             <img src="/attach-file.png" width="40px" alt="attach">
-            <input type="file" @change="handleFileUpload" class="hidden"
-              accept="image/*,audio/*,video/*,application/pdf" />
+            <input type="file" @change="handleFileUpload" class="hidden" />
           </label>
           <input v-model="newMessage" :placeholder="$t('yozish')"
             class="flex-1 border border-gray-300 rounded-full text-black px-4 py-4 mx-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -126,7 +125,8 @@
       </div>
     </div>
   </div>
-  <div class="bg-blue-800 border-[5px] border-[#ffcc00] rounded-xl fixed top-0 right-0 h-[100vh] w-[460px] overflow-y-auto">
+  <div
+    class="bg-blue-800 border-[5px] border-[#ffcc00] rounded-xl fixed top-0 right-0 h-[100vh] w-[460px] overflow-y-auto">
     <div class="mt-[195px] border-t-[5px] border-[#ffcc00]">
       <div v-for="(item, index) in admins"
         class="bg-white m-3 flex items-center hover:bg-lime-500 border-4 rounded-xl border-[#ffcc00] p-3" :key="index">
@@ -148,9 +148,9 @@
       <input v-model="editedContent" class="w-full border-2 text-black rounded px-2 py-1 mb-4" />
       <div class="flex justify-end space-x-2">
         <button @click="handleUpdateMessage" class="bg-blue-500 text-white w-full px-4 py-2 rounded">{{ $t('yuklash')
-          }}</button>
+        }}</button>
         <button @click="showModal = false" class="bg-red-500 text-white px-4 py-2 w-full rounded">{{ $t('Bekor_qilish')
-          }}</button>
+        }}</button>
       </div>
     </div>
   </div>
@@ -159,7 +159,7 @@
     <div class="bg-white p-6 rounded-lg shadow-lg w-80">
       <div class="flex justify-end space-x-2">
         <button @click="confirmDelete" class="bg-red-500 text-white w-full px-4 py-2 rounded">{{ $t('remove')
-          }}</button>
+        }}</button>
         <button @click="showDeleteConfirm = false" class="bg-gray-500 text-white px-4 py-2 w-full rounded">{{
           $t('Bekor_qilish') }}</button>
       </div>
@@ -170,8 +170,10 @@
     :style="{ top: contextMenuY + 'px', left: contextMenuX + 'px' }">
     <button v-if="isOwnMessage(contextMenuMessage)" @click="startEditing(contextMenuMessage)"
       class="block w-full text-left px-2 py-1 text-blue-500 hover:bg-gray-100">{{ $t('tahrirlash') }}</button>
-    <button v-if="isOwnMessage(contextMenuMessage)" @click="deleteMessage(contextMenuMessage.id)"
-      class="block w-full text-left px-2 py-1 text-red-500 hover:bg-gray-100">{{ $t('remove') }}</button>
+    <button @click="confirmDeleteMessage(contextMenuMessage.id)"
+      class="block w-full text-left px-2 py-1 text-red-500 hover:bg-gray-100">
+      {{ $t('remove') }}
+    </button>
     <button @click="handleReply(contextMenuMessage)"
       class="block w-full text-left px-2 py-1 text-green-500 hover:bg-gray-100">{{ $t('javob') }}</button>
     <button @click="closeContextMenu" class="block w-full text-left px-2 py-1 text-gray-500 hover:bg-gray-100">{{
@@ -186,7 +188,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, nextTick, inject, watch, computed } from "vue";
-import { getMessages, onNewMessage, markAsRead, socket } from "./messageService";
+import { getMessages, onNewMessage, markAllAsRead, onUnreadCountUpdate, socket, sendMessage, updateMessage, deleteMessage } from "./messageService";
 import moment from "moment";
 import { useRoute } from "vue-router";
 import axios from "axios";
@@ -220,6 +222,7 @@ const showContextMenuModal = ref(false);
 const contextMenuX = ref(0);
 const contextMenuY = ref(0);
 const contextMenuMessage = ref(null);
+const unreadCount = ref(0);
 
 const open = (link) => window.open(link);
 const cancelReply = () => replyTo.value = null;
@@ -259,6 +262,7 @@ const loadMessages = async () => {
     if (dat.value === 'datakril') {
       messages.value = messages.value.map(msg => ({ ...msg, content: latinToCyrillic(msg.content) }));
     }
+    await markAllAsRead(); // Mark all messages as read when loading
     await nextTick();
     scrollToBottom();
   } catch (error) {
@@ -295,46 +299,24 @@ const getData = async () => {
 const handleSendMessage = async (type, smileyId) => {
   if (type === "text" && !newMessage.value.trim()) return;
 
-  let messageData;
-  if (type === "text") {
-    messageData = {
-      senderId,
-      content: dat.value === 'datakril' ? latinToCyrillic(newMessage.value.trim()) : newMessage.value.trim(),
-      replyToMessageId: replyTo.value || null,
-      fileType: null,
-      attachmentUrl: null,
-      smileyId: smileyId || null,
-    };
-  } else {
-    messageData = new FormData();
-    messageData.append("senderId", senderId);
-    messageData.append("fileType", type);
-    messageData.append("replyToMessageId", replyTo.value || "");
-    if (type === "smiley") messageData.append("smileyId", smileyId);
-    else if (selectedFile.value) {
-      messageData.append("file", selectedFile.value);
-    } else {
-      console.error("No file to send for type:", type);
-      return;
-    }
-  }
+  let messageData = {
+    senderId,
+    content: type === "text" ? (dat.value === 'datakril' ? latinToCyrillic(newMessage.value.trim()) : newMessage.value.trim()) : null,
+    replyToMessageId: replyTo.value || null,
+    file: type === "file" || type === "audio" ? selectedFile.value : null,
+    smileyId: type === "smiley" ? smileyId : null,
+  };
 
   try {
-    const response = await fetch(`${URL}/messages`, {
-      method: "POST",
-      body: messageData instanceof FormData ? messageData : JSON.stringify(messageData),
-      headers: messageData instanceof FormData ? {} : { "Content-Type": "application/json" },
-    });
-
-    if (!response.ok) throw new Error(`Server error: ${response.status}`);
-    const savedMessage = await response.json();
-    socket.emit('sendMessage', savedMessage); // Emit to server for real-time broadcast
-    newMessage.value = "";
-    replyTo.value = null;
-    selectedFile.value = null;
-    showEmojiPicker.value = false;
-    await nextTick();
-    scrollToBottom();
+    const result = await sendMessage(messageData);
+    if (result) {
+      newMessage.value = "";
+      replyTo.value = null;
+      selectedFile.value = null;
+      showEmojiPicker.value = false;
+      await nextTick();
+      scrollToBottom();
+    }
   } catch (error) {
     console.error("Failed to send message:", error);
   }
@@ -402,19 +384,21 @@ const startEditing = (msg) => {
 
 const handleUpdateMessage = async () => {
   try {
-    await axios.put(`${URL}/messages/${editingMessage.value}`, { content: editedContent.value });
-    const messageIndex = messages.value.findIndex(msg => msg.id === editingMessage.value);
-    messages.value[messageIndex].content = editedContent.value;
-    showModal.value = false;
-    editingMessage.value = null;
-    await nextTick();
-    scrollToBottom();
+    const updatedMessage = await updateMessage(editingMessage.value, editedContent.value);
+    if (updatedMessage) {
+      const messageIndex = messages.value.findIndex(msg => msg.id === editingMessage.value);
+      messages.value[messageIndex] = updatedMessage;
+      showModal.value = false;
+      editingMessage.value = null;
+      await nextTick();
+      scrollToBottom();
+    }
   } catch (error) {
     console.error('Failed to update message:', error);
   }
 };
 
-const deleteMessage = (messageId) => {
+const confirmDeleteMessage = (messageId) => {
   messageToDelete.value = messageId;
   showDeleteConfirm.value = true;
   showContextMenuModal.value = false;
@@ -422,12 +406,14 @@ const deleteMessage = (messageId) => {
 
 const confirmDelete = async () => {
   try {
-    await axios.delete(`${URL}/messages/${messageToDelete.value}`);
-    messages.value = messages.value.filter(msg => msg.id !== messageToDelete.value);
-    showDeleteConfirm.value = false;
-    messageToDelete.value = null;
-    await nextTick();
-    scrollToBottom();
+    const success = await deleteMessage(messageToDelete.value);
+    if (success) {
+      messages.value = messages.value.filter(msg => msg.id !== messageToDelete.value);
+      showDeleteConfirm.value = false;
+      messageToDelete.value = null;
+      await nextTick();
+      scrollToBottom();
+    }
   } catch (error) {
     console.error('Failed to delete message:', error);
   }
@@ -508,13 +494,21 @@ onMounted(async () => {
   socket.on('connect_error', (error) => console.error('Socket.IO connection error:', error));
   socket.on('error', (error) => console.error('Socket.IO error:', error));
 
-  await markAsRead(senderId);
   await loadMessages();
-  onNewMessage((message) => {
+  onNewMessage(async (message) => {
     if (!messages.value.some(msg => msg.id === message.id)) {
       messages.value = [...messages.value, message];
-      nextTick(scrollToBottom);
+      if (dat.value === 'datakril') {
+        message.content = latinToCyrillic(message.content);
+      }
+      await markAllAsRead(); // Mark new messages as read if user is in chat
+      await nextTick();
+      scrollToBottom();
     }
+  });
+  onUnreadCountUpdate((count) => {
+    unreadCount.value = count;
+    console.log('Unread count updated:', count);
   });
   await getData();
   await fetchSmileys();
@@ -534,6 +528,7 @@ watch(dat, (newDatValue) => {
 
 onUnmounted(() => {
   socket.off('newMessage');
+  socket.off('unreadCount');
   socket.off('connect');
   socket.off('connect_error');
   socket.off('error');

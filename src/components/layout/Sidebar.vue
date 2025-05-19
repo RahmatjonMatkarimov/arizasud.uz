@@ -1,15 +1,23 @@
 <script setup>
-import translateText from '@/auth/Translate'
-import { URL } from '@/auth/url'
-import axios from 'axios'
-import { inject, onMounted, ref } from 'vue'
+import translateText from '@/auth/Translate' 
+import { URL } from '@/auth/url' 
+import axios from 'axios' 
+import { onMounted, ref, provide, computed, onBeforeUnmount, watch } from 'vue' 
 import { useRouter } from 'vue-router'
+import { gsap } from 'gsap'
 
-const dat = inject('dat')
-console.log(dat)
-const router = useRouter()
-const currentRoute = router.currentRoute
+const dat = ref('datalotin') // Default language setting 
+const isAsideVisible = ref(false) // Sidebar initially closed for better mobile experience
+provide('isAsideVisible', isAsideVisible) // Provide to parent 
+const router = useRouter() 
+const currentRoute = router.currentRoute 
 const user = ref(null)
+const activeItemIndex = ref(0)
+const animationComplete = ref(false)
+const isAnimating = ref(false) // Prevent animation overlap
+
+// Add hover state for menu items
+const hoveredItem = ref(null)
 
 const menuItems = [
   { name: 'Bosh sahifa', icon: 'chart-line', path: '/dashboard' },
@@ -19,293 +27,522 @@ const menuItems = [
   { name: 'Shartnoma qarzlari', icon: 'user', path: '/clients' },
 ]
 
-const getUser = async () => {
-  const res = await axios.get(`${URL}/accauntant/${localStorage.getItem('id')}`)
-  user.value = res.data
-  console.log(user.value)
+// Timeline for better animation control
+const sidebarTimeline = gsap.timeline({paused: true})
+const menuTimeline = gsap.timeline({paused: true})
+
+// Find initial active menu item
+const initActiveMenuItem = () => {
+  const activeIndex = menuItems.findIndex(item => item.path === currentRoute.value.path)
+  activeItemIndex.value = activeIndex >= 0 ? activeIndex : 0
 }
+
+// Handle window resize
+const handleResize = () => {
+  if (window.innerWidth < 768 && isAsideVisible.value) {
+    isAsideVisible.value = false
+    animateSidebar(false)
+  }
+}
+
+// Create animation timelines
+const setupAnimations = () => {
+  // Expand timeline
+  sidebarTimeline.clear()
+  sidebarTimeline
+    .to('.sidebar', {
+      width: '16rem',
+      duration: 0.4,
+      ease: 'power2.out'
+    })
+    .to('.menu-icon', {
+      marginRight: '0.75rem',
+      x: 0,
+      duration: 0.3,
+      ease: 'power2.out'
+    }, '-=0.3')
+    .to('.menu-text', {
+      opacity: 1,
+      width: 'auto',
+      display: 'block',
+      duration: 0.4,
+      stagger: 0.05,
+      ease: 'power2.out'
+    }, '-=0.2')
+    .to('.toggle-icon', {
+      rotation: 180,
+      duration: 0.4,
+      ease: 'power2.inOut'
+    }, '-=0.4')
+    
+  // Menu items entrance
+  menuTimeline.clear()
+  menuTimeline
+    .fromTo('.menu-item', 
+      { x: -20, opacity: 0 }, 
+      {
+        x: 0,
+        opacity: 1,
+        duration: 0.5,
+        stagger: 0.07,
+        ease: 'power2.out'
+      }
+    )
+    .to(`.menu-item-${activeItemIndex.value}`, {
+      backgroundColor: 'rgba(255, 255, 255, 0.15)',
+      borderLeftWidth: '3px',
+      borderLeftColor: 'rgba(250, 204, 21, 1)',
+      duration: 0.3,
+      ease: 'power2.out'
+    }, '-=0.2')
+}
+
+const toggleAside = () => {
+  if (isAnimating.value) return
+  isAnimating.value = true
+  
+  isAsideVisible.value = !isAsideVisible.value
+  animateSidebar(isAsideVisible.value)
+}
+
+const animateSidebar = (expand) => {
+  if (expand) {
+    sidebarTimeline.play()
+  } else {
+    sidebarTimeline.reverse()
+  }
+  
+  // Release animation lock after completion
+  sidebarTimeline.eventCallback('onComplete', () => {
+    isAnimating.value = false
+  })
+  sidebarTimeline.eventCallback('onReverseComplete', () => {
+    isAnimating.value = false
+  })
+}
+
+const getUser = async () => {
+  try {
+    const res = await axios.get(`${URL}/accauntant/${localStorage.getItem('id')}`)
+    user.value = res.data
+  } catch (error) {
+    console.error('Error fetching user:', error)
+  }
+}
+
+// Enhanced hover effects
+const setHoveredItem = (index) => {
+  if (activeItemIndex.value !== index) {
+    hoveredItem.value = index
+    gsap.to(`.menu-item-${index}`, {
+      backgroundColor: 'rgba(255, 255, 255, 0.08)',
+      duration: 0.3,
+      ease: 'power1.out'
+    })
+  }
+}
+
+const clearHoveredItem = (index) => {
+  hoveredItem.value = null
+  if (activeItemIndex.value !== index) {
+    gsap.to(`.menu-item-${index}`, {
+      backgroundColor: 'rgba(255, 255, 255, 0)',
+      duration: 0.3,
+      ease: 'power1.out'
+    })
+  }
+}
+
+const navigateTo = (path, index) => {
+  if (activeItemIndex.value === index) return
+  
+  // Reset previous active item
+  gsap.to(`.menu-item-${activeItemIndex.value}`, {
+    backgroundColor: 'rgba(255, 255, 255, 0)',
+    borderLeftWidth: '0px',
+    duration: 0.3,
+    ease: 'power2.out'
+  })
+  
+  // Set active menu item
+  activeItemIndex.value = index
+  
+  // Animate new active item
+  gsap.timeline()
+    .to(`.menu-item-${index}`, {
+      backgroundColor: 'rgba(255, 255, 255, 0.15)',
+      borderLeftWidth: '3px',
+      borderLeftColor: 'rgba(250, 204, 21, 1)',
+      duration: 0.4,
+      ease: 'power2.out'
+    })
+    .fromTo(`.menu-item-${index} .glow-dot`, 
+      { scale: 0.5, opacity: 0.5 },
+      { scale: 1, opacity: 1, duration: 0.5, ease: 'elastic.out(1, 0.3)' },
+      '-=0.2'
+    )
+  
+  // Hide sidebar on mobile after navigation
+  if (window.innerWidth < 768) {
+    isAsideVisible.value = false
+    animateSidebar(false)
+  }
+  
+  router.push(path)
+}
+
+// Initialize animations
+const initAnimations = () => {
+  // Set initial states
+  gsap.set('.sidebar', { 
+    x: -100, 
+    opacity: 0,
+    width: '4rem'
+  })
+  
+  gsap.set('.menu-text', {
+    opacity: 0,
+    width: 0,
+    display: 'none'
+  })
+  
+  gsap.set('.menu-item', { 
+    x: -20, 
+    opacity: 0,
+    borderLeftWidth: '0px'
+  })
+  
+  // Create timelines
+  setupAnimations()
+  
+  // Entrance animation
+  gsap.timeline()
+    .to('.sidebar', {
+      x: 0,
+      opacity: 1,
+      duration: 0.6,
+      ease: 'power2.out',
+      onComplete: () => {
+        menuTimeline.play()
+        animationComplete.value = true
+      }
+    })
+}
+
+// Create ripple effect
+const createRipple = (event) => {
+  const button = event.currentTarget
+  
+  // Remove any existing ripple
+  const oldRipple = button.querySelector('.ripple')
+  if (oldRipple) {
+    oldRipple.remove()
+  }
+  
+  const circle = document.createElement('span')
+  const diameter = Math.max(button.clientWidth, button.clientHeight)
+  const radius = diameter / 2
+  
+  const rect = button.getBoundingClientRect()
+  
+  circle.style.width = circle.style.height = `${diameter}px`
+  circle.style.left = `${event.clientX - rect.left - radius}px`
+  circle.style.top = `${event.clientY - rect.top - radius}px`
+  circle.classList.add('ripple')
+  
+  button.appendChild(circle)
+  
+  // Auto cleanup ripple
+  setTimeout(() => {
+    if (circle && circle.parentElement) {
+      circle.remove()
+    }
+  }, 600)
+}
+
+// Determine if item is active
+const isActive = (path) => {
+  return currentRoute.value.path === path
+}
+
+// Cleanup
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', handleResize)
+})
+
+// Watch for route changes
+watch(() => currentRoute.value.path, (newPath) => {
+  const newIndex = menuItems.findIndex(item => item.path === newPath)
+  if (newIndex >= 0 && newIndex !== activeItemIndex.value) {
+    navigateTo(newPath, newIndex)
+  }
+})
+
 onMounted(() => {
   getUser()
+  initActiveMenuItem()
+  setupAnimations()
+  initAnimations()
+  
+  // Add window resize listener
+  window.addEventListener('resize', handleResize)
 })
 </script>
 
 <template>
-  <div class="sidebar">
-    <div class="logo">
-      <h1>{{ dat === 'datakril' ? translateText('Bugalteriya') : 'Bugalteriya' }}</h1>
+  <div class="sidebar" :class="[
+    'bg-[#1e2a46] text-white flex flex-col h-screen fixed top-[90px] overflow-hidden transition-all duration-300 ease-in-out z-20',
+    isAsideVisible ? 'w-64' : 'w-14'
+  ]">
+    <!-- Toggle button with animation -->
+    <div class="header-container  border-b justify-end border-white border-opacity-10 flex items-center ">
+      
+      <button @click="toggleAside" @mousedown="createRipple" class="toggle-button relative overflow-hidden"
+        :class="[
+          ' h-11 transition-all duration-300 ',
+        ]">
+        <img src="/menu1.png"
+          class="toggle-icon w-4 h-4 mx-6" />
+      </button>
     </div>
-    <nav class="menu">
-      <router-link v-for="item in menuItems" :key="item.name" :to="item.path" class="menu-item"
-        :class="{ active: currentRoute.value?.path === item.path }">
-        <font-awesome-icon :icon="item.icon" />
-        <span>{{ dat === 'datakril' ? translateText(item.name) : item.name }}</span>
-      </router-link>
+    
+    <!-- Menu items with animations -->
+    <nav class="py-3 flex-1 overflow-y-auto scrollbar-hide">
+      <div v-for="(item, index) in menuItems" :key="item.name"
+        :class="[
+          `menu-item menu-item-${index}`,
+          'flex items-center py-3 px-5 text-white text-opacity-80 transition-all duration-300 ease-in-out mb-1 cursor-pointer relative',
+          isActive(item.path) ? 'active-item border-l-3 border-yellow-400 bg-white bg-opacity-15 text-white' : '',
+          !isAsideVisible ? 'px-2' : '',
+        ]"
+        @mouseenter="setHoveredItem(index)"
+        @mouseleave="clearHoveredItem(index)"
+        @click="navigateTo(item.path, index)">
+        
+        <!-- Glowing dot for active item -->
+        <div v-if="isActive(item.path)" class="absolute left-0 w-1 h-1 bg-yellow-400 rounded-full glow-dot"></div>
+        
+        <!-- Hover overlay -->
+        <div class="hover-overlay absolute inset-0  h-full pointer-events-none"></div>
+        
+        <!-- Icon with animations -->
+        <font-awesome-icon :icon="item.icon" class="menu-icon w-5 transition-all duration-300 ease-in-out"
+          :class="{ 'mr-3': isAsideVisible }" />
+        
+        <!-- Text with fade animation -->
+        <span class="menu-text transition-all duration-300 ease-in-out whitespace-nowrap"
+          :class="{ 'opacity-0 w-0': !isAsideVisible }">
+          {{ dat === 'datakril' ? translateText(item.name) : item.name }}
+        </span>
+        
+        <!-- Active indicator bar -->
+        <div v-if="isActive(item.path)" class="active-indicator absolute right-0 top-0 h-full w-1 bg-yellow-400 opacity-50"></div>
+      </div>
     </nav>
+    
+    <!-- Bottom user info section with animation -->
+    <div v-if="user" class="user-info mt-auto border-t border-white border-opacity-10 p-3 flex items-center transition-all duration-300"
+      :class="{ 'justify-center': !isAsideVisible }">
+      <div class="avatar w-8 h-8 rounded-full bg-yellow-400 flex items-center justify-center overflow-hidden"
+        :class="{ 'mr-3': isAsideVisible }">
+        <span class="text-[#1e2a46] font-bold">{{ user.name ? user.name.charAt(0).toUpperCase() : 'U' }}</span>
+      </div>
+      <div class="user-details transition-all duration-300" :class="{ 'opacity-0 w-0 hidden': !isAsideVisible }">
+        <div class="user-name font-medium">{{ user.name || 'Foydalanuvchi' }}</div>
+        <div class="user-role text-xs text-white text-opacity-60">Buxgalter</div>
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
 .sidebar {
-  width: 260px;
-  background-color: var(--color-primary);
-  color: white;
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  position: fixed;
-  margin-top: 200px;
-  top: 0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.logo {
-  padding: var(--space-4);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+/* Custom scrollbar */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 
-.logo h1 {
-  margin: 0;
-  font-size: 1.5rem;
-  letter-spacing: 1px;
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-.menu {
-  padding: var(--space-3) 0;
-  flex: 1;
-}
-
+/* Menu item hover */
 .menu-item {
-  display: flex;
-  align-items: center;
-  padding: var(--space-3) var(--space-4);
-  color: rgba(255, 255, 255, 0.8);
-  transition: all 0.2s ease;
-  margin-bottom: var(--space-1);
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.3s ease-in-out, border-left-width 0.3s ease-in-out;
 }
 
-.menu-item:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: white;
+.menu-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  transition: left 0.8s ease-in-out;
+  pointer-events: none;
 }
 
-.menu-item.active {
-  background-color: rgba(255, 255, 255, 0.15);
-  color: white;
-  border-left: 3px solid var(--color-accent);
+.menu-item:hover::before {
+  left: 100%;
 }
 
-.menu-item svg {
-  width: 1.2em;
-  margin-right: var(--space-3);
+/* Active item effects */
+.active-item {
+  position: relative;
 }
 
-.profile-menu {
-  padding: var(--space-3);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+.active-indicator {
+  box-shadow: 0 0 8px rgba(250, 204, 21, 0.6);
+  animation: pulseIndicator 2.5s infinite;
 }
 
-.profile-item {
-  display: flex;
-  align-items: center;
-  color: white;
-  padding: var(--space-2);
-  border-radius: var(--radius-md);
-  transition: all 0.2s ease;
+.glow-dot {
+  box-shadow: 0 0 10px 5px rgba(250, 204, 21, 0.5);
+  animation: pulse 2.5s infinite;
 }
 
-.profile-item:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+/* Toggle button ripple effect */
+.toggle-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: scale(0);
+  animation: ripple 0.6s linear;
+}
+
+/* User info section */
+.user-info {
+  animation: slideUp 0.5s ease-out;
+  background-color: rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease-in-out;
 }
 
 .avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  overflow: hidden;
-  margin-right: var(--space-2);
+  box-shadow: 0 0 10px rgba(250, 204, 21, 0.3);
+  animation: avatarPulse 4s infinite alternate;
+  transition: margin-right 0.3s ease-in-out;
 }
 
-.avatar img {
+/* Animations */
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+    box-shadow: 0 0 5px 2px rgba(250, 204, 21, 0.5);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 15px 5px rgba(250, 204, 21, 0.7);
+  }
+  100% {
+    opacity: 0.6;
+    box-shadow: 0 0 5px 2px rgba(250, 204, 21, 0.5);
+  }
+}
+
+@keyframes pulseIndicator {
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0.3;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes avatarPulse {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.1);
+  }
+}
+
+/* Ensure smooth text fade */
+.menu-text {
+  transition: opacity 300ms ease-in-out, width 300ms ease-in-out;
+}
+
+/* Add subtle gradient to sidebar */
+.sidebar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  pointer-events: none;
 }
 
-.user-info h3 {
-  margin: 0;
-  font-size: 0.95rem;
+/* Custom elevation effect for hover */
+.hover-overlay {
+  background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
 }
 
-.user-info p {
-  margin: 0;
-  font-size: 0.8rem;
-  opacity: 0.7;
+.menu-item:hover .hover-overlay {
+  opacity: 1;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* Add pulsating effect to active item */
+.active-item::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 0;
+  height: 0;
+  background: rgba(250, 204, 21, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: activeRipple 2s infinite;
+  pointer-events: none;
 }
 
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-  background-color: var(--color-bg-secondary);
-  color: var(--color-text-primary);
-}
-
-h1 {
-  font-size: 2rem;
-  line-height: 1.2;
-  font-weight: 600;
-  margin-bottom: var(--space-4);
-}
-
-h2 {
-  font-size: 1.5rem;
-  line-height: 1.3;
-  font-weight: 600;
-  margin-bottom: var(--space-3);
-}
-
-h3 {
-  font-size: 1.25rem;
-  line-height: 1.4;
-  font-weight: 600;
-  margin-bottom: var(--space-2);
-}
-
-a {
-  text-decoration: none;
-  color: var(--color-accent);
-}
-
-button,
-.btn {
-  border-radius: var(--radius-md);
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: var(--color-accent);
-  color: white;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-button:hover,
-.btn:hover {
-  background-color: #2c73b4;
-}
-
-.card {
-  background-color: var(--color-bg-primary);
-  border-radius: var(--radius-md);
-  padding: var(--space-4);
-  box-shadow: var(--shadow-md);
-}
-
-.text-success {
-  color: var(--color-success);
-}
-
-.text-warning {
-  color: var(--color-warning);
-}
-
-.text-error {
-  color: var(--color-error);
-}
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.table th,
-.table td {
-  padding: var(--space-2) var(--space-3);
-  text-align: left;
-}
-
-.table th {
-  background-color: var(--color-bg-secondary);
-  font-weight: 600;
-}
-
-.table tr {
-  border-bottom: 1px solid var(--color-bg-tertiary);
-}
-
-.table tr:last-child {
-  border-bottom: none;
-}
-
-.table tr:hover {
-  background-color: var(--color-bg-secondary);
-}
-
-.badge {
-  display: inline-block;
-  padding: var(--space-1) var(--space-2);
-  border-radius: var(--radius-sm);
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.badge-success {
-  background-color: rgba(56, 161, 105, 0.1);
-  color: var(--color-success);
-}
-
-.badge-pending {
-  background-color: rgba(237, 137, 54, 0.1);
-  color: var(--color-warning);
-}
-
-.negative {
-  color: var(--color-error);
-}
-
-.positive {
-  color: var(--color-success);
-}
-
-@media (max-width: 768px) {
-  .sidebar {
-    width: 100%;
-    height: auto;
-    position: relative;
+@keyframes activeRipple {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 0.5;
   }
-
-  .menu {
-    display: flex;
-    overflow-x: auto;
-    padding: var(--space-2) 0;
-  }
-
-  .menu-item {
-    flex-direction: column;
-    padding: var(--space-2);
-    text-align: center;
-    margin-right: var(--space-2);
-    border-radius: var(--radius-md);
-  }
-
-  .menu-item svg {
-    margin-right: 0;
-    margin-bottom: var(--space-1);
-  }
-
-  .menu-item.active {
-    border-left: none;
-    border-bottom: 3px solid var(--color-accent);
-  }
-
-  .profile-menu {
-    display: none;
+  100% {
+    width: 100px;
+    height: 100px;
+    opacity: 0;
   }
 }
 </style>

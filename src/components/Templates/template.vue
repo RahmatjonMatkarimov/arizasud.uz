@@ -1,272 +1,79 @@
 <template>
   <div>
-    <div class="w-full fixed mb-32 top-0 z-20 mx-auto">
-      <!-- Toggle Button for Aside -->
-      <button @click="toggleAside" :class="[
-        'fixed z-30 bg-[var(--color-primary)] hover:bg-blue-900 text-white w-11 h-11 flex items-center justify-center',
-        isAsideVisible ? 'left-[260px] top-[50%] duration-700 rounded-r-lg' : 'left-0 top-[50%] duration-700 rounded-r-lg'
-      ]">
-        <img src="/menu1.png"
-          :class="['w-6 h-6 transition-transform duration-500', isAsideVisible ? 'rotate-180' : 'rotate-0']" />
-      </button>
+    <!-- Sidebar Toggle Button -->
 
-      <div v-if="dat === 'datakril'" class="bg-[var(--color-primary)]  flex h-[200px] p-2">
-        <!-- Existing content for datakril -->
-        <div class="flex items-start gap-6 mb-8">
-          <div @click="router.push(`/profileUser/${userInfoLotin.id}`)"
-            class="flex gap-2 flex-col justify-center items-center">
-            <div class="w-36 h-36 border-2 border-profile-blue rounded-lg overflow-hidden">
-              <img :src="getImageUrl(userInfoLotin.img)" alt="Profile Image" />
+
+    <!-- Header -->
+    <header class="fixed top-0 bg-[#1e2a46] w-full z-20 flex justify-between items-center px-6 py-4 h-[90px] shadow-sm">
+      <!-- <h1 class="text-white ml-20 font-semibold"><img class="w-[190px]" src="/logo1.png" alt=""></h1> -->
+
+      <router-link to="/profile">
+        <div class="w-10 h-10 rounded-full overflow-hidden">
+          <img :src="getProfileImage(userInfoLotin.img)" alt="Profile" class="w-full h-full object-cover" />
+        </div>
+      </router-link>
+      <div class="flex items-center space-x-4">
+        <!-- Chat Icon -->
+        <div @click="navigateToChat" class="relative cursor-pointer group">
+          <Icon icon="token:chat" width="50" height="50" class="text-white" />
+          <span v-if="messageCount > 0"
+            class="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1 rounded-full">
+            {{ messageCount }}
+          </span>
+
+          <!-- Hover Text Element -->
+          <div class="absolute w-32 -left-12 top-14 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div class="bg-white text-gray-800 text-center py-1 px-2 rounded-md shadow-md">
+              Xabarlar
             </div>
-            <h1 class="font-bold border-2 border-profile-blue rounded-lg overflow-hidden px-2">{{ userInfo.name }} {{
-              userInfo.surname }}</h1>
+            <!-- Triangle pointer -->
+            <div
+              class="w-0 h-0 border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-white mx-auto -mt-8 mb-2">
+            </div>
           </div>
-          <div class="flex-1 w-[300px] bg-profile-blue m-2 text-white rounded-lg">
-            <div class="mb-4 relative w-full flex border p-4 rounded-lg break-words">
-              <span class="font-medium capitalize">{{ $t('fuqaro_lavozimi') }}:</span>
-              <span class="block group capitalize truncate max-w-[250px] ml-2 cursor-pointer">
-                {{ userInfo.lavozimi }}
-                <span
-                  class="absolute capitalize left-0 -bottom-7 w-auto min-w-max bg-lime-500 text-black text-[16px] p-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div class="flex justify-center items-center">
-                    <h1 style="text-shadow: 0 0 5px #fff,0 0 10px #fff;"
-                      class="text-black text-[16px] font-bold text-center rounded-lg">{{ userInfo.lavozimi }} </h1>
-                  </div>
-                </span>
-              </span>
-            </div>
-            <div class="flex border rounded-lg px-4 items-center">
-              <span class="font-medium capitalize">{{ $t('tizim_holati') }}:</span>
-              <div class="flex h-10 items-center ml-2">
-                <span class="mr-2">{{ isOnline ? "Onlayn" : "Oflayn" }}</span>
-                <div class="flex gap-1">
-                  <div class="w-6 h-6 rounded-full" :class="isOnline ? 'bg-green-500' : 'bg-red-500'"></div>
-                </div>
+        </div>
+        <!-- Notifications & Profile -->
+        <div class="flex items-center space-x-3">
+          <div @click="showNotificationModal" class="relative cursor-pointer group">
+            <Icon icon="pajamas:notifications" class="text-white" width="40" height="40" />
+            <span v-if="unreadCount > 0"
+              class="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1 rounded-full">
+              {{ unreadCount }}
+            </span>
+
+            <!-- Hover Text Element -->
+            <div
+              class="absolute w-32 -left-12 top-12 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div class="bg-white text-gray-800 text-center py-1 px-2 rounded-md shadow-md">
+                Bildirishnomalar
+              </div>
+              <!-- Triangle pointer -->
+              <div
+                class="w-0 h-0 border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-white mx-auto -mt-8 mb-2">
               </div>
             </div>
           </div>
         </div>
-        <div class="flex flex-col flex-wrap">
-          <button v-if="role !== 'bigAdmin'" @click="router.push('/reminders')"
-            class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
-            {{ $t('hisobot') }}
-          </button>
-          <button @click="go(userInfoLotin.id)"
-            class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
-            {{ $t('ish_haqqi_kalkulyatori') }}
-          </button>
-          <a href="https://www.zoom.com/uz" target="_blank"
-            class="border bg-lime-600 py-2 px-6 m-2 text-center text-black rounded hover:bg-lime-700 duration-500 capitalize">
-            {{ $t('zoom_boglanish') }}
-          </a>
-          <button @click="go2(userInfoLotin.id)"
-            class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
-            {{ $t('hodim_majburiyatlari') }}
-          </button>
-          <button @click="go3(userInfoLotin.id)"
-            class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
-            {{ $t('hodim_vazifalari') }}
-          </button>
-          <button v-if="data?.ticket" @click="router.push('/ticketAdmin')"
-            class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
-            {{ $t('taklif_va_shikoyat') }}
-          </button>
-          <div @click="gonotif(userInfo.id)"
-            class="relative bg-lime-600 hover:bg-lime-700 duration-500 flex border items-center capitalize px-6 m-2 rounded">
-            <img class="w-10 -ml-4 mr-9" src="/chat.png" alt="">
-            {{ $t('muhim_sms') }}
-            <span v-if="notificationCount > 0" :class="[
-              'text-[10px] absolute ml-[4px] flex justify-center items-center top-[1px] bg-red-500 text-white rounded-full',
-              notificationCount.toString().length === 1 ? 'px-2' : 'px-1'
-            ]">
-              <h1 class="capitalize">{{ notificationCount }}</h1>
-            </span>
-          </div>
-          <div @click="gochat1(userInfo.id)"
-            class="relative bg-lime-600 hover:bg-lime-700 duration-500 flex border items-center capitalize px-6 m-2 rounded">
-            <img class="w-10 -ml-4 mr-9" src="/chat.png" alt="">
-            {{ $t('chat-guruh') }}
-            <span v-if="messageCount > 0" :class="[
-              'text-[10px] absolute ml-[4px] flex justify-center items-center top-[1px] bg-red-500 text-white rounded-full',
-              messageCount.toString().length === 1 ? 'px-2' : 'px-1'
-            ]">
-              <h1 class="capitalize">{{ messageCount }}</h1>
-            </span>
-          </div>
-          <div @click="showModal = true"
-            class="relative bg-lime-600 hover:bg-lime-700 duration-500 flex border items-center capitalize px-6 m-2 rounded">
-            <img class="w-10 -ml-4 mr-9" src="/chat.png" alt="">
-            {{ dat === 'datakril' ? translateText('To\'lov vaqti kelgan hujjatlar') : 'To\'lov vaqti kelgan hujjatlar'
-            }}
-            <span v-if="unreadCount > 0" :class="[
-              'text-[10px] absolute ml-[4px] flex justify-center items-center top-[1px] bg-red-500 text-white rounded-full',
-              unreadCount.toString().length === 1 ? 'px-2' : 'px-1'
-            ]">
-              <h1 class="capitalize">{{ unreadCount }}</h1>
-            </span>
-          </div>
-          <div class="absolute top-1 right-1">
-            <div class="relative">
-              <button @click="toggleDropdown"
-                class="flex items-center gap-2 bg-blue-700 hover:bg-blue-800 rounded-lg px-4 py-2 shadow-md">
-                <img :src="selectedFlag" class="w-5 rounded h-5" />
-                <span>{{ selectedLabel }}</span>
-                <svg class="w-4 h-4 transition-transform transform" :class="{ 'rotate-180': isOpen }"
-                  fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd"
-                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                    clip-rule="evenodd"></path>
-                </svg>
-              </button>
-              <div v-if="isOpen"
-                class="absolute right-0 mt-2 w-40 bg-blue-700 border rounded-lg shadow-md overflow-hidden transition-opacity">
-                <div @click="setLanguage('uzb', 'Uz', '/uzb.png')"
-                  class="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-blue-800 transition">
-                  <img src="/uzb.png" class="w-5 rounded h-5" />
-                  <span>Uz</span>
-                </div>
-                <div @click="setLanguage('ўзб', 'Уз', '/uzb.png')"
-                  class="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-blue-800 transition">
-                  <img src="/uzb.png" class="w-5 rounded h-5" />
-                  <span>Уз</span>
-                </div>
-              </div>
-            </div>
-          </div>
+
+        <!-- Search Box -->
+        <div class="relative hidden md:flex items-center">
+          <Icon icon="line-md:search" width="24" height="24" class="absolute left-3 text-gray-400" />
+          <input type="text" v-model="searchStore.query" placeholder="Qidiruv..."
+            class="pl-10 pr-4 py-2 border border-gray-300 rounded-md bg-transparent text-white focus:outline-none focus:border-blue-500 w-48 md:w-64 transition-all duration-200 placeholder-gray-400" />
         </div>
+
       </div>
-      <div v-if="dat === 'datalotin'" class="bg-[var(--color-primary)]  flex h-[200px] p-2">
-        <!-- Existing content for datalotin -->
-        <div class="flex items-start gap-6 mb-8">
-          <div @click="router.push(`/profileUser/${userInfoLotin.id}`)"
-            class="flex gap-2 flex-col justify-center items-center">
-            <div class="w-36 h-36 border-2 border-profile-blue rounded-lg overflow-hidden">
-              <img :src="getImageUrl(userInfoLotin.img)" alt="Profile Image" />
-            </div>
-            <h1 class="font-bold border-2 border-profile-blue rounded-lg overflow-hidden px-2">{{ userInfoLotin.name }}
-              {{ userInfoLotin.surname }}</h1>
-          </div>
-          <div class="flex-1 w-[300px] bg-profile-blue m-2 text-white rounded-lg">
-            <div class="mb-4 relative w-full flex border p-4 rounded-lg break-words">
-              <span class="font-medium capitalize">{{ $t('fuqaro_lavozimi') }}:</span>
-              <span class="block group capitalize truncate max-w-[250px] ml-2 cursor-pointer">
-                {{ userInfoLotin.lavozimi }}
-                <span
-                  class="absolute capitalize left-0 -bottom-7 w-auto min-w-max bg-lime-500 text-black text-[16px] p-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div class="flex justify-center items-center">
-                    <h1 style="text-shadow: 0 0 5px #fff,0 0 10px #fff;"
-                      class="text-black text-[16px] font-bold text-center rounded-lg">{{ userInfoLotin.lavozimi }} </h1>
-                  </div>
-                </span>
-              </span>
-            </div>
-            <div class="flex border rounded-lg px-4 items-center">
-              <span class="font-medium capitalize">{{ $t('tizim_holati') }}:</span>
-              <div class="flex h-10 items-center ml-2">
-                <span class="mr-2">{{ isOnline ? "Onlayn" : "Oflayn" }}</span>
-                <div class="flex gap-1">
-                  <div class="w-6 h-6 rounded-full" :class="isOnline ? 'bg-green-500' : 'bg-red-500'"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="flex flex-col flex-wrap">
-          <button v-if="role !== 'bigAdmin'" @click="router.push('/reminders')"
-            class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
-            {{ $t('hisobot') }}
-          </button>
-          <button @click="go(userInfoLotin.id)"
-            class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
-            {{ $t('ish_haqqi_kalkulyatori') }}
-          </button>
-          <a href="https://www.zoom.com/uz" target="_blank"
-            class="border bg-lime-600 py-2 px-6 m-2 text-center text-black rounded hover:bg-lime-700 duration-500 capitalize">
-            {{ $t('zoom_boglanish') }}
-          </a>
-          <button @click="go2(userInfoLotin.id)"
-            class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
-            {{ $t('hodim_majburiyatlari') }}
-          </button>
-          <button @click="go3(userInfoLotin.id)"
-            class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
-            {{ $t('hodim_vazifalari') }}
-          </button>
-          <button v-if="data?.ticket" @click="router.push('/ticketAdmin')"
-            class="border capitalize bg-lime-600 p-2 m-2 text-black rounded hover:bg-lime-700 duration-500">
-            {{ $t('taklif_va_shikoyat') }}
-          </button>
-          <div @click="gonotif(userInfo.id)"
-            class="relative bg-lime-600 hover:bg-lime-700 duration-500 flex border items-center capitalize px-6 m-2 rounded">
-            <img class="w-10 -ml-4 mr-9" src="/chat.png" alt="">
-            {{ $t('muhim_sms') }}
-            <span v-if="notificationCount > 0" :class="[
-              'text-[10px] absolute ml-[4px] flex justify-center items-center top-[1px] bg-red-500 text-white rounded-full',
-              notificationCount.toString().length === 1 ? 'px-2' : 'px-1'
-            ]">
-              <h1 class="capitalize">{{ notificationCount }}</h1>
-            </span>
-          </div>
-          <div @click="gochat1(userInfo.id)"
-            class="relative bg-lime-600 hover:bg-lime-700 duration-500 flex border items-center capitalize px-6 m-2 rounded">
-            <img class="w-10 -ml-4 mr-9" src="/chat.png" alt="">
-            {{ $t('chat-guruh') }}
-            <span v-if="messageCount > 0" :class="[
-              'text-[10px] absolute ml-[4px] flex justify-center items-center top-[1px] bg-red-500 text-white rounded-full',
-              messageCount.toString().length === 1 ? 'px-2' : 'px-1'
-            ]">
-              <h1 class="capitalize">{{ messageCount }}</h1>
-            </span>
-          </div>
-          <div @click="showModal = true"
-            class="relative bg-lime-600 hover:bg-lime-700 duration-500 flex border items-center capitalize px-6 m-2 rounded">
-            <img class="w-10 -ml-4 mr-9" src="/chat.png" alt="">
-            {{ dat === 'datakril' ? translateText('To\'lov vaqti kelgan hujjatlar') : 'To\'lov vaqti kelgan hujjatlar'
-            }}
-            <span v-if="unreadCount > 0" :class="[
-              'text-[12px] absolute ml-[5px] flex justify-center items-center top-[3px] bg-red-500 text-white rounded-full',
-              unreadCount.toString().length === 1 ? 'px-2' : 'px-1 py-[1px]'
-            ]">
-              <h1 class="capitalize">{{ unreadCount }}</h1>
-            </span>
-          </div>
-        </div>
-        <div class="absolute top-1 right-1">
-          <div class="relative">
-            <button @click="toggleDropdown"
-              class="flex items-center gap-2 bg-blue-700 hover:bg-blue-800 rounded-lg px-4 py-2 shadow-md">
-              <img :src="selectedFlag" class="w-5 rounded h-5" />
-              <span>{{ selectedLabel }}</span>
-              <svg class="w-4 h-4 transition-transform transform" :class="{ 'rotate-180': isOpen }" fill="currentColor"
-                viewBox="0 0 20 20">
-                <path fill-rule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clip-rule="evenodd"></path>
-              </svg>
-            </button>
-            <div v-if="isOpen"
-              class="absolute right-0 mt-2 w-40 bg-blue-700 border rounded-lg shadow-md overflow-hidden transition-opacity">
-              <div @click="setLanguage('uzb', 'Uz', '/uzb.png')"
-                class="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-blue-800 transition">
-                <img src="/uzb.png" class="w-5 rounded h-5" />
-                <span>Uz</span>
-              </div>
-              <div @click="setLanguage('ўзб', 'Уз', '/uzb.png')"
-                class="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-blue-800 transition">
-                <img src="/uzb.png" class="w-5 rounded h-5" />
-                <span>Уз</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <NotificationModal v-if="showModal" @close="showModal = false" />
-    <div class="flex">
-      <Aside class="fixed left-0 top-0 h-full w-64 transition-all duration-700 ease-in-out"
-        :class="{ 'translate-x-0 opacity-100': isAsideVisible, '-translate-x-full opacity-0': !isAsideVisible }" />
-      <main
-        :class="['flex-1 mt-[200px] transition-all duration-700 ease-in-out', isAsideVisible ? 'ml-[260px]' : 'ml-[0px]']">
+    </header>
+
+    <!-- Notification Modal -->
+    <NotificationModal v-if="showModal" @close="closeNotificationModal" />
+
+    <!-- Main Layout -->
+    <div class="flex min-h-screen bg-gray-100">
+      <Aside class="fixed left-0 top-0 h-full w-16 transition-all duration-500 ease-in-out z-10" />
+      <main :class="[
+        'flex-1 mt-[90px] transition-all ml-16 duration-500 ease-in-out',
+      ]">
         <router-view />
       </main>
     </div>
@@ -274,236 +81,208 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed, inject, watch } from "vue";
-import { useRouter } from "vue-router";
-import Aside from "../layout/Sidebar.vue";
-import axios from "axios";
-import { URL } from "@/auth/url.js";
-import { io } from "socket.io-client";
-import { useI18n } from "vue-i18n";
-import { provide } from "vue";
-import translateText from "@/auth/Translate";
-import NotificationModal from '../dashboard/notificationModal.vue';
+import { ref, onMounted, onUnmounted, inject, watch, provide } from 'vue'
+import { useRouter } from 'vue-router'
+import Aside from '../layout/Sidebar.vue'
+import NotificationModal from '../dashboard/notificationModal.vue'
+import axios from 'axios'
+import { URL } from '@/auth/url.js'
+import { Icon } from '@iconify/vue'
+import { io } from 'socket.io-client'
+import translateText from '@/auth/Translate'
+import { useSearchStore } from './searchQuary'
 
-const showModal = ref(false);
-const { locale } = useI18n();
-const isOpen = ref(false);
-const selectedFlag = ref("/uzb.png");
-const selectedLabel = ref("Uz");
-const dat = ref("datalotin");
-provide("dat", dat);
-const isLoading = inject('isLoading');
-const isAsideVisible = ref(false);
-const ids = localStorage.getItem("id");
-const newIds = parseInt(ids);
-const role = localStorage.getItem("role");
-const data = ref({});
-const router = useRouter();
-const id = localStorage.getItem("id");
-const newId = id ? parseInt(id) : null;
-const error = ref(null);
-const userInfo = ref({});
-const userInfoLotin = ref({});
-const isOnline = ref(false);
-const notificationCount = ref(0);
-const unreadCount = ref(0);
-const messageCount = ref(parseInt(localStorage.getItem('messageCount')) || 0);
-const fetchUnreadCount = async () => {
-  try {
-    const userId = parseInt(localStorage.getItem('id')); // foydalanuvchining IDsi
-    const response = await axios.get(`${URL}/accauntant-notification/unread/count?userId=${userId}`);
-    unreadCount.value = response.data;
-    console.log(response.data)
-  } catch (error) {
-    console.error('Error fetching unread count:', error);
-  }
-};
-// Socket.IO ulanishi
-const socket = io(URL, {
-  path: '/socket.io',
-  transports: ['websocket', 'polling'],
-  withCredentials: true,
-  reconnection: true,
-  reconnectionAttempts: Infinity,
-  reconnectionDelay: 1000,
-  timeout: 20000,
-  auth: { userId: id },
-});
+const searchStore = useSearchStore()
+const showModal = ref(false)
+const isLoading = inject('isLoading')
+const isAsideVisible = ref(true) // Sidebar initially open
+provide('isAsideVisible', isAsideVisible) // Provide to children
+const userInfo = ref({})
+const userInfoLotin = ref({})
+const isOnline = ref(false)
+const unreadCount = ref(0)
+const messageCount = ref(0)
+const error = ref(null)
+const router = useRouter()
+const dat = ref('datalotin')
+provide('dat', dat)
 
-// Watch messageCount va localStorage'ga saqlash
-watch(messageCount, (newVal) => {
-  localStorage.setItem('messageCount', newVal);
-});
+// Get user information from localStorage
+const userId = localStorage.getItem('id')
+const userIdNum = userId ? parseInt(userId) : null
+const userRole = localStorage.getItem('role')
 
-// Admin ma'lumotlarini olish
-const fetchAdminData = async () => {
-  isLoading.value = true;
-  try {
-    const response = await axios.get(`${URL}/${localStorage.getItem("role")}/${newIds}`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
-    data.value = response.data.permissions[response.data.permissions.length - 1];
-  } catch (error) {
-    console.error("Xatolik yuz berdi:", error);
-  } finally {
-    isLoading.value = false;
-  }
-};
-
-// Dropdown'ni ochish/yopish
-const toggleDropdown = () => {
-  isOpen.value = !isOpen.value;
-};
-
-// Tilni o'zgartirish
-const setLanguage = (lang, label, flag) => {
-  dat.value = lang === "ўзб" ? "datakril" : "datalotin";
-  locale.value = lang;
-  selectedLabel.value = label;
-  selectedFlag.value = flag;
-  isOpen.value = false;
-};
-
-// Aside'ni ochish/yopish
+// UI interactions
 const toggleAside = () => {
-  isAsideVisible.value = !isAsideVisible.value;
-};
+  isAsideVisible.value = !isAsideVisible.value
+}
 
-// Rasm URL'ini olish
-const getImageUrl = (img) => {
-  return img ? `${URL}/upload/${img}` : "/default-avatar.png";
-};
+const navigateToChat = () => {
+  if (userId) {
+    router.push(`/chat/${userId}`)
+  }
+}
 
-// Navigatsiya funksiyalari
-const go = (id) => router.push(`/salaryCalculator/${id}`);
-const go1 = (id) => router.push(`/requireUserInfoFiles`);
-const go2 = (id) => router.push(`/requireUserobligationsFiles`);
-const go3 = (id) => router.push(`/requireUserTasksFiles`);
-const gonotif = (id) => router.push(`/notifications/${id}`);
-const gochat1 = (id) => router.push(`/chat/${id}`);
-const gochat2 = (id) => router.push(`/Notification/${id}`);
+const showNotificationModal = () => {
+  showModal.value = true
+}
 
-// Foydalanuvchi ma'lumotlarini olish
-const getData = async () => {
-  isLoading.value = true;
+const closeNotificationModal = () => {
+  showModal.value = false
+  fetchUnreadCount()
+}
+
+const getProfileImage = (imgPath) => {
+  return imgPath ? `${URL}/upload/${imgPath}` : '/default-avatar.png'
+}
+
+// Data fetching
+const fetchUserData = async () => {
+  if (!userIdNum || !userRole) {
+    console.error('Missing user information')
+    return
+  }
+
+  isLoading.value = true
+
   try {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("Token topilmadi. Foydalanuvchi avtorizatsiyadan o'tmagan.");
+    const token = localStorage.getItem('token')
+    if (!token) {
+      console.error('Token not found. User is not authorized.')
+      router.push('/login')
+      return
+    }
 
-    const response = await axios.get(`${URL}/${localStorage.getItem('role')}/${newId}`, {
+    const response = await axios.get(`${URL}/${userRole}/${userIdNum}`, {
       headers: { Authorization: `Bearer ${token}` },
-    });
+    })
 
-    userInfo.value = { ...response.data };
+    userInfoLotin.value = response.data
+    userInfo.value = { ...response.data }
     for (const key in userInfo.value) {
-      if (typeof userInfo.value[key] === "string") {
-        userInfo.value[key] = translateText(userInfo.value[key]);
+      if (typeof userInfo.value[key] === 'string') {
+        userInfo.value[key] = translateText(userInfo.value[key])
       }
     }
-    userInfoLotin.value = response.data;
 
-    // Onlayn foydalanuvchilarni olish
-    const onlineResponse = await axios.get(`${URL}/${localStorage.getItem('role')}/online`, {
+    const onlineResponse = await axios.get(`${URL}/${userRole}/online`, {
       headers: { Authorization: `Bearer ${token}` },
-    });
+    })
 
-    checkOnlineStatus(onlineResponse.data.map((admin) => String(admin.id)));
-    await fetchNotifications();
+    checkOnlineStatus(onlineResponse.data.map((user) => String(user.id)))
   } catch (err) {
-    console.error("Xatolik:", err.response?.data || err.message);
-    error.value = "Ma'lumotlarni yuklashda xatolik yuz berdi.";
+    console.error('Error fetching user data:', err.response?.data || err.message)
+    error.value = 'Error loading data.'
+
+    if (err.response?.status === 401) {
+      localStorage.removeItem('token')
+      router.push('/login')
+    }
   } finally {
-    isLoading.value = false;
+    isLoading.value = false
   }
-};
+}
 
-// Bildirishnomalarni olish
-const fetchNotifications = async () => {
+const fetchUnreadMessageCount = async () => {
+  if (!userIdNum) return
+
   try {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("Token topilmadi. Foydalanuvchi avtorizatsiyadan o'tmagan.");
-
-    const response = await axios.get(`${URL}/${localStorage.getItem('role')}/${newId}/notifications/unread-count`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    notificationCount.value = response.data;
+    const response = await axios.get(`${URL}/messages/unread/${userIdNum}`)
+    messageCount.value = response.data.length
   } catch (error) {
-    console.error("Xatolik o'qilmagan xabarnomalar sonini olishda:", error);
+    console.error('Error fetching unread message count:', error)
   }
-};
+}
 
-// Tug'ilgan kunni formatlash
-const formattedBirthday = computed(() => {
-  if (!userInfoLotin.value?.birthday) return "Ma'lum emas";
+const fetchUnreadCount = async () => {
+  if (!userIdNum) return
 
-  const date = new Date(userInfoLotin.value.birthday);
-  if (isNaN(date.getTime())) return "Ma'lum emas";
+  try {
+    const response = await axios.get(`${URL}/accauntant-notification/unread/count?userId=${userIdNum}`)
+    unreadCount.value = response.data
+  } catch (error) {
+    console.error('Error fetching unread count:', error)
+  }
+}
 
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
+const fetchUnreadNotifications = async () => {
+  await fetchUnreadCount()
+}
 
-  return `${day}.${month}.${year}`;
-});
-
-// Onlayn holatni tekshirish
-const checkOnlineStatus = (onlineAdmins) => {
-  isOnline.value = onlineAdmins.includes(String(id));
-};
-
-// Lifecycle hooks
-onMounted(() => {
-  getData();
-  fetchAdminData();
-  fetchUnreadCount()
-
-  // Validate ID before emitting
-  if (!id || isNaN(parseInt(id))) {
-    console.error('Invalid user ID:', id);
-    return;
+// Socket connections
+const setupSocketConnection = () => {
+  if (!userId || isNaN(parseInt(userId))) {
+    console.error('Invalid user ID:', userId)
+    return null
   }
 
-  // Socket ulanish hodisalari
+  const socket = io(URL, {
+    path: '/socket.io',
+    transports: ['websocket', 'polling'],
+    withCredentials: true,
+    reconnection: true,
+    reconnectionAttempts: Infinity,
+    reconnectionDelay: 1000,
+    timeout: 20000,
+    auth: { userId },
+  })
+
   socket.on('connect', () => {
-    socket.emit('joinUser', id);
-  });
+    console.log('Socket connected successfully')
+    socket.emit('joinUser', userId)
+    socket.emit('getMessageCount', userIdNum)
+  })
 
   socket.on('connect_error', (error) => {
-    console.error('Socket.IO connection error:', error.message, error);
-  });
+    console.error('Socket.IO connection error:', error.message)
+  })
 
-  socket.on('adminOnlineUpdate', checkOnlineStatus);
+  socket.on('adminOnlineUpdate', checkOnlineStatus)
 
-  socket.on('newNotification', () => {
-    fetchNotifications();
-  });
+  socket.on('newNotification', fetchUnreadNotifications)
 
-  socket.on('unreadCount', (count) => {
-    messageCount.value += count;
-  });
+  socket.on('messageCount', (count) => {
+    messageCount.value = count
+  })
 
-  fetchNotifications();
+  socket.on('newMessage', () => {
+    messageCount.value += 1
+  })
 
-  const intervalId = setInterval(fetchNotifications, 10000);
-  const intervalId1 = setInterval(fetchUnreadCount, 1000);
-  provide('intervalId', intervalId);
-  provide('intervalId1', intervalId1);
-});
+  socket.on('messageRead', () => {
+    if (messageCount.value > 0) {
+      messageCount.value -= 1
+    }
+  })
+
+  return socket
+}
+
+const checkOnlineStatus = (onlineUsers) => {
+  if (Array.isArray(onlineUsers)) {
+    isOnline.value = onlineUsers.includes(String(userId))
+  }
+}
+
+const socket = setupSocketConnection()
+if (socket) {
+  provide('socket', socket)
+}
+
+onMounted(async () => {
+  await fetchUserData()
+  await fetchUnreadCount()
+  await fetchUnreadMessageCount()
+
+  watch(messageCount, (newVal) => {
+    localStorage.setItem('messageCount', newVal)
+  })
+})
 
 onUnmounted(() => {
-  socket.off('adminOnlineUpdate');
-  socket.off('newNotification');
-  socket.off('unreadCount');
-  socket.off('connect');
-  socket.off('connect_error');
-  socket.disconnect();
-  const intervalId = inject('intervalId');
-  if (intervalId) clearInterval(intervalId);
-});
+  const socket = inject('socket')
+  if (socket) {
+    socket.disconnect()
+  }
+})
 </script>
-
-<style scoped>
-aside {
-  background-color: #1e3a8a;
-}
-</style>

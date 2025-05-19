@@ -1,6 +1,6 @@
 <template>
-    <div class="modal-overlay" @click.self="closeModal">
-        <div class="modal">
+    <div class="modal-overlay " @click.self="closeModal">
+        <div class="modal background">
             <div class="modal-header">
                 <h2>
                     {{ dat === 'datakril' ? translateText('Bildirishnomalar') : 'Bildirishnomalar' }}
@@ -17,7 +17,7 @@
                     </p>
                     <p>{{ formatDate(notification.createdAt) }}</p>
                     <button v-if="!notification.isRead" @click="markAsRead(notification.id)"
-                        class="bg-lime-500 text-white px-2 py-1 absolute bottom-2 right-2 rounded hover:bg-lime-600">
+                        class="bg-lime-500 text-black px-2 py-1 absolute bottom-2 right-2 rounded hover:bg-lime-600">
                         {{ dat === 'datakril' ? translateText('Tushundim') : 'Tushundim' }}
                     </button>
                 </div>
@@ -149,12 +149,9 @@ const filteredNotifications = computed(() => {
     z-index: 40;
 }
 
-* {
-    color: black;
-}
 
 .modal {
-    background: white;
+    /* background: white; */
     padding: 20px;
     width: 500px;
     position: relative;
@@ -184,11 +181,11 @@ const filteredNotifications = computed(() => {
 select {
     padding: 5px;
     border-radius: 4px;
-    border: 1px solid #ccc;
+    /* border: 1px solid #ccc; */
 }
 
 .notification-item {
-    border: 1px solid #ddd;
+    /* border: 1px solid #ddd; */
     padding: 15px;
     margin-bottom: 10px;
     border-left: 5px solid #007bff;

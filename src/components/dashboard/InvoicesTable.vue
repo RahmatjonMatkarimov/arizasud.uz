@@ -13,7 +13,7 @@ const dat = inject('dat')
 
 <template>
   <div class="invoices-table card">
-    <h3>{{ dat === 'datakril' ? translateText('Ariza yozgan mijozlar ro\'yxati ') : 'Ariza yozgan mijozlar ro\'yxati ' }}</h3>
+    <h3 class="text-white">{{ dat === 'datakril' ? translateText('Ariza yozgan mijozlar ro\'yxati ') : 'Ariza yozgan mijozlar ro\'yxati ' }}</h3>
     <table class="table">
       <thead>
         <tr>
@@ -38,72 +38,14 @@ const dat = inject('dat')
 
 <style scoped>
 .invoices-table {
-  margin-top: var(--space-4);
-}
-*{
-  color: black;
-  }
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-  background-color: var(--color-bg-secondary);
-  color: var(--color-text-primary);
-}
-
-h1 {
-  font-size: 2rem;
-  line-height: 1.2;
-  font-weight: 600;
-  margin-bottom: var(--space-4);
-}
-
-h2 {
-  font-size: 1.5rem;
-  line-height: 1.3;
-  font-weight: 600;
-  margin-bottom: var(--space-3);
-}
-
-h3 {
-  font-size: 1.25rem;
-  line-height: 1.4;
-  font-weight: 600;
-  margin-bottom: var(--space-2);
-}
-
-a {
-  text-decoration: none;
-  color: var(--color-accent);
-}
-
-button, .btn {
-  border-radius: var(--radius-md);
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: var(--color-accent);
-  color: white;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-button:hover, .btn:hover {
-  background-color: #2c73b4;
+  margin-top: 4px;
 }
 
 .card {
-  background-color: var(--color-bg-primary);
   border-radius: var(--radius-md);
   padding: var(--space-4);
+  @apply bg-gradient-to-r from-[#2a3655] to-[#3d4e81] rounded-lg border border-white/5 shadow-lg hover:shadow-blue-500/5 hover:border-white/10 transition-all duration-300;
+
   box-shadow: var(--shadow-md);
 }
 
@@ -127,23 +69,16 @@ button:hover, .btn:hover {
 .table th, .table td {
   padding: var(--space-2) var(--space-3);
   text-align: left;
+  color: white;
 }
 
 .table th {
-  background-color: var(--color-bg-secondary);
   font-weight: 600;
 }
 
-.table tr {
-  border-bottom: 1px solid var(--color-bg-tertiary);
-}
 
 .table tr:last-child {
   border-bottom: none;
-}
-
-.table tr:hover {
-  background-color: var(--color-bg-secondary);
 }
 
 .badge {

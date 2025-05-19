@@ -2,11 +2,12 @@
 import translateText from '@/auth/Translate'
 import axios from 'axios'
 import { URL } from '@/auth/url'
-import { ref, inject, onMounted, watch } from 'vue'
+import { ref, inject, onMounted, watch, computed } from 'vue'
 import * as XLSX from 'xlsx'
 import { useRoute, useRouter } from 'vue-router';
 import PDFViewer from '../components/ppdf.vue'
-
+import { useSearchStore } from '@/components/Templates/searchQuary'
+const searchStore = useSearchStore()
 const selectedFilePath = ref(null)
 const router = useRouter()
 const dat = inject('dat')
@@ -16,7 +17,7 @@ const modal = ref(false)
 const name = ref('')
 const startDate = ref('')
 const endDate = ref('')
-const totalSum = ref(null)
+const totalSumInternal = ref('') // Internal state for raw number
 const file = ref('')
 const chek = ref(null)
 const ids = ref([])
@@ -26,7 +27,7 @@ const accauntantFilesId = ref(null)
 const invoices = ref([])
 
 const filters = ref({
-  search: '',
+  // search: '',
   status: '',
   dateFrom: '',
   dateTo: ''
@@ -35,6 +36,19 @@ const filters = ref({
 // Selected invoice for details view
 const selectedInvoice = ref(null)
 const showDetails = ref(false)
+
+// Computed property to format totalSum with dots
+const totalSum = computed({
+  get() {
+    if (!totalSumInternal.value) return ''
+    return Number(totalSumInternal.value).toLocaleString('uz-UZ', { minimumFractionDigits: 0 }).replace(/,/g, '.')
+  },
+  set(value) {
+    // Remove all non-numeric characters except for the first dot (if decimal)
+    const cleanedValue = value.replace(/[^0-9]/g, '')
+    totalSumInternal.value = cleanedValue
+  }
+})
 
 const handleImageUpload = (event) => {
   file.value = event.target.files[0]
@@ -51,20 +65,20 @@ const upload = async () => {
     formData.append('userId', parseInt(localStorage.getItem('id')))
     formData.append('startDate', new Date(startDate.value).toISOString())
     formData.append('endDate', new Date(endDate.value).toISOString())
-    formData.append('totalSum', parseInt(totalSum.value))
+    formData.append('totalSum', parseInt(totalSumInternal.value)) // Send raw number
     formData.append('type', 'reports')
     formData.append('file', file.value)
     formData.append('check', chek.value)
     const res = await axios.post(URL + '/accountant-files', formData, {
       headers: {
-        "Content-Type": 'multipart/form-data' // Fixed typo in Content-Type
+        "Content-Type": 'multipart/form-data'
       }
     })
     name.value = ''
     file.value = ''
     startDate.value = ''
     endDate.value = ''
-    totalSum.value = null
+    totalSumInternal.value = ''
     Showmodal.value = false
     getFiles()
     console.log(res)
@@ -80,11 +94,10 @@ const getFiles = async () => {
   try {
     const res = await axios.get(URL + '/accountant-files');
     console.log(res);
-    let sortedData = res.data.slice().filter(item => item.type === 'reports'); // Clone data
+    let sortedData = res.data.slice().filter(item => item.type === 'reports');
 
-    // Apply search filter
-    if (filters.value.search) {
-      const searchQuery = filters.value.search.toLowerCase();
+    if (searchStore.query) {
+      const searchQuery = searchStore.query.toLowerCase();
       sortedData = sortedData.filter(item => {
         const lastHistory = item.History[item.History.length - 1];
         const status = getStatusClass(lastHistory.endDate).toLowerCase();
@@ -95,7 +108,6 @@ const getFiles = async () => {
       });
     }
 
-    // Apply sorting based on status filter
     switch (filters.value.status) {
       case 'az':
         sortedData.sort((a, b) =>
@@ -125,13 +137,11 @@ const getFiles = async () => {
   }
 };
 
-// View invoice details
 function viewInvoice(invoice) {
   selectedInvoice.value = invoice
   showDetails.value = true
 }
 
-// Close invoice details
 function closeDetails() {
   showDetails.value = false
 }
@@ -183,10 +193,10 @@ const postHistory = async () => {
     formData.append('accauntantFilesId', parseInt(accauntantFilesId.value))
     formData.append('startDate', new Date(startDate.value).toISOString())
     formData.append('endDate', new Date(endDate.value).toISOString())
-    formData.append('totalSum', parseInt(totalSum.value))
+    formData.append('totalSum', parseInt(totalSumInternal.value)) // Send raw number
     const res = await axios.post(URL + '/accauntant-files-history', formData, {
       headers: {
-        "Content-Type": 'multipart/form-data' // Fixed typo in Content-Type
+        "Content-Type": 'multipart/form-data'
       }
     })
     modal.value = false
@@ -207,14 +217,15 @@ const getBorderClass = (endDate) => {
   const daysRemaining = Math.ceil(timeDiff / (1000 * 60 * 60 * 24))
 
   if (daysRemaining > 15) {
-    return 'bg-green-600'
+    return 'green'
   } else if (daysRemaining <= 15 && daysRemaining > 10) {
-    return 'bg-yellow-400'
+    return 'yellow'
   } else if (daysRemaining <= 10) {
-    return 'bg-red-700'
+    return 'red'
   }
   return 'border-black'
 }
+
 const getStatusClass = (endDate) => {
   if (!endDate) return 'Nomalum'
   const today = new Date()
@@ -232,28 +243,24 @@ const getStatusClass = (endDate) => {
   return 'border-black'
 }
 
-
-
 const downloadExcel = () => {
   const today = new Date()
   const excelRows = []
 
   invoices.value.forEach((item) => {
-    // Fayl ustunlari
     excelRows.push([
-      { v: item.name, s: { fill: { fgColor: { rgb: "FFFF00" } } } },  // Sariq fon
+      { v: item.name, s: { fill: { fgColor: { rgb: "FFFF00" } } } },
       { v: new Date(item.createdAt).toLocaleDateString() },
       '', '', ''
     ])
 
-    // History qatorlari
     item.History.forEach((history) => {
       const endDate = new Date(history.endDate)
       const diffTime = endDate.getTime() - today.getTime()
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 
       const rowStyle = diffDays <= 10
-        ? { fill: { fgColor: { rgb: "FF0000" } } } // Qizil fon (10 kun yoki kamroq qolgan bo‘lsa)
+        ? { fill: { fgColor: { rgb: "FF0000" } } }
         : {}
 
       excelRows.push([
@@ -265,7 +272,6 @@ const downloadExcel = () => {
       ])
     })
 
-    // Bo‘sh qator ajratish uchun
     excelRows.push(['', '', '', '', ''])
   })
 
@@ -279,14 +285,14 @@ const handleViewInvoice = (item) => {
   if (item.pdfPath) {
     selectedFilePath.value = URL + item.pdfPath;
     console.log('ishladi' + item.pdfPath);
-
   }
   console.log(item)
 };
 
-watch(() => filters.value.search, () => {
+watch(() => searchStore.query, () => {
   getFiles();
 });
+
 watch(() => filters.value.status, () => {
   getFiles()
 })
@@ -297,28 +303,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="animated-gradient p-7 min-h-screen">
+  <div class="background p-7 min-h-screen">
     <!-- Invoices List View -->
     <div v-if="!showDetails" class="rounded-lg p-6">
       <div class="mb-6">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           <div class="flex flex-col">
-            <div class="relative z-0 w-full mb-6 group">
-  <input
-    type="text"
-    v-model="filters.search"
-    name="text"
-    id="text"
-    class="block py-2.5 px-0 w-[300px] focus:w-[500px] duration-200 focus:text-lg bg-transparent rounded-md border-2 focus:border-0 focus:border-b-2 border-gray-300 appearance-none outline-none focus:ring-0 peer"
-    placeholder=" "
-  />
-  <label
-    for="text"
-    class="absolute text-lg text-white duration-300 transform -translate-y-6 scale-75 top-[9px] -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus pl-3 peer-focus:pl-0 peer-focus:-translate-y-6"
-  >
-    {{ dat === 'datakril' ? translateText('Qidiruv:') : 'Qidiruv:' }}
-  </label>
-</div>
           </div>
           <div class="flex justify-end md:col-span-2">
             <div class="mb-3">
@@ -337,7 +327,6 @@ onMounted(() => {
             class="bg-lime-600 text-white px-4 py-2 rounded-md hover:bg-lime-700 transition">
             {{ dat === 'datakril' ? translateText('Yangi hisobot yaratish') : 'Yangi hisobot yaratish' }}
           </button>
-          <!-- New Excel Download Button -->
           <button @click="downloadExcel"
             class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
             {{ dat === 'datakril' ? translateText('Excel qilib yuklab olish') : 'Excel qilib yuklab olish' }}
@@ -361,22 +350,22 @@ onMounted(() => {
       <div class="overflow-x-auto">
         <table class="w-full border-collapse">
           <thead>
-            <tr class="bg-gray-100 w-full grid grid-cols-8 gap-2 items-center">
-              <th class="p-3 text-center font-semibold text-black">{{ dat === 'datakril' ? translateText('Hisob-faktura #') : 'Hisob-faktura #' }}</th>
-              <th class="p-3 text-center font-semibold text-black">{{ dat === 'datakril' ? translateText('Korxona') : 'Korxona' }}</th>
-              <th class="p-3 text-center font-semibold text-black">{{ dat === 'datakril' ? translateText('To\'langan sana') : 'To\'langan sana' }}</th>
-              <th class="p-3 text-center font-semibold text-black">{{ dat === 'datakril' ? translateText('Qayta to\'lov sanasi') : 'Qayta to\'lov sanasi' }}</th>
-              <th class="p-3 text-center font-semibold text-black">{{ dat === 'datakril' ? translateText('Narx') : 'Narx' }}</th>
-              <th class="p-3 text-center font-semibold text-black">{{ dat === 'datakril' ? translateText('Holati') : 'Holati' }}</th>
-              <th class="p-3 text-center font-semibold text-black flex justify-center items-center gap-4">
+            <tr class="bg-gray-100 qard mb-1 w-full grid grid-cols-8 gap-2 items-center">
+              <th class="p-3 text-center font-semibold">{{ dat === 'datakril' ? translateText('Hisob-faktura #') : 'Hisob-faktura #' }}</th>
+              <th class="p-3 text-center font-semibold">{{ dat === 'datakril' ? translateText('Korxona') : 'Korxona' }}</th>
+              <th class="p-3 text-center font-semibold">{{ dat === 'datakril' ? translateText('To\'langan sana') : 'To\'langan sana' }}</th>
+              <th class="p-3 text-center font-semibold">{{ dat === 'datakril' ? translateText('Qayta to\'lov sanasi') : 'Qayta to\'lov sanasi' }}</th>
+              <th class="p-3 text-center font-semibold">{{ dat === 'datakril' ? translateText('Narx') : 'Narx' }}</th>
+              <th class="p-3 text-center font-semibold">{{ dat === 'datakril' ? translateText('Holati') : 'Holati' }}</th>
+              <th class="p-3 text-center font-semibold flex justify-center items-center gap-4">
                 {{ dat === 'datakril' ? translateText('Harakatlar') : 'Harakatlar' }}
               </th>
               <th class="p-1">
                 <div v-if="ids.length" @click="selectedAll()"
-                  class="py-2 px-4 bg-lime-500 hover:bg-lime-600 rounded-lg cursor-pointer transition">
-                  {{ dat === 'datakril' ? translateText('Barchasini belgilash') : 'Barchasini belgilash' }}
-                </div>
-              </th>
+                class="py-2 px-4 bg-lime-500 hover:bg-lime-600 rounded-lg cursor-pointer transition">
+                {{ dat === 'datakril' ? translateText('Barchasini belgilash') : 'Barchasini belgilash' }}
+              </div>
+            </th>
             </tr>
           </thead>
           <tbody>
@@ -402,7 +391,7 @@ onMounted(() => {
                     <div class="flex justify-evenly items-center">
                       <button class="border border-gray-300 px-2 py-1 rounded text-sm bg-blue-500 hover:bg-blue-600"
                         @click="router.push({
-                          path: '/reportsChild',
+                          path: '/invoicesChild',
                           query: { addressId: item.id }
                         })">{{ dat === 'datakril' ? translateText('Ko\'rish') : 'Ko\'rish' }}</button>
                       <button @click="openModal(item.id)"
@@ -442,12 +431,13 @@ onMounted(() => {
       </div>
     </div>
   </div>
-  <div v-if="selectedFilePath"
-    class="fixed max-h-[100vh] overflow-auto flex justify-center animated-gradient z-40 items-center min-w-full inset-0">
-    <div class="text-blue-600 font-medium cursor-pointer" @click="selectedFilePath = false">
-      <img src="../../public/reject-White.png" class="absolute top-4 right-4 w-[50px]" alt="{{ dat === 'datakril' ? translateText('Yopish') : 'Yopish' }}">
+  <div v-if="selectedFilePath" class="fixed inset-0 z-40 flex min-h-[100vh]  justify-center background items-center">
+    <div class="absolute top-4 right-4 cursor-pointer" @click="selectedFilePath = null">
+      <img src="../../public/reject-White.png" class="w-10 h-10" alt="{{ dat === 'datakril' ? translateText('Yopish') : 'Yopish' }}">
     </div>
-    <PDFViewer :file-path="selectedFilePath" />
+    <div class="w-full max-w-5xl p-5 max-h-[100vh] overflow-auto">
+      <PDFViewer v-if="selectedFilePath" :file-path="selectedFilePath" />
+    </div>
   </div>
   <!-- Create Report Modal -->
   <div v-if="Showmodal" class="fixed inset-0 bg-black bg-opacity-80 z-40 flex justify-center items-center">
@@ -460,7 +450,7 @@ onMounted(() => {
         :placeholder="dat === 'datakril' ? translateText('Hisobot nomi kiriting') : 'Hisobot nomi kiriting'" />
 
       <label>{{ dat === 'datakril' ? translateText('To\'lanadigan summani') : 'To\'lanadigan summani' }}</label>
-      <input v-model="totalSum" type="number" class="text-black outline-none p-2 rounded-md"
+      <input v-model="totalSum" type="text" class="text-black outline-none p-2 rounded-md"
         :placeholder="dat === 'datakril' ? translateText('To\'lanadigan summani') : 'To\'lanadigan summani'" />
 
       <label>{{ dat === 'datakril' ? translateText('Shartnoma amal qilishni boshlagan sanani kiriting') : 'Shartnoma amal qilishni boshlagan sanani kiriting' }}</label>
@@ -494,7 +484,7 @@ onMounted(() => {
         alt="{{ dat === 'datakril' ? translateText('Yopish') : 'Yopish' }}" />
       <h4 class="text-lg font-semibold">{{ dat === 'datakril' ? translateText('Qayta to\'lash') : 'Qayta to\'lash' }}</h4>
       <label>{{ dat === 'datakril' ? translateText('To\'lanadigan summani') : 'To\'lanadigan summani' }}</label>
-      <input v-model="totalSum" type="number" class="outline-none text-black p-2 rounded-md"
+      <input v-model="totalSum" type="text" class="outline-none text-black p-2 rounded-md"
         :placeholder="dat === 'datakril' ? translateText('To\'lanadigan summani') : 'To\'lanadigan summani'" />
       <label>{{ dat === 'datakril' ? translateText('Shartnoma amal qilishni boshlagan sanani kiriting') : 'Shartnoma amal qilishni boshlagan sanani kiriting' }}</label>
       <input v-model="startDate" type="date" class="outline-none text-black p-2 rounded-md" />
@@ -518,6 +508,18 @@ onMounted(() => {
   animation: gradientAnimation 15s ease infinite;
   padding: 1.75rem;
   min-height: 100vh;
+}
+
+.red {
+  @apply bg-[#ff00006a] rounded-lg border border-white/5 shadow-lg hover:shadow-red-500/10 hover:border-white/10 transition-all duration-300;
+}
+
+.yellow {
+  @apply bg-[#fbff006a] rounded-lg border border-white/5 shadow-lg hover:shadow-red-500/10 hover:border-white/10 transition-all duration-300;
+}
+
+.green {
+  @apply bg-[#04ff006a] rounded-lg border border-white/5 shadow-lg hover:shadow-red-500/10 hover:border-white/10 transition-all duration-300;
 }
 
 @keyframes gradientAnimation {

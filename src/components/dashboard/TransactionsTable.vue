@@ -12,8 +12,8 @@ const dat = inject('dat')
 
 <template>
   <div class="transactions-table card">
-    <h3>{{ dat === 'datakril' ? translateText('Shartnoma tuzgan mijozlar ro\'yxati') : 
-    'Shartnoma tuzgan mijozlar ro\'yxati' }}</h3>
+    <h3>{{ dat === 'datakril' ? translateText('Shartnoma tuzgan mijozlar ro\'yxati') :
+      'Shartnoma tuzgan mijozlar ro\'yxati' }}</h3>
     <table class="table">
       <thead>
         <tr>
@@ -30,7 +30,7 @@ const dat = inject('dat')
           <td>{{ index + 1 }}</td>
           <td></td>
           <td>{{ dat === 'datakril' ? translateText(`${transaction.name} ${transaction.surname} ${transaction.dadname}`)
-            : `${transaction.name} ${transaction.surname} ${transaction.dadname}`}}</td>
+            : `${transaction.name} ${transaction.surname} ${transaction.dadname}` }}</td>
         </tr>
       </tbody>
     </table>
@@ -39,11 +39,12 @@ const dat = inject('dat')
 
 <style scoped>
 .transactions-table {
-  margin-top: var(--space-4);
+  margin-top: 4px;
+  @apply bg-gradient-to-r from-[#2a3655] to-[#3d4e81] rounded-lg border border-white/5 shadow-lg hover:shadow-blue-500/5 hover:border-white/10 transition-all duration-300;
 }
 
 * {
-  color: black;
+  color: white;
 }
 
 * {
@@ -136,21 +137,14 @@ button:hover,
 }
 
 .table th {
-  background-color: var(--color-bg-secondary);
+  /* background-color: var(--color-bg-secondary); */
   font-weight: 600;
-}
-
-.table tr {
-  border-bottom: 1px solid var(--color-bg-tertiary);
 }
 
 .table tr:last-child {
   border-bottom: none;
 }
 
-.table tr:hover {
-  background-color: var(--color-bg-secondary);
-}
 
 .badge {
   display: inline-block;

@@ -1,8 +1,8 @@
 <template>
-    <div class="animated-gradient">
+    <div class="background pt-6">
       <div class="bg-black rounded-lg p-12 bg-opacity-15 container mx-auto">
         <div class="flex flex-col gap-2">
-          <div @click="router.push({ path: '/salaryChange', query: { id: item.id, role:item.role } })" v-for="item in users" class="cardGradent" :key="item.id">
+          <div @click="router.push({ path: '/salaryChange', query: { id: item.id, role:item.role } })" v-for="item in users" class="qard" :key="item.id">
             <div class="flex items-center gap-4 p-2">
               <img :src="URL+'/upload/'+item.img" alt="" class="max-w-[100px] object-cover min-w-[100px] min-h-[100px] max-h-[100px] rounded-full">
               <h1 class="text-[18px]">{{ dat === 'datakril' ? translateText( `${item.name} ${item.surname} ${item.dadname}`) :  `${item.name} ${item.surname} ${item.dadname}` }}</h1>

@@ -11,16 +11,39 @@
                 </div>
             </div>
         </div>
+    <ModalConfirm :visible="showModal" @confirm="confirmLeave" @cancel="cancelLeave" />
+
     </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import { useRoute, useRouter } from 'vue-router';
+import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router';
 import { URL } from '@/auth/url.js';
 import translateText from '@/auth/Translate';
 import { inject } from 'vue';
+import ModalConfirm from './modal.vue' // Nomi to‘g‘ri ulanganiga ishonch hosil qiling
+
+const showModal = ref(false)
+let nextRoute = null
+
+onBeforeRouteLeave((to, from, next) => {
+  showModal.value = true
+  nextRoute = next
+})
+
+function confirmLeave() {
+  showModal.value = false
+  nextRoute()
+  nextRoute = null
+}
+
+function cancelLeave() {
+  showModal.value = false
+  nextRoute(false)
+  nextRoute = null
+}
 
 const route = useRoute();
 const isLoading = inject('isLoading');

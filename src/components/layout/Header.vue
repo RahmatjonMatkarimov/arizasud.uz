@@ -1,12 +1,15 @@
 <script setup>
+import { Icon } from "@iconify/vue";
 </script>
 
 <template>
-  <header class="header">
-    <h1 class="page-title">{{ $route.meta.title }}</h1>
+  <header class="header fixed top-0 w-full z-0">
+      <img src="../../../public/logo1.png" alt="">
     <div class="header-actions">
+        <Icon icon="token:chat" width="50" class="text-white"  height="50" />
+        <Icon icon="pajamas:notifications" class="text-white" width="40" height="40" />
       <div class="search-box">
-        <font-awesome-icon icon="faSearch" />
+        <Icon icon="line-md:search" width="24" height="24" />
         <input type="text" placeholder="Search..." />
       </div>
       <div class="user-profile">
@@ -30,16 +33,15 @@
   justify-content: space-between;
   align-items: center;
   padding: var(--space-4);
-  background-color: var(--color-bg-primary);
+  background-color: var(--color-primary);
+  height: 90px;
   box-shadow: var(--shadow-sm);
-  border-bottom: 1px solid var(--color-bg-tertiary);
 }
-*{
-  color: black;
-}
+
 .page-title {
   margin: 0;
   font-size: 1.5rem;
+  color: white;
 }
 
 .header-actions {
@@ -65,6 +67,7 @@
   border: 1px solid var(--color-bg-tertiary);
   border-radius: var(--radius-md);
   font-size: 0.95rem;
+  background: #00000000;
   width: 200px;
   transition: all 0.2s ease;
 }
@@ -167,22 +170,6 @@ a {
   color: var(--color-accent);
 }
 
-button, .btn {
-  border-radius: var(--radius-md);
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: var(--color-accent);
-  color: white;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-button:hover, .btn:hover {
-  background-color: #2c73b4;
-}
 
 .card {
   background-color: var(--color-bg-primary);
@@ -208,7 +195,8 @@ button:hover, .btn:hover {
   border-collapse: collapse;
 }
 
-.table th, .table td {
+.table th,
+.table td {
   padding: var(--space-2) var(--space-3);
   text-align: left;
 }
@@ -255,11 +243,12 @@ button:hover, .btn:hover {
 .positive {
   color: var(--color-success);
 }
+
 @media (max-width: 768px) {
   .header {
     padding: var(--space-3);
   }
-  
+
   .search-box {
     display: none;
   }

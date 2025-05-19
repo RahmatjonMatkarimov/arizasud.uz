@@ -7,8 +7,12 @@ import ўзб from "@/kril.json";
 import uzb from "@/lotin.json";
 import axios from "axios"; 
 
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+// ✅ Pinia import va yaratish
+import { createPinia } from 'pinia';
+
+// FontAwesome
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { 
   faChartLine, 
   faFileInvoice, 
@@ -18,7 +22,7 @@ import {
   faUser,
   faSearch,
   faBell
-} from '@fortawesome/free-solid-svg-icons'
+} from '@fortawesome/free-solid-svg-icons';
 
 library.add(
   faChartLine, 
@@ -29,13 +33,16 @@ library.add(
   faUser,
   faSearch,
   faBell
-)
+);
 
+// i18n
 const i18n = createI18n({
     legacy: false,
     locale: 'uzb',
     messages: { uzb, ўзб },
 });
+
+// IP location tekshirish
 const checkLocation = async () => {
     try {
         const response = await axios.get("https://ipwhois.app/json/");
@@ -48,15 +55,26 @@ const checkLocation = async () => {
         console.error("Joylashuvni olishda xatolik:", error);
     }
 };
+
+// App yaratish
 const app = createApp(App);
-app.component('font-awesome-icon', FontAwesomeIcon)
+
+// ✅ Pinia yaratish va ulash
+const pinia = createPinia();
+app.use(pinia); // << Bu qatorda xatolik bartaraf etiladi
+
+app.component('font-awesome-icon', FontAwesomeIcon);
 app.use(i18n);
 app.use(router);
+
+// Global xatoliklar
 app.provide("globalError", null); 
 app.config.errorHandler = (err) => {
     console.error("Xatolik:", err);
     app.provide("globalError", 500); 
 };
+
+// Joylashuvni tekshirib bo‘lgandan keyin mount qilish
 checkLocation().then(() => {
     app.mount('#app'); 
 });

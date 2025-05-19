@@ -101,8 +101,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="animated-gradient p-7 min-h-screen">
-    <div class="bg-black bg-opacity-20 rounded-lg shadow-lg p-6">
+  <div class="background p-7 min-h-screen">
+    <div class="bg-[#8b8b8b0f] rounded-lg shadow-lg p-6">
       <div class="flex justify-between items-center mb-6 pb-4 border-b">
         <div class="text-blue-400 font-medium cursor-pointer" @click="router.push('/invoices')">
           ← {{ dat === 'datakril' ? translateText('Orqaga qaytish') : 'Orqaga qaytish' }}
@@ -155,11 +155,11 @@ onMounted(() => {
   </div>
 
   <!-- PDF Viewer Modal -->
-  <div v-if="selectedFilePath" class="fixed inset-0 z-40 flex min-h-[100vh] justify-center animated-gradient items-center">
+  <div v-if="selectedFilePath" class="fixed inset-0 z-40 flex min-h-[100vh]  justify-center background items-center">
     <div class="absolute top-4 right-4 cursor-pointer" @click="selectedFilePath = null">
       <img src="../../public/reject-White.png" class="w-10 h-10" alt="{{ dat === 'datakril' ? translateText('Yopish') : 'Yopish' }}">
     </div>
-    <div class="w-full max-w-5xl max-h-[100vh] overflow-auto">
+    <div class="w-full max-w-5xl p-5 max-h-[100vh] overflow-auto">
       <PDFViewer v-if="selectedFilePath" :file-path="selectedFilePath" />
     </div>
   </div>

@@ -68,7 +68,7 @@ defineExpose({ fetchData });
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  color: white;
+  /* color: white; */
   font-family: Cambria;
 }
 .loader {

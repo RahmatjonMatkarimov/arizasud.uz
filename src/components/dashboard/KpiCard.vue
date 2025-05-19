@@ -29,6 +29,7 @@ const dat = inject('dat')
 .kpi-card {
   padding: var(--space-4);
   border-radius: var(--radius-md);
+  @apply bg-gradient-to-r from-[#2a3655] to-[#3d4e81] rounded-lg border border-white/5 shadow-lg hover:shadow-blue-500/5 hover:border-white/10 transition-all duration-300;
   box-shadow: var(--shadow-md);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
