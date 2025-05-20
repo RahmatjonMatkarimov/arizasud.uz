@@ -4,9 +4,9 @@
 
 
     <!-- Header -->
-    <header class="fixed top-0 bg-[#1e2a46] w-full z-20 flex justify-between items-center px-6 py-4 h-[90px] shadow-sm">
+    <header class="fixed top-0 dark:bg-[#1e2a46] w-full z-20 flex justify-between items-center px-6 py-4 h-[90px] shadow-sm">
       <!-- <h1 class="text-white ml-20 font-semibold"><img class="w-[190px]" src="/logo1.png" alt=""></h1> -->
-
+<Dark /> 
       <router-link to="/profile">
         <div class="w-[70px] h-[68px] rounded-full overflow-hidden">
           <img :src="getProfileImage(userInfoLotin.img)" alt="Profile" class="w-full h-full object-cover" />
@@ -91,6 +91,7 @@ import { Icon } from '@iconify/vue'
 import { io } from 'socket.io-client'
 import translateText from '@/auth/Translate'
 import { useSearchStore } from './searchQuary'
+import Dark from '../dark.vue'
 
 const searchStore = useSearchStore()
 const showModal = ref(false)

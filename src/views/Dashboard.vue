@@ -220,7 +220,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="p-6 dashboard min-h-screen bg-gray-200">
+  <div class="p-6 dark:bg-black min-h-screen bg-gray-200">
     <div class="container mx-auto">
       <div v-if="!isLoaded" class="loading-container">
         <div class="loading-pulse">

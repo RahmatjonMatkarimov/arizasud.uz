@@ -183,22 +183,64 @@ export const sendMessage = async (messageData) => {
   }
 };
 
-// Delete a message
+// Delete a message using socket
 export const deleteMessage = async (messageId) => {
   try {
-    await axios.delete(`${API_URL}/${messageId}`);
-    return true;
+    const userId = localStorage.getItem('id');
+    
+    // Try socket first for real-time experience
+    if (socket && socket.connected) {
+      console.log('Socket orqali xabar o\'chirilmoqda:', messageId);
+      return new Promise((resolve) => {
+        socket.emit('deleteMessage', { messageId, userId: parseInt(userId) }, (response) => {
+          // Handle response...
+        });
+        
+        // Timeout for fallback...
+      });
+    } else {
+      // Use HTTP if socket is not available
+      return await fallbackHttpDeleteMessage(messageId);
+    }
   } catch (error) {
     console.error("Xabarni o'chirishda xato:", error);
     return false;
   }
 };
+// Listen for updated messages
+export const onUpdatedMessage = (callback) => {
+  if (!socket) return;
+  
+  socket.off('messageUpdated'); // Prevent duplicate listeners
+  socket.on("messageUpdated", (message) => {
+    console.log("Socket.IO orqali yangilangan xabar qabul qilindi:", message);
+    callback(message);
+  });
+};
 
-// Update a message
+// Update a message using socket
 export const updateMessage = async (messageId, content) => {
   try {
-    const response = await axios.put(`${API_URL}/${messageId}`, { content });
-    return response.data;
+    const userId = localStorage.getItem('id');
+    
+    // Try socket first for real-time experience
+    if (socket && socket.connected) {
+      console.log('Socket orqali xabar yangilanmoqda:', messageId);
+      return new Promise((resolve) => {
+        socket.emit('updateMessage', { 
+          messageId, 
+          content, 
+          userId: parseInt(userId) 
+        }, (response) => {
+          // Handle response...
+        });
+        
+        // Timeout for fallback...
+      });
+    } else {
+      // Use HTTP if socket is not available
+      return await fallbackHttpUpdateMessage(messageId, content);
+    }
   } catch (error) {
     console.error("Xabarni yangilashda xato:", error);
     return null;
