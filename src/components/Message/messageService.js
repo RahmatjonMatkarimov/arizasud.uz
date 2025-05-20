@@ -102,6 +102,28 @@ export const onNewMessage = (callback) => {
   });
 };
 
+// Listen for message updates
+export const onMessageUpdated = (callback) => {
+  if (!socket) return;
+  
+  socket.off('messageUpdated'); // Prevent duplicate listeners
+  socket.on("messageUpdated", (message) => {
+    console.log("Socket.IO orqali xabar yangilandi:", message);
+    callback(message);
+  });
+};
+
+// Listen for message deletions
+export const onMessageDeleted = (callback) => {
+  if (!socket) return;
+  
+  socket.off('messageDeleted'); // Prevent duplicate listeners
+  socket.on("messageDeleted", (data) => {
+    console.log("Socket.IO orqali xabar o'chirildi:", data);
+    callback(data);
+  });
+};
+
 // Listen for unread count updates
 export const onUnreadCountUpdate = (callback) => {
   if (!socket) return;
@@ -113,70 +135,65 @@ export const onUnreadCountUpdate = (callback) => {
   });
 };
 
+// Listen for messages being read
+export const onMessagesRead = (callback) => {
+  if (!socket) return;
+  
+  socket.off('messagesRead'); // Prevent duplicate listeners
+  socket.on("messagesRead", (data) => {
+    console.log("Xabarlar o'qildi:", data);
+    callback(data);
+  });
+};
+
 // Mark messages as read
 export const markAllAsRead = async () => {
   try {
     const userId = localStorage.getItem('id');
-    if (!userId) return;
+    if (!userId || !socket) return;
     
     console.log('Barcha xabarlar o\'qildi deb belgilandi');
-    await axios.put(`${API_URL}/${userId}/read`);
-    
-    // Also emit through socket for real-time updates
-    if (socket) {
-      socket.emit('markAsRead', parseInt(userId));
-    }
+    socket.emit('markAsRead', parseInt(userId));
   } catch (error) {
     console.error("Xabarlarni o'qildi deb belgilashda xato:", error);
-  }
-};
-
-// Mark specific message as read (you might not need this for group chat)
-export const markAsRead = async (id) => {
-  try {
-    console.log('Xabar o\'qildi deb belgilandi:', id);
-    await axios.put(`${API_URL}/${id}/read`);
-  } catch (error) {
-    console.error("Xabarni o'qildi deb belgilashda xato:", error);
   }
 };
 
 // Send a message
 export const sendMessage = async (messageData) => {
   try {
-    // For simple messages without files, use socket
-    if (!messageData.file) {
-      console.log('Socket orqali xabar yuborilmoqda:', messageData);
-      if (socket) {
-        socket.emit('sendMessage', messageData);
-        return true;
-      }
-    }
-    
     // For messages with files, use HTTP request
-    console.log('HTTP orqali xabar yuborilmoqda:', messageData);
-    const formData = new FormData();
-    
     if (messageData.file) {
+      console.log('HTTP orqali fayl yuborilmoqda:', messageData);
+      const formData = new FormData();
+      
       formData.append('file', messageData.file);
+      formData.append('senderId', messageData.senderId);
+      
+      if (messageData.content) {
+        formData.append('content', messageData.content);
+      }
+      
+      if (messageData.smileyId) {
+        formData.append('smileyId', messageData.smileyId);
+      }
+      
+      if (messageData.replyToMessageId) {
+        formData.append('replyToMessageId', messageData.replyToMessageId);
+      }
+      
+      const response = await axios.post(API_URL, formData);
+      return response.data;
     }
     
-    formData.append('senderId', messageData.senderId);
-    
-    if (messageData.content) {
-      formData.append('content', messageData.content);
+    // For simple messages without files, use socket
+    console.log('Socket orqali xabar yuborilmoqda:', messageData);
+    if (socket) {
+      socket.emit('sendMessage', messageData);
+      return true;
     }
     
-    if (messageData.smileyId) {
-      formData.append('smileyId', messageData.smileyId);
-    }
-    
-    if (messageData.replyToMessageId) {
-      formData.append('replyToMessageId', messageData.replyToMessageId);
-    }
-    
-    const response = await axios.post(API_URL, formData);
-    return response.data;
+    return false;
   } catch (error) {
     console.error("Xabar yuborishda xato:", error);
     return null;
@@ -186,61 +203,35 @@ export const sendMessage = async (messageData) => {
 // Delete a message using socket
 export const deleteMessage = async (messageId) => {
   try {
-    const userId = localStorage.getItem('id');
+    if (!socket) return false;
     
-    // Try socket first for real-time experience
-    if (socket && socket.connected) {
-      console.log('Socket orqali xabar o\'chirilmoqda:', messageId);
-      return new Promise((resolve) => {
-        socket.emit('deleteMessage', { messageId, userId: parseInt(userId) }, (response) => {
-          // Handle response...
-        });
-        
-        // Timeout for fallback...
-      });
-    } else {
-      // Use HTTP if socket is not available
-      return await fallbackHttpDeleteMessage(messageId);
-    }
+    const userId = localStorage.getItem('id');
+    if (!userId) return false;
+    
+    console.log('Socket orqali xabar o\'chirilmoqda:', messageId);
+    socket.emit('deleteMessage', { messageId: messageId, userId: parseInt(userId) });
+    return true;
   } catch (error) {
     console.error("Xabarni o'chirishda xato:", error);
     return false;
   }
 };
-// Listen for updated messages
-export const onUpdatedMessage = (callback) => {
-  if (!socket) return;
-  
-  socket.off('messageUpdated'); // Prevent duplicate listeners
-  socket.on("messageUpdated", (message) => {
-    console.log("Socket.IO orqali yangilangan xabar qabul qilindi:", message);
-    callback(message);
-  });
-};
 
 // Update a message using socket
 export const updateMessage = async (messageId, content) => {
   try {
-    const userId = localStorage.getItem('id');
+    if (!socket) return null;
     
-    // Try socket first for real-time experience
-    if (socket && socket.connected) {
-      console.log('Socket orqali xabar yangilanmoqda:', messageId);
-      return new Promise((resolve) => {
-        socket.emit('updateMessage', { 
-          messageId, 
-          content, 
-          userId: parseInt(userId) 
-        }, (response) => {
-          // Handle response...
-        });
-        
-        // Timeout for fallback...
-      });
-    } else {
-      // Use HTTP if socket is not available
-      return await fallbackHttpUpdateMessage(messageId, content);
-    }
+    const userId = localStorage.getItem('id');
+    if (!userId) return null;
+    
+    console.log('Socket orqali xabar yangilanmoqda:', messageId);
+    socket.emit('updateMessage', { 
+      messageId: messageId, 
+      content: content,
+      userId: parseInt(userId)
+    });
+    return true;
   } catch (error) {
     console.error("Xabarni yangilashda xato:", error);
     return null;
