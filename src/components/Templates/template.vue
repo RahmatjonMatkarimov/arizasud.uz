@@ -75,6 +75,7 @@
         'flex-1 mt-[90px] transition-all ml-16 duration-500 ease-in-out',
       ]">
         <router-view />
+        <Js />
       </main>
     </div>
   </div>
@@ -92,6 +93,7 @@ import { io } from 'socket.io-client'
 import translateText from '@/auth/Translate'
 import { useSearchStore } from './searchQuary'
 import Dark from '../dark.vue'
+import Js from './js.vue'
 
 const searchStore = useSearchStore()
 const showModal = ref(false)

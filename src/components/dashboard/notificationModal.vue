@@ -1,223 +1,245 @@
 <template>
-    <div class="modal-overlay " @click.self="closeModal">
-        <div class="modal background">
-            <div class="modal-header">
-                <h2>
-                    {{ dat === 'datakril' ? translateText('Bildirishnomalar') : 'Bildirishnomalar' }}
-                </h2>
-                <button class="close-btn" @click="closeModal">×</button>
-            </div>
-
-            <div class="notifications-list">
-                <div v-for="notification in filteredNotifications" :key="notification.id"
-                    class="notification-item relative"
-                    :class="{ critical: notification.urgency === 'Due today!', soon: notification.urgency === 'Due tomorrow!' }">
-                    <p class="message">
-                        {{ dat === 'datakril' ? translateText(notification.message) : notification.message }}
-                    </p>
-                    <p>{{ formatDate(notification.createdAt) }}</p>
-                    <button v-if="!notification.isRead" @click="markAsRead(notification.id)"
-                        class="bg-lime-500 text-black px-2 py-1 absolute bottom-2 right-2 rounded hover:bg-lime-600">
-                        {{ dat === 'datakril' ? translateText('Tushundim') : 'Tushundim' }}
-                    </button>
-                </div>
-
-                <div v-if="filteredNotifications.length === 0" class="no-notifications">
-                    {{ dat === 'datakril' ? translateText('Hozircha bildirishnimalar yoq') :
-                        'Hozircha bildirishnimalar yoq' }}
-                </div>
-            </div>
+  <div class="fixed inset-0 bg-black bg-opacity-70 flex justify-end z-40">
+    <div class="bg-gray-800 p-5 w-[500px] max-h-screen overflow-y-auto">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-gray-200">{{ dat === 'datakril' ? translateText('Bildirishnomalar') : 'Bildirishnomalar' }}</h2>
+        <!-- Notification Type Selector -->
+        <div class="flex items-center">
+          <select id="notification-type" v-model="selectedNotificationType" class="ml-2 p-1 rounded border border-gray-600 bg-gray-900 text-white">
+            <option value="axios">{{ dat === 'datakril' ? translateText('Tizim ichida muhim xabarlar') : 'Tizim ichida muhim xabarlar' }}</option>
+            <option value="socket">{{ dat === 'datakril' ? translateText('Bugalteriya bildirishnomalar') : 'Bugalteriya bildirishnomalar' }}</option>
+          </select>
         </div>
+        <button class="text-2xl text-gray-400 hover:text-gray-300" @click="closeModal">×</button>
+      </div>
+
+      <!-- Send Notification -->
+      <div v-if="selectedNotificationType === 'socket'" class="p-4 my-4 rounded bg-gray-700 text-white">
+        <h2 class="text-lg font-semibold">{{ dat === 'datakril' ? translateText('Bildirishnoma yuborish') : 'Bildirishnoma yuborish' }}</h2>
+        <input 
+          v-model="notificationMessage" 
+          type="text" 
+          :placeholder="dat === 'datakril' ? translateText('Bildirishnoma xabari') : 'Bildirishnoma xabari'" 
+          class="border border-gray-600 bg-gray-900 text-white p-2 mr-2 rounded w-full placeholder-gray-400" 
+        />
+        <button 
+          @click="sendNotification" 
+          class="bg-blue-500 text-white px-4 py-2 rounded mt-2 hover:bg-blue-600"
+        >
+          {{ dat === 'datakril' ? translateText('Hammaga yuborish') : 'Hammaga yuborish' }}
+        </button>
+      </div>
+
+      <!-- Notifications List -->
+      <div>
+        <div v-if="selectedNotificationType === 'socket'">
+          <div 
+            v-for="notification in socketNotifications" 
+            :key="notification.id" 
+            class="p-4 mb-2.5 border border-gray-600 border-l-4 border-l-blue-400 bg-gray-700 relative"
+          >
+            <p class="font-medium my-1 text-gray-200">{{ dat === 'datakril' ? translateText(notification.message) : notification.message }}</p>
+            <p class="text-gray-400">{{ formatDate(notification.sentAt) }}</p>
+            <button 
+              v-if="!notification.isRead" 
+              @click="markAsRead(notification.id, 'socket')" 
+              class="bg-lime-500 text-black px-2 py-1 absolute bottom-2 right-2 rounded hover:bg-lime-600"
+            >
+              {{ dat === 'datakril' ? translateText('Tushundim') : 'Tushundim' }}
+            </button>
+          </div>
+        </div>
+        <div v-else>
+          <div 
+            v-for="notification in axiosNotifications" 
+            :key="notification.id" 
+            class="p-4 mb-2.5 border border-gray-600 relative"
+            :class="{
+              'border-l-4 border-l-red-500 bg-red-900 bg-opacity-20': notification.urgency === 'Due today!',
+              'border-l-4 border-l-amber-500 bg-amber-900 bg-opacity-20': notification.urgency === 'Due tomorrow!',
+              'border-l-4 border-l-blue-400 bg-gray-700': !notification.urgency || (notification.urgency !== 'Due today!' && notification.urgency !== 'Due tomorrow!')
+            }"
+          >
+            <p class="font-medium my-1 text-gray-200">{{ dat === 'datakril' ? translateText(notification.message) : notification.message }}</p>
+            <p class="text-gray-400">{{ formatDate(notification.createdAt) }}</p>
+            <button 
+              v-if="!notification.isRead" 
+              @click="markAsRead(notification.id, 'axios')" 
+              class="bg-lime-500 text-black px-2 py-1 absolute bottom-2 right-2 rounded hover:bg-lime-600"
+            >
+              {{ dat === 'datakril' ? translateText('Tushundim') : 'Tushundim' }}
+            </button>
+          </div>
+        </div>
+        <div v-if="selectedNotifications.length === 0" class="text-center text-gray-400">
+          {{ dat === 'datakril' ? translateText('Hozircha bildirishnimalar yoq') : 'Hozircha bildirishnimalar yoq' }}
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, computed, inject } from 'vue';
 import axios from 'axios';
 import { io } from 'socket.io-client';
+import { format } from 'date-fns';
 import { URL } from '@/auth/url';
 import translateText from '@/auth/Translate';
-import { inject } from 'vue';
 
-const dat = inject('dat')
-const unreadCount = ref(0);
-const socket = ref(null);
-const notifications = ref([]);
-const selectedFilter = ref("all");
-const selectedTime = ref("alltime");
-
+const dat = inject('dat');
 const emit = defineEmits(['close']);
+const isConnected = ref(false);
+const socketNotifications = ref([]);
+const axiosNotifications = ref([]);
+const unreadCount = ref(0);
+const notificationMessage = ref('');
+const selectedNotificationType = ref('axios'); // Default to socket notifications
 
-function closeModal() {
-    emit('close');
-}
-// Format date for display
-const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleString();
+// Socket instance
+const socketURL = URL || 'http://localhost:3000';
+const socket = io(socketURL, {
+  path: '/socket.io',
+  transports: ['websocket', 'polling'],
+  auth: {
+    userId: parseInt(localStorage.getItem('id')) || 1,
+  },
+  query: { userId: parseInt(localStorage.getItem('id')).toString() },
+});
+
+// Date formatting
+const formatDate = (date) => {
+  return date ? format(new Date(date), 'yyyy-MM-dd HH:mm:ss') : '';
 };
 
-// Fetch notifications
-const fetchNotifications = async () => {
-    try {
-        const response = await axios.get(URL + `/accauntant-notification/user/${parseInt(localStorage.getItem('id'))}`);
-        notifications.value = response.data;
-    } catch (error) {
-        console.error('Error fetching notifications:', error);
-    }
-};
+// Computed property for selected notifications
+const selectedNotifications = computed(() => {
+  return selectedNotificationType.value === 'axios' ? socketNotifications.value : axiosNotifications.value;
+});
 
-// Fetch unread count
-const fetchUnreadCount = async () => {
-    try {
-        const userId = parseInt(localStorage.getItem('id')); // foydalanuvchining IDsi
-        const response = await axios.get(`${URL}/accauntant-notification/unread/count?userId=${userId}`);
-        unreadCount.value = response.data;
-    } catch (error) {
-        console.error('Error fetching unread count:', error);
-    }
-};
+// Socket event handlers
+const setupSocketListeners = () => {
+  socket.on('connect', () => {
+    isConnected.value = true;
+    const userId = parseInt(localStorage.getItem('id')) || 1;
+    socket.emit('joinUser', userId);
+  });
 
-// Mark notification as read
-const markAsRead = async (notificationId) => {
-    try {
-        await axios.put(URL + `/accauntant-notification/${notificationId}/read`);
-        await fetchNotifications();
-        await fetchUnreadCount();
-    } catch (error) {
-        console.error('Error marking notification as read:', error);
-    }
-};
-// Initialize Socket.IO
-onMounted(() => {
-    socket.value = io(URL, {
-        query: { userId: parseInt(localStorage.getItem('id')).toString() }
+  socket.on('disconnect', () => {
+    isConnected.value = false;
+  });
+
+  socket.on('notification', (data) => {
+    socketNotifications.value.unshift({
+      id: data.id || Date.now(),
+      message: data.message,
+      sentAt: data.sentAt || data.createdAt || new Date(),
+      isRead: data.isRead || false,
     });
+    if (!data.isRead) unreadCount.value += 1;
+  });
 
-    socket.value.on('notification', (data) => {
-        notifications.value = [
-            {
-                id: data.id || Date.now(),
-                message: data.message,
-                createdAt: data.createdAt || new Date(),
-                isRead: false
-            },
-            ...notifications.value
-        ];
-        unreadCount.value += 1;
-    });
-
-    fetchNotifications();
+  socket.on('newNotification', () => {
     fetchUnreadCount();
-});
+  });
 
-// Cleanup Socket.IO
-onUnmounted(() => {
-    if (socket.value) {
-        socket.value.disconnect();
+  socket.on('unreadCount', (count) => {
+    unreadCount.value = count;
+  });
+
+  socket.on('error', (message) => {
+    console.error('Socket Error:', message);
+  });
+
+  socket.on('notificationMarkedAsRead', (notificationId) => {
+    socketNotifications.value = socketNotifications.value.filter((n) => n.id !== notificationId);
+    fetchUnreadCount();
+  });
+
+  socket.on('allNotificationsMarkedAsRead', ({ count }) => {
+    socketNotifications.value = socketNotifications.value.map((n) => ({ ...n, isRead: true }));
+    unreadCount.value = 0;
+    console.log(`Marked ${count} notifications as read`);
+  });
+
+  socket.on('notifyAllSuccess', ({ message, count }) => {
+    console.log(`Notification sent to ${count} users: ${message}`);
+  });
+};
+
+// Notification handlers
+const fetchSocketNotifications = () => {
+  const userId = parseInt(localStorage.getItem('id')) || 1;
+  socket.emit('getNotifications', userId, (response) => {
+    socketNotifications.value = response || [];
+  });
+};
+
+const fetchAxiosNotifications = async () => {
+  try {
+    const userId = parseInt(localStorage.getItem('id')) || 1;
+    const response = await axios.get(`${URL}/accauntant-notification/user/${userId}`);
+    axiosNotifications.value = response.data.map((n) => ({
+      ...n,
+      sentAt: n.createdAt || n.sentAt,
+    }));
+  } catch (error) {
+    console.error('Error fetching axios notifications:', error);
+  }
+};
+
+const fetchUnreadCount = async () => {
+  try {
+    const userId = parseInt(localStorage.getItem('id')) || 1;
+    const response = await axios.get(`${URL}/accauntant-notification/unread/count?userId=${userId}`);
+    unreadCount.value = response.data;
+  } catch (error) {
+    console.error('Error fetching unread count:', error);
+  }
+};
+
+const markAsRead = async (notificationId, type) => {
+  try {
+    if (type === 'axios') {
+      await axios.put(`${URL}/accauntant-notification/${notificationId}/read`);
+      await fetchAxiosNotifications();
+    } else {
+      socket.emit('markAsRead', notificationId);
+      socketNotifications.value = socketNotifications.value.filter((n) => n.id !== notificationId);
     }
+    await fetchUnreadCount();
+  } catch (error) {
+    console.error('Error marking notification as read:', error);
+  }
+};
+
+const markAllAsRead = () => {
+  socket.emit('markAllAsRead');
+};
+
+const sendNotification = () => {
+  if (notificationMessage.value) {
+    socket.emit('notifyAllUsers', {
+      message: notificationMessage.value,
+      type: 'REMINDER',
+    });
+    notificationMessage.value = '';
+  }
+};
+
+const closeModal = () => {
+  emit('close');
+};
+
+// Lifecycle hooks
+onMounted(() => {
+  setupSocketListeners();
+  fetchSocketNotifications();
+  fetchAxiosNotifications();
+  fetchUnreadCount();
 });
 
-const filteredNotifications = computed(() => {
-    return notifications.value.filter((n) => {
-        const filterMatch =
-            selectedFilter.value === "all" ||
-            (selectedFilter.value === "critical" && n.urgency === "Due today!") ||
-            (selectedFilter.value === "soon" && n.urgency === "Due tomorrow!");
-
-        let timeMatch = true;
-        if (selectedTime.value === "today") {
-            timeMatch = n.urgency === "Due today!";
-        } else if (selectedTime.value === "tomorrow") {
-            timeMatch = n.urgency === "Due tomorrow!";
-        }
-
-        return filterMatch && timeMatch;
-    });
+onUnmounted(() => {
+  socket.disconnect();
 });
 </script>
-
-<style scoped>
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: end;
-    z-index: 40;
-}
-
-
-.modal {
-    /* background: white; */
-    padding: 20px;
-    width: 500px;
-    position: relative;
-    max-height: 100vh;
-    overflow-y: auto;
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.close-btn {
-    font-size: 24px;
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
-.filters {
-    display: flex;
-    gap: 10px;
-    margin: 15px 0;
-}
-
-select {
-    padding: 5px;
-    border-radius: 4px;
-    /* border: 1px solid #ccc; */
-}
-
-.notification-item {
-    /* border: 1px solid #ddd; */
-    padding: 15px;
-    margin-bottom: 10px;
-    border-left: 5px solid #007bff;
-}
-
-.notification-item.critical {
-    border-left-color: red;
-    background-color: #fff0f0;
-}
-
-.notification-item.soon {
-    border-left-color: orange;
-    background-color: #fff8e1;
-}
-
-.message {
-    font-weight: 500;
-    margin: 5px 0;
-}
-
-.pay-btn {
-    margin-top: 10px;
-    padding: 8px 12px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.no-notifications {
-    text-align: center;
-    color: gray;
-}
-</style>

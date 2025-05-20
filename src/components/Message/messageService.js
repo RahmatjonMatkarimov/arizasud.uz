@@ -34,12 +34,6 @@ export const initializeSocket = () => {
     console.error('Socket ulanish xatosi:', error);
   });
 
-  // Handle any errors from the server
-  socket.on('error', (error) => {
-    console.error('Serverdan xato xabari:', error);
-    alert(error); // Show error to user
-  });
-
   return socket;
 };
 
@@ -108,28 +102,6 @@ export const onNewMessage = (callback) => {
   });
 };
 
-// Listen for updated messages
-export const updateMessage = (callback) => {
-  if (!socket) return;
-  
-  socket.off('messageUpdated'); // Prevent duplicate listeners
-  socket.on("messageUpdated", (message) => {
-    console.log("Socket.IO orqali yangilangan xabar qabul qilindi:", message);
-    callback(message);
-  });
-};
-
-// Listen for deleted messages
-export const deleteMessage = (callback) => {
-  if (!socket) return;
-  
-  socket.off('messageDeleted'); // Prevent duplicate listeners
-  socket.on("messageDeleted", (data) => {
-    console.log("Socket.IO orqali o'chirilgan xabar ma'lumoti qabul qilindi:", data);
-    callback(data);
-  });
-};
-
 // Listen for unread count updates
 export const onUnreadCountUpdate = (callback) => {
   if (!socket) return;
@@ -140,6 +112,7 @@ export const onUnreadCountUpdate = (callback) => {
     callback(count);
   });
 };
+
 // Mark messages as read
 export const markAllAsRead = async () => {
   try {
@@ -174,41 +147,13 @@ export const sendMessage = async (messageData) => {
     // For simple messages without files, use socket
     if (!messageData.file) {
       console.log('Socket orqali xabar yuborilmoqda:', messageData);
-      if (socket && socket.connected) {
-        return new Promise((resolve) => {
-          socket.emit('sendMessage', messageData, (response) => {
-            if (response && (response.id || response.success === true)) {
-              console.log('Xabar socket orqali muvaffaqiyatli yuborildi');
-              resolve(response);
-            } else if (response && response.success === false) {
-              console.warn('Socket bilan yuborishda muammo:', response.error);
-              fallbackHttpSendMessage(messageData).then(resolve);
-            } else {
-              console.warn('Socket bilan yuborishda nomalum javob, HTTP usulini sinab ko\'rilmoqda');
-              fallbackHttpSendMessage(messageData).then(resolve);
-            }
-          });
-          
-          // Add timeout to fall back to HTTP if socket doesn't respond
-          setTimeout(() => {
-            console.warn('Socket javob bermayapti, HTTP usulini sinab ko\'rilmoqda');
-            fallbackHttpSendMessage(messageData).then(resolve);
-          }, 3000);
-        });
+      if (socket) {
+        socket.emit('sendMessage', messageData);
+        return true;
       }
     }
     
-    // For messages with files or if socket is not available, use HTTP
-    return await fallbackHttpSendMessage(messageData);
-  } catch (error) {
-    console.error("Xabar yuborishda xato:", error);
-    return null;
-  }
-};
-
-// Fallback HTTP method for sending messages
-const fallbackHttpSendMessage = async (messageData) => {
-  try {
+    // For messages with files, use HTTP request
     console.log('HTTP orqali xabar yuborilmoqda:', messageData);
     const formData = new FormData();
     
@@ -231,10 +176,31 @@ const fallbackHttpSendMessage = async (messageData) => {
     }
     
     const response = await axios.post(API_URL, formData);
-    console.log('Xabar HTTP orqali muvaffaqiyatli yuborildi');
     return response.data;
   } catch (error) {
-    console.error("HTTP orqali xabar yuborishda xato:", error);
+    console.error("Xabar yuborishda xato:", error);
+    return null;
+  }
+};
+
+// Delete a message
+export const deleteMessage = async (messageId) => {
+  try {
+    await axios.delete(`${API_URL}/${messageId}`);
+    return true;
+  } catch (error) {
+    console.error("Xabarni o'chirishda xato:", error);
+    return false;
+  }
+};
+
+// Update a message
+export const updateMessage = async (messageId, content) => {
+  try {
+    const response = await axios.put(`${API_URL}/${messageId}`, { content });
+    return response.data;
+  } catch (error) {
+    console.error("Xabarni yangilashda xato:", error);
     return null;
   }
 };
