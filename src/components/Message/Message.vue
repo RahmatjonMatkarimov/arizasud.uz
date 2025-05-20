@@ -494,6 +494,30 @@ onMounted(async () => {
   socket.on('connect_error', (error) => console.error('Socket.IO connection error:', error));
   socket.on('error', (error) => console.error('Socket.IO error:', error));
 
+  // Listen for message deletion
+  socket.on('messageDeleted', ({ messageId }) => {
+    console.log('Socket orqali xabar o\'chirildi:', messageId);
+    messages.value = messages.value.filter(msg => msg.id !== messageId);
+    showDeleteConfirm.value = false;
+    messageToDelete.value = null;
+    nextTick(() => scrollToBottom());
+  });
+
+  // Listen for message updates
+  socket.on('messageUpdated', (updatedMessage) => {
+    console.log('Socket orqali xabar yangilandi:', updatedMessage);
+    const messageIndex = messages.value.findIndex(msg => msg.id === updatedMessage.id);
+    if (messageIndex !== -1) {
+      messages.value[messageIndex] = {
+        ...messages.value[messageIndex],
+        content: updatedMessage.content,
+      };
+      showModal.value = false;
+      editingMessage.value = null;
+      nextTick(() => scrollToBottom());
+    }
+  });
+
   await loadMessages();
   onNewMessage(async (message) => {
     if (!messages.value.some(msg => msg.id === message.id)) {
@@ -501,7 +525,7 @@ onMounted(async () => {
       if (dat.value === 'datakril') {
         message.content = latinToCyrillic(message.content);
       }
-      await markAllAsRead(); // Mark new messages as read if user is in chat
+      await markAllAsRead();
       await nextTick();
       scrollToBottom();
     }
@@ -532,6 +556,8 @@ onUnmounted(() => {
   socket.off('connect');
   socket.off('connect_error');
   socket.off('error');
+  socket.off('messageDeleted');
+  socket.off('messageUpdated');
   clearInterval(recordingInterval.value);
   localStorage.removeItem("messageCount");
   mediaRecorder.value?.stream?.getTracks().forEach(track => track.stop());
