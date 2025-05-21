@@ -1,204 +1,351 @@
 <template>
-  <div id="asda" class="w-[1111111124px] top-[200px] h-[100vh] fixed border-4 rounded-xl border-[#ffcc00]"></div>
-  <div id="img" class="relative flex justify-between mb-28">
-    <div class="w-full mr-[460px] flex flex-col items-center justify-center p-4">
-      <div ref="messagesContainer" class="w-full p-4 space-y-4">
-        <template v-for="(msg, index) in messages" :key="msg.id">
-          <div :ref="el => messageRefs[msg.id] = el"
-            :class="['flex', isOwnMessage(msg) ? 'justify-end' : 'justify-start']"
-            @contextmenu.prevent="showContextMenu($event, msg)">
+  <div id="asda" class="w-[calc(100%-460px)] top-[200px] h-[calc(100vh-200px)] fixed border-4 rounded-xl border-[#ffcc00]">
+    <div id="img" class="relative flex justify-between h-full">
+      <div class="w-full mr-[460px] flex flex-col items-center justify-center p-4">
+        <div
+          ref="messagesContainer"
+          class="w-full mb-[420px] h-[calc(100%-120px)] overflow-y-auto p-4 space-y-4"
+        >
+          <div
+            v-for="message in messages"
+            :key="message.id"
+            :ref="el => messageRefs[message.id] = el"
+            :class="['flex', message.senderId === user?.id ? 'justify-end' : 'justify-start']"
+            @contextmenu.prevent="showContextMenu($event, message)"
+          >
             <div class="flex items-start max-w-[80%] space-x-2">
-              <div v-if="!isOwnMessage(msg)" class="w-8 h-8 rounded-full bg-gray-300 flex-shrink-0">
-                <img v-if="msg.sender?.img" :src="getImageUrl(msg.sender.img)" class="w-full h-full rounded-full" />
+              <div
+                v-if="message.senderId !== user?.id"
+                class="w-8 h-8 rounded-full bg-gray-300 flex-shrink-0"
+              >
+                <img
+                  v-if="message.senderImage"
+                  :src="getImageUrl(message.senderImage)"
+                  class="w-full h-full rounded-full"
+                />
               </div>
               <div class="flex flex-col space-y-1">
-                <div v-if="!isOwnMessage(msg) && msg.sender" class="flex items-center space-x-2">
-                  <span class="font-medium text-gray-900">
-                    {{ dat === 'datalotin' ? `${msg.sender?.name} ${msg.sender?.surname} ${msg.sender?.lavozimi}` :
-                      `${latinToCyrillic(msg.sender?.name)} ${latinToCyrillic(msg.sender?.surname)}
-                    ${latinToCyrillic(msg.sender?.lavozimi)}` }}
-                  </span>
+                <div
+                  v-if="message.senderId !== user?.id && message.senderUsername"
+                  class="flex items-center space-x-2"
+                >
+                  <span class="font-medium text-gray-900">{{ message.senderUsername }}</span>
                 </div>
-                <div :class="[
-                  'rounded-3xl px-3 py-3 max-w-sm',
-                  isOwnMessage(msg) ? 'bg-blue-500 hover:bg-lime-500 border-2 rounded-br-none text-white' : 'bg-gray-500 hover:bg-lime-500 border-2 rounded-bl-none text-white'
-                ]">
-                  <div v-if="msg.replyToMessageId" @click="scrollToRepliedMessage(msg.replyToMessageId)"
-                    class="border-l-2 rounded-tr-md rounded-tl-sm rounded-bl-sm rounded-br-md p-2 bg-black bg-opacity-[25%] cursor-pointer">
-                    <p v-if="replyMessages[msg.replyToMessageId]?.content">{{
-                      replyMessages[msg.replyToMessageId]?.content }}</p>
-                    <img v-else-if="isImage(replyMessages[msg.replyToMessageId]?.attachmentUrl)"
-                      :src="URL + replyMessages[msg.replyToMessageId]?.attachmentUrl" class="w-24 h-24 rounded-md p-2">
-                    <video v-else-if="isVideo(replyMessages[msg.replyToMessageId]?.attachmentUrl)"
-                      :src="URL + replyMessages[msg.replyToMessageId]?.attachmentUrl" class="w-24 h-24 rounded-md p-2"
-                      controls></video>
-                    <div v-else-if="replyMessages[msg.replyToMessageId]?.attachmentUrl?.endsWith('.mp3')">{{ $t('media')
-                    }}</div>
-                    <div v-else-if="replyMessages[msg.replyToMessageId]?.attachmentUrl?.endsWith('.pdf')"
-                      class="text-red-500 underline">{{ $t('pdf') }}</div>
-                    <div v-else-if="replyMessages[msg.replyToMessageId]?.attachmentUrl?.match(/\.(doc|docx)$/i)"
-                      class="text-blue-500 underline">{{ $t('word') }}</div>
-                    <div v-else-if="replyMessages[msg.replyToMessageId]?.attachmentUrl" class="">{{ $t('file') }}</div>
-                    <img v-else-if="replyMessages[msg.replyToMessageId]?.smiley"
-                      :src="URL + '/' + replyMessages[msg.replyToMessageId]?.smiley" class="w-24 p-1 h-24">
-                    <p v-else>{{ $t('nomalum') }}</p>
+                <div
+                  :class="[
+                    'rounded-3xl px-3 py-3 max-w-sm',
+                    message.senderId === user?.id
+                      ? 'bg-blue-500 hover:bg-lime-500 border-2 rounded-br-none text-white'
+                      : 'bg-gray-500 hover:bg-lime-500 border-2 rounded-bl-none text-white',
+                  ]"
+                >
+                  <div
+                    v-if="message.replyToMessageId"
+                    @click="scrollToRepliedMessage(message.replyToMessageId)"
+                    class="border-l-2 rounded-tr-md rounded-tl-sm rounded-bl-sm rounded-br-md p-2 bg-black bg-opacity-[25%] cursor-pointer"
+                  >
+                    <p v-if="replyMessages[message.replyToMessageId]?.content">
+                      {{ replyMessages[message.replyToMessageId].content }}
+                    </p>
+                    <img
+                      v-else-if="isImage(replyMessages[message.replyToMessageId]?.attachmentUrl)"
+                      :src="getMessageImageUrl(replyMessages[message.replyToMessageId]?.attachmentUrl)"
+                      class="w-24 h-24 rounded-md p-2"
+                    />
+                    <video
+                      v-else-if="isVideo(replyMessages[message.replyToMessageId]?.attachmentUrl)"
+                      :src="getMessageImageUrl(replyMessages[message.replyToMessageId]?.attachmentUrl)"
+                      class="w-24 h-24 rounded-md p-2"
+                      controls
+                    ></video>
+                    <div
+                      v-else-if="replyMessages[message.replyToMessageId]?.attachmentUrl?.endsWith('.mp3')"
+                    >
+                      Audio
+                    </div>
+                    <div
+                      v-else-if="replyMessages[message.replyToMessageId]?.attachmentUrl?.endsWith('.pdf')"
+                      class="text-red-500 underline"
+                    >
+                      PDF
+                    </div>
+                    <div
+                      v-else-if="replyMessages[message.replyToMessageId]?.attachmentUrl?.match(/\.(doc|docx)$/i)"
+                      class="text-blue-500 underline"
+                    >
+                      Word
+                    </div>
+                    <div
+                      v-else-if="replyMessages[message.replyToMessageId]?.attachmentUrl"
+                    >
+                      File
+                    </div>
+                    <img
+                      v-else-if="replyMessages[message.replyToMessageId]?.smileyPath"
+                      :src="getSmileyUrl(replyMessages[message.replyToMessageId]?.smileyPath)"
+                      class="w-24 p-1 h-24"
+                    />
+                    <p v-else>Unknown</p>
                   </div>
-                  <div class="px-2">{{ msg.content }}</div>
-                  <img v-if="msg.fileType === 'smiley'" :src="URL + `/${msg?.smiley?.filePath}`"
-                    class="w-40 h-auto rounded-lg" />
-                  <div v-if="msg.fileType === 'file' && msg.attachmentUrl" class="border p-2 rounded-lg">
-                    <img v-if="isImage(msg.attachmentUrl)" :src="getMessageImageUrl(msg.attachmentUrl)"
-                      class="w-40 h-auto rounded-lg" />
-                    <video v-else-if="isVideo(msg.attachmentUrl)" :src="getMessageImageUrl(msg.attachmentUrl)"
-                      class="w-40 h-auto rounded-lg" controls></video>
-                    <div v-else @click="open(`${URL}${msg.attachmentUrl}`)"
-                      class="hover:text-blue-500 text-[17px] flex items-center gap-3">
-                      <img src="/file.png" width="40px" alt="">{{ $t('filelarni') }}
+                  <div class="px-2">{{ message.content }}</div>
+                  <img
+                    v-if="message.smileyPath"
+                    :src="getSmileyUrl(message.smileyPath)"
+                    class="w-40 h-auto rounded-lg"
+                  />
+                  <div v-if="message.attachmentUrl" class="border p-2 rounded-lg">
+                    <img
+                      v-if="isImage(message.attachmentUrl)"
+                      :src="getMessageImageUrl(message.attachmentUrl)"
+                      class="w-40 h-auto rounded-lg"
+                    />
+                    <video
+                      v-else-if="isVideo(message.attachmentUrl)"
+                      :src="getMessageImageUrl(message.attachmentUrl)"
+                      class="w-40 h-auto rounded-lg"
+                      controls
+                    ></video>
+                    <div
+                      v-else
+                      @click="open(getMessageImageUrl(message.attachmentUrl))"
+                      class="hover:text-blue-500 text-[17px] flex items-center gap-3"
+                    >
+                      <img src="/file.png" width="40px" alt="" />File
                     </div>
                   </div>
-                  <audio v-if="msg.fileType === 'audio'" controls>
-                    <source :src="getMessageImageUrl(msg.attachmentUrl)" type="audio/mpeg" />
-                  </audio>
+                  <audio
+                    v-if="message.fileType === 'audio'"
+                    :src="getMessageImageUrl(message.attachmentUrl)"
+                    controls
+                  ></audio>
                 </div>
                 <div class="text-xs text-gray-500 flex space-x-2">
-                  <button @click="handleReply(msg)" class="text-green-500 font-bold mx-2">{{ $t('javob') }}</button>
-                  {{ moment(msg.createdAt).format("HH:mm") }}
+                  <button
+                    @click="handleReply(message)"
+                    class="text-green-500 font-bold mx-2"
+                  >
+                    Reply
+                  </button>
+                  {{ formatDate(message.createdAt) }}
+                  <span v-if="message.updated">(Edited)</span>
                 </div>
               </div>
             </div>
           </div>
-        </template>
-      </div>
+        </div>
 
-      <button v-if="showScrollButton" @click="scrollToBottom"
-        class="fixed bottom-[170px] bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600">
-        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-        </svg>
-      </button>
+        <button
+          v-if="showScrollButton"
+          @click="scrollToBottom"
+          class="fixed bottom-[170px] bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600"
+        >
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          </svg>
+        </button>
 
-      <div class="fixed bottom-4 w-[990px] bg-gray-300 shadow-md px-3 py-8 flex flex-col rounded-3xl">
-        <div v-if="replyTo" class="w-full bg-gray-200 p-2 rounded-lg mb-2 flex justify-between items-center">
-          <div class="flex items-center space-x-2">
-            <span class="text-green-500 font-semibold">{{ $t('javob') }}:</span>
-            <div class="text-black">
-              {{ replyMessages[replyTo]?.content?.substring(0, 50) + (replyMessages[replyTo]?.content?.length > 50 ?
-                '...' :
-                '') ||
-                replyMessages[replyTo]?.attachmentUrl ? $t('file') :
-                replyMessages[replyTo]?.smiley ? $t('smiley') : $t('nomalum') }}
+        <div class="fixed bottom-4 w-[990px] bg-gray-300 shadow-md px-3 py-8 flex flex-col rounded-3xl">
+          <div v-if="replyTo" class="w-full bg-gray-200 p-2 rounded-lg mb-2 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+              <span class="text-green-500 font-semibold">Reply:</span>
+              <div class="text-black">
+                {{
+                  replyMessages[replyTo]?.content?.substring(0, 50) +
+                  (replyMessages[replyTo]?.content?.length > 50 ? '...' : '') ||
+                  replyMessages[replyTo]?.attachmentUrl
+                    ? 'File'
+                    : replyMessages[replyTo]?.smileyPath
+                    ? 'Smiley'
+                    : 'Unknown'
+                }}
+              </div>
             </div>
+            <button @click="cancelReply" class="text-red-500 hover:text-red-700">✖</button>
           </div>
-          <button @click="cancelReply" class="text-red-500 hover:text-red-700">✖</button>
-        </div>
 
-        <div v-if="recording" class="flex items-center justify-between">
-          <div class="flex items-center">
-            <div class="w-5 h-5 bg-red-700 rounded-full mr-3 animate-pulse"></div>
-            <span class="text-black text-lg font-mono">00:{{ formattedRecordingTime }}</span>
+          <div v-if="recording" class="flex items-center justify-between">
+            <div class="flex items-center">
+              <div class="w-5 h-5 bg-red-700 rounded-full mr-3 animate-pulse"></div>
+              <span class="text-black text-lg font-mono">00:{{ formattedRecordingTime }}</span>
+            </div>
+            <button
+              @click="stopRecording"
+              class="text-red-600 rounded-xl border-4 px-2 font-semibold text-[20px] hover:text-red-700"
+            >
+              Cancel
+            </button>
+            <button
+              @click="stopRecording"
+              :class="{ 'animate-bounce bg-white': isClicked, 'bg-gray-300': !isClicked }"
+              class="hover:bg-blue-500 p-2 rounded-full"
+            >
+              <img src="/arrow.png" width="50px" alt="send" />
+            </button>
           </div>
-          <button @click="stopRecording"
-            class="text-red-600 rounded-xl border-4 px-2 font-semibold text-[20px] hover:text-red-700">
-            {{ $t('Bekor_qilish') }}
+          <div v-else class="flex items-center w-full">
+            <h1 @click="openEmojiPicker" class="text-[35px]">🙂</h1>
+            <label class="cursor-pointer text-[30px] p-2">
+              <img src="/attach-file.png" width="40px" alt="attach" />
+              <input type="file" @change="handleFileUpload" class="hidden" />
+            </label>
+            <input
+              v-model="newMessage"
+              placeholder="Type a message..."
+              class="flex-1 border border-gray-300 rounded-full text-black px-4 py-4 mx-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              @keypress.enter="editingMessage ? updateMessage() : sendMessage('text')"
+            />
+            <button
+              @click="editingMessage ? updateMessage() : sendMessage('text')"
+              class="text-blue-500 text-[40px] ml-2"
+            >
+              ➤
+            </button>
+            <button
+              @click="recording ? stopRecording() : startRecording()"
+              :class="{ 'animate-bounce bg-blue-500': isClicked, 'bg-gray-300': !isClicked }"
+              class="hover:bg-blue-500 p-2 rounded-full"
+            >
+              <img src="/microfon.png" width="50px" alt="mic" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="bg-blue-800 border-[5px] border-[#ffcc00] rounded-xl fixed top-0 right-0 h-[100vh] w-[460px] overflow-y-auto"
+    >
+      <div class="mt-[195px] border-t-[5px] border-[#ffcc00]">
+        <div
+          v-for="(admin, index) in admins"
+          class="bg-white m-3 flex items-center hover:bg-lime-500 border-4 rounded-xl border-[#ffcc00] p-3"
+          :key="index"
+        >
+          <h1 class="text-black text-[20px] font-bold mr-2">{{ index + 1 }}</h1>
+          <div class="w-16 h-16 mr-2 flex-shrink-0 rounded-full overflow-hidden border border-gray-300">
+            <img
+              :src="getImageUrl(admin.img)"
+              class="w-full h-full object-cover"
+              alt="Admin Image"
+            />
+          </div>
+          <div>
+            <h1 class="text-[18px] capitalize text-black">{{ admin.name }} {{ admin.surname }}</h1>
+            <span class="text-gray-700 capitalize text-[14px]">{{ admin.lavozimi }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="showModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div class="bg-white p-6 rounded-lg shadow-lg w-80">
+        <h2 class="text-lg text-black font-bold mb-4">Edit Message</h2>
+        <input
+          v-model="editedContent"
+          class="w-full border-2 text-black rounded px-2 py-1 mb-4"
+        />
+        <div class="flex justify-end space-x-2">
+          <button
+            @click="updateMessage"
+            class="bg-blue-500 text-white w-full px-4 py-2 rounded"
+          >
+            Update
           </button>
-          <button @click="stopRecording" :class="{ 'animate-bounce bg-white': isClicked, 'bg-gray-300': !isClicked }"
-            class="hover:bg-blue-500 p-2 rounded-full">
-            <img src="/arrow.png" width="50px" alt="send">
-          </button>
-        </div>
-        <div v-else class="flex items-center w-full">
-          <h1 @click="openEmojiPicker" class="text-[35px]">🙂</h1>
-          <label class="cursor-pointer text-[30px] p-2">
-            <img src="/attach-file.png" width="40px" alt="attach">
-            <input type="file" @change="handleFileUpload" class="hidden" />
-          </label>
-          <input v-model="newMessage" :placeholder="$t('yozish')"
-            class="flex-1 border border-gray-300 rounded-full text-black px-4 py-4 mx-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            @keypress.enter="handleSendMessage('text')" />
-          <button @click="handleSendMessage('text')" class="text-blue-500 text-[40px] ml-2">➤</button>
-          <button @click="startRecording"
-            :class="{ 'animate-bounce bg-blue-500': isClicked, 'bg-gray-300': !isClicked }"
-            class="hover:bg-blue-500 p-2 rounded-full">
-            <img src="/microfon.png" width="50px" alt="mic">
+          <button
+            @click="showModal = false"
+            class="bg-red-500 text-white px-4 py-2 w-full rounded"
+          >
+            Cancel
           </button>
         </div>
       </div>
     </div>
-  </div>
-  <div
-    class="bg-blue-800 border-[5px] border-[#ffcc00] rounded-xl fixed top-0 right-0 h-[100vh] w-[460px] overflow-y-auto">
-    <div class="mt-[195px] border-t-[5px] border-[#ffcc00]">
-      <div v-for="(item, index) in admins"
-        class="bg-white m-3 flex items-center hover:bg-lime-500 border-4 rounded-xl border-[#ffcc00] p-3" :key="index">
-        <h1 class="text-black text-[20px] font-bold mr-2">{{ index + 1 }}</h1>
-        <div class="w-16 h-16 mr-2 flex-shrink-0 rounded-full overflow-hidden border border-gray-300">
-          <img :src="getImageUrl(item.img)" class="w-full h-full object-cover" alt="Admin Image" />
+
+    <div v-if="showDeleteConfirm" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div class="bg-white p-6 rounded-lg shadow-lg w-80">
+        <div class="flex justify-end space-x-2">
+          <button
+            @click="confirmDelete"
+            class="bg-red-500 text-white w-full px-4 py-2 rounded"
+          >
+            Delete
+          </button>
+          <button
+            @click="showDeleteConfirm = false"
+            class="bg-gray-500 text-white px-4 py-2 w-full rounded"
+          >
+            Cancel
+          </button>
         </div>
-        <div>
-          <h1 class="text-[18px] capitalize text-black">{{ item.name }} {{ item.surname }}</h1>
-          <span class="text-gray-700 capitalize text-[14px]">{{ item.lavozimi }}</span>
-        </div>
       </div>
     </div>
-  </div>
 
-  <div v-if="showModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-80">
-      <h2 class="text-lg text-black font-bold mb-4">Xabarni tahrirlash</h2>
-      <input v-model="editedContent" class="w-full border-2 text-black rounded px-2 py-1 mb-4" />
-      <div class="flex justify-end space-x-2">
-        <button @click="handleUpdateMessage" class="bg-blue-500 text-white w-full px-4 py-2 rounded">{{ $t('yuklash')
-        }}</button>
-        <button @click="showModal = false" class="bg-red-500 text-white px-4 py-2 w-full rounded">{{ $t('Bekor_qilish')
-        }}</button>
-      </div>
+    <div
+      v-if="showContextMenuModal"
+      class="fixed bg-white border rounded-lg shadow-lg p-4 z-50 context-menu"
+      :style="{ top: contextMenuY + 'px', left: contextMenuX + 'px' }"
+    >
+      <button
+        v-if="contextMenuMessage?.senderId === user?.id"
+        @click="startEditing(contextMenuMessage)"
+        class="block w-full text-left px-2 py-1 text-blue-500 hover:bg-gray-100"
+      >
+        Edit
+      </button>
+      <button
+        v-if="contextMenuMessage?.senderId === user?.id"
+        @click="confirmDeleteMessage(contextMenuMessage.id)"
+        class="block w-full text-left px-2 py-1 text-red-500 hover:bg-gray-100"
+      >
+        Delete
+      </button>
+      <button
+        @click="handleReply(contextMenuMessage)"
+        class="block w-full text-left px-2 py-1 text-green-500 hover:bg-gray-100"
+      >
+        Reply
+      </button>
+      <button
+        @click="closeContextMenu"
+        class="block w-full text-left px-2 py-1 text-gray-500 hover:bg-gray-100"
+      >
+        Cancel
+      </button>
     </div>
-  </div>
 
-  <div v-if="showDeleteConfirm" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-80">
-      <div class="flex justify-end space-x-2">
-        <button @click="confirmDelete" class="bg-red-500 text-white w-full px-4 py-2 rounded">{{ $t('remove')
-        }}</button>
-        <button @click="showDeleteConfirm = false" class="bg-gray-500 text-white px-4 py-2 w-full rounded">{{
-          $t('Bekor_qilish') }}</button>
-      </div>
+    <div
+      v-if="showEmojiPicker"
+      class="fixed bottom-[160px] flex gap-2 flex-wrap rounded-md z-50 bg-gray-300 p-6"
+    >
+      <img
+        v-for="item in smileys"
+        :key="item.id"
+        width="90px"
+        @click="sendMessage('smiley', item.id)"
+        class="block rounded-md"
+        :src="getSmileyUrl(item.filePath)"
+      />
     </div>
-  </div>
-
-  <div v-if="showContextMenuModal" class="fixed bg-white border rounded-lg shadow-lg p-4 z-50 context-menu"
-    :style="{ top: contextMenuY + 'px', left: contextMenuX + 'px' }">
-    <button v-if="isOwnMessage(contextMenuMessage)" @click="startEditing(contextMenuMessage)"
-      class="block w-full text-left px-2 py-1 text-blue-500 hover:bg-gray-100">{{ $t('tahrirlash') }}</button>
-    <button @click="confirmDeleteMessage(contextMenuMessage.id)"
-      class="block w-full text-left px-2 py-1 text-red-500 hover:bg-gray-100">
-      {{ $t('remove') }}
-    </button>
-    <button @click="handleReply(contextMenuMessage)"
-      class="block w-full text-left px-2 py-1 text-green-500 hover:bg-gray-100">{{ $t('javob') }}</button>
-    <button @click="closeContextMenu" class="block w-full text-left px-2 py-1 text-gray-500 hover:bg-gray-100">{{
-      $t('Bekor_qilish') }}</button>
-  </div>
-
-  <div v-if="showEmojiPicker" class="fixed bottom-[160px] flex gap-2 flex-wrap rounded-md z-50 bg-gray-300 p-6">
-    <img v-for="item in smileys" :key="item.id" width="90px" @click="handleSendMessage('smiley', item.id)"
-      class="block rounded-md" :src="getSmileyUrl(item.filePath)" />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, nextTick, inject, watch, computed } from "vue";
-import { getMessages, onNewMessage, markAllAsRead, onUnreadCountUpdate, socket, sendMessage, updateMessage, deleteMessage } from "./messageService";
-import moment from "moment";
-import { useRoute } from "vue-router";
-import axios from "axios";
-import { URL } from "@/auth/url.js";
+import { ref, onMounted, onUnmounted, nextTick, computed } from 'vue';
+import { io } from 'socket.io-client';
+import axios from 'axios';
+import { URL } from '@/auth/url';
 
-const showEmojiPicker = ref(false);
+// User data from localStorage
+const user = ref({
+  id: parseInt(localStorage.getItem('id')) || null,
+  username: localStorage.getItem('username') || 'TestUser',
+});
+
+// Reactive state
+const socket = ref(null);
 const messages = ref([]);
-const newMessage = ref("");
+const newMessage = ref('');
 const editingMessage = ref(null);
-const editedContent = ref("");
+const editedContent = ref('');
 const showModal = ref(false);
 const replyTo = ref(null);
 const selectedFile = ref(null);
@@ -206,12 +353,6 @@ const recording = ref(false);
 const mediaRecorder = ref(null);
 const audioChunks = ref([]);
 const admins = ref([]);
-const route = useRoute();
-const senderId = parseInt(route.params.id);
-const isClicked = ref(false);
-const recordingTime = ref(0);
-const recordingInterval = ref(null);
-const dat = inject('dat');
 const smileys = ref([]);
 const replyMessages = ref({});
 const messageRefs = ref({});
@@ -223,56 +364,135 @@ const contextMenuX = ref(0);
 const contextMenuY = ref(0);
 const contextMenuMessage = ref(null);
 const unreadCount = ref(0);
+const userStatus = ref({});
+const showEmojiPicker = ref(false);
+const isClicked = ref(false);
+const recordingTime = ref(0);
+const recordingInterval = ref(null);
+const messagesContainer = ref(null);
 
-const open = (link) => window.open(link);
-const cancelReply = () => replyTo.value = null;
-const scrollToBottom = () => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-const openEmojiPicker = () => showEmojiPicker.value = !showEmojiPicker.value;
-const isOwnMessage = (msg) => msg.senderId === senderId;
-const getMessageImageUrl = (img) => img ? `${URL}${img}` : "/default-avatar.png";
-const getImageUrl = (img) => img ? `${URL}/upload/${img}` : "/default-avatar.png";
-const getSmileyUrl = (img) => img ? `${URL}/${img}` : "/default-avatar.png";
-const isImage = (url) => url && /\.(jpg|jpeg|png|gif|webp)$/i.test(url);
-const isVideo = (url) => url && /\.(mp4|webm|ogg)$/i.test(url);
-
-const translitMap = {
-  "ch": "ч", "sh": "ш", "yo": "ё", "yu": "ю", "ya": "я", "ye": "е", "oʻ": "ў", "g‘": "ғ",
-  "a": "а", "b": "б", "d": "д", "e": "э", "f": "ф", "g": "г", "h": "ҳ", "i": "и", "j": "ж",
-  "k": "к", "l": "л", "m": "м", "n": "н", "o": "о", "p": "п", "q": "қ", "r": "р", "s": "с",
-  "t": "т", "u": "у", "v": "в", "x": "х", "y": "й", "z": "з", "'": "ъ"
-};
-
-const latinToCyrillic = (text) => {
-  let result = text || '';
-  Object.keys(translitMap).sort((a, b) => b.length - a.length).forEach(key => {
-    result = result.replace(new RegExp(key, 'gi'), translitMap[key]);
-  });
-  return result;
-};
-
+// Computed property for recording time
 const formattedRecordingTime = computed(() => {
   const minutes = Math.floor(recordingTime.value / 60);
   const seconds = recordingTime.value % 60;
-  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 });
 
-const loadMessages = async () => {
-  try {
-    messages.value = await getMessages();
-    if (dat.value === 'datakril') {
-      messages.value = messages.value.map(msg => ({ ...msg, content: latinToCyrillic(msg.content) }));
+// Helper functions
+const open = (link) => window.open(link);
+const getImageUrl = (img) => (img ? `${URL}/upload/${img}` : '/default-avatar.png');
+const getMessageImageUrl = (url) => (url ? `${URL}${url}` : '');
+const getSmileyUrl = (path) => (path ? `${URL}/${path}` : '');
+const isImage = (url) => url && /\.(jpg|jpeg|png|gif|webp)$/i.test(url);
+const isVideo = (url) => url && /\.(mp4|webm|ogg)$/i.test(url);
+const formatDate = (date) => {
+  return new Date(date).toLocaleString('en-US', {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+    month: 'short',
+    day: 'numeric',
+  });
+};
+const scrollToBottom = () => {
+  nextTick(() => {
+    if (messagesContainer.value) {
+      messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
     }
-    await markAllAsRead(); // Mark all messages as read when loading
-    await nextTick();
+  });
+};
+const openEmojiPicker = () => {
+  showEmojiPicker.value = !showEmojiPicker.value;
+};
+const cancelReply = () => {
+  replyTo.value = null;
+};
+const closeContextMenu = () => {
+  showContextMenuModal.value = false;
+  contextMenuMessage.value = null;
+};
+
+// Initialize WebSocket connection
+const initializeSocket = () => {
+  if (!user.value.id) {
+    console.error('No user ID found in localStorage');
+    alert('Please log in to access the chat');
+    return;
+  }
+
+  socket.value = io(URL, {
+    path: '/socket.io',
+    transports: ['websocket', 'polling'],
+    auth: { userId: user.value.id },
+  });
+
+  socket.value.on('error', (error) => {
+    console.error('Socket error:', error);
+    alert(error || 'An error occurred with the WebSocket connection');
+  });
+
+  socket.value.on('newMessage', (message) => {
+    messages.value.push(message);
+    if (message.replyToMessageId) {
+      getOneMessage(message.replyToMessageId);
+    }
     scrollToBottom();
+    if (message.senderId !== user.value.id) {
+      unreadCount.value++;
+    }
+  });
+
+  socket.value.on('messageUpdated', (updatedMessage) => {
+    const index = messages.value.findIndex((m) => m.id === updatedMessage.id);
+    if (index !== -1) {
+      messages.value[index] = updatedMessage;
+    }
+    scrollToBottom();
+  });
+
+  socket.value.on('messageDeleted', ({ messageId }) => {
+    messages.value = messages.value.filter((m) => m.id !== messageId);
+    scrollToBottom();
+  });
+
+  socket.value.on('messagesRead', ({ userId }) => {
+    if (userId === user.value.id) {
+      unreadCount.value = 0;
+    }
+  });
+
+  socket.value.on('userStatus', ({ userId, status }) => {
+    userStatus.value[userId] = status;
+  });
+
+  socket.value.on('unreadCount', ({ count }) => {
+    unreadCount.value = count;
+  });
+
+  socket.value.emit('join', user.value.id);
+};
+
+// API functions
+const fetchMessages = async () => {
+  try {
+    const response = await axios.get(`${URL}/messages`);
+    messages.value = response.data;
+    messages.value.forEach((msg) => {
+      if (msg.replyToMessageId) {
+        getOneMessage(msg.replyToMessageId);
+      }
+    });
+    scrollToBottom();
+    socket.value.emit('markAsRead', user.value.id);
   } catch (error) {
-    console.error('Failed to load messages:', error);
+    console.error('Error fetching messages:', error.message);
+    alert('Failed to load messages');
   }
 };
 
-const getData = async () => {
+const fetchAdmins = async () => {
   try {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
     const [adminRes, yuristRes, managerRes, yuristAssistantRes, delivererRes] = await Promise.all([
       axios.get(`${URL}/admin`, config),
@@ -281,45 +501,168 @@ const getData = async () => {
       axios.get(`${URL}/yuristAssistant`, config),
       axios.get(`${URL}/deliverer`, config),
     ]);
-    admins.value = [...adminRes.data, ...yuristRes.data, ...managerRes.data, ...yuristAssistantRes.data, ...delivererRes.data]
-      .filter(item => item.type === "active");
-    if (dat.value === "datakril") {
-      admins.value = admins.value.map(admin => ({
-        ...admin,
-        name: latinToCyrillic(admin.name),
-        surname: latinToCyrillic(admin.surname),
-        lavozimi: latinToCyrillic(admin.lavozimi)
-      }));
-    }
+    admins.value = [
+      ...adminRes.data,
+      ...yuristRes.data,
+      ...managerRes.data,
+      ...yuristAssistantRes.data,
+      ...delivererRes.data,
+    ].filter((item) => item.type === 'active');
   } catch (error) {
     console.error('Failed to load admins:', error);
   }
 };
 
-const handleSendMessage = async (type, smileyId) => {
-  if (type === "text" && !newMessage.value.trim()) return;
+const fetchSmileys = async () => {
+  try {
+    const response = await axios.get(`${URL}/smileys`);
+    smileys.value = response.data;
+  } catch (error) {
+    console.error('Failed to fetch smileys:', error);
+  }
+};
 
-  let messageData = {
-    senderId,
-    content: type === "text" ? (dat.value === 'datakril' ? latinToCyrillic(newMessage.value.trim()) : newMessage.value.trim()) : null,
+const getOneMessage = async (id) => {
+  if (!replyMessages.value[id]) {
+    try {
+      const response = await axios.get(`${URL}/messages/${id}`);
+      replyMessages.value[id] = {
+        content: response.data.content || null,
+        smileyPath: response.data.smiley?.filePath || null,
+        attachmentUrl: response.data.attachmentUrl || null,
+        fileType: response.data.fileType || null,
+      };
+    } catch (error) {
+      console.error('Failed to fetch reply message:', error);
+    }
+  }
+};
+
+const sendMessage = async (type, smileyId = null) => {
+  if (type === 'text' && !newMessage.value.trim() && !selectedFile.value && !smileyId) return;
+
+  const messageData = {
+    senderId: user.value.id,
+    content: type === 'text' ? newMessage.value.trim() : null,
     replyToMessageId: replyTo.value || null,
-    file: type === "file" || type === "audio" ? selectedFile.value : null,
-    smileyId: type === "smiley" ? smileyId : null,
+    file: type === 'file' || type === 'audio' ? selectedFile.value : null,
+    smileyId: type === 'smiley' ? smileyId : null,
   };
 
   try {
-    const result = await sendMessage(messageData);
-    if (result) {
-      newMessage.value = "";
-      replyTo.value = null;
-      selectedFile.value = null;
-      showEmojiPicker.value = false;
-      await nextTick();
-      scrollToBottom();
+    if (!messageData.file) {
+      socket.value.emit('sendMessage', messageData, (response) => {
+        if (!response || !response.success) {
+          console.error('Error sending message:', response?.error || 'Unknown error');
+          alert(response?.error || 'Failed to send message');
+        }
+      });
+    } else {
+      const formData = new FormData();
+      formData.append('file', messageData.file);
+      formData.append('senderId', messageData.senderId);
+      if (messageData.content) formData.append('content', messageData.content);
+      if (messageData.smileyId) formData.append('smileyId', messageData.smileyId);
+      if (messageData.replyToMessageId) formData.append('replyToMessageId', messageData.replyToMessageId);
+
+      const response = await axios.post(`${URL}/messages`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      socket.value.emit('sendMessage', response.data);
     }
+
+    newMessage.value = '';
+    replyTo.value = null;
+    selectedFile.value = null;
+    showEmojiPicker.value = false;
+    scrollToBottom();
   } catch (error) {
-    console.error("Failed to send message:", error);
+    console.error('Error sending message:', error.message);
+    alert('Failed to send message');
   }
+};
+
+const startEditing = (message) => {
+  editingMessage.value = message;
+  editedContent.value = message.content;
+  showModal.value = true;
+  showContextMenuModal.value = false;
+};
+
+const updateMessage = async () => {
+  if (!editedContent.value.trim() || !editingMessage.value) return;
+
+  const updateData = {
+    messageId: editingMessage.value.id,
+    content: editedContent.value,
+    userId: user.value.id,
+  };
+
+  socket.value.emit('updateMessage', updateData, (response) => {
+    if (!response || !response.success) {
+      console.error('Error updating message:', response?.error || 'Unknown error');
+      alert(response?.error || 'Failed to update message');
+    }
+  });
+
+  newMessage.value = '';
+  editingMessage.value = null;
+  showModal.value = false;
+};
+
+const confirmDeleteMessage = (messageId) => {
+  messageToDelete.value = messageId;
+  showDeleteConfirm.value = true;
+  showContextMenuModal.value = false;
+};
+
+const confirmDelete = async () => {
+  socket.value.emit('deleteMessage', { messageId: messageToDelete.value, userId: user.value.id }, (response) => {
+    if (!response || !response.success) {
+      console.error('Error deleting message:', response?.error || 'Unknown error');
+      alert(response?.error || 'Failed to delete message');
+    }
+  });
+  showDeleteConfirm.value = false;
+  messageToDelete.value = null;
+};
+
+const handleReply = (message) => {
+  replyTo.value = message.id;
+  getOneMessage(message.id);
+  showContextMenuModal.value = false;
+};
+
+const scrollToRepliedMessage = async (replyToMessageId) => {
+  if (!messageRefs.value[replyToMessageId]) await getOneMessage(replyToMessageId);
+  await nextTick();
+  messageRefs.value[replyToMessageId]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+};
+
+const handleFileUpload = (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const validTypes = [
+    'image/jpeg', 'image/png', 'image/gif', 'image/webp',
+    'audio/mpeg', 'video/mp4', 'video/webm', 'video/ogg',
+    'application/pdf',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  ];
+
+  if (!validTypes.includes(file.type)) {
+    alert('Unsupported file type');
+    return;
+  }
+
+  if (file.size > 10 * 1024 * 1024) {
+    alert('File size exceeds 10MB limit');
+    return;
+  }
+
+  selectedFile.value = file;
+  sendMessage(file.type.startsWith('audio') ? 'audio' : 'file');
 };
 
 const startRecording = async () => {
@@ -336,14 +679,12 @@ const startRecording = async () => {
 
     mediaRecorder.value.onstop = async () => {
       if (audioChunks.value.length > 0) {
-        const audioBlob = new Blob(audioChunks.value, { type: "audio/mpeg" });
-        selectedFile.value = new File([audioBlob], `audio-${Date.now()}.mp3`, { type: "audio/mpeg" });
-        await handleSendMessage("audio");
-      } else {
-        console.error("No audio data recorded.");
+        const audioBlob = new Blob(audioChunks.value, { type: 'audio/mpeg' });
+        selectedFile.value = new File([audioBlob], `audio-${Date.now()}.mp3`, { type: 'audio/mpeg' });
+        await sendMessage('audio');
       }
       recording.value = false;
-      stream.getTracks().forEach(track => track.stop());
+      stream.getTracks().forEach((track) => track.stop());
     };
 
     recording.value = true;
@@ -352,7 +693,8 @@ const startRecording = async () => {
     recordingInterval.value = setInterval(() => recordingTime.value++, 1000);
     mediaRecorder.value.start();
   } catch (error) {
-    console.error("Failed to start recording:", error);
+    console.error('Failed to start recording:', error);
+    alert('Failed to start recording');
     recording.value = false;
     isClicked.value = false;
   }
@@ -366,177 +708,36 @@ const stopRecording = () => {
   isClicked.value = false;
 };
 
-const fetchSmileys = async () => {
-  try {
-    const response = await axios.get(`${URL}/smileys`);
-    smileys.value = response.data;
-  } catch (error) {
-    console.error('Failed to fetch smileys:', error);
-  }
-};
-
-const startEditing = (msg) => {
-  editingMessage.value = msg.id;
-  editedContent.value = msg.content;
-  showModal.value = true;
-  showContextMenuModal.value = false;
-};
-
-const handleUpdateMessage = async () => {
-  try {
-    const updatedMessage = await updateMessage(editingMessage.value, editedContent.value);
-    if (updatedMessage) {
-      const messageIndex = messages.value.findIndex(msg => msg.id === editingMessage.value);
-      messages.value[messageIndex] = updatedMessage;
-      showModal.value = false;
-      editingMessage.value = null;
-      await nextTick();
-      scrollToBottom();
-    }
-  } catch (error) {
-    console.error('Failed to update message:', error);
-  }
-};
-
-const confirmDeleteMessage = (messageId) => {
-  messageToDelete.value = messageId;
-  showDeleteConfirm.value = true;
-  showContextMenuModal.value = false;
-};
-
-const confirmDelete = async () => {
-  try {
-    const success = await deleteMessage(messageToDelete.value);
-    if (success) {
-      messages.value = messages.value.filter(msg => msg.id !== messageToDelete.value);
-      showDeleteConfirm.value = false;
-      messageToDelete.value = null;
-      await nextTick();
-      scrollToBottom();
-    }
-  } catch (error) {
-    console.error('Failed to delete message:', error);
-  }
-};
-
-const handleReply = (msg) => {
-  replyTo.value = msg.id;
-  getOneMassage(msg.id);
-  showContextMenuModal.value = false;
-};
-
-const getOneMassage = async (id) => {
-  if (!replyMessages.value[id]) {
-    try {
-      const response = await axios.get(`${URL}/messages/${id}`);
-      replyMessages.value[id] = {
-        content: response.data.content || null,
-        smiley: response.data.smiley?.filePath || null,
-        attachmentUrl: response.data.attachmentUrl || null,
-        fileType: response.data.fileType || null,
-      };
-    } catch (error) {
-      console.error('Failed to fetch reply message:', error);
-    }
-  }
-};
-
-const scrollToRepliedMessage = async (replyToMessageId) => {
-  if (!messageRefs.value[replyToMessageId]) await getOneMassage(replyToMessageId);
-  await nextTick();
-  messageRefs.value[replyToMessageId]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-};
-
-const handleScroll = () => {
-  showScrollButton.value = window.scrollY + window.innerHeight < document.body.scrollHeight - 50;
-};
-
-const handleFileUpload = (event) => {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  const validTypes = [
-    'image/jpeg', 'image/png', 'image/gif', 'image/webp',
-    'audio/mpeg', 'video/mp4', 'video/webm', 'video/ogg',
-    'application/pdf',
-    'application/msword',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-  ];
-
-  if (!validTypes.includes(file.type)) {
-    console.error("Unsupported file type:", file.type);
-    return;
-  }
-
-  if (file.size > 10 * 1024 * 1024) {
-    console.error("File too large:", file.size);
-    return;
-  }
-
-  selectedFile.value = file;
-  handleSendMessage("file");
-};
-
-const showContextMenu = (event, msg) => {
-  contextMenuMessage.value = msg;
+const showContextMenu = (event, message) => {
+  contextMenuMessage.value = message;
   contextMenuX.value = event.clientX;
   contextMenuY.value = event.clientY;
   showContextMenuModal.value = true;
 };
 
-const closeContextMenu = () => {
-  showContextMenuModal.value = false;
-  contextMenuMessage.value = null;
-};
-
-onMounted(async () => {
-  socket.on('connect', () => console.log('Socket.IO connected'));
-  socket.on('connect_error', (error) => console.error('Socket.IO connection error:', error));
-  socket.on('error', (error) => console.error('Socket.IO error:', error));
-
-  await loadMessages();
-  onNewMessage(async (message) => {
-    if (!messages.value.some(msg => msg.id === message.id)) {
-      messages.value = [...messages.value, message];
-      if (dat.value === 'datakril') {
-        message.content = latinToCyrillic(message.content);
-      }
-      await markAllAsRead(); // Mark new messages as read if user is in chat
-      await nextTick();
-      scrollToBottom();
+// Lifecycle hooks
+onMounted(() => {
+  initializeSocket();
+  fetchMessages();
+  fetchAdmins();
+  fetchSmileys();
+  window.addEventListener('scroll', () => {
+    if (messagesContainer.value) {
+      const { scrollTop, scrollHeight, clientHeight } = messagesContainer.value;
+      showScrollButton.value = scrollTop + clientHeight < scrollHeight - 50;
     }
   });
-  onUnreadCountUpdate((count) => {
-    unreadCount.value = count;
-    console.log('Unread count updated:', count);
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.context-menu')) closeContextMenu();
   });
-  await getData();
-  await fetchSmileys();
-  messages.value.forEach(msg => msg.replyToMessageId && getOneMassage(msg.replyToMessageId));
-  window.addEventListener('scroll', handleScroll);
-  document.addEventListener('click', (e) => !e.target.closest('.context-menu') && closeContextMenu());
-});
-
-watch(dat, (newDatValue) => {
-  if (newDatValue === 'datakril') {
-    messages.value = messages.value.map(msg => ({ ...msg, content: latinToCyrillic(msg.content) }));
-    getData();
-  } else {
-    loadMessages();
-  }
 });
 
 onUnmounted(() => {
-  socket.off('newMessage');
-  socket.off('unreadCount');
-  socket.off('connect');
-  socket.off('connect_error');
-  socket.off('error');
+  if (socket.value) socket.value.disconnect();
   clearInterval(recordingInterval.value);
-  localStorage.removeItem("messageCount");
-  mediaRecorder.value?.stream?.getTracks().forEach(track => track.stop());
-  window.removeEventListener('scroll', handleScroll);
-  document.removeEventListener('click', closeContextMenu);
+  mediaRecorder.value?.stream?.getTracks().forEach((track) => track.stop());
+  window.removeEventListener('scroll', () => {});
+  document.removeEventListener('click', () => {});
 });
 </script>
 

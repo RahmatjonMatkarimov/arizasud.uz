@@ -1,5 +1,10 @@
 <template>
-<NotificationButton />
+  <div v-if="isLoading" class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-80 z-50">
+    <span class="loader"></span>
+  </div>
+  <ticketModal v-if="hidden" />
+  <ErrorComponent v-if="errorCode" :errorCode="errorCode" />
+  <RouterView v-else />
 </template>
 
 <script setup>

@@ -13,27 +13,26 @@ const user = ref({
   address: '',
   avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg' // Fallback avatar
 })
-
+const fetchFiles = async () => {
+  try {
+    const response = await axios.get(`${URL}/${parseInt(localStorage.getItem('id'))}`)
+    const res = response.data.userFiles.filter(item => item.type == 'info')
+    console.log(res.data)
+  } catch (error) {
+    console.error('Fayllarni olishda xatolik:', error)
+  }lavozimi
+}
 const BildirishnomalarData = ref([]) // Store backend Bildirishnomalar
 const editForm = ref({ ...user.value, password: '', confirmPassword: '' })
 const activeTab = ref('sozlamalar')
 const isEditing = ref(true)
 const Bildirishnomalar = ref({ email: true, browser: true, invoices: true, payments: true, reports: false })
 const darkMode = ref(false)
-const securityForm = ref({
-  currentPassword: '',
-  newPassword: '',
-  confirmPassword: ''
-})
 const settings = ref({
   theme: 'system-default',
   language: 'english',
   dateFormat: 'mm/dd/yyyy'
 })
-const sessions = ref([
-  { device: 'Chrome on Windows', ip: '192.168.1.1', status: 'Active now', icon: 'desktop' },
-  { device: 'Safari on macOS', ip: '192.168.1.2', status: 'Last active: 2 days ago', icon: 'laptop' }
-])
 
 // Fetch user data from backend
 const GetUser = async () => {
@@ -46,7 +45,6 @@ const GetUser = async () => {
       id: data.id || null,
       name: data.name || 'Unknown',
       email: data.username || '', // Assuming username is used as email
-      position: data.lavozimi || 'Unknown',
       phone: data.phone || '',
       avatar: data.img ? `${URL}/upload/${data.img}` : user.value.avatar ,// Construct image URL or use fallback
       user:data,
@@ -62,13 +60,6 @@ const GetUser = async () => {
     // Optionally show an error message in the UI
   }
 }
-
-// Theme toggling
-function toggleTheme() {
-  darkMode.value = !darkMode.value
-  document.documentElement.classList.toggle('dark', darkMode.value)
-}
-
 // Check system preference initially
 function checkSystemTheme() {
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -91,32 +82,10 @@ function handleThemeChange(event) {
   }
 }
 
-// Save changes
-function toggleEdit() {
-  if (isEditing.value) {
-    user.value = { 
-      ...user.value,
-      name: editForm.value.name,
-      email: editForm.value.email,
-      position: editForm.value.position,
-      phone: editForm.value.phone,
-      address: editForm.value.address,
-      user: editForm.value,
-    }
-    securityForm.value = {
-      currentPassword: '',
-      newPassword: '',
-      confirmPassword: ''
-    }
-  } else {
-    editForm.value = { ...user.value }
-  }
-  isEditing.value = !isEditing.value
-}
-
 // When component mounts
 onMounted(() => {
   checkSystemTheme()
+  fetchFiles()
   GetUser() // Fetch user data on mount
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
     if (settings.value.theme === 'system-default') {
