@@ -16,7 +16,7 @@ const subscribeToPush = async () => {
     const permission = await Notification.requestPermission()
     if (permission === 'granted') {
       const currentToken = await getToken(messaging, {
-        vapidKey: 'SIZNING_PUBLIC_VAPID_KEY'
+        vapidKey: 'BKeIjiuLlJ7oF1TjaLSH04F5aEIzNApGMV1THrNGj9GRX5vF4xv6L1xqzdmjopWI8dimQK5LDM89zRy9y9d0Aag'
       })
       if (currentToken) {
         token.value = currentToken
