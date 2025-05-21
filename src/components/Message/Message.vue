@@ -2,20 +2,20 @@
   <div
     class="min-w-full mx-auto top-[100px] h-[calc(100vh-100px)] fixed border-2 rounded-2xl border-teal-500 bg-gradient-to-br from-gray-900 to-gray-800 backdrop-blur-md">
     <div id="img" class="relative flex min-w-full justify-between h-full">
-      <div class="w-full flex flex-col container mx-auto items-center justify-center p-4">
+      <div class="w-full flex flex-col  mx-auto items-center justify-center p-4">
         <div ref="messagesContainer"
-          class="min-w-full mb-[190px] h-[calc(100%-100px)] overflow-y-auto p-4 space-y-4 scrollbar-custom">
+          class="min-w-full mb-[190px] mt-[100px] h-[calc(100%-100px)] overflow-y-auto p-4 space-y-4 scrollbar-custom">
           <div v-for="message in messages" :key="message.id" :ref="el => messageRefs[message.id] = el"
             :class="['flex', message.senderId === user?.id ? 'justify-end' : 'justify-start']"
             @contextmenu.prevent="showContextMenu($event, message)">
             <div class="flex items-start max-w-[80%] space-x-2">
               <div v-if="message.senderId !== user?.id" class="w-8 h-8 rounded-full bg-gray-700 flex-shrink-0">
-                <img v-if="message.attachmentUrl" :src="getImageUrl(message.sender.img)"
+                <img v-if="message.attachmentUrl" :src="getImageUrl(message?.sender?.img)"
                   class="w-full h-full rounded-full object-cover" alt="Sender avatar" />
               </div>
               <div class="flex flex-col space-y-1">
                 <div v-if="message.senderId !== user?.id" class="flex items-center space-x-1">
-                  <span class="font-semibold text-teal-300 text-sm">{{ message.sender.name }} {{ message.sender.surname }}</span>
+                  <span class="font-semibold text-teal-300 text-sm">{{ message?.sender?.name }} {{ message?.sender?.surname }}</span>
                 </div>
                 <div :class="[
                   'message-bubble px-3 py-2 max-w-md transition-all duration-200 shadow-md',
@@ -394,11 +394,6 @@ const closeContextMenu = () => {
   contextMenuMessage.value = null;
 };
 
-// Debounced sendMessage to prevent rapid successive calls
-const debouncedSendMessage = debounce((type, smileyId = null) => {
-  sendMessage(type, smileyId);
-}, 300);
-
 // Audio Player Methods
 const audioPlayerMethods = {
   initAudioPlayer(event) {
@@ -415,9 +410,7 @@ const audioPlayerMethods = {
           const durationSeconds = Math.floor(audio.duration % 60);
           timeDisplay.textContent = `0:00 / ${durationMinutes}:${durationSeconds.toString().padStart(2, '0')}`;
         } else {
-          // Fallback for invalid duration
           timeDisplay.textContent = '0:00 / --:--';
-          // Retry metadata loading after a short delay
           setTimeout(() => {
             if (!isNaN(audio.duration) && isFinite(audio.duration)) {
               const durationMinutes = Math.floor(audio.duration / 60);
@@ -429,11 +422,9 @@ const audioPlayerMethods = {
       }
     };
 
-    // Check if metadata is already loaded
-    if (audio.readyState >= 2) { // HAVE_METADATA
+    if (audio.readyState >= 2) {
       updateTimeDisplay();
     } else {
-      // Wait for metadata to load
       audio.addEventListener('loadedmetadata', updateTimeDisplay, { once: true });
     }
   },
@@ -498,7 +489,7 @@ const audioPlayerMethods = {
       }
     }
 
-    audio.currentTime = 0; // Reset audio to start
+    audio.currentTime = 0;
   },
 
   toggleAudioPlayback(event) {
@@ -534,7 +525,7 @@ const audioPlayerMethods = {
 const setupNewAudioPlayers = () => {
   nextTick(() => {
     const newAudios = document.querySelectorAll('.audio-player audio:not([data-initialized])');
-    newAudios.forEach(audio => {
+    newAudios.forEach((audio) => {
       audio.setAttribute('data-initialized', 'true');
       audio.addEventListener('loadedmetadata', audioPlayerMethods.initAudioPlayer);
       audio.addEventListener('timeupdate', audioPlayerMethods.updateAudioProgress);
@@ -543,13 +534,11 @@ const setupNewAudioPlayers = () => {
       if (container) {
         const playButton = container.querySelector('.audio-play-btn');
         if (playButton) {
-          // Remove existing listeners to prevent duplicates
           const newButton = playButton.cloneNode(true);
           playButton.parentNode.replaceChild(newButton, playButton);
           newButton.addEventListener('click', audioPlayerMethods.toggleAudioPlayback);
         }
       }
-      // Force metadata load
       audio.load();
     });
   });
@@ -590,23 +579,16 @@ const initializeSocket = () => {
   });
 
   socket.value.on('newMessage', (message) => {
-    console.log('Received new message:', message);
-    const isDuplicate = messages.value.some((m) => {
-      return (
-        m.senderId === message.senderId &&
-        m.content === message.content &&
-        m.smileyId === message.smileyId &&
-        m.attachmentUrl === message.attachmentUrl &&
-        Math.abs(new Date(m.createdAt) - new Date(message.createdAt)) < 1000
-      );
-    });
-    if (!isDuplicate) {
+    // Prevent duplicates by checking message ID
+    if (!messages.value.some((msg) => msg.id === message.id)) {
       messages.value.push(message);
       if (message.replyToMessageId) {
         getOneMessage(message.replyToMessageId);
       }
       scrollToBottom();
-      setupNewAudioPlayers();
+      if (message.senderId !== user.value.id) {
+        unreadCount.value++;
+      }
     }
   });
 
@@ -650,7 +632,7 @@ const fetchMessages = async () => {
     const uniqueMessages = response.data.filter(
       (msg) => !messages.value.some((m) => m.id === msg.id)
     );
-    messages.value = [...messages.value, ...uniqueMessages];
+    messages.value = [...uniqueMessages]; // Replace, not append, to avoid duplicates
     messages.value.forEach((msg) => {
       if (msg.replyToMessageId) {
         getOneMessage(msg.replyToMessageId);
@@ -702,125 +684,71 @@ const getOneMessage = async (id) => {
   }
 };
 
+// Send message function
 const sendMessage = async (type, smileyId = null) => {
-  if (type === 'text' && !newMessage.value.trim() && !selectedFile.value && !smileyId) {
-    console.log('Empty text message, skipping send');
-    return;
-  }
+  if (type === 'text' && !newMessage.value.trim() && !selectedFile.value && !smileyId) return;
 
-  let fileType = null;
-  if (selectedFile.value) {
-    if (selectedFile.value.type.startsWith('image/')) fileType = 'image';
-    else if (selectedFile.value.type.startsWith('video/')) fileType = 'video';
-    else if (selectedFile.value.type.startsWith('audio/')) fileType = 'audio';
-    else if (selectedFile.value.type === 'application/pdf') fileType = 'pdf';
-    else if (
-      selectedFile.value.type === 'application/msword' ||
-      selectedFile.value.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    ) fileType = 'word';
-    else fileType = 'file';
-  }
-
-  const tempId = `temp-${Date.now()}-${Math.random()}`;
   const messageData = {
-    id: tempId,
     senderId: user.value.id,
-    senderUsername: user.value.username,
     content: type === 'text' ? newMessage.value.trim() : null,
     replyToMessageId: replyTo.value || null,
-    file: selectedFile.value,
-    fileType,
+    file: type === 'file' || type === 'audio' ? selectedFile.value : null,
     smileyId: type === 'smiley' ? smileyId : null,
-    createdAt: new Date().toISOString(),
-    isPending: true,
   };
 
   try {
     if (!messageData.file) {
-      console.log('Sending non-file message:', messageData);
-      messages.value.push(messageData);
-      scrollToBottom();
-
+      // For non-file messages (text or smiley), use Socket.IO
       socket.value.emit('sendMessage', messageData, (response) => {
         if (!response || !response.success) {
-          console.error('Error sending non-file message:', response?.error || 'Unknown error');
-          alert(response?.error || 'Xabar yuborishda xato');
-          messages.value = messages.value.filter((m) => m.id !== tempId);
-        } else {
-          console.log('Non-file message sent successfully:', response);
-          const index = messages.value.findIndex((m) => m.id === tempId);
-          if (index !== -1 && response.message) {
-            messages.value[index] = { ...response.message, isPending: false };
-          }
-          nextTick(() => setupNewAudioPlayers());
+          console.error('Error sending message:', response?.error || 'Unknown error');
+          alert(response?.error || 'Failed to send message');
         }
       });
     } else {
-      console.log('Preparing file upload:', messageData);
+      // For file messages, use HTTP POST request
       const formData = new FormData();
       formData.append('file', messageData.file);
       formData.append('senderId', messageData.senderId);
-      formData.append('senderUsername', messageData.senderUsername);
       if (messageData.content) formData.append('content', messageData.content);
       if (messageData.smileyId) formData.append('smileyId', messageData.smileyId);
       if (messageData.replyToMessageId) formData.append('replyToMessageId', messageData.replyToMessageId);
-      if (messageData.fileType) formData.append('fileType', messageData.fileType);
-      formData.append('tempId', tempId);
 
-      const tempMessage = {
-        ...messageData,
-        attachmentUrl: null,
-        fileType: messageData.fileType,
-      };
-      messages.value.push(tempMessage);
-      scrollToBottom();
-
-      console.log('Uploading file with formData');
       const response = await axios.post(`${URL}/messages`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      console.log('File upload response:', response.data);
-
-      const fileMessage = {
-        id: response.data.id || tempId,
-        senderId: messageData.senderId,
-        senderUsername: messageData.senderUsername,
-        content: messageData.content,
-        attachmentUrl: response.data.attachmentUrl,
-        fileType: response.data.fileType || messageData.fileType,
-        replyToMessageId: messageData.replyToMessageId,
-        createdAt: response.data.createdAt || messageData.createdAt,
-        smileyId: messageData.smileyId,
-        smileyPath: response.data.smiley?.filePath || null,
-        isPending: false,
-      };
-
-      const index = messages.value.findIndex((m) => m.id === tempId);
-      if (index !== -1) {
-        messages.value[index] = fileMessage;
-      } else if (!messages.value.some((m) => m.id === fileMessage.id)) {
-        messages.value.push(fileMessage);
+      // Immediately add the sent file message to the UI
+      if (!messages.value.some((msg) => msg.id === response.data.id)) {
+        messages.value.push(response.data);
+        if (response.data.replyToMessageId) {
+          getOneMessage(response.data.replyToMessageId);
+        }
+        scrollToBottom();
+        nextTick(() => setupNewAudioPlayers());
       }
-      scrollToBottom();
-      nextTick(() => setupNewAudioPlayers());
     }
 
+    // Reset UI state
     newMessage.value = '';
     replyTo.value = null;
     selectedFile.value = null;
     showEmojiPicker.value = false;
-    audioChunks.value = [];
+    scrollToBottom();
   } catch (error) {
-    console.error('Error in sendMessage:', error.message, error.response?.data);
-    alert('Xabar yuborishda xato: ' + error.message);
-    messages.value = messages.value.filter((m) => m.id !== tempId);
+    console.error('Error sending message:', error.message);
+    alert('Failed to send message');
   }
 };
 
+// Debounced sendMessage
+const debouncedSendMessage = debounce((type, smileyId = null) => {
+  sendMessage(type, smileyId);
+}, 300);
+
 const startEditing = (message) => {
   editingMessage.value = message;
-  editedContent.value = message.content;
+  editedContent.value = message.content || '';
   showModal.value = true;
   showContextMenuModal.value = false;
 };
@@ -842,8 +770,8 @@ const updateMessage = async () => {
     }
   });
 
-  newMessage.value = '';
   editingMessage.value = null;
+  editedContent.value = '';
   showModal.value = false;
 };
 
@@ -854,6 +782,7 @@ const confirmDeleteMessage = (messageId) => {
 };
 
 const confirmDelete = async () => {
+  if (!messageToDelete.value) return;
   console.log('Deleting message ID:', messageToDelete.value);
   socket.value.emit('deleteMessage', { messageId: messageToDelete.value, userId: user.value.id }, (response) => {
     if (!response || !response.success) {
@@ -879,34 +808,28 @@ const scrollToRepliedMessage = async (replyToMessageId) => {
 
 const handleFileUpload = (event) => {
   const file = event.target.files[0];
-  if (!file) {
-    console.log('No file selected');
-    return;
-  }
+  if (!file) return;
 
   const validTypes = [
-    'image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/bmp', 'image/svg+xml',
-    'audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/aac', 'audio/flac',
-    'video/mp4', 'video/webm', 'video/ogg', 'video/mov', 'video/avi', 'video/x-matroska',
+    'image/jpeg', 'image/png', 'image/gif', 'image/webp',
+    'audio/mpeg', 'video/mp4', 'video/webm', 'video/ogg',
     'application/pdf',
     'application/msword',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   ];
 
   if (!validTypes.includes(file.type)) {
-    console.log('Invalid file type:', file.type);
-    alert('Fayl turi qo‘llab-quvvatlanmaydi');
+    alert('Unsupported file type');
     return;
   }
 
   if (file.size > 10 * 1024 * 1024) {
-    console.log('File too large:', file.size);
-    alert('Fayl hajmi 10MB dan oshmasligi kerak');
+    alert('File size exceeds 10MB limit');
     return;
   }
 
   selectedFile.value = file;
-  sendMessage(file.type.startsWith('audio') ? 'audio' : 'file');
+  debouncedSendMessage(file.type.startsWith('audio') ? 'audio' : 'file');
 };
 
 const startRecording = async () => {
@@ -941,7 +864,7 @@ const startRecording = async () => {
         const audioBlob = new Blob(audioChunks.value, { type: 'audio/mpeg' });
         console.log('Audio Blob:', { size: audioBlob.size, type: audioBlob.type });
         selectedFile.value = new File([audioBlob], `audio-${Date.now()}.mp3`, { type: 'audio/mpeg' });
-        await sendMessage('audio');
+        await debouncedSendMessage('audio');
       }
       recording.value = false;
       isClicked.value = false;
@@ -1035,7 +958,6 @@ onUnmounted(() => {
   document.removeEventListener('click', () => {});
 });
 </script>
-
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
