@@ -13,11 +13,13 @@ const data = ref(0)
 const data1 = ref(0)
 const data2 = ref(0)
 const data3 = ref(0)
+const data4 = ref(0)
 
 const animatedData = ref(0)
 const animatedData1 = ref(0)
 const animatedData2 = ref(0)
 const animatedData3 = ref(0)
+const animatedData4 = ref(0)
 
 const chartData = ref(Array(12).fill(0))
 const chartData1 = ref(Array(12).fill(0))
@@ -61,6 +63,7 @@ const getClientTransactions = async () => {
 const fetchFinancialData = async () => {
   try {
     let totalRevenue = 0
+    let totalRevenue1 = 0
     let totalExpense = 0
     let totalTaxExpense = 0
     let totalBusinessExpense = 0
@@ -74,10 +77,10 @@ const fetchFinancialData = async () => {
     accountantResponse.data.forEach((item) => {
       if (Array.isArray(item.History)) {
         item.History.forEach((history) => {
-          if (history.createdAt && !isNaN(Number(history.totalSum))) {
+          if (history.createdAt && !isNaN(Math.floor(history.totalSum))) {
             const monthIndex = new Date(history.createdAt).getMonth()
-            monthlyExpenses[monthIndex] += Number(history.totalSum)
-            totalExpense += Number(history.totalSum)
+            monthlyExpenses[monthIndex] += Math.floor(history.totalSum)
+            totalExpense += Math.floor(history.totalSum)
           }
         })
       }
@@ -87,10 +90,10 @@ const fetchFinancialData = async () => {
     businessExpenseItems.forEach((item) => {
       if (Array.isArray(item.History)) {
         item.History.forEach((history) => {
-          if (history.createdAt && !isNaN(Number(history.totalSum))) {
+          if (history.createdAt && !isNaN(Math.floor(history.totalSum))) {
             const monthIndex = new Date(history.createdAt).getMonth()
-            monthlyBusinessExpenses[monthIndex] += Number(history.totalSum)
-            totalBusinessExpense += Number(history.totalSum)
+            monthlyBusinessExpenses[monthIndex] += Math.floor(history.totalSum)
+            totalBusinessExpense += Math.floor(history.totalSum)
           }
         })
       }
@@ -100,10 +103,10 @@ const fetchFinancialData = async () => {
     taxExpenseItems.forEach((item) => {
       if (Array.isArray(item.History)) {
         item.History.forEach((history) => {
-          if (history.createdAt && !isNaN(Number(history.totalSum))) {
+          if (history.createdAt && !isNaN(Math.floor(history.totalSum))) {
             const monthIndex = new Date(history.createdAt).getMonth()
-            monthlyTaxExpenses[monthIndex] += Number(history.totalSum)
-            totalTaxExpense += Number(history.totalSum)
+            monthlyTaxExpenses[monthIndex] += Math.floor(history.totalSum)
+            totalTaxExpense += Math.floor(history.totalSum)
           }
         })
       }
@@ -112,10 +115,12 @@ const fetchFinancialData = async () => {
     const clientResponse = await axios.get(`${URL}/client-files`)
     clientResponse.data.forEach((file) => {
       const payment = file.ClientPayment?.[0]
-      if (payment && payment.createdAt && !isNaN(Number(payment.TotalSum))) {
+      if (payment && payment.createdAt && !isNaN(Math.floor(payment.TotalSum))) {
         const monthIndex = new Date(payment.createdAt).getMonth()
-        monthlyRevenue[monthIndex] += Number(payment.TotalSum)
-        totalRevenue += Number(payment.TotalSum)
+        monthlyRevenue[monthIndex] += Math.floor(payment.TotalSum)
+        totalRevenue += Math.floor(payment.TotalSum)
+        totalRevenue1 += Math.floor(payment.remainingSum)
+        console.log(payment)
       }
     })
 
@@ -123,6 +128,7 @@ const fetchFinancialData = async () => {
     data1.value = totalExpense
     data2.value = totalTaxExpense
     data3.value = totalBusinessExpense
+    data4.value = totalRevenue1
     chartData.value = monthlyRevenue
     chartData1.value = monthlyExpenses
 
@@ -167,6 +173,12 @@ const animateCounters = () => {
     value: data.value,
     ease: "power2.out",
     onUpdate: () => { animatedData.value = Math.round(animatedData.value) }
+  })
+  gsap.to(animatedData4, {
+    duration: 2,
+    value: data4.value,
+    ease: "power2.out",
+    onUpdate: () => { animatedData4.value = Math.round(animatedData4.value) }
   })
   
   gsap.to(animatedData1, {
@@ -220,7 +232,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="p-6 dark:bg-black min-h-screen bg-gray-200">
+  <div class="p-6 background min-h-screen">
     <div class="container mx-auto">
       <div v-if="!isLoaded" class="loading-container">
         <div class="loading-pulse">
@@ -237,7 +249,7 @@ onMounted(() => {
           <KpiCard class="kpi-card" title="Umumiy Xarajatlar" :value="formatNumberWithDots(animatedData1) + ` so'm`" color="warning" />
           <KpiCard class="kpi-card" title="Soliq Xarajatlari" :value="formatNumberWithDots(animatedData2) + ` so'm`" color="success" />
           <KpiCard class="kpi-card" title="Korxona Xarajati" :value="formatNumberWithDots(animatedData3) + ` so'm`" color="primary" />
-          <KpiCard class="kpi-card" title="Shartmona bo'yicha qarzlar" :value="formatNumberWithDots(animatedData) + ` so'm`" color="success" />
+          <KpiCard class="kpi-card" title="Shartmona bo'yicha qarzlar" :value="formatNumberWithDots(animatedData4) + ` so'm`" color="success" />
           <KpiCard class="kpi-card" title="Foyda" :value="formatNumberWithDots(animatedData) + ` so'm`" color="success" />
         </div>
 

@@ -1,323 +1,275 @@
 <script setup>
-import { ref } from 'vue'
+import { URL } from '@/auth/url'
+import axios from 'axios'
+import { ref, computed, onMounted } from 'vue'
 
-// User data
 const user = ref({
-  id: 1,
-  name: 'John Doe',
-  email: 'john.doe@example.com',
-  position: 'Accountant',
-  joinDate: 'January 15, 2022',
-  phone: '(555) 123-4567',
-  address: '123 Business St, Suite 456, Business City, ST 12345',
-  avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg'
+  id: null,
+  name: '',
+  email: '',
+  position: '',
+  joinDate: '',
+  phone: '',
+  address: '',
+  avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg' // Fallback avatar
 })
 
-// Form data for editing
-const editForm = ref({
-  name: user.value.name,
-  email: user.value.email,
-  position: user.value.position,
-  phone: user.value.phone,
-  address: user.value.address,
-  password: '',
+const BildirishnomalarData = ref([]) // Store backend Bildirishnomalar
+const editForm = ref({ ...user.value, password: '', confirmPassword: '' })
+const activeTab = ref('sozlamalar')
+const isEditing = ref(true)
+const Bildirishnomalar = ref({ email: true, browser: true, invoices: true, payments: true, reports: false })
+const darkMode = ref(false)
+const securityForm = ref({
+  currentPassword: '',
+  newPassword: '',
   confirmPassword: ''
 })
+const settings = ref({
+  theme: 'system-default',
+  language: 'english',
+  dateFormat: 'mm/dd/yyyy'
+})
+const sessions = ref([
+  { device: 'Chrome on Windows', ip: '192.168.1.1', status: 'Active now', icon: 'desktop' },
+  { device: 'Safari on macOS', ip: '192.168.1.2', status: 'Last active: 2 days ago', icon: 'laptop' }
+])
 
-// Active tab
-const activeTab = ref('profile') // 'profile', 'security', 'preferences'
+// Fetch user data from backend
+const GetUser = async () => {
+  try {
+    const res = await axios.get(`${URL}/${localStorage.getItem('role')}/${parseInt(localStorage.getItem('id'))}`)
+    const data = res.data
 
-// Edit mode
-const isEditing = ref(false)
+    // Map backend data to user ref
+    user.value = {
+      id: data.id || null,
+      name: data.name || 'Unknown',
+      email: data.username || '', // Assuming username is used as email
+      position: data.lavozimi || 'Unknown',
+      phone: data.phone || '',
+      avatar: data.img ? `${URL}/upload/${data.img}` : user.value.avatar ,// Construct image URL or use fallback
+      user:data,
+    }
 
-// Toggle edit mode
+    // Populate Bildirishnomalar data
+    BildirishnomalarData.value = data.Notification || []
+
+    // Update editForm with new user data
+    editForm.value = { ...user.value, password: '', confirmPassword: '' }
+  } catch (error) {
+    console.error('Failed to fetch user data:', error)
+    // Optionally show an error message in the UI
+  }
+}
+
+// Theme toggling
+function toggleTheme() {
+  darkMode.value = !darkMode.value
+  document.documentElement.classList.toggle('dark', darkMode.value)
+}
+
+// Check system preference initially
+function checkSystemTheme() {
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+  darkMode.value = prefersDark
+  document.documentElement.classList.toggle('dark', prefersDark)
+  settings.value.theme = prefersDark ? 'dark' : 'light'
+}
+
+// Handle theme changes from dropdown
+function handleThemeChange(event) {
+  const newTheme = event.target.value
+  settings.value.theme = newTheme
+  if (newTheme === 'system-default') {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    darkMode.value = prefersDark
+    document.documentElement.classList.toggle('dark', prefersDark)
+  } else {
+    darkMode.value = newTheme === 'dark'
+    document.documentElement.classList.toggle('dark', darkMode.value)
+  }
+}
+
+// Save changes
 function toggleEdit() {
   if (isEditing.value) {
-    // Save logic would go here
-    isEditing.value = false
+    user.value = { 
+      ...user.value,
+      name: editForm.value.name,
+      email: editForm.value.email,
+      position: editForm.value.position,
+      phone: editForm.value.phone,
+      address: editForm.value.address,
+      user: editForm.value,
+    }
+    securityForm.value = {
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: ''
+    }
   } else {
-    isEditing.value = true
+    editForm.value = { ...user.value }
   }
+  isEditing.value = !isEditing.value
 }
 
-// Cancel editing
-function cancelEdit() {
-  editForm.value = {
-    name: user.value.name,
-    email: user.value.email,
-    position: user.value.position,
-    phone: user.value.phone,
-    address: user.value.address,
-    password: '',
-    confirmPassword: ''
-  }
-  isEditing.value = false
-}
-
-// Notification preferences
-const notifications = ref({
-  email: true,
-  browser: true,
-  invoices: true,
-  payments: true,
-  reports: false
+// When component mounts
+onMounted(() => {
+  checkSystemTheme()
+  GetUser() // Fetch user data on mount
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+    if (settings.value.theme === 'system-default') {
+      darkMode.value = event.matches
+      document.documentElement.classList.toggle('dark', event.matches)
+    }
+  })
 })
 </script>
 
 <template>
-  <div>
-    <div class="profile-header card">
-      <div class="profile-info">
-        <div class="profile-avatar">
-          <img :src="user.avatar" alt="Profile Photo">
-        </div>
-        <div class="profile-details">
-          <h2>{{ user.name }}</h2>
-          <p class="profile-position">{{ user.position }}</p>
-          <p class="profile-joined">Member since {{ user.joinDate }}</p>
-        </div>
-      </div>
-      <div class="profile-actions">
-        <button class="btn-primary" @click="toggleEdit">
-          {{ isEditing ? 'Save Changes' : 'Edit Profile' }}
-        </button>
-        <button v-if="isEditing" class="btn-secondary" @click="cancelEdit">
-          Cancel
-        </button>
-      </div>
-    </div>
-    
-    <div class="profile-tabs">
-      <div 
-        class="tab" 
-        :class="{ active: activeTab === 'profile' }" 
-        @click="activeTab = 'profile'"
-      >
-        Profile Information
-      </div>
-      <div 
-        class="tab" 
-        :class="{ active: activeTab === 'security' }" 
-        @click="activeTab = 'security'"
-      >
-        Security
-      </div>
-      <div 
-        class="tab" 
-        :class="{ active: activeTab === 'preferences' }" 
-        @click="activeTab = 'preferences'"
-      >
-        Preferences
-      </div>
-    </div>
-    
-    <!-- Profile Information Tab -->
-    <div v-if="activeTab === 'profile'" class="card profile-content">
-      <form class="profile-form">
-        <div class="form-group">
-          <label for="name">Full Name</label>
-          <input 
-            id="name" 
-            type="text" 
-            v-model="editForm.name" 
-            :disabled="!isEditing"
-            class="form-input"
-          >
-        </div>
-        
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input 
-            id="email" 
-            type="email" 
-            v-model="editForm.email" 
-            :disabled="!isEditing"
-            class="form-input"
-          >
-        </div>
-        
-        <div class="form-group">
-          <label for="position">Position</label>
-          <input 
-            id="position" 
-            type="text" 
-            v-model="editForm.position" 
-            :disabled="!isEditing"
-            class="form-input"
-          >
-        </div>
-        
-        <div class="form-group">
-          <label for="phone">Phone</label>
-          <input 
-            id="phone" 
-            type="tel" 
-            v-model="editForm.phone" 
-            :disabled="!isEditing"
-            class="form-input"
-          >
-        </div>
-        
-        <div class="form-group">
-          <label for="address">Address</label>
-          <textarea 
-            id="address" 
-            v-model="editForm.address" 
-            :disabled="!isEditing"
-            class="form-textarea"
-            rows="3"
-          ></textarea>
-        </div>
-      </form>
-    </div>
-    
-    <!-- Security Tab -->
-    <div v-if="activeTab === 'security'" class="card profile-content">
-      <form class="profile-form">
-        <div class="form-group">
-          <label for="current-password">Current Password</label>
-          <input 
-            id="current-password" 
-            type="password" 
-            :disabled="!isEditing"
-            class="form-input"
-          >
-        </div>
-        
-        <div class="form-group">
-          <label for="new-password">New Password</label>
-          <input 
-            id="new-password" 
-            type="password" 
-            v-model="editForm.password"
-            :disabled="!isEditing"
-            class="form-input"
-          >
-        </div>
-        
-        <div class="form-group">
-          <label for="confirm-password">Confirm New Password</label>
-          <input 
-            id="confirm-password" 
-            type="password" 
-            v-model="editForm.confirmPassword"
-            :disabled="!isEditing"
-            class="form-input"
-          >
-        </div>
-        
-        <div class="security-section">
-          <h3>Login Sessions</h3>
-          <div class="session-item">
-            <div class="session-info">
-              <span class="session-device">Chrome on Windows</span>
-              <span class="session-ip">192.168.1.1</span>
-              <span class="session-time">Active now</span>
+  <div class="min-h-screen transition-colors duration-300 font-sans antialiased">
+    <div class="min-h-screen bg-gray-200 dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-indigo-950 p-4 md:p-8 transition-colors duration-300">
+      <div class="max-w-4xl mx-auto">
+
+        <!-- Profile Card -->
+        <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700 transition-all duration-300">
+          <!-- Profile Header -->
+          <div class="relative">
+            <!-- Cover Image -->
+            <div class="h-40 qard"></div>
+            
+            <!-- Profile Info -->
+            <div class="px-6 pb-5 relative">
+              <div class="flex flex-col md:flex-row md:items-end md:justify-between">
+                <div class="flex flex-col md:flex-row md:items-center space-y-3 md:space-y-0 md:space-x-5">
+                  <!-- Avatar -->
+                  <div class="flex justify-center md:justify-start -mt-16 relative">
+                    <div class="w-28 h-28 rounded-full border-4 border-white dark:border-gray-800 overflow-hidden shadow-lg">
+                      <img :src="user.avatar" alt="Profile" class="w-full h-full object-cover" />
+                    </div>
+                  </div>
+
+                  <!-- User Info -->
+                  <div class="text-center md:text-left pt-2 md:pt-0">
+                    <h1 class="text-2xl font-bold text-gray-800 dark:text-white">{{ user.name }}</h1>
+                    <div class="flex flex-col md:flex-row md:items-center space-y-1 md:space-y-0 md:space-x-3">
+                      <span class="text-indigo-600 dark:text-indigo-400 font-medium">{{ user.user.lavozimi }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <button class="btn-secondary">Logout</button>
           </div>
-          
-          <div class="session-item">
-            <div class="session-info">
-              <span class="session-device">Safari on macOS</span>
-              <span class="session-ip">192.168.1.2</span>
-              <span class="session-time">Last active: 2 days ago</span>
+
+          <!-- Tab Navigation -->
+          <div class="border-b border-gray-200 dark:border-gray-700">
+            <div class="px-6 flex overflow-x-auto hide-scrollbar">
+              <div v-for="tab in ['sozlamalar']" :key="tab"
+                :class="[
+                  'py-4 px-4 font-medium cursor-pointer border-b-2 transition-colors whitespace-nowrap',
+                  activeTab === tab 
+                    ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400' 
+                    : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                ]"
+                @click="activeTab = tab">
+                {{ tab.charAt(0).toUpperCase() + tab.slice(1) }}
+              </div>
             </div>
-            <button class="btn-secondary">Logout</button>
           </div>
-        </div>
-      </form>
-    </div>
-    
-    <!-- Preferences Tab -->
-    <div v-if="activeTab === 'preferences'" class="card profile-content">
-      <div class="preferences-section">
-        <h3>Notification Preferences</h3>
-        <div class="preference-item">
-          <div class="preference-info">
-            <span class="preference-label">Email Notifications</span>
-            <span class="preference-description">Receive notifications via email</span>
-          </div>
-          <label class="toggle">
-            <input type="checkbox" v-model="notifications.email" :disabled="!isEditing">
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-        
-        <div class="preference-item">
-          <div class="preference-info">
-            <span class="preference-label">Browser Notifications</span>
-            <span class="preference-description">Receive notifications in browser</span>
-          </div>
-          <label class="toggle">
-            <input type="checkbox" v-model="notifications.browser" :disabled="!isEditing">
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-        
-        <div class="preference-item">
-          <div class="preference-info">
-            <span class="preference-label">Invoice Alerts</span>
-            <span class="preference-description">Get notified about new invoices</span>
-          </div>
-          <label class="toggle">
-            <input type="checkbox" v-model="notifications.invoices" :disabled="!isEditing">
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-        
-        <div class="preference-item">
-          <div class="preference-info">
-            <span class="preference-label">Payment Alerts</span>
-            <span class="preference-description">Get notified about payments</span>
-          </div>
-          <label class="toggle">
-            <input type="checkbox" v-model="notifications.payments" :disabled="!isEditing">
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-        
-        <div class="preference-item">
-          <div class="preference-info">
-            <span class="preference-label">Report Notifications</span>
-            <span class="preference-description">Get notified when reports are ready</span>
-          </div>
-          <label class="toggle">
-            <input type="checkbox" v-model="notifications.reports" :disabled="!isEditing">
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-      </div>
-      
-      <div class="preferences-section">
-        <h3>Display Preferences</h3>
-        <div class="display-preferences">
-          <div class="form-group">
-            <label for="theme">Theme</label>
-            <select id="theme" class="form-select" :disabled="!isEditing">
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
-              <option value="system">System Default</option>
-            </select>
-          </div>
-          
-          <div class="form-group">
-            <label for="language">Language</label>
-            <select id="language" class="form-select" :disabled="!isEditing">
-              <option value="en">English</option>
-              <option value="es">Spanish</option>
-              <option value="fr">French</option>
-              <option value="de">German</option>
-            </select>
-          </div>
-          
-          <div class="form-group">
-            <label for="date-format">Date Format</label>
-            <select id="date-format" class="form-select" :disabled="!isEditing">
-              <option value="mdy">MM/DD/YYYY</option>
-              <option value="dmy">DD/MM/YYYY</option>
-              <option value="ymd">YYYY-MM-DD</option>
-            </select>
+
+          <!-- Tab Content -->
+          <div class="p-6">
+            <div v-if="activeTab === 'sozlamalar'" class="space-y-8">
+              <!-- Bildirishnomalar -->
+              <div>
+                <div class="space-y-4">
+                  <div v-for="[key, label, desc] in [
+                    ['email', 'Email Bildirishnomalar', 'Get updates delivered to your inbox'],
+                    ['browser', 'Browser Bildirishnomalar', 'Receive alerts in your browser'],
+                  ]" :key="key" 
+                  class="flex items-center justify-between py-4 border-b border-gray-100 dark:border-gray-700">
+                    <div>
+                      <p class="font-medium text-gray-800 dark:text-white">{{ label }}</p>
+                      <p class="text-sm text-gray-500 dark:text-gray-400">{{ desc }}</p>
+                    </div>
+                    
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" v-model="Bildirishnomalar[key]" :disabled="!isEditing" class="sr-only peer">
+                      <div
+                        class="w-11 h-6 bg-gray-200 dark:bg-gray-700 rounded-full peer 
+                        peer-checked:bg-indigo-500 peer-disabled:opacity-50 peer-disabled:cursor-not-allowed
+                        after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white 
+                        after:rounded-full after:h-5 after:w-5 after:transition-all
+                        peer-checked:after:translate-x-5"></div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Display Settings -->
+              <div>
+                <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Display Settings</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <!-- Theme -->
+                  <div>
+                    <label for="theme" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Theme
+                    </label>
+                    <select 
+                      id="theme" 
+                      v-model="settings.theme" 
+                      @change="handleThemeChange($event)"
+                      :disabled="!isEditing"
+                      class="w-full px-4 py-3 rounded-xl border border-gray-600
+                      text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-700
+                      focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
+                      disabled:bg-gray-100 dark:disabled:bg-gray-800/50 disabled:text-gray-500 dark:disabled:text-gray-400
+                      disabled:cursor-not-allowed transition-colors">
+                      <option value="light">Light</option>
+                      <option value="dark">Dark</option>
+                      <option value="system-default">System Default</option>
+                    </select>
+                  </div>
+
+                  <!-- Language -->
+                  <div>
+                    <label for="language" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Language
+                    </label>
+                    <select 
+                      id="language" 
+                      v-model="settings.language" 
+                      :disabled="!isEditing"
+                      class="w-full px-4 py-3 rounded-xl border border-gray-600
+                      text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-700
+                      focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
+                      disabled:bg-gray-100 dark:disabled:bg-gray-800/50 disabled:text-gray-500 dark:disabled:text-gray-400
+                      disabled:cursor-not-allowed transition-colors">
+                      <option value="english">kril</option>
+                      <option value="uzbek">Uzbek</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bildirishnomalar Tab -->
+            <div v-if="activeTab === 'Bildirishnomalar'" class="space-y-6">
+              <h3 class="text-xl font-bold text-gray-800 dark:text-white">Bildirishnomalar</h3>
+              <div v-if="BildirishnomalarData.length === 0" class="text-gray-500 dark:text-gray-400">
+                No Bildirishnomalar available.
+              </div>
+              <div v-else class="space-y-4">
+                <div v-for="notification in BildirishnomalarData" :key="notification.id"
+                  class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-100 dark:border-gray-700">
+                  <p class="font-medium text-gray-800 dark:text-white">{{ notification.message }}</p>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">
+                    {{ new Date(notification.sentAt).toLocaleString() }}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -326,382 +278,18 @@ const notifications = ref({
 </template>
 
 <style scoped>
-.profile-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--space-4);
+/* Hide scrollbar while maintaining functionality */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-.profile-info {
-  display: flex;
-  align-items: center;
-}
-
-.profile-avatar {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  overflow: hidden;
-  margin-right: var(--space-4);
-  border: 3px solid var(--color-bg-secondary);
-}
-
-.profile-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.profile-details h2 {
-  margin: 0 0 var(--space-1) 0;
-}
-
-.profile-position {
-  color: var(--color-text-secondary);
-  margin: 0 0 var(--space-1) 0;
-}
-
-.profile-joined {
-  font-size: 0.875rem;
-  color: var(--color-text-tertiary);
-  margin: 0;
-}
-
-.profile-actions {
-  display: flex;
-  gap: var(--space-2);
-}
-
-.profile-tabs {
-  display: flex;
-  margin-bottom: var(--space-4);
-  background-color: var(--color-bg-primary);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-}
-
-.tab {
-  padding: var(--space-3) var(--space-4);
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border-bottom: 2px solid transparent;
-}
-
-.tab:hover {
-  background-color: var(--color-bg-secondary);
-}
-
-.tab.active {
-  background-color: var(--color-bg-primary);
-  border-bottom: 2px solid var(--color-accent);
-  color: var(--color-accent);
-}
-
-.profile-form {
-  max-width: 600px;
-}
-
-.form-group {
-  margin-bottom: var(--space-4);
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: var(--space-1);
-  font-weight: 500;
-}
-
-.form-input, .form-select, .form-textarea {
-  width: 100%;
-  padding: var(--space-2);
-  border: 1px solid var(--color-bg-tertiary);
-  border-radius: var(--radius-md);
-  font-size: 1rem;
-  transition: border-color 0.2s ease;
-  background-color: white;
-}
-
-.form-input:focus, .form-select:focus, .form-textarea:focus {
-  outline: none;
-  border-color: var(--color-accent);
-}
-
-.form-input:disabled, .form-select:disabled, .form-textarea:disabled {
-  background-color: var(--color-bg-secondary);
-  cursor: not-allowed;
-}
-
-.form-textarea {
-  resize: vertical;
-}
-
-.security-section, .preferences-section {
-  margin-top: var(--space-5);
-}
-
-.security-section h3, .preferences-section h3 {
-  margin-bottom: var(--space-3);
-  padding-bottom: var(--space-2);
-  border-bottom: 1px solid var(--color-bg-tertiary);
-}
-
-.session-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--space-3);
-  background-color: var(--color-bg-secondary);
-  border-radius: var(--radius-md);
-  margin-bottom: var(--space-3);
-}
-
-.session-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.session-device {
-  font-weight: 500;
-  margin-bottom: var(--space-1);
-}
-
-.session-ip, .session-time {
-  font-size: 0.875rem;
-  color: var(--color-text-tertiary);
-}
-
-.preference-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--space-3) 0;
-  border-bottom: 1px solid var(--color-bg-tertiary);
-}
-
-.preference-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.preference-label {
-  font-weight: 500;
-  margin-bottom: var(--space-1);
-}
-
-.preference-description {
-  font-size: 0.875rem;
-  color: var(--color-text-tertiary);
-}
-
-.toggle {
-  position: relative;
-  display: inline-block;
-  width: 50px;
-  height: 24px;
-}
-
-.toggle input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.toggle-slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: var(--color-bg-tertiary);
-  transition: .4s;
-  border-radius: 24px;
-}
-
-.toggle-slider:before {
-  position: absolute;
-  content: "";
-  height: 18px;
-  width: 18px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  transition: .4s;
-  border-radius: 50%;
-}
-
-input:checked + .toggle-slider {
-  background-color: var(--color-success);
-}
-
-input:checked + .toggle-slider:before {
-  transform: translateX(26px);
-}
-
-input:disabled + .toggle-slider {
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-.display-preferences {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-4);
-}
-*{
-  color: black;
-  }
+/* Add smooth transition for all color changes */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-  background-color: var(--color-bg-secondary);
-  color: var(--color-text-primary);
-}
-
-h1 {
-  font-size: 2rem;
-  line-height: 1.2;
-  font-weight: 600;
-  margin-bottom: var(--space-4);
-}
-
-h2 {
-  font-size: 1.5rem;
-  line-height: 1.3;
-  font-weight: 600;
-  margin-bottom: var(--space-3);
-}
-
-h3 {
-  font-size: 1.25rem;
-  line-height: 1.4;
-  font-weight: 600;
-  margin-bottom: var(--space-2);
-}
-
-a {
-  text-decoration: none;
-  color: var(--color-accent);
-}
-
-button, .btn {
-  border-radius: var(--radius-md);
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: var(--color-accent);
-  color: white;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-button:hover, .btn:hover {
-  background-color: #2c73b4;
-}
-
-.card {
-  background-color: var(--color-bg-primary);
-  border-radius: var(--radius-md);
-  padding: var(--space-4);
-  box-shadow: var(--shadow-md);
-}
-
-.text-success {
-  color: var(--color-success);
-}
-
-.text-warning {
-  color: var(--color-warning);
-}
-
-.text-error {
-  color: var(--color-error);
-}
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.table th, .table td {
-  padding: var(--space-2) var(--space-3);
-  text-align: left;
-}
-
-.table th {
-  background-color: var(--color-bg-secondary);
-  font-weight: 600;
-}
-
-.table tr {
-  border-bottom: 1px solid var(--color-bg-tertiary);
-}
-
-.table tr:last-child {
-  border-bottom: none;
-}
-
-.table tr:hover {
-  background-color: var(--color-bg-secondary);
-}
-
-.badge {
-  display: inline-block;
-  padding: var(--space-1) var(--space-2);
-  border-radius: var(--radius-sm);
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.badge-success {
-  background-color: rgba(56, 161, 105, 0.1);
-  color: var(--color-success);
-}
-
-.badge-pending {
-  background-color: rgba(237, 137, 54, 0.1);
-  color: var(--color-warning);
-}
-
-.negative {
-  color: var(--color-error);
-}
-
-.positive {
-  color: var(--color-success);
-}
-@media (max-width: 768px) {
-  .profile-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .profile-info {
-    margin-bottom: var(--space-3);
-  }
-  
-  .profile-tabs {
-    flex-direction: column;
-  }
-  
-  .tab {
-    text-align: center;
-  }
-  
-  .display-preferences {
-    grid-template-columns: 1fr;
-  }
+  transition-property: color, background-color, border-color;
+  transition-duration: 300ms;
 }
 </style>

@@ -4,9 +4,7 @@
 
 
     <!-- Header -->
-    <header class="fixed top-0 dark:bg-[#1e2a46] w-full z-20 flex justify-between items-center px-6 py-4 h-[90px] shadow-sm">
-      <!-- <h1 class="text-white ml-20 font-semibold"><img class="w-[190px]" src="/logo1.png" alt=""></h1> -->
-<Dark /> 
+    <header class="fixed top-0 bg-[#1e2a46] w-full z-20 flex justify-between items-center px-6 py-4 h-[90px] shadow-sm">
       <router-link to="/profile">
         <div class="w-[70px] h-[68px] rounded-full overflow-hidden">
           <img :src="getProfileImage(userInfoLotin.img)" alt="Profile" class="w-full h-full object-cover" />
@@ -75,7 +73,7 @@
         'flex-1 mt-[90px] transition-all ml-16 duration-500 ease-in-out',
       ]">
         <router-view />
-        <Js />
+        <Dark />
       </main>
     </div>
   </div>
@@ -93,7 +91,7 @@ import { io } from 'socket.io-client'
 import translateText from '@/auth/Translate'
 import { useSearchStore } from './searchQuary'
 import Dark from '../dark.vue'
-import Js from './js.vue'
+const unreadCount1 = ref(0);
 
 const searchStore = useSearchStore()
 const showModal = ref(false)
@@ -202,7 +200,7 @@ const fetchUnreadCount = async () => {
 
   try {
     const response = await axios.get(`${URL}/accauntant-notification/unread/count?userId=${userIdNum}`)
-    unreadCount.value = response.data
+    unreadCount.value = response.data + unreadCount1.value
   } catch (error) {
     console.error('Error fetching unread count:', error)
   }
@@ -272,11 +270,53 @@ if (socket) {
   provide('socket', socket)
 }
 
+// State
+
+// Socket instance
+const socketURL = URL || 'http://localhost:3000';
+const socket1 = io(socketURL, {
+  path: '/socket.io',
+  transports: ['websocket', 'polling'],
+  auth: {
+    userId: parseInt(localStorage.getItem('id')) || 1,
+  },
+});
+
+// Socket event handlers for unread count
+const setupSocketListeners = () => {
+  socket1.on('connect', () => {
+    const userId = parseInt(localStorage.getItem('id')) || 1;
+    socket.emit('joinUser', userId);
+  });
+
+  socket1.on('unreadCount', (count) => {
+    unreadCount.value = unreadCount.value + count;
+    unreadCount1.value = count
+  });
+
+  socket1.on('newNotification', () => {
+    getUnreadCount();
+  });
+
+  socket1.on('error', (message) => {
+    console.error('Socket Error:', message);
+  });
+};
+
+// Function to fetch unread count
+const getUnreadCount = () => {
+  const userId = parseInt(localStorage.getItem('id')) || 1;
+  socket1.emit('getUnreadCount', userId);
+};
+
+
+
 onMounted(async () => {
   await fetchUserData()
   await fetchUnreadCount()
   await fetchUnreadMessageCount()
-
+  setupSocketListeners();
+  getUnreadCount();
   watch(messageCount, (newVal) => {
     localStorage.setItem('messageCount', newVal)
   })
@@ -284,6 +324,7 @@ onMounted(async () => {
 
 onUnmounted(() => {
   const socket = inject('socket')
+  socket.disconnect();
   if (socket) {
     socket.disconnect()
   }

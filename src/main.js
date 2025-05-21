@@ -55,7 +55,14 @@ const checkLocation = async () => {
         console.error("Joylashuvni olishda xatolik:", error);
     }
 };
-
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/firebase-messaging-sw.js')
+    .then((registration) => {
+      console.log("Service Worker ro'yxatdan o'tdi:", registration)
+    }).catch((err) => {
+      console.error("Service Worker xatolik:", err)
+    })
+}
 // App yaratish
 const app = createApp(App);
 

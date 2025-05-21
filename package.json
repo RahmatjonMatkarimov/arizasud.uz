@@ -37,6 +37,7 @@
     "docxtemplater": "^3.60.2",
     "docxtemplater-image-module-free": "^1.1.1",
     "file-saver": "^2.0.5",
+    "firebase": "^11.8.0",
     "framer-motion": "^12.4.2",
     "fs": "^0.0.1-security",
     "gsap": "^3.12.7",
