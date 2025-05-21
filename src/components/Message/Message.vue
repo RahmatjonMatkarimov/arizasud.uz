@@ -344,6 +344,7 @@ const isClicked = ref(false);
 const recordingTime = ref(0);
 const recordingInterval = ref(null);
 const messagesContainer = ref(null);
+const isSocketConnected = ref(false);
 
 // Computed property for recording time
 const formattedRecordingTime = computed(() => {
@@ -571,14 +572,25 @@ const initializeSocket = () => {
     auth: { userId: user.value.id },
   });
 
-  socket.value.on('connect', () => console.log('Socket connected'));
-  socket.value.on('disconnect', () => console.log('Socket disconnected'));
+  socket.value.on('connect', () => {
+    console.log('Socket connected');
+    isSocketConnected.value = true;
+    socket.value.emit('join', user.value.id); // Ensure join after connect
+  });
+
+  socket.value.on('disconnect', () => {
+    console.log('Socket disconnected');
+    isSocketConnected.value = false;
+  });
+
   socket.value.on('error', (error) => {
     console.error('Socket error:', error);
     alert(error || 'An error occurred with the WebSocket connection');
+    isSocketConnected.value = false;
   });
 
   socket.value.on('newMessage', (message) => {
+    console.log('Received new message:', message);
     // Prevent duplicates by checking message ID
     if (!messages.value.some((msg) => msg.id === message.id)) {
       messages.value.push(message);
@@ -586,6 +598,7 @@ const initializeSocket = () => {
         getOneMessage(message.replyToMessageId);
       }
       scrollToBottom();
+      nextTick(() => setupNewAudioPlayers());
       if (message.senderId !== user.value.id) {
         unreadCount.value++;
       }
@@ -620,8 +633,28 @@ const initializeSocket = () => {
   socket.value.on('unreadCount', ({ count }) => {
     unreadCount.value = count;
   });
+};
 
-  socket.value.emit('join', user.value.id);
+// Fallback polling for messages (in case socket fails)
+const pollMessages = async () => {
+  try {
+    const response = await axios.get(`${URL}/messages`);
+    const newMessages = response.data.filter(
+      (msg) => !messages.value.some((m) => m.id === msg.id)
+    );
+    if (newMessages.length > 0) {
+      messages.value.push(...newMessages);
+      newMessages.forEach((msg) => {
+        if (msg.replyToMessageId) {
+          getOneMessage(msg.replyToMessageId);
+        }
+      });
+      scrollToBottom();
+      nextTick(() => setupNewAudioPlayers());
+    }
+  } catch (error) {
+    console.error('Error polling messages:', error.message);
+  }
 };
 
 // API functions
@@ -629,17 +662,14 @@ const fetchMessages = async () => {
   try {
     const response = await axios.get(`${URL}/messages`);
     console.log('Fetched messages:', response.data);
-    const uniqueMessages = response.data.filter(
-      (msg) => !messages.value.some((m) => m.id === msg.id)
-    );
-    messages.value = [...uniqueMessages]; // Replace, not append, to avoid duplicates
+    messages.value = response.data; // Replace to ensure fresh state
     messages.value.forEach((msg) => {
       if (msg.replyToMessageId) {
         getOneMessage(msg.replyToMessageId);
       }
     });
     scrollToBottom();
-    socket.value.emit('markAsRead', user.value.id);
+    socket.value?.emit('markAsRead', user.value.id);
     nextTick(() => setupNewAudioPlayers());
   } catch (error) {
     console.error('Error fetching messages:', error.message, error.response?.data);
@@ -928,6 +958,7 @@ const showContextMenu = (event, message) => {
 };
 
 // Lifecycle hooks
+let pollingInterval = null;
 onMounted(() => {
   console.log('Component mounted, initializing socket');
   initializeSocket();
@@ -944,6 +975,8 @@ onMounted(() => {
     if (!e.target.closest('.context-menu')) closeContextMenu();
   });
   setupNewAudioPlayers();
+  // Start polling as a fallback (every 30 seconds)
+  pollingInterval = setInterval(pollMessages, 30000);
 });
 
 onUnmounted(() => {
@@ -953,6 +986,7 @@ onUnmounted(() => {
     socket.value.off();
   }
   clearInterval(recordingInterval.value);
+  clearInterval(pollingInterval);
   mediaRecorder.value?.stream?.getTracks().forEach((track) => track.stop());
   window.removeEventListener('scroll', () => {});
   document.removeEventListener('click', () => {});
