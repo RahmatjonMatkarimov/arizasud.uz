@@ -262,6 +262,7 @@ const createRipple = (event) => {
 
 // Determine if item is active
 const isActive = (path) => {
+  isAsideVisible.value = false
   return currentRoute.value.path === path
 }
 
