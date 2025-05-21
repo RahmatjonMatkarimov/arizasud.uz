@@ -575,7 +575,9 @@ const initializeSocket = () => {
   socket.value.on('connect', () => {
     console.log('Socket connected');
     isSocketConnected.value = true;
-    socket.value.emit('join', user.value.id); // Ensure join after connect
+    socket.value.emit('join', user.value.id, (response) => {
+      console.log('Join response:', response);
+    });
   });
 
   socket.value.on('disconnect', () => {
@@ -590,8 +592,7 @@ const initializeSocket = () => {
   });
 
   socket.value.on('newMessage', (message) => {
-    console.log('Received new message:', message);
-    // Prevent duplicates by checking message ID
+    console.log('Received new message:', message, 'Is file:', !!message.attachmentUrl);
     if (!messages.value.some((msg) => msg.id === message.id)) {
       messages.value.push(message);
       if (message.replyToMessageId) {
@@ -602,6 +603,8 @@ const initializeSocket = () => {
       if (message.senderId !== user.value.id) {
         unreadCount.value++;
       }
+    } else {
+      console.log('Duplicate message ignored:', message.id);
     }
   });
 
@@ -635,7 +638,7 @@ const initializeSocket = () => {
   });
 };
 
-// Fallback polling for messages (in case socket fails)
+// Fallback polling for messages
 const pollMessages = async () => {
   try {
     const response = await axios.get(`${URL}/messages`);
@@ -643,6 +646,7 @@ const pollMessages = async () => {
       (msg) => !messages.value.some((m) => m.id === msg.id)
     );
     if (newMessages.length > 0) {
+      console.log('Polled new messages:', newMessages);
       messages.value.push(...newMessages);
       newMessages.forEach((msg) => {
         if (msg.replyToMessageId) {
@@ -662,7 +666,7 @@ const fetchMessages = async () => {
   try {
     const response = await axios.get(`${URL}/messages`);
     console.log('Fetched messages:', response.data);
-    messages.value = response.data; // Replace to ensure fresh state
+    messages.value = response.data;
     messages.value.forEach((msg) => {
       if (msg.replyToMessageId) {
         getOneMessage(msg.replyToMessageId);
@@ -751,6 +755,7 @@ const sendMessage = async (type, smileyId = null) => {
       // Immediately add the sent file message to the UI
       if (!messages.value.some((msg) => msg.id === response.data.id)) {
         messages.value.push(response.data);
+        console.log('Added file message to sender UI:', response.data);
         if (response.data.replyToMessageId) {
           getOneMessage(response.data.replyToMessageId);
         }
@@ -975,8 +980,8 @@ onMounted(() => {
     if (!e.target.closest('.context-menu')) closeContextMenu();
   });
   setupNewAudioPlayers();
-  // Start polling as a fallback (every 30 seconds)
-  pollingInterval = setInterval(pollMessages, 30000);
+  // Start polling for testing (every 10 seconds)
+  pollingInterval = setInterval(pollMessages, 10000);
 });
 
 onUnmounted(() => {
