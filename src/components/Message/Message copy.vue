@@ -6,7 +6,7 @@
         <div ref="messagesContainer"
           class="min-w-full mb-[190px] mt-[100px] h-[calc(100%-100px)] overflow-y-auto p-4 space-y-4 scrollbar-custom">
           <div v-for="message in messages" :key="message.id" :ref="el => messageRefs[message.id] = el"
-            :class="['flex', message.senderId === user?.id ? 'justify-end' : 'justify-start']"@dblclick="handleReply(message)"
+            :class="['flex', message.senderId === user?.id ? 'justify-end' : 'justify-start']"
             @contextmenu.prevent="showContextMenu($event, message)">
             <div class="flex items-start max-w-[80%] space-x-2">
               <div v-if="message?.sender?.img" class="w-8 h-8 rounded-full bg-gray-700 flex-shrink-0">
@@ -182,25 +182,23 @@
       <div
         class="fixed bottom-4 w-[calc(100%-500px)] bg-gray-800/90 shadow-xl px-3 py-4 flex flex-col rounded-full border border-teal-500/50 backdrop-blur-sm">
         <div v-if="replyTo" class="w-full bg-gray-700/50 p-2 rounded-md mb-2 flex justify-between items-center">
-  <div class="flex items-center space-x-1">
-    <span class="text-teal-400 font-semibold text-xs">{{ dat === 'datakril' ? translateText('Javob berilmoqda:') : 'Javob berilmoqda:' }}</span>
-    <div class="text-gray-300 text-xs">
-      <template v-if="replyMessages[replyTo]?.content">
-        {{ replyMessages[replyTo].content.substring(0, 40) + (replyMessages[replyTo].content.length > 40 ? '...' : '') }}
-      </template>
-      <template v-else-if="replyMessages[replyTo]?.smileyPath">
-        {{ dat === 'datakril' ? translateText('Stikker') : 'Stikker' }}
-      </template>
-      <template v-else-if="replyMessages[replyTo]?.attachmentUrl">
-        {{ dat === 'datakril' ? translateText('Fayl') : 'Fayl' }}
-      </template>
-      <template v-else>
-        {{ dat === 'datakril' ? translateText('Noma\'lum') : 'Noma\'lum' }}
-      </template>
-    </div>
-  </div>
-  <button @click="cancelReply" class="text-red-400 hover:text-red-500 text-sm">✖</button>
-</div>
+          <div class="flex items-center space-x-1">
+            <span class="text-teal-400 font-semibold text-xs">{{ dat === 'datakril' ? translateText('Javob berilmoqda:')
+              : 'Javob berilmoqda:' }}</span>
+            <div class="text-gray-300 text-xs">
+              {{
+                replyMessages[replyTo]?.content?.substring(0, 40) +
+                  (replyMessages[replyTo]?.content?.length > 40 ? '...' : '') ||
+                  replyMessages[replyTo]?.attachmentUrl
+                  ? (dat === 'datakril' ? translateText('Fayl') : 'Fayl')
+                  : replyMessages[replyTo]?.smileyPath
+                    ? (dat === 'datakril' ? translateText('Tabassum') : 'Tabassum')
+                    : (dat === 'datakril' ? translateText('Noma\'lum') : 'Noma\'lum')
+              }}
+            </div>
+          </div>
+          <button @click="cancelReply" class="text-red-400 hover:text-red-500 text-sm">✖</button>
+        </div>
 
         <div v-if="recording" class="flex items-center justify-between">
           <div class="flex items-center">

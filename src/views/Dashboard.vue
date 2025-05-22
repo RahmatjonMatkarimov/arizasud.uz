@@ -246,9 +246,9 @@ onMounted(() => {
 
       <div v-else>
         <div class="kpi-grid">
-          <KpiCard class="kpi-card" title="Umumiy Xarajatlar" :value="formatNumberWithDots(animatedData1) + ` so'm`" color="warning" />
           <KpiCard class="kpi-card" title="Soliq Xarajatlari" :value="formatNumberWithDots(animatedData2) + ` so'm`" color="success" />
           <KpiCard class="kpi-card" title="Korxona Xarajati" :value="formatNumberWithDots(animatedData3) + ` so'm`" color="primary" />
+          <KpiCard class="kpi-card" title="Umumiy Xarajatlar" :value="formatNumberWithDots(animatedData1) + ` so'm`" color="warning" />
           <KpiCard class="kpi-card" title="Shartmona bo'yicha qarzlar" :value="formatNumberWithDots(animatedData4) + ` so'm`" color="success" />
           <KpiCard class="kpi-card" title="Foyda" :value="formatNumberWithDots(animatedData) + ` so'm`" color="success" />
         </div>
