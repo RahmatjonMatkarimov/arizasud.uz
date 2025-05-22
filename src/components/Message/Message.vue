@@ -1,13 +1,14 @@
 <template>
   <div
-    class="min-w-full mx-auto top-[100px] h-[calc(100vh-100px)] fixed border-2 rounded-2xl border-teal-500 bg-gradient-to-br from-gray-900 to-gray-800 backdrop-blur-md">
-    <div id="img" class="relative flex min-w-full justify-between h-full">
+    class="min-w-full mx-auto top-[100px] h-[calc(100vh-100px)] fixed border-2 rounded-2xl border-teal-500 bg-gray-200 dark:bg-gradient-to-br from-gray-900 to-gray-800 backdrop-blur-md">
+    <div id="" class="relative flex min-w-full min-h-screen justify-between h-full">
       <div class="w-full container flex flex-col mx-auto items-center justify-center p-4">
         <div ref="messagesContainer"
-          class="min-w-full mb-[190px] mt-[100px] h-[calc(100%-100px)] overflow-y-auto p-4 space-y-4 scrollbar-custom">
+          class="min-w-full mb-[220px] mt-[100px] h-[calc(100%-100px)] overflow-y-auto p-4 space-y-4 scrollbar-custom">
           <div v-for="message in messages" :key="message.id" :ref="el => messageRefs[message.id] = el"
             :class="['flex', message.senderId === user?.id ? 'justify-end' : 'justify-start']"@dblclick="handleReply(message)"
             @contextmenu.prevent="showContextMenu($event, message)">
+            <Dark /> 
             <div class="flex items-start max-w-[80%] space-x-2">
               <div v-if="message?.sender?.img" class="w-8 h-8 rounded-full bg-gray-700 flex-shrink-0">
                 <img :src="getImageUrl(message?.sender?.img)" class="w-full h-full rounded-full object-cover"
@@ -34,7 +35,7 @@
                   'message-bubble px-3 py-2 max-w-md transition-all duration-200 shadow-md',
                   message.senderId === user?.id
                     ? 'bg-gradient-to-r rounded-bl-2xl rounded-tl-2xl rounded-tr-2xl from-teal-600 to-teal-500 text-white'
-                    : 'bg-gradient-to-r rounded-br-2xl rounded-tl-2xl rounded-tr-2xl from-gray-700 to-gray-600 text-white'
+                    : 'bg-gradient-to-r rounded-br-2xl rounded-tl-2xl rounded-tr-2xl from-slate-500 to-gray-600 dark:from-gray-700 dark:to-gray-600 text-white'
                 ]">
                   <div v-if="message.replyToMessageId" @click="scrollToRepliedMessage(message.replyToMessageId)"
                     class="border-l-4 border-teal-400/50 rounded-tr-sm rounded-tl-md rounded-bl-md rounded-br-sm p-2 bg-black/30 cursor-pointer hover:bg-black/40 transition">
@@ -180,7 +181,7 @@
       </button>
 
       <div
-        class="fixed bottom-4 w-[calc(100%-500px)] bg-gray-800/90 shadow-xl px-3 py-4 flex flex-col rounded-full border border-teal-500/50 backdrop-blur-sm">
+        class="fixed bottom-4 w-[calc(100%-500px)] bg-gray-800/90 shadow-xl px-3 py-4 flex flex-col rounded-2xl border border-teal-500/50 backdrop-blur-sm">
         <div v-if="replyTo" class="w-full bg-gray-700/50 p-2 rounded-md mb-2 flex justify-between items-center">
   <div class="flex items-center space-x-1">
     <span class="text-teal-400 font-semibold text-xs">{{ dat === 'datakril' ? translateText('Javob berilmoqda:') : 'Javob berilmoqda:' }}</span>
@@ -201,7 +202,6 @@
   </div>
   <button @click="cancelReply" class="text-red-400 hover:text-red-500 text-sm">✖</button>
 </div>
-
         <div v-if="recording" class="flex items-center justify-between">
           <div class="flex items-center">
             <div class="w-3 h-3 bg-red-500 rounded-full mr-1 animate-pulse"></div>
@@ -338,6 +338,7 @@ import { inject } from 'vue';
 import translateText from '@/auth/Translate';
 import translateTextLotin from '@/auth/lotin';
 import { Icon } from '@iconify/vue';
+import Dark from '../dark.vue';
 
 // User data from localStorage
 const user = ref({
