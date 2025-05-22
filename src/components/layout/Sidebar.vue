@@ -182,8 +182,8 @@ const navigateTo = (path, index) => {
       '-=0.2'
     )
   
-  // Hide sidebar on mobile after navigation
-  if (window.innerWidth < 768) {
+  // Auto close sidebar after navigation (for all screen sizes)
+  if (isAsideVisible.value) {
     isAsideVisible.value = false
     animateSidebar(false)
   }
@@ -262,7 +262,6 @@ const createRipple = (event) => {
 
 // Determine if item is active
 const isActive = (path) => {
-  isAsideVisible.value = false
   return currentRoute.value.path === path
 }
 
@@ -271,11 +270,37 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', handleResize)
 })
 
-// Watch for route changes
-watch(() => currentRoute.value.path, (newPath) => {
+// Watch for route changes and auto-close sidebar
+watch(() => currentRoute.value.path, (newPath, oldPath) => {
+  // Auto-close sidebar when route changes (if it was open)
+  if (newPath !== oldPath && isAsideVisible.value) {
+    isAsideVisible.value = false
+    animateSidebar(false)
+  }
+  
+  // Update active menu item
   const newIndex = menuItems.findIndex(item => item.path === newPath)
   if (newIndex >= 0 && newIndex !== activeItemIndex.value) {
-    navigateTo(newPath, newIndex)
+    // Reset previous active item
+    gsap.to(`.menu-item-${activeItemIndex.value}`, {
+      backgroundColor: 'rgba(255, 255, 255, 0)',
+      borderLeftWidth: '0px',
+      duration: 0.3,
+      ease: 'power2.out'
+    })
+    
+    // Set new active item
+    activeItemIndex.value = newIndex
+    
+    // Animate new active item
+    gsap.timeline()
+      .to(`.menu-item-${newIndex}`, {
+        backgroundColor: 'rgba(255, 255, 255, 0.15)',
+        borderLeftWidth: '3px',
+        borderLeftColor: 'rgba(250, 204, 21, 1)',
+        duration: 0.4,
+        ease: 'power2.out'
+      })
   }
 })
 

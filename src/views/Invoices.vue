@@ -303,26 +303,20 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="background p-7 min-h-screen">
+  <div class="dark:bg-[#1a2642] dark:text-gray-200 p-7 min-h-screen">
     <!-- Invoices List View -->
     <div v-if="!showDetails" class="rounded-lg p-6">
       <div class="mb-6">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-          <div class="flex flex-col">
-          </div>
-          <div class="flex justify-end md:col-span-2">
-            <div class="mb-3">
-              <select id="status" v-model="filters.status"
+        <div class="flex justify-end gap-4">
+                  <div>
+         <select id="status" v-model="filters.status"
                 class="block w-full px-4 py-3 border border-gray-300 bg-[#fff0] text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500">
                 <option class="text-black" value="">{{ dat === 'datakril' ? translateText('Tartib raqam') : 'Tartib raqam' }}</option>
                 <option class="text-black" value="Paid">{{ dat === 'datakril' ? translateText('Teskari Yaratilish vaqti') : 'Teskari Yaratilish vaqti' }}</option>
                 <option class="text-black" value="az">{{ dat === 'datakril' ? translateText('A-Z nom bo‘yicha') : 'A-Z nom bo‘yicha' }}</option>
                 <option class="text-black" value="total">{{ dat === 'datakril' ? translateText('Tugash vaqti kelganlar') : 'Tugash vaqti kelganlar' }}</option>
               </select>
-            </div>
-          </div>
         </div>
-        <div class="flex justify-end gap-4">
           <button @click="Showmodal = !Showmodal"
             class="bg-lime-600 text-white px-4 py-2 rounded-md hover:bg-lime-700 transition">
             {{ dat === 'datakril' ? translateText('Yangi hisobot yaratish') : 'Yangi hisobot yaratish' }}
@@ -331,20 +325,21 @@ onMounted(() => {
             class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
             {{ dat === 'datakril' ? translateText('Excel qilib yuklab olish') : 'Excel qilib yuklab olish' }}
           </button>
-        </div>
-      </div>
-      <div class="flex justify-end gap-2 mb-4">
+                <div class="flex justify-end gap-2">
         <div v-if="showChekbox" @click="deleteManyFiles()"
-          class="py-2 px-4 bg-red-700 hover:bg-red-800 rounded-lg cursor-pointer transition">
+          class="py-2 px-4 bg-red-700 flex justify-center items-center hover:bg-red-800 rounded-lg cursor-pointer transition">
           {{ dat === 'datakril' ? translateText('O\'chirish') : 'O\'chirish' }}
         </div>
         <div v-if="!showChekbox" @click="showChekbox = true"
-          class="py-2 px-4 bg-red-700 hover:bg-red-800 rounded-lg cursor-pointer transition">
+          class="py- px-4 bg-red-700 flex justify-center items-center hover:bg-red-800 rounded-lg cursor-pointer transition">
           {{ dat === 'datakril' ? translateText('O\'chirishni rejimini yoqish') : 'O\'chirishni rejimini yoqish' }}
         </div>
         <div v-if="showChekbox" @click="showChekbox = false"
-          class="py-2 px-4 bg-yellow-600 hover:bg-yellow-700 rounded-lg cursor-pointer transition">
+          class="py-2 px-4 flex justify-center items-center bg-yellow-600 hover:bg-yellow-700 rounded-lg cursor-pointer transition">
           {{ dat === 'datakril' ? translateText('O\'chirishni rejimini bekor qilish') : 'O\'chirishni rejimini bekor qilish' }}
+        </div>
+
+      </div>
         </div>
       </div>
       <div class="overflow-x-auto">
@@ -511,15 +506,13 @@ onMounted(() => {
 }
 
 .red {
-  @apply bg-[#ff00006a] rounded-lg border border-white/5 shadow-lg hover:shadow-red-500/10 hover:border-white/10 transition-all duration-300;
+  @apply dark:bg-red-500/40 rounded-lg bg-red-500 border border-white/5 shadow-lg hover:shadow-red-500/10 hover:border-white/10 transition-all duration-300;
 }
-
 .yellow {
-  @apply bg-[#fbff006a] rounded-lg border border-white/5 shadow-lg hover:shadow-red-500/10 hover:border-white/10 transition-all duration-300;
+  @apply dark:bg-yellow-400/40 bg-yellow-400 rounded-lg border border-white/5 shadow-lg hover:shadow-yellow-500/10 hover:border-white/10 transition-all duration-300;
 }
-
 .green {
-  @apply bg-[#04ff006a] rounded-lg border border-white/5 shadow-lg hover:shadow-red-500/10 hover:border-white/10 transition-all duration-300;
+  @apply dark:bg-green-500/40  bg-green-500 rounded-lg border border-white/5 shadow-lg hover:shadow-green-500/10 hover:border-white/10 transition-all duration-300;
 }
 
 @keyframes gradientAnimation {

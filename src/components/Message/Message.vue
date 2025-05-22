@@ -8,7 +8,6 @@
           <div v-for="message in messages" :key="message.id" :ref="el => messageRefs[message.id] = el"
             :class="['flex', message.senderId === user?.id ? 'justify-end' : 'justify-start']"@dblclick="handleReply(message)"
             @contextmenu.prevent="showContextMenu($event, message)">
-            <Dark /> 
             <div class="flex items-start max-w-[80%] space-x-2">
               <div v-if="message?.sender?.img" class="w-8 h-8 rounded-full bg-gray-700 flex-shrink-0">
                 <img :src="getImageUrl(message?.sender?.img)" class="w-full h-full rounded-full object-cover"

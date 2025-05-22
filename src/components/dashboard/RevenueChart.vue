@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { Line } from 'vue-chartjs'
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js'
 import axios from 'axios'
@@ -10,6 +10,9 @@ import { inject } from 'vue'
 const dat = inject('dat')
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
+
+// Reactive theme state
+const isDark = ref(document.documentElement.classList.contains('dark'))
 
 const chartData = ref({
   labels: ['Yan', 'Fev', 'Mar', 'Apr', 'May', 'Iyn', 'Iyl', 'Aug', 'Sen', 'Okt', 'Noy', 'Dek'],
@@ -27,7 +30,7 @@ const chartData = ref({
       label: 'Xarajatlar',
       data: Array(12).fill(0),
       borderColor: '#dc2626',
-      backgroundColor: 'rgba(250,250,250, 0.1)', // Slightly transparent for better contrast
+      backgroundColor: 'rgba(220, 38, 38, 0.1)',
       borderWidth: 2,
       tension: 0.3,
       pointBackgroundColor: '#dc2626',
@@ -35,54 +38,78 @@ const chartData = ref({
   ],
 })
 
-const chartOptions = ref({
-  responsive: true,
-  maintainAspectRatio: false,
-  scales: {
-    y: {
-      beginAtZero: true,
-      ticks: {
-        stepSize: 5000,
-        color: '#ffffff', // White ticks on y-axis
+// Watch for theme changes using MutationObserver
+const setupThemeWatcher = () => {
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+        isDark.value = document.documentElement.classList.contains('dark')
+      }
+    })
+  })
+
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['class']
+  })
+
+  return observer
+}
+
+// Theme-aware chart options - now reactive to isDark changes
+const chartOptions = computed(() => {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        beginAtZero: true,
+        max: chartData.value.yMax || 20000,
+        ticks: {
+          stepSize: chartData.value.stepSize || 5000,
+          color: isDark.value ? '#ffffff' : '#000000',
+        },
+        grid: {
+          color: isDark.value ? 'rgba(255, 255, 255, 0.2)' : 'rgba(107, 114, 128, 0.3)',
+        },
       },
-      grid: {
-        color: 'rgba(255, 255, 255, 0.2)', // Lighter grid lines for contrast
+      x: {
+        ticks: {
+          color: isDark.value ? '#ffffff' : '#000000',
+        },
+        grid: {
+          display: false,
+        },
       },
     },
-    x: {
-      ticks: {
-        color: '#ffffff', // White ticks on x-axis
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: {
+          usePointStyle: true,
+          padding: 20,
+          color: isDark.value ? '#ffffff' : '#000000',
+        },
       },
-      grid: {
-        display: false,
+      tooltip: {
+        mode: 'index',
+        intersect: false,
+        titleColor: isDark.value ? '#ffffff' : '#000000',
+        bodyColor: isDark.value ? '#ffffff' : '#000000',
+        backgroundColor: isDark.value ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.9)',
+        borderColor: isDark.value ? 'rgba(255, 255, 255, 0.2)' : 'rgba(107, 114, 128, 0.3)',
+        borderWidth: 1,
       },
     },
-  },
-  plugins: {
-    legend: {
-      position: 'top',
-      labels: {
-        usePointStyle: true,
-        padding: 20,
-        color: '#ffffff', // White legend text
-      },
-    },
-    tooltip: {
-      mode: 'index',
+    interaction: {
+      mode: 'nearest',
+      axis: 'x',
       intersect: false,
-      titleColor: '#ffffff', // White tooltip title
-      bodyColor: '#ffffff', // White tooltip body
-      backgroundColor: 'rgba(0, 0, 0, 0.8)', // Dark tooltip background for contrast
     },
-  },
-  interaction: {
-    mode: 'nearest',
-    axis: 'x',
-    intersect: false,
-  },
-  animation: {
-    duration: 1000,
-  },
+    animation: {
+      duration: 1000,
+    },
+  }
 })
 
 const getDATA = async () => {
@@ -119,9 +146,9 @@ const getDATA = async () => {
     const maxValue = Math.max(maxRevenue, maxExpense)
     const yMax = maxValue > 0 ? Math.ceil(maxValue * 1.1 / 5000) * 5000 : 20000
 
-    // Update chartOptions with dynamic y-axis max
-    chartOptions.value.scales.y.max = yMax
-    chartOptions.value.scales.y.ticks.stepSize = Math.ceil(yMax / 5)
+    // Store scaling values in chartData for computed options
+    chartData.value.yMax = yMax
+    chartData.value.stepSize = Math.ceil(yMax / 5)
 
     // Update chart data
     chartData.value.datasets[0].data = [...revenueSums]
@@ -133,41 +160,70 @@ const getDATA = async () => {
   }
 }
 
+let observer = null
+
 onMounted(() => {
   getDATA()
+  observer = setupThemeWatcher()
+})
+
+// Cleanup observer when component unmounts
+import { onUnmounted } from 'vue'
+onUnmounted(() => {
+  if (observer) {
+    observer.disconnect()
+  }
 })
 </script>
 
 <template>
-  <div class="chart-container">
-    <h3>{{ dat === 'datakril' ? translateText('Xarajatlar va Foyda') : 'Xarajatlar va Foyda' }}</h3>
+  <div class="chart-container min-h-full overflow-hidden">
+    <h3 class="chart-title">
+      {{ dat === 'datakril' ? translateText('Xarajatlar va Foyda') : 'Xarajatlar va Foyda' }}
+    </h3>
     <div class="chart">
       <Line v-if="chartData.datasets[0].data.some(val => val > 0) || chartData.datasets[1].data.some(val => val > 0)"
         :data="chartData" :options="chartOptions" />
-      <p v-else>{{ dat === 'datakril' ? translateText('Hech qanday malumot yo\'q') : 'Hech qanday malumot yo\'q' }}</p>
+      <p v-else class="no-data-text">
+        {{ dat === 'datakril' ? translateText('Hech qanday malumot yo\'q') : 'Hech qanday malumot yo\'q' }}
+      </p>
     </div>
   </div>
 </template>
 
 <style scoped>
 .chart-container {
-  padding: var(--space-4);
-  @apply bg-gradient-to-r from-[#2a3655] to-[#3d4e81] rounded-lg border border-white/5 shadow-lg hover:shadow-blue-500/5 hover:border-white/10 transition-all duration-300;
-  width: 100%;
-  position: relative;
+  @apply p-4 rounded-lg border shadow-lg transition-all duration-300 w-full relative;
+  
+  /* Light mode styles */
+  @apply bg-gradient-to-r from-blue-50 to-indigo-100 border-gray-200 hover:shadow-xl hover:border-gray-300;
+  
+  /* Dark mode styles */
+  @apply dark:bg-gradient-to-r dark:from-[#2a3655] dark:to-[#3d4e81] dark:border-white/10 dark:hover:shadow-blue-500/10 dark:hover:border-white/20;
 }
 
-.chart-container h3 {
-  margin-bottom: var(--space-3);
-  color: #ffffff; /* White color for h3 */
+.chart-title {
+  @apply mb-3 font-semibold text-lg;
+  
+  /* Light mode text */
+  @apply text-black;
+  
+  /* Dark mode text */
+  @apply dark:text-white;
 }
 
-.chart-container p {
-  color: #ffffff; /* White color for p */
+.no-data-text {
+  @apply text-center py-8 text-base;
+  
+  /* Light mode text */
+  @apply text-gray-900;
+  
+  /* Dark mode text */
+  @apply dark:text-gray-300;
 }
 
 .chart {
   min-height: 300px;
-  width: 100%;
+  width: 100%; 
 }
 </style>

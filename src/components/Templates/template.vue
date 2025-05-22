@@ -59,6 +59,7 @@
           <input type="text" v-model="searchStore.query" placeholder="Qidiruv..."
             class="pl-10 pr-4 py-2 border border-gray-300 rounded-md bg-transparent text-white focus:outline-none focus:border-blue-500 w-48 md:w-64 transition-all duration-200 placeholder-gray-400" />
         </div>
+        <Dark />
 
       </div>
     </header>
@@ -73,7 +74,6 @@
         'flex-1 mt-[90px] transition-all ml-16 duration-500 ease-in-out',
       ]">
         <router-view />
-        <Dark />
       </main>
     </div>
   </div>

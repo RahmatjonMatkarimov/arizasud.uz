@@ -232,9 +232,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="p-6 background min-h-screen">
+  <div class="p-6 min-h-screen bg-gray-200 dark:bg-gradient-to-br from-slate-800 to-slate-900 text-gray-100 antialiased">
     <div class="container mx-auto">
-      <div v-if="!isLoaded" class="loading-container">
+      <!-- Loading State -->
+      <div v-if="!isLoaded" class="flex flex-col items-center justify-center h-screen">
         <div class="loading-pulse">
           <svg class="animate-spin h-12 w-12 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -244,24 +245,52 @@ onMounted(() => {
         <p class="mt-4 text-white">Ma'lumotlar yuklanmoqda...</p>
       </div>
 
+      <!-- Dashboard Content -->
       <div v-else>
-        <div class="kpi-grid">
-          <KpiCard class="kpi-card" title="Soliq Xarajatlari" :value="formatNumberWithDots(animatedData2) + ` so'm`" color="success" />
-          <KpiCard class="kpi-card" title="Korxona Xarajati" :value="formatNumberWithDots(animatedData3) + ` so'm`" color="primary" />
-          <KpiCard class="kpi-card" title="Umumiy Xarajatlar" :value="formatNumberWithDots(animatedData1) + ` so'm`" color="warning" />
-          <KpiCard class="kpi-card" title="Shartmona bo'yicha qarzlar" :value="formatNumberWithDots(animatedData4) + ` so'm`" color="success" />
-          <KpiCard class="kpi-card" title="Foyda" :value="formatNumberWithDots(animatedData) + ` so'm`" color="success" />
+        <!-- KPI Cards Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-4">
+          <KpiCard 
+            class="kpi-card transition-all bg-gray-300 text-gray-600 w-full dark:text-white dark:bg-gradient-to-r from-[#2a3655] to-[#3d4e81] rounded-lg dark:border border-white/5 shadow-lg hover:shadow-blue-500/5 hover:border-white/10 duration-300  ease-in-out transform hover:-translate-y-1 hover:shadow-2xl relative overflow-hidden group" 
+            title="Soliq Xarajatlari" 
+            :value="formatNumberWithDots(animatedData2) + ` so'm`" 
+          />
+          <KpiCard 
+            class="kpi-card transition-all text-blue-600 dark:text-white bg-blue-500 bg-opacity-20 w-full dark:bg-gradient-to-r from-[#2a3655] to-[#3d4e81] rounded-lg dark:border border-white/5 shadow-lg hover:shadow-blue-500/5 hover:border-white/10 duration-300  ease-in-out transform hover:-translate-y-1 hover:shadow-2xl relative overflow-hidden group" 
+            title="Korxona Xarajati" 
+            :value="formatNumberWithDots(animatedData3) + ` so'm`" 
+          />
+          <KpiCard 
+            class="kpi-card transition-all text-purple-600 dark:text-white bg-purple-500 bg-opacity-20 w-full dark:bg-gradient-to-r from-[#2a3655] to-[#3d4e81] rounded-lg dark:border border-white/5 shadow-lg hover:shadow-blue-500/5 hover:border-white/10 duration-300  ease-in-out transform hover:-translate-y-1 hover:shadow-2xl relative overflow-hidden group" 
+            title="Umumiy Xarajatlar" 
+            :value="formatNumberWithDots(animatedData1) + ` so'm`" 
+          />
+          <KpiCard 
+            class="kpi-card transition-all w-full text-orange-600 dark:text-white bg-orange-500 bg-opacity-20 dark:bg-gradient-to-r from-[#2a3655] to-[#3d4e81] rounded-lg dark:border border-white/5 shadow-lg hover:shadow-blue-500/5 hover:border-white/10 duration-300  ease-in-out transform hover:-translate-y-1 hover:shadow-2xl relative overflow-hidden group" 
+            title="Shartmona bo'yicha qarzlar" 
+            :value="formatNumberWithDots(animatedData4) + ` so'm`" 
+          />
+          <KpiCard 
+            class="kpi-card transition-all w-full dark:bg-gradient-to-r text-green-600 dark:text-white bg-green-500 bg-opacity-20 from-[#2a3655] to-[#3d4e81] rounded-lg dark:border border-white/5 shadow-lg hover:shadow-blue-500/5 hover:border-white/10 duration-300  ease-in-out transform hover:-translate-y-1 hover:shadow-2xl relative overflow-hidden group" 
+            title="Foyda" 
+            :value="formatNumberWithDots(animatedData) + ` so'm`" 
+          />
         </div>
 
-        <div class="dashboard-grid mt-4">
-          <div class="chart-container">
-            <RevenueChart class="h-full" :revenueData="chartData" :expenseData="chartData1" :options="chartOptions" />
+        <!-- Dashboard Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-4">
+          <!-- Chart Container -->
+          <div class="lg:col-span-2">
+            <div class="chart-container min-h-full flex justify-center items-center relative bg-slate-400/20 dark:bg-slate-700/50 backdrop-blur-sm rounded-lg p-4 shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden border-gradient-to-r from-green-400 via-blue-500 to-red-500">
+              <RevenueChart class="min-h-full" :revenueData="chartData" :expenseData="chartData1" :options="chartOptions" />
+            </div>
           </div>
-          <div class="flex flex-col justify-center">
-            <div class="chart-container">
+          
+          <!-- Tables Container -->
+          <div class="flex flex-col justify-center space-y-4">
+            <div class="chart-container relative bg-slate-400/20 dark:bg-slate-700/50 backdrop-blur-sm rounded-lg p-4 shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
               <TransactionsTable :transactions="transactions" />
             </div>
-            <div class="chart-container mt-4">
+            <div class="chart-container relative bg-slate-400/20 dark:bg-slate-700/50 backdrop-blur-sm rounded-lg p-4 shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
               <InvoicesTable :invoices="invoices" />
             </div>
           </div>
@@ -272,47 +301,9 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: var(--space-4);
-  margin-bottom: var(--space-4);
-}
+/* Custom styles for animations and effects that can't be replicated with Tailwind alone */
 
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: var(--space-4);
-}
-
-* {
-  color: white;
-}
-
-.dashboard {
-  @apply bg-[#1a2642] text-gray-100 antialiased min-h-screen;
-  background: linear-gradient(135deg, #1a2642 0%, #121c30 100%);
-}
-
-.loading-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 80vh;
-}
-
-.kpi-card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.kpi-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-}
-
+/* Shimmer effect for KPI cards */
 .kpi-card::after {
   content: '';
   position: absolute;
@@ -330,35 +321,7 @@ onMounted(() => {
   left: 80%;
 }
 
-.table-wrapper {
-  position: relative;
-  overflow: hidden;
-  border-radius: 8px;
-  background-color: rgba(41, 58, 91, 0.5);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
-}
-
-.table-wrapper:hover {
-  transform: translateY(-3px);
-}
-
-.chart-container {
-  position: relative;
-  background-color: rgba(41, 58, 91, 0.5);
-  backdrop-filter: blur(10px);
-  border-radius: 8px;
-  padding: 1rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
-  overflow: hidden;
-}
-
-.chart-container:hover {
-  transform: translateY(-3px);
-}
-
+/* Animated gradient border for chart containers */
 .chart-container::before {
   content: '';
   position: absolute;
@@ -377,19 +340,4 @@ onMounted(() => {
   100% { background-position: 0% 50%; }
 }
 
-@media (max-width: 1200px) {
-  .kpi-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 600px) {
-  .kpi-grid {
-    grid-template-columns: 1fr;
-  }
-}
 </style>
