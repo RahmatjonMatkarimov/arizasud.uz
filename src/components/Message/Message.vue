@@ -2,7 +2,7 @@
   <div
     class="min-w-full mx-auto top-[100px] h-[calc(100vh-100px)] fixed border-2 rounded-2xl border-teal-500 bg-gradient-to-br from-gray-900 to-gray-800 backdrop-blur-md">
     <div id="img" class="relative flex min-w-full justify-between h-full">
-      <div class="w-full flex flex-col  mx-auto items-center justify-center p-4">
+      <div class="w-full flex flex-col mx-auto items-center justify-center p-4">
         <div ref="messagesContainer"
           class="min-w-full mb-[190px] mt-[100px] h-[calc(100%-100px)] overflow-y-auto p-4 space-y-4 scrollbar-custom">
           <div v-for="message in messages" :key="message.id" :ref="el => messageRefs[message.id] = el"
@@ -10,8 +10,8 @@
             @contextmenu.prevent="showContextMenu($event, message)">
             <div class="flex items-start max-w-[80%] space-x-2">
               <div v-if="message.senderId !== user?.id" class="w-8 h-8 rounded-full bg-gray-700 flex-shrink-0">
-                <img v-if="message.attachmentUrl" :src="getImageUrl(message?.sender?.img)"
-                  class="w-full h-full rounded-full object-cover" alt="Sender avatar" />
+                <img v-if="message.sender" :src="getImageUrl(message?.sender?.img)"
+                  class="w-full h-full rounded-full object-cover" alt="Yuboruvchi avatari" />
               </div>
               <div class="flex flex-col space-y-1">
                 <div v-if="message.senderId !== user?.id" class="flex items-center space-x-1">
@@ -20,8 +20,8 @@
                 <div :class="[
                   'message-bubble px-3 py-2 max-w-md transition-all duration-200 shadow-md',
                   message.senderId === user?.id
-                    ? 'bg-gradient-to-r from-teal-600 to-teal-500 text-white rounded-tr-none'
-                    : 'bg-gradient-to-r from-gray-700 to-gray-600 text-white rounded-tl-none'
+                    ? 'bg-gradient-to-r rounded-bl-2xl rounded-tl-2xl rounded-tr-2xl from-teal-600 to-teal-500 text-white'
+                    : 'bg-gradient-to-r rounded-br-2xl rounded-tl-2xl rounded-tr-2xl from-gray-700 to-gray-600 text-white'
                 ]">
                   <div v-if="message.replyToMessageId" @click="scrollToRepliedMessage(message.replyToMessageId)"
                     class="border-l-4 border-teal-400/50 rounded-tr-sm rounded-tl-md rounded-bl-md rounded-br-sm p-2 bg-black/30 cursor-pointer hover:bg-black/40 transition">
@@ -30,7 +30,7 @@
                     </p>
                     <img v-else-if="isImage(replyMessages[message.replyToMessageId]?.attachmentUrl)"
                       :src="getMessageImageUrl(replyMessages[message.replyToMessageId]?.attachmentUrl)"
-                      class="w-16 h-16 rounded-md object-cover" alt="Replied image" />
+                      class="w-16 h-16 rounded-md object-cover" alt="Javob berilgan rasm" />
                     <video v-else-if="isVideo(replyMessages[message.replyToMessageId]?.attachmentUrl)"
                       :src="getMessageImageUrl(replyMessages[message.replyToMessageId]?.attachmentUrl)"
                       class="w-16 h-16 rounded-md" controls></video>
@@ -42,34 +42,31 @@
                         <circle cx="6" cy="18" r="3"></circle>
                         <circle cx="18" cy="16" r="3"></circle>
                       </svg>
-                      <span class="text-xs text-teal-300">Audio message</span>
+                      <span class="text-xs text-teal-300">Ovozli xabar</span>
                     </div>
                     <a v-else-if="isPDF(replyMessages[message.replyToMessageId]?.attachmentUrl)"
                       :href="getMessageImageUrl(replyMessages[message.replyToMessageId]?.attachmentUrl)" target="_blank"
                       class="text-xs text-red-400 underline">PDF</a>
                     <a v-else-if="isWord(replyMessages[message.replyToMessageId]?.attachmentUrl)"
                       :href="getMessageImageUrl(replyMessages[message.replyToMessageId]?.attachmentUrl)" target="_blank"
-                      class="text-xs text-gray-400 underline">Word</a>
+                      class="text-xs text-gray-400 underline">Word hujjati</a>
                     <div v-else-if="replyMessages[message.replyToMessageId]?.attachmentUrl"
-                      class="text-xs text-gray-300">File</div>
-                    <img v-else-if="replyMessages[message.replyToMessageId]?.smileyPath"
+                      class="text-xs text-gray-300">Fayl</div>
+                    <img v-else-if="message.smiley"
                       :src="getSmileyUrl(replyMessages[message.replyToMessageId]?.smileyPath)"
-                      class="w-16 h-16 p-1 rounded-md" alt="Replied smiley" />
-                    <p v-else class="text-xs text-gray-500">Unknown</p>
+                      class="p-1 rounded-md" alt="Javob berilgan tabassum" />
+                    <p v-else class="text-xs text-gray-500">Noma'lum</p>
                   </div>
-                  <div class="px-1 text-sm">{{ message.content }}</div>
+                  <div class="px-1 text-lg">{{ message.content }}</div>
                   <img v-if="message.smileyPath" :src="getSmileyUrl(message.smileyPath)"
-                    class="w-24 h-auto rounded-md mt-1" alt="Message smiley" />
+                    class="rounded-md mt-1" alt="Xabar tabassumi" />
                   <div v-if="message.attachmentUrl" class="border border-teal-500/30 p-1 rounded-md mt-1">
                     <img v-if="isImage(message.attachmentUrl)" :src="getMessageImageUrl(message.attachmentUrl)"
-                      class="w-24 h-auto rounded-md hover:scale-105 transition-transform" alt="Attached image" />
+                      class="rounded-md hover:scale-105 transition-transform" alt="Biriktirilgan rasm" />
                     <video v-else-if="isVideo(message.attachmentUrl)" :src="getMessageImageUrl(message.attachmentUrl)"
-                      class="w-24 h-auto rounded-md" controls></video>
-
-                    <!-- Enhanced Audio Player -->
-                    <!-- Enhanced Audio Player -->
+                      class="rounded-md" controls></video>
                     <div v-else-if="isAudio(message.attachmentUrl)"
-                      class="audio-player rounded-lg overflow-hidden bg-gray-900/60 border border-teal-500/30 hover:border-teal-400/50 transition-all p-3">
+                      class="audio-player rounded-lg overflow-hidden w-[300px] bg-gray-900/60 border border-teal-500/30 hover:border-teal-400/50 transition-all p-3">
                       <div class="flex items-center justify-between mb-2">
                         <div class="flex items-center space-x-2">
                           <div v-on:click="toggleAudioPlayback"
@@ -85,7 +82,7 @@
                             </svg>
                           </div>
                           <div>
-                            <div class="text-xs font-medium text-teal-300">Voice message</div>
+                            <div class="text-xs font-medium text-teal-300">Ovozli xabar</div>
                             <div class="text-xs text-gray-400 audio-time">00:00</div>
                           </div>
                         </div>
@@ -99,17 +96,14 @@
                           </svg>
                         </div>
                       </div>
-
                       <div class="relative h-1.5 bg-gray-700 rounded-full overflow-hidden">
                         <div
                           class="absolute left-0 top-0 h-full bg-gradient-to-r from-teal-500 to-teal-300 rounded-full audio-progress"
                           style="width: 0%"></div>
                       </div>
-
                       <audio :src="getMessageImageUrl(message.attachmentUrl)" class="hidden audio-element"
                         @timeupdate="updateAudioProgress" @loadedmetadata="initAudioPlayer" @ended="audioEnded"></audio>
                     </div>
-
                     <a v-else-if="isPDF(message.attachmentUrl)" :href="getMessageImageUrl(message.attachmentUrl)"
                       target="_blank" class="text-red-400 underline flex items-center gap-1">
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2"
@@ -128,7 +122,7 @@
                         <polyline points="14 2 14 8 20 8"></polyline>
                         <text x="8" y="16" font-size="8" fill="#60a5fa">W</text>
                       </svg>
-                      Word Document
+                      Word hujjati
                     </a>
                     <a v-else :href="getMessageImageUrl(message.attachmentUrl)" target="_blank"
                       class="text-gray-300 flex items-center gap-1">
@@ -137,16 +131,16 @@
                         <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
                         <polyline points="13 2 13 9 20 9"></polyline>
                       </svg>
-                      File
+                      Fayl
                     </a>
                   </div>
                 </div>
                 <div class="text-xs text-gray-400 flex items-center space-x-2">
                   <button @click="handleReply(message)" class="text-teal-400 hover:text-teal-300 font-medium">
-                    Reply
+                    Javob berish
                   </button>
                   <span>{{ formatDate(message.createdAt) }}</span>
-                  <span v-if="message.updated" class="text-gray-500">(Edited)</span>
+                  <span v-if="message.updated" class="text-gray-500">(Tahrirlangan)</span>
                 </div>
               </div>
             </div>
@@ -164,16 +158,16 @@
           class="fixed bottom-4 w-[calc(100%-500px)] bg-gray-800/90 shadow-xl px-3 py-4 flex flex-col rounded-full border border-teal-500/50 backdrop-blur-sm">
           <div v-if="replyTo" class="w-full bg-gray-700/50 p-2 rounded-md mb-2 flex justify-between items-center">
             <div class="flex items-center space-x-1">
-              <span class="text-teal-400 font-semibold text-xs">Replying to:</span>
+              <span class="text-teal-400 font-semibold text-xs">Javob berilmoqda:</span>
               <div class="text-gray-300 text-xs">
                 {{
                 replyMessages[replyTo]?.content?.substring(0, 40) +
                 (replyMessages[replyTo]?.content?.length > 40 ? '...' : '') ||
                 replyMessages[replyTo]?.attachmentUrl
-                ? 'File'
+                ? 'Fayl'
                 : replyMessages[replyTo]?.smileyPath
-                ? 'Smiley'
-                : 'Unknown'
+                ? 'Tabassum'
+                : 'Noma\'lum'
                 }}
               </div>
             </div>
@@ -187,7 +181,7 @@
             </div>
             <button @click="cancelRecording"
               class="text-red-400 border border-red-400 px-2 py-1 rounded-md text-xs font-semibold hover:bg-red-400 hover:text-gray-900 transition">
-              Cancel
+              Bekor qilish
             </button>
             <button @click="stopRecording" class="p-1 rounded-full bg-teal-500 hover:bg-teal-600 transition">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"
@@ -208,7 +202,7 @@
               </svg>
               <input type="file" @change="handleFileUpload" class="hidden" />
             </label>
-            <input v-model="newMessage" placeholder="Type a message..."
+            <input v-model="newMessage" placeholder="Xabar yozing..."
               class="flex-1 border border-gray-600 bg-gray-700 text-gray-200 rounded-full px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500" />
             <button @click="debouncedSendMessage('text')"
               class="p-1 rounded-full bg-teal-500 hover:bg-teal-600 transition">
@@ -235,17 +229,17 @@
 
     <div v-if="showModal" class="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
       <div class="bg-gray-800/90 p-5 rounded-xl shadow-2xl w-72 backdrop-blur-md border border-teal-500/50">
-        <h2 class="text-base text-teal-300 font-bold mb-3">Edit Message</h2>
+        <h2 class="text-base text-teal-300 font-bold mb-3">Xabarni tahrirlash</h2>
         <input v-model="editedContent"
           class="w-full border border-gray-600 bg-gray-700 text-gray-200 rounded px-2 py-2 mb-3 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500" />
         <div class="flex justify-end space-x-2">
           <button @click="updateMessage"
             class="bg-teal-500 text-white w-full px-3 py-2 rounded hover:bg-teal-600 transition text-sm">
-            Update
+            Yangilash
           </button>
           <button @click="showModal = false"
             class="bg-red-500 text-white px-3 py-2 w-full rounded hover:bg-red-600 transition text-sm">
-            Cancel
+            Bekor qilish
           </button>
         </div>
       </div>
@@ -253,16 +247,16 @@
 
     <div v-if="showDeleteConfirm" class="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
       <div class="bg-gray-800/90 p-5 rounded-xl shadow-2xl w-72 backdrop-blur-md border border-teal-500/50">
-        <h2 class="text-base text-teal-300 font-bold mb-3">Delete Message</h2>
-        <p class="text-gray-300 text-sm mb-3">Are you sure you want to delete this message?</p>
+        <h2 class="text-base text-teal-300 font-bold mb-3">Xabarni o‘chirish</h2>
+        <p class="text-gray-300 text-sm mb-3">Ushbu xabarni o‘chirishga ishonchingiz komilmi?</p>
         <div class="flex justify-end space-x-2">
           <button @click="confirmDelete"
             class="bg-red-500 text-white w-full px-3 py-2 rounded hover:bg-red-600 transition text-sm">
-            Delete
+            O‘chirish
           </button>
           <button @click="showDeleteConfirm = false"
             class="bg-gray-600 text-white px-3 py-2 w-full rounded hover:bg-gray-700 transition text-sm">
-            Cancel
+            Bekor qilish
           </button>
         </div>
       </div>
@@ -273,19 +267,19 @@
       :style="{ top: contextMenuY + 'px', left: contextMenuX + 'px' }">
       <button v-if="contextMenuMessage?.senderId === user?.id" @click="startEditing(contextMenuMessage)"
         class="block w-full text-left px-2 py-1 text-teal-300 hover:bg-gray-700 rounded text-sm">
-        Edit
+        Tahrirlash
       </button>
       <button v-if="contextMenuMessage?.senderId === user?.id" @click="confirmDeleteMessage(contextMenuMessage.id)"
         class="block w-full text-left px-2 py-1 text-red-400 hover:bg-gray-700 rounded text-sm">
-        Delete
+        O‘chirish
       </button>
       <button @click="handleReply(contextMenuMessage)"
         class="block w-full text-left px-2 py-1 text-teal-300 hover:bg-gray-700 rounded text-sm">
-        Reply
+        Javob berish
       </button>
       <button @click="closeContextMenu"
         class="block w-full text-left px-2 py-1 text-gray-300 hover:bg-gray-700 rounded text-sm">
-        Cancel
+        Bekor qilish
       </button>
     </div>
 
@@ -293,9 +287,9 @@
       class="fixed bottom-[160px] w-[calc(100%-500px)] bg-gray-800/90 shadow-2xl rounded-xl z-50 p-4 grid grid-cols-8 gap-2 max-h-64 overflow-y-auto scrollbar-custom border border-teal-500/50 backdrop-blur-md">
       <button v-for="item in smileys" :key="item.id" @click="debouncedSendMessage('smiley', item.id)"
         class="block rounded-md hover:scale-110 transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
-        :title="`Smiley ${item.id}`">
+        :title="`Tabassum ${item.id}`">
         <img :src="getSmileyUrl(item.filePath)" class="w-12 h-12 rounded-md object-contain"
-          :alt="`Smiley ${item.id}`" />
+          :alt="`Tabassum ${item.id}`" />
       </button>
     </div>
   </div>
@@ -356,7 +350,7 @@ const formattedRecordingTime = computed(() => {
 // Helper functions
 const open = (link) => window.open(link);
 const getImageUrl = (img) => (img ? `${URL}/upload/${img}` : '/default-avatar.png');
-const getMessageImageUrl = (url) => (url ? `${URL}${url}` : '');
+const getMessageImageUrl = (url) => (url ? `${URL}/${url}` : '');
 const getSmileyUrl = (path) => (path ? `${URL}/${path}` : '');
 const isImage = (url) => url && /\.(jpg|jpeg|png|gif|webp|bmp|svg)$/i.test(url);
 const isVideo = (url) => url && /\.(mp4|webm|ogg|mov|avi|mkv)$/i.test(url);
@@ -858,7 +852,7 @@ const handleFileUpload = (event) => {
     return;
   }
 
-  if (file.size > 10 * 1024 * 1024) {
+  if (file.size > 100 * 1024 * 1024) {
     alert('File size exceeds 10MB limit');
     return;
   }
@@ -1055,7 +1049,6 @@ button:hover {
   flex-direction: column;
   gap: 6px;
   padding: 10px;
-  border-radius: 12px;
   transition: all 0.3s ease;
 }
 
@@ -1064,11 +1057,9 @@ button:hover {
   transform: translateY(-2px);
 }
 
-.message-bubble img,
-.message-bubble video,
 .message-bubble audio {
   border-radius: 6px;
-  max-width: 160px;
+  max-width: 260px;
 }
 
 audio {
