@@ -1,12 +1,13 @@
 <template>
-    <div class="background">
+    <div class="dark:bg-[#1a2642] dark:text-gray-200 min-h-screen">
         <div class="flex justify-center p-5 rounded-lg min-w-full overflow-x-auto">
-            <div class="w-full  p-4 rounded-lg">
-                <!-- File List -->
-                <ul class="list-none container mx-auto p-0 m-0">
+            <div class="w-full p-4 rounded-lg">
+                <!-- File List with Animation -->
+                <transition-group name="slide-up" tag="ul" class="list-none container mx-auto p-0 m-0">
                     <li v-for="file in filteredFiles"
                         @click="router.push(file.type === 'video' ? '/video-open/' + file.id : '/lists-view/' + file.id)"
-                        :key="file.id" class="my-2 bg-[#8a8a8a36] w-full flex justify-between items-center relative z-10 px-6 py-5 rounded-lg">
+                        :key="file.id"
+                        class="my-2 bg-[#8a8a8a36] w-full flex justify-between items-center relative z-10 px-6 py-5 rounded-lg">
                         <a target="_blank" class="text-[17px]">
                             {{ dat === 'datakril' ? translateText(file.name) : file.name }}
                         </a>
@@ -24,7 +25,7 @@
                                         @click.stop="openPaymentDetailsModal(file, $event)">
                                         {{ dat === 'datakril' ? translateText("Qarzi") : "Qarzi" }}:
                                         {{ formatNumberWithDots(file.ClientPayment[file.ClientPayment.length -
-                                        1]?.remainingSum || 0) }}
+                                            1]?.remainingSum || 0) }}
                                         {{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
                                     </span>
                                 </div>
@@ -44,11 +45,11 @@
                             </div>
                         </div>
                     </li>
-                </ul>
+                </transition-group>
             </div>
             <!-- File Upload Modal -->
             <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-40">
-                <div class="bg-white p-6 rounded-lg w-full max-w-lg shadow-lg relative">
+                <div class="bg-gray-200 dark:bg-gray-600 p-6 rounded-lg w-full max-w-lg shadow-lg relative">
                     <button @click="showModal = false" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
@@ -61,9 +62,10 @@
                     </h2>
                     <form @submit.prevent="uploadFile" class="flex flex-col gap-4">
                         <input type="text" v-model="formData.name" :placeholder="dat === 'datakril'
-                                ? translateText('Shartnoma nomini kiriting')
-                                : 'Shartnoma nomini kiriting'
-                            " class="p-3 border rounded-lg focus:outline-none text-black border-black focus:ring-2 focus:ring-blue-500"
+                            ? translateText('Shartnoma nomini kiriting')
+                            : 'Shartnoma nomini kiriting'
+                            "
+                            class="p-3 border rounded-lg focus:outline-none text-black border-black focus:ring-2 focus:ring-blue-500"
                             required />
                         <input type="file" @change="handleFileUpload" class="text-black" required />
                         <div class="flex justify-end gap-3">
@@ -81,7 +83,7 @@
             <!-- Region and District Selection Modal -->
             <div v-if="showRegionModal"
                 class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                <div class="bg-white p-6 rounded-lg w-full max-w-md shadow-lg relative">
+                <div class="bg-gray-200 dark:bg-gray-600 p-6 rounded-lg w-full max-w-md shadow-lg relative">
                     <button @click="closeRegionModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
@@ -89,31 +91,31 @@
                                 d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
-                    <h2 class="text-xl text-center font-semibold text-gray-800 mb-4">
-                        {{ dat === 'datakril' ? 
-                        translateText('Qarzdorlik uchun to‘lov "YURIST KONSUL KONSALTING" kompaniyasining qaysi filialida amalga oshirilmoqda ? ') : 
+                    <h2 class="text-xl text-center font-semibold dark:text-gray-200 text-gray-800 mb-4">
+                        {{ dat === 'datakril' ?
+                            translateText('Qarzdorlik uchun to‘lov "YURIST KONSUL KONSALTING" kompaniyasining qaysi filialida amalga oshirilmoqda ? ') :
                         'Qarzdorlik uchun to‘lov "YURIST KONSUL KONSALTING" kompaniyasining qaysi filialida amalga oshirilmoqda?' }}
                     </h2>
                     <div class="flex flex-col gap-4">
                         <!-- Region Dropdown -->
-                        <select v-model="ofis"
-                            class="p-3 border rounded-lg focus:outline-none text-black border-black focus:ring-2 focus:ring-blue-500">
-                            <option class=" text-black" value="" disabled>
+                        <select v-model="ofis" required
+                            class="p-3 border rounded-lg focus:outline-none text-black bg-white dark:bg-gray-500 dark:text-gray-300 text-[20px] border-black focus:ring-2 focus:ring-blue-500">
+                            <option class="" value="" disabled>
                                 {{ dat === 'datakril' ? translateText('To\'lov qaysi ofisdan amalga oshirilmoqda') :
-                                'To\'lov qaysi ofisdan amalga oshirilmoqda' }}
+                                    'To\'lov qaysi ofisdan amalga oshirilmoqda' }}
                             </option>
-                            <option class="text-black" value="Xorazm viloyati Urganch shaxar 1-son filiali">
+                            <option class="" value="Xorazm viloyati Urganch shaxar 1-son filiali">
                                 {{ dat === 'datakril' ? translateText('Xorazm viloyati Urganch shaxar 1-son filiali')
                                     : 'Xorazm viloyati Urganch shaxar 1-son filiali' }}
                             </option>
-                            <option class="text-black" value="Xorazm viloyati Xiva shaxar markaziy binosi">
+                            <option class="" value="Xorazm viloyati Xiva shaxar markaziy binosi">
                                 {{ dat === 'datakril' ? translateText('Xorazm viloyati Xiva shaxar markaziy binosi')
                                     : 'Xorazm viloyati Xiva shaxar markaziy binosi' }}
                             </option>
                         </select>
                         <div class="flex justify-end gap-3">
                             <button @click="closeRegionModal"
-                                class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">
+                                class="px-4 py-2 bg-gray-300 text-gray-500 rounded-lg hover:bg-gray-400">
                                 {{ dat === 'datakril' ? translateText('Yopish') : 'Yopish' }}
                             </button>
                             <button @click="submitRegionSelection"
@@ -126,17 +128,18 @@
             </div>
             <!-- Payment Modal -->
             <div v-if="modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                <div class="bg-white p-4 rounded shadow-lg w-80">
+                <div class="bg-gray-200 dark:bg-gray-600 p-[15px] flex flex-col gap-3 rounded shadow-lg w-[450px]">
                     <input v-model="summa" type="number" :placeholder="dat === 'datakril' ? translateText('To\'langan summa') : 'To\'langan summa'
-                        " class="w-full p-2 border text-black border-black rounded mb-4 focus:outline-none focus:ring focus:ring-blue-300" />
-                    <div class="flex justify-end space-x-2">
-                        <button @click="submitPayment"
-                            class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300">
-                            {{ dat === 'datakril' ? translateText("To'lash") : "To'lash" }}
-                        </button>
+                        " required
+                        class="w-full p-2 border text-black border-black rounded bg-white dark:bg-gray-500 dark:text-gray-300 text-[20px] focus:outline-none focus:ring focus:ring-blue-300" />
+                    <div class="flex gap-3">
                         <button @click="modal = false"
-                            class="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-gray-300">
+                            class="bg-gray-500 w-full text-white text-[20px]  px-3 py-1 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-gray-300">
                             {{ dat === 'datakril' ? translateText("Yopish") : "Yopish" }}
+                        </button>
+                        <button @click="submitPayment"
+                            class="bg-blue-500 text-white  w-full text-[20px] px-3 py-1 rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300">
+                            {{ dat === 'datakril' ? translateText("To'lash") : "To'lash" }}
                         </button>
                     </div>
                 </div>
@@ -145,43 +148,29 @@
             <div v-if="paymentDetailsModal" @click="closePaymentDetailsModal($event)"
                 class="absolute inset-0 z-50 flex justify-center items-start">
                 <div :style="{ top: modalPosition.top + 10 + 'px', left: modalPosition.left - 143 + 'px' }" @click.stop
-                    class="absolute bg-gray-200 p-6 rounded-lg max-h-[450px] shadow-lg overflow-y-auto">
-                    <h2 class="text-xl font-semibold text-gray-800 mb-4">
+                    class="absolute bg-gray-200 dark:bg-gray-600 dark:text-gray-300 p-6 rounded-lg max-h-[450px] shadow-lg overflow-y-auto">
+                    <h2 class="text-xl font-semibold mb-4">
                         {{ dat === 'datakril' ? translateText("To'lov tafsilotlari") : "To'lov tafsilotlari" }}
                     </h2>
-                    <div class="mb-4">
-                        <span class="text-green-600 font-medium" v-if="
-                            selectedPaymentDetails &&
-                            selectedPaymentDetails[selectedPaymentDetails.length - 1].remainingSum <= 0
-                        ">
-                            {{ dat === 'datakril' ? translateText("To'langan") : "To'langan" }}
-                        </span>
-                        <span class="text-red-600 font-medium" v-else>
-                            {{ dat === 'datakril' ? translateText("Qarzi") : "Qarzi" }}:
-                            {{ formatNumberWithDots(selectedPaymentDetails[selectedPaymentDetails.length -
-                            1].remainingSum) }}
-                            {{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
-                        </span>
-                    </div>
                     <ul class="list-none p-0 m-0">
                         <li v-for="payment in selectedPaymentDetails" :key="payment.id"
-                            class="mt-1 border p-2 border-black">
-                            <div class="text-black">
+                            class="mt-1 border p-2 dark:border-white border-black">
+                            <div class="">
                                 {{ dat === 'datakril' ? translateText("Jami summa") : "Jami summa" }}:
                                 {{ formatNumberWithDots(payment.TotalSum) }}
                                 {{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
                             </div>
-                            <div class="text-black">
+                            <div class="">
                                 {{ dat === 'datakril' ? translateText("Qoldiq summa") : "Qoldiq summa" }}:
                                 {{ formatNumberWithDots(payment.remainingSum) }}
                                 {{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
                             </div>
-                            <div class="text-black">
+                            <div class="">
                                 {{ dat === 'datakril' ? translateText("To'langan summa") : "To'langan summa" }}:
                                 {{ formatNumberWithDots(payment.paidSum) }}
                                 {{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
                             </div>
-                            <div class="text-black">
+                            <div class="">
                                 {{ dat === 'datakril' ? translateText("Vaqt") : "Vaqt" }}:
                                 {{ formatDate(payment.createdAt) }}
                             </div>
@@ -194,13 +183,29 @@
 </template>
 
 <script setup>
-import { ref, onMounted, inject, computed } from 'vue';
+import { ref, onMounted, inject, computed, onUnmounted } from 'vue';
 import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
 import html2pdf from 'html2pdf.js';
 import { URL } from '@/auth/url.js';
 import translateText from '@/auth/Translate';
-const dat = inject('dat');
+import { useSearchStore } from '@/components/Templates/searchQuary'
+const dat = ref(localStorage.getItem('til') || 'datalotin');
+
+let intervalId = null;
+const checkLanguageChange = () => {
+    const currentLang = localStorage.getItem('til') || 'datalotin';
+    if (currentLang !== dat.value) {
+        dat.value = currentLang;
+    }
+};
+onMounted(() => {
+    intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+    if (intervalId) clearInterval(intervalId);
+});
 const route = useRoute();
 const router = useRouter();
 const id = route.params.id;
@@ -211,7 +216,7 @@ const showModal = ref(false);
 const showRegionModal = ref(false);
 const summa = ref(0);
 const modal = ref(false);
-const searchQuery = ref('');
+const searchQuery = useSearchStore();
 const totalsumma = ref(null)
 const districts = ref([]);
 const formData = ref({
@@ -679,7 +684,7 @@ const formatNumberWithDots = (number) => {
 };
 
 const filteredFiles = computed(() => {
-    const query = searchQuery.value.toLowerCase();
+    const query = searchQuery.query.toLowerCase();
     return clientFiles.value.filter((file) => {
         // Qarz borligini tekshirish
         const hasDebt = file.ClientPayment &&
@@ -703,6 +708,29 @@ const filteredFiles = computed(() => {
     animation: gradientAnimation 15s ease infinite;
     padding: 1.75rem;
     min-height: 100vh;
+}
+
+/* Slide-up animation */
+.slide-up-enter-active,
+.slide-up-move {
+    transition: all 0.5s ease;
+}
+
+.slide-up-enter-from,
+.slide-up-leave-to {
+    opacity: 0;
+    transform: translateY(50px);
+}
+
+.slide-up-enter-to,
+.slide-up-leave-from {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Stagger the animation for each item */
+.slide-up-enter-active {
+    transition-delay: calc(0.1s * var(--i));
 }
 
 @keyframes gradientAnimation {

@@ -1,7 +1,23 @@
 <script setup>
 import translateText from '@/auth/Translate'
-import { inject } from 'vue'
-const dat = inject('dat')
+import { onUnmounted, ref } from 'vue';
+import { inject, onMounted } from 'vue'
+const dat = ref(localStorage.getItem('til') || 'datalotin');
+
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem('til') || 'datalotin';
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
 defineProps({
   title: {
     type: String,
@@ -23,7 +39,6 @@ class=""></div>
 <template>
   <div 
     class="w-full p-6 rounded-lg border border-white/5 shadow-lg hover:shadow-blue-500/5 hover:border-white/10 transition-all duration-300"
-    :class="cardColorClasses"
   >
     <h3 class="text-lg font-semibold mb-3">
       {{ dat == 'datakril' ? translateText(title) : title }}

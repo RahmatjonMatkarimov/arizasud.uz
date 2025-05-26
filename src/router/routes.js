@@ -146,7 +146,9 @@ export const routes = [
         component: Profile,
         meta: { title: 'Profile' }
       },
-    ]
+    ],
+    meta: { requiresAuth: true, allowedRoles: ['admin', 'manager', 'yuristAssistant','accauntant', 'deliverer', 'yurist', 'bigAdmin'] },
+    
   },
 
     {

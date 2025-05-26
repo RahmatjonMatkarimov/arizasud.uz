@@ -2,7 +2,7 @@
 import translateText from '@/auth/Translate'
 import axios from 'axios'
 import { URL } from '@/auth/url'
-import { ref, inject, onMounted, watch, computed } from 'vue'
+import { ref, inject, onMounted, watch, computed, onUnmounted } from 'vue'
 import * as XLSX from 'xlsx'
 import { useRoute, useRouter } from 'vue-router';
 import PDFViewer from '../components/ppdf.vue'
@@ -10,7 +10,22 @@ import { useSearchStore } from '@/components/Templates/searchQuary'
 const searchStore = useSearchStore()
 const selectedFilePath = ref(null)
 const router = useRouter()
-const dat = inject('dat')
+const dat = ref(localStorage.getItem('til') || 'datalotin');
+
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem('til') || 'datalotin';
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
 const Showmodal = ref(false)
 const showChekbox = ref(false)
 const modal = ref(false)
@@ -301,56 +316,164 @@ onMounted(() => {
   getFiles()
 })
 </script>
+<style scoped>
+/* Existing styles with added animations */
+.red {
+  @apply bg-[#ff0000] text-white text-[22px] rounded-lg transition-all duration-300 transform hover:scale-100
+}
+
+.yellow {
+  @apply bg-[#fbff00] text-black text-[22px] rounded-lg border border-white/5 shadow-lg hover:shadow-yellow-500/20 hover:border-white/10 transition-all duration-300 transform hover:scale-100;
+}
+
+.green {
+  @apply bg-[#04ff00] text-black text-[22px] rounded-lg border border-white/5 shadow-lg hover:shadow-green-500/20 hover:border-white/10 transition-all duration-300 transform hover:scale-100;
+}
+
+/* Modal Animation */
+.modal-enter-active,
+.modal-leave-active {
+  @apply transition-all duration-500 ease-in-out;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  @apply opacity-0 translate-y-10;
+}
+
+.modal-enter-to,
+.modal-leave-from {
+  @apply opacity-100 translate-y-0;
+}
+
+/* Table Row Animation */
+tbody tr {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+tbody tr:hover {
+  @apply transform scale-[1.01] shadow-md;
+}
+
+/* Button Hover Animation */
+button {
+  @apply transition-all duration-200 ease-in-out;
+}
+
+button:hover {
+  @apply transform scale-105 shadow-lg;
+}
+
+/* PDF Viewer Animation */
+.pdf-viewer-enter-active,
+.pdf-viewer-leave-active {
+  @apply transition-all duration-500 ease-in-out;
+}
+
+.pdf-viewer-enter-from,
+.pdf-viewer-leave-to {
+  @apply opacity-0 scale-95;
+}
+
+.pdf-viewer-enter-to,
+.pdf-viewer-leave-from {
+  @apply opacity-100 scale-100;
+}
+
+/* Checkbox Animation */
+input[type="checkbox"] + label {
+  @apply transition-all duration-200 ease-in-out;
+}
+
+input[type="checkbox"]:checked + label {
+  @apply bg-blue-600 border-blue-600 scale-110;
+}
+
+/* Select Dropdown Animation */
+select {
+  @apply transition-all duration-200 ease-in-out;
+}
+
+select:focus {
+  @apply ring-2 ring-blue-500 scale-105;
+}
+
+/* Fade-in for table on mount */
+.table-container {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>
 
 <template>
-  <div class="background p-7 min-h-screen">
+  <div class="dark:bg-[#1a2642] p-7 min-h-screen">
     <!-- Invoices List View -->
-    <div v-if="!showDetails" class="rounded-lg p-6">
+    <div v-if="!showDetails" class="rounded-lg p-6 table-container">
       <div class="mb-6">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-          <div class="flex flex-col">
+        <div class="flex justify-end gap-4">
+          <div>
+            <select
+              id="status"
+              v-model="filters.status"
+              class="block text-black dark:text-white w-full px-4 py-3 border dark:border-gray-300 border-gray-700 bg-[#fff0] text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option class="text-black dark:text-white" value="">{{ dat === 'datakril' ? translateText('Tartib raqam') : 'Tartib raqam' }}</option>
+              <option class="text-black dark:text-white" value="Paid">{{ dat === 'datakril' ? translateText('Teskari Yaratilish vaqti') : 'Teskari Yaratilish vaqti' }}</option>
+              <option class="text-black dark:text-white" value="az">{{ dat === 'datakril' ? translateText('A-Z nom bo‘yicha') : 'A-Z nom bo‘yicha' }}</option>
+              <option class="text-black dark:text-white" value="total">{{ dat === 'datakril' ? translateText('Tugash vaqti kelganlar') : 'Tugash vaqti kelganlar' }}</option>
+            </select>
           </div>
-          <div class="flex justify-end md:col-span-2">
-            <div class="mb-3">
-              <select id="status" v-model="filters.status"
-                class="block w-full px-4 py-3 border border-gray-300 bg-[#fff0] text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500">
-                <option class="text-black" value="">{{ dat === 'datakril' ? translateText('Tartib raqam') : 'Tartib raqam' }}</option>
-                <option class="text-black" value="Paid">{{ dat === 'datakril' ? translateText('Teskari Yaratilish vaqti') : 'Teskari Yaratilish vaqti' }}</option>
-                <option class="text-black" value="az">{{ dat === 'datakril' ? translateText('A-Z nom bo‘yicha') : 'A-Z nom bo‘yicha' }}</option>
-                <option class="text-black" value="total">{{ dat === 'datakril' ? translateText('Tugash vaqti kelganlar') : 'Tugash vaqti kelganlar' }}</option>
-              </select>
+          <button
+            @click="Showmodal = !Showmodal"
+            class="bg-lime-600 text-white px-4 py-2 rounded-md hover:bg-lime-700 transition"
+          >
+            {{ dat === 'datakril' ? translateText('Yangi hisobot yaratish') : 'Yangi hisobot yaratish' }}
+          </button>
+          <button
+            @click="downloadExcel"
+            class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+          >
+            {{ dat === 'datakril' ? translateText('Excel qilib yuklab olish') : 'Excel qilib yuklab olish' }}
+          </button>
+          <div class="flex justify-end gap-2">
+            <div
+              v-if="showChekbox"
+              @click="deleteManyFiles()"
+              class="py-2 px-4 bg-red-700 text-white flex justify-center items-center hover:bg-red-800 rounded-lg cursor-pointer transition"
+            >
+              {{ dat === 'datakril' ? translateText('O\'chirish') : 'O\'chirish' }}
+            </div>
+            <div
+              v-if="!showChekbox"
+              @click="showChekbox = true"
+              class="py-2 px-4 bg-red-700 text-white flex justify-center items-center hover:bg-red-800 rounded-lg cursor-pointer transition"
+            >
+              {{ dat === 'datakril' ? translateText('O\'chirishni rejimini yoqish') : 'O\'chirishni rejimini yoqish' }}
+            </div>
+            <div
+              v-if="showChekbox"
+              @click="showChekbox = false"
+              class="py-2 px-4 flex justify-center items-center bg-yellow-600 hover:bg-yellow-700 rounded-lg cursor-pointer transition"
+            >
+              {{ dat === 'datakril' ? translateText('O\'chirishni rejimini bekor qilish') : 'O\'chirishni rejimini bekor qilish' }}
             </div>
           </div>
         </div>
-        <div class="flex justify-end gap-4">
-          <button @click="Showmodal = !Showmodal"
-            class="bg-lime-600 text-white px-4 py-2 rounded-md hover:bg-lime-700 transition">
-            {{ dat === 'datakril' ? translateText('Yangi hisobot yaratish') : 'Yangi hisobot yaratish' }}
-          </button>
-          <button @click="downloadExcel"
-            class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
-            {{ dat === 'datakril' ? translateText('Excel qilib yuklab olish') : 'Excel qilib yuklab olish' }}
-          </button>
-        </div>
       </div>
-      <div class="flex justify-end gap-2 mb-4">
-        <div v-if="showChekbox" @click="deleteManyFiles()"
-          class="py-2 px-4 bg-red-700 hover:bg-red-800 rounded-lg cursor-pointer transition">
-          {{ dat === 'datakril' ? translateText('O\'chirish') : 'O\'chirish' }}
-        </div>
-        <div v-if="!showChekbox" @click="showChekbox = true"
-          class="py-2 px-4 bg-red-700 hover:bg-red-800 rounded-lg cursor-pointer transition">
-          {{ dat === 'datakril' ? translateText('O\'chirishni rejimini yoqish') : 'O\'chirishni rejimini yoqish' }}
-        </div>
-        <div v-if="showChekbox" @click="showChekbox = false"
-          class="py-2 px-4 bg-yellow-600 hover:bg-yellow-700 rounded-lg cursor-pointer transition">
-          {{ dat === 'datakril' ? translateText('O\'chirishni rejimini bekor qilish') : 'O\'chirishni rejimini bekor qilish' }}
-        </div>
-      </div>
-      <div class="overflow-x-auto">
+      <div class="">
         <table class="w-full border-collapse">
           <thead>
-            <tr class="bg-gray-100 qard mb-1 w-full grid grid-cols-8 gap-2 items-center">
+            <tr class="text-white  mb-1 w-full grid grid-cols-8 gap-2 items-center">
               <th class="p-3 text-center font-semibold">{{ dat === 'datakril' ? translateText('Hisob-faktura #') : 'Hisob-faktura #' }}</th>
               <th class="p-3 text-center font-semibold">{{ dat === 'datakril' ? translateText('Korxona') : 'Korxona' }}</th>
               <th class="p-3 text-center font-semibold">{{ dat === 'datakril' ? translateText('To\'langan sana') : 'To\'langan sana' }}</th>
@@ -361,48 +484,73 @@ onMounted(() => {
                 {{ dat === 'datakril' ? translateText('Harakatlar') : 'Harakatlar' }}
               </th>
               <th class="p-1">
-                <div v-if="ids.length" @click="selectedAll()"
-                class="py-2 px-4 bg-lime-500 hover:bg-lime-600 rounded-lg cursor-pointer transition">
-                {{ dat === 'datakril' ? translateText('Barchasini belgilash') : 'Barchasini belgilash' }}
-              </div>
-            </th>
+                <div
+                  v-if="ids.length"
+                  @click="selectedAll()"
+                  class="py-2 px-4 bg-lime-500 hover:bg-lime-600 rounded-lg cursor-pointer transition"
+                >
+                  {{ dat === 'datakril' ? translateText('Barchasini belgilash') : 'Barchasini belgilash' }}
+                </div>
+              </th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="item in invoices" :key="item.id" class="text-center">
               <td colspan="7" class="py-1">
-                <div :class="[getBorderClass(item.History[item.History.length - 1].endDate), 'rounded-lg p-2']"
-                  class="flex justify-between items-center">
+                <div
+                  :class="[getBorderClass(item.History[item.History.length - 1].endDate), 'rounded-lg p-2']"
+                  class="flex justify-between items-center"
+                >
                   <div class="w-full grid grid-cols-8 gap-2 items-center">
                     <div class="text-center">{{ item.id }}</div>
-                    <div class="text-center">{{ item.name }}</div>
+                    <div class="text-center">{{ dat === 'datakril' ? translateText(item.name) : item.name }}</div>
                     <div class="text-center">{{ filteridTime(item.History[item.History.length - 1].startDate) }}</div>
                     <div class="text-center">{{ filteridTime(item.History[item.History.length - 1].endDate) }}</div>
                     <div class="text-center">{{ FilteredDots(item.History[item.History.length - 1].totalSum) }} {{ dat === 'datakril' ? translateText('So\'m') : 'So\'m' }}</div>
                     <div>
                       <span class="inline-block px-2 py-1 text-center rounded-lg text-sm font-medium bg-black bg-opacity-20">
-                        {{ dat === 'datakril'? translateText(getStatusClass(item.History[item.History.length - 1].endDate)):getStatusClass(item.History[item.History.length - 1].endDate) }}
+                        {{ dat === 'datakril' ? translateText(getStatusClass(item.History[item.History.length - 1].endDate)) : getStatusClass(item.History[item.History.length - 1].endDate) }}
                       </span>
                     </div>
-                    <button class="border border-gray-300 px-2 py-1 rounded text-sm bg-blue-500 hover:bg-blue-600"
-                      @click="handleViewInvoice(item)">
+                    <button
+                      class="border border-gray-300 text-white px-2 py-1 rounded text-sm bg-blue-500 hover:bg-blue-600"
+                      @click="handleViewInvoice(item)"
+                    >
                       {{ dat === 'datakril' ? translateText('Shartnomani ko\'rish') : 'Shartnomani ko\'rish' }}
                     </button>
                     <div class="flex justify-evenly items-center">
-                      <button class="border border-gray-300 px-2 py-1 rounded text-sm bg-blue-500 hover:bg-blue-600"
-                        @click="router.push({
-                          path: '/invoicesChild',
-                          query: { addressId: item.id }
-                        })">{{ dat === 'datakril' ? translateText('Ko\'rish') : 'Ko\'rish' }}</button>
-                      <button @click="openModal(item.id)"
-                        class="border border-gray-300 px-2 py-1 rounded text-sm text-black bg-yellow-500 hover:bg-yellow-600">{{ dat === 'datakril' ? translateText('Qayta to\'lash') : 'Qayta to\'lash' }}</button>
+                      <button
+                        class="border border-gray-300 text-white px-2 py-1 rounded text-sm bg-blue-500 hover:bg-blue-600"
+                        @click="router.push({ path: '/ReportsChild', query: { addressId: item.id } })"
+                      >
+                        {{ dat === 'datakril' ? translateText('Ko\'rish') : 'Ko\'rish' }}
+                      </button>
+                      <button
+                        @click="openModal(item.id)"
+                        class="border border-gray-300 px-2 py-1 rounded text-sm text-black bg-yellow-500 hover:bg-yellow-600"
+                      >
+                        {{ dat === 'datakril' ? translateText('Qayta to\'lash') : 'Qayta to\'lash' }}
+                      </button>
                       <div v-if="showChekbox">
-                        <input type="checkbox" v-model="ids" :value="item.id" :id="'checkbox-' + item.id"
-                          class="hidden peer" />
-                        <label :for="'checkbox-' + item.id"
-                          class="inline-flex items-center justify-center w-5 h-5 rounded border border-gray-400 peer-checked:bg-blue-600 peer-checked:border-blue-600 cursor-pointer transition">
-                          <svg v-if="ids.includes(item.id)" class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor" stroke-width="3">
+                        <input
+                          type="checkbox"
+                          v-model="ids"
+                          :value="item.id"
+                          :id="'checkbox-' + item.id"
+                          class="hidden peer"
+                        />
+                        <label
+                          :for="'checkbox-' + item.id"
+                          class="inline-flex items-center justify-center w-5 h-5 rounded border border-gray-400 peer-checked:bg-blue-600 peer-checked:border-blue-600 cursor-pointer transition"
+                        >
+                          <svg
+                            v-if="ids.includes(item.id)"
+                            class="w-4 h-4 text-white"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="3"
+                          >
                             <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                           </svg>
                         </label>
@@ -419,120 +567,182 @@ onMounted(() => {
     <!-- Invoice Details View -->
     <div v-else class="bg-white rounded-lg shadow-lg p-6">
       <div class="flex justify-between items-center mb-6 pb-4 border-b">
-        <div class="text-blue-600 font-medium cursor-pointer" @click="closeDetails">
+        <div
+          class="text-blue-600 font-medium cursor-pointer transition-all duration-200 hover:scale-105"
+          @click="closeDetails"
+        >
           {{ dat === 'datakril' ? translateText('← Orqaga qaytish') : '← Orqaga qaytish' }}
         </div>
       </div>
-
       <div class="flex justify-end gap-4">
-        <button @click="closeDetails"
-          class="border border-gray-300 px-4 py-2 rounded-md text-black hover:bg-gray-100">{{ dat === 'datakril' ? translateText('Chiqish') : 'Chiqish' }}</button>
-        <button class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">{{ dat === 'datakril' ? translateText('Excel qilib yuklab olish') : 'Excel qilib yuklab olish' }}</button>
+        <button
+          @click="closeDetails"
+          class="border border-gray-300 px-4 py-2 rounded-md text-black hover:bg-gray-100"
+        >
+          {{ dat === 'datakril' ? translateText('Chiqish') : 'Chiqish' }}
+        </button>
+        <button
+          class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+        >
+          {{ dat === 'datakril' ? translateText('Excel qilib yuklab olish') : 'Excel qilib yuklab olish' }}
+        </button>
       </div>
     </div>
   </div>
-  <div v-if="selectedFilePath" class="fixed inset-0 z-40 flex min-h-[100vh]  justify-center background items-center">
-    <div class="absolute top-4 right-4 cursor-pointer" @click="selectedFilePath = null">
-      <img src="../../public/reject-White.png" class="w-10 h-10" alt="{{ dat === 'datakril' ? translateText('Yopish') : 'Yopish' }}">
+  <!-- PDF Viewer -->
+  <transition name="pdf-viewer">
+    <div
+      v-if="selectedFilePath"
+      class="fixed inset-0 z-40 flex min-h-[100vh] justify-center dark:bg-[#1a2642] bg-white items-center"
+    >
+      <div
+        class="absolute top-4 right-4 cursor-pointer"
+        @click="selectedFilePath = null"
+      >
+        <button
+          class="text-2xl dark:text-gray-400 hover:text-gray-300 transition-all duration-300 hover:scale-110 hover:rotate-90 animate-fade-in"
+        >
+          ×
+        </button>
+      </div>
+      <div class="w-full max-w-5xl p-5 max-h-[100vh] overflow-auto">
+        <PDFViewer v-if="selectedFilePath" :file-path="selectedFilePath" />
+      </div>
     </div>
-    <div class="w-full max-w-5xl p-5 max-h-[100vh] overflow-auto">
-      <PDFViewer v-if="selectedFilePath" :file-path="selectedFilePath" />
-    </div>
-  </div>
+  </transition>
   <!-- Create Report Modal -->
-  <div v-if="Showmodal" class="fixed inset-0 bg-black bg-opacity-80 z-40 flex justify-center items-center">
-    <div class="bg-slate-800 w-[600px] top-0 duration-500 rounded-lg p-6 relative flex flex-col gap-2">
-      <img @click="Showmodal = false" src="../../public/reject-White.png"
-        class="absolute top-2 right-2 w-8 cursor-pointer" alt="{{ dat === 'datakril' ? translateText('Yopish') : 'Yopish' }}" />
-      <h4 class="text-lg text-white font-semibold">{{ dat === 'datakril' ? translateText('Hisobot yaratish') : 'Hisobot yaratish' }}</h4>
-      <label>{{ dat === 'datakril' ? translateText('Korxona nomini kiriting') : 'Korxona nomini kiriting' }}</label>
-      <input v-model="name" type="text" class="text-black outline-none p-2 rounded-md"
-        :placeholder="dat === 'datakril' ? translateText('Hisobot nomi kiriting') : 'Hisobot nomi kiriting'" />
-
-      <label>{{ dat === 'datakril' ? translateText('To\'lanadigan summani') : 'To\'lanadigan summani' }}</label>
-      <input v-model="totalSum" type="text" class="text-black outline-none p-2 rounded-md"
-        :placeholder="dat === 'datakril' ? translateText('To\'lanadigan summani') : 'To\'lanadigan summani'" />
-
-      <label>{{ dat === 'datakril' ? translateText('Shartnoma amal qilishni boshlagan sanani kiriting') : 'Shartnoma amal qilishni boshlagan sanani kiriting' }}</label>
-      <input v-model="startDate" type="date" class="text-black outline-none p-2 rounded-md" />
-
-      <label>{{ dat === 'datakril' ? translateText('Shartnoma amal qilishdan tugaydigan sanani kiriting') : 'Shartnoma amal qilishdan tugaydigan sanani kiriting' }}</label>
-      <input v-model="endDate" type="date" class="text-black outline-none p-2 rounded-md" />
-      <div class="flex">
-        <div>
-          <label>{{ dat === 'datakril' ? translateText('Shartnomani kiriting') : 'Shartnomani kiriting' }}</label>
-          <input @change="handleImageUpload" type="file" class="outline-none p-2 rounded-md" />
+  <transition name="modal">
+    <div
+      v-if="Showmodal"
+      class="fixed inset-0 bg-black bg-opacity-80 z-40 flex justify-center items-center"
+    >
+      <div
+        class="bg-slate-800 w-[600px] top-0 duration-500 rounded-lg p-6 relative flex flex-col gap-2"
+      >
+        <img
+          @click="Showmodal = false"
+          src="../../public/reject-White.png"
+          class="absolute top-2 right-2 w-8 cursor-pointer hover:scale-110 transition-all duration-200"
+          :alt="dat === 'datakril' ? translateText('Yopish') : 'Yopish'"
+        />
+        <h4 class="text-lg text-white font-semibold">{{ dat === 'datakril' ? translateText('Hisobot yaratish') : 'Hisobot yaratish' }}</h4>
+        <label>{{ dat === 'datakril' ? translateText('Korxona nomini kiriting') : 'Korxona nomini kiriting' }}</label>
+        <input
+          v-model="name"
+          type="text"
+          class="text-black outline-none p-2 rounded-md transition-all duration-200 focus:ring-2 focus:ring-blue-500"
+          :placeholder="dat === 'datakril' ? translateText('Hisobot nomi kiriting') : 'Hisobot nomi kiriting'"
+        />
+        <label>{{ dat === 'datakril' ? translateText('To\'lanadigan summani') : 'To\'lanadigan summani' }}</label>
+        <input
+          v-model="totalSum"
+          type="text"
+          class="text-black outline-none p-2 rounded-md transition-all duration-200 focus:ring-2 focus:ring-blue-500"
+          :placeholder="dat === 'datakril' ? translateText('To\'lanadigan summani') : 'To\'lanadigan summani'"
+        />
+        <label>{{ dat === 'datakril' ? translateText('Shartnoma amal qilishni boshlagan sanani kiriting') : 'Shartnoma amal qilishni boshlagan sanani kiriting' }}</label>
+        <input
+          v-model="startDate"
+          type="date"
+          class="text-black outline-none p-2 rounded-md transition-all duration-200 focus:ring-2 focus:ring-blue-500"
+        />
+        <label>{{ dat === 'datakril' ? translateText('Shartnoma amal qilishdan tugaydigan sanani kiriting') : 'Shartnoma amal qilishdan tugaydigan sanani kiriting' }}</label>
+        <input
+          v-model="endDate"
+          type="date"
+          class="text-black outline-none p-2 rounded-md transition-all duration-200 focus:ring-2 focus:ring-blue-500"
+        />
+        <div class="flex">
+          <div>
+            <label>{{ dat === 'datakril' ? translateText('Shartnomani kiriting') : 'Shartnomani kiriting' }}</label>
+            <input
+              @change="handleImageUpload"
+              type="file"
+              class="outline-none p-2 rounded-md transition-all duration-200"
+            />
+          </div>
+          <div>
+            <label>{{ dat === 'datakril' ? translateText('Chekni kiriting') : 'Chekni kiriting' }}</label>
+            <input
+              @change="handleCkekUpload"
+              type="file"
+              class="outline-none p-2 rounded-md transition-all duration-200"
+            />
+          </div>
         </div>
-        <div>
-          <label>{{ dat === 'datakril' ? translateText('Chekni kiriting') : 'Chekni kiriting' }}</label>
-          <input @change="handleCkekUpload" type="file" class="outline-none p-2 rounded-md" />
+        <div class="flex gap-2">
+          <button
+            @click="Showmodal = false"
+            class="bg-red-600 text-white px-4 py-2 w-full rounded-md hover:bg-red-700"
+          >
+            {{ dat === 'datakril' ? translateText('Bekor qilish') : 'Bekor qilish' }}
+          </button>
+          <button
+            @click="upload"
+            class="bg-blue-600 text-white px-4 py-2 w-full rounded-md hover:bg-blue-700"
+          >
+            {{ dat === 'datakril' ? translateText('Yuborish') : 'Yuborish' }}
+          </button>
         </div>
-      </div>
-      <div class="flex gap-2">
-        <button @click="Showmodal = false"
-          class="bg-red-600 text-white px-4 py-2 w-full rounded-md hover:bg-red-700">{{ dat === 'datakril' ? translateText('Bekor qilish') : 'Bekor qilish' }}</button>
-        <button @click="upload"
-          class="bg-blue-600 text-white px-4 py-2 w-full rounded-md hover:bg-blue-700">{{ dat === 'datakril' ? translateText('Yuborish') : 'Yuborish' }}</button>
       </div>
     </div>
-  </div>
-
+  </transition>
   <!-- Repayment Modal -->
-  <div v-if="modal" class="fixed inset-0 group bg-black bg-opacity-80 z-40 flex justify-center items-center">
-    <div class="bg-slate-800 w-[500px] top-0 rounded-lg p-6 relative flex flex-col gap-2">
-      <img @click="modal = false" src="../../public/reject-White.png" class="absolute top-2 right-2 w-8 cursor-pointer"
-        alt="{{ dat === 'datakril' ? translateText('Yopish') : 'Yopish' }}" />
-      <h4 class="text-lg font-semibold">{{ dat === 'datakril' ? translateText('Qayta to\'lash') : 'Qayta to\'lash' }}</h4>
-      <label>{{ dat === 'datakril' ? translateText('To\'lanadigan summani') : 'To\'lanadigan summani' }}</label>
-      <input v-model="totalSum" type="text" class="outline-none text-black p-2 rounded-md"
-        :placeholder="dat === 'datakril' ? translateText('To\'lanadigan summani') : 'To\'lanadigan summani'" />
-      <label>{{ dat === 'datakril' ? translateText('Shartnoma amal qilishni boshlagan sanani kiriting') : 'Shartnoma amal qilishni boshlagan sanani kiriting' }}</label>
-      <input v-model="startDate" type="date" class="outline-none text-black p-2 rounded-md" />
-      <label>{{ dat === 'datakril' ? translateText('Shartnoma amal qilishdan tugaydigan sanani kiriting') : 'Shartnoma amal qilishdan tugaydigan sanani kiriting' }}</label>
-      <input v-model="endDate" type="date" class="outline-none text-black p-2 rounded-md" />
-      <label>{{ dat === 'datakril' ? translateText('Chekni kiriting') : 'Chekni kiriting' }}</label>
-      <input @change="handleCkekUpload" type="file" class="outline-none p-2 rounded-md" />
-      <div class="flex gap-2">
-        <button @click="modal = false" class="bg-red-600 text-white px-4 py-2 w-full rounded-md hover:bg-red-700">{{ dat === 'datakril' ? translateText('Bekor qilish') : 'Bekor qilish' }}</button>
-        <button @click="postHistory"
-          class="bg-blue-600 text-white px-4 py-2 w-full rounded-md hover:bg-blue-700">{{ dat === 'datakril' ? translateText('Yuborish') : 'Yuborish' }}</button>
+  <transition name="modal">
+    <div
+      v-if="modal"
+      class="fixed inset-0 group bg-black bg-opacity-80 z-40 flex justify-center items-center"
+    >
+      <div
+        class="bg-slate-800 w-[500px] top-0 rounded-lg p-6 relative flex flex-col gap-2"
+      >
+        <img
+          @click="modal = false"
+          src="../../public/reject-White.png"
+          class="absolute top-2 right-2 w-8 cursor-pointer hover:scale-110 transition-all duration-200"
+          :alt="dat === 'datakril' ? translateText('Yopish') : 'Yopish'"
+        />
+        <h4 class="text-lg font-semibold">{{ dat === 'datakril' ? translateText('Qayta to\'lash') : 'Qayta to\'lash' }}</h4>
+        <label>{{ dat === 'datakril' ? translateText('To\'lanadigan summani') : 'To\'lanadigan summani' }}</label>
+        <input
+          v-model="totalSum"
+          type="text"
+          class="outline-none text-black p-2 rounded-md transition-all duration-200 focus:ring-2 focus:ring-blue-500"
+          :placeholder="dat === 'datakril' ? translateText('To\'lanadigan summani') : 'To\'lanadigan summani'"
+        />
+        <label>{{ dat === 'datakril' ? translateText('Shartnoma amal qilishni boshlagan sanani kiriting') : 'Shartnoma amal qilishni boshlagan sanani kiriting' }}</label>
+        <input
+          v-model="startDate"
+          type="date"
+          class="outline-none text-black p-2 rounded-md transition-all duration-200 focus:ring-2 focus:ring-blue-500"
+        />
+        <label>{{ dat === 'datakril' ? translateText('Shartnoma amal qilishdan tugaydigan sanani kiriting') : 'Shartnoma amal qilishdan tugaydigan sanani kiriting' }}</label>
+        <input
+          v-model="endDate"
+          type="date"
+          class="outline-none text-black p-2 rounded-md transition-all duration-200 focus:ring-2 focus:ring-blue-500"
+        />
+        <label>{{ dat === 'datakril' ? translateText('Chekni kiriting') : 'Chekni kiriting' }}</label>
+        <input
+          @change="handleCkekUpload"
+          type="file"
+          class="outline-none p-2 rounded-md transition-all duration-200"
+        />
+        <div class="flex gap-2">
+          <button
+            @click="modal = false"
+            class="bg-red-600 text-white px-4 py-2 w-full rounded-md hover:bg-red-700"
+          >
+            {{ dat === 'datakril' ? translateText('Bekor qilish') : 'Bekor qilish' }}
+          </button>
+          <button
+            @click="postHistory"
+            class="bg-blue-600 text-white px-4 py-2 w-full rounded-md hover:bg-blue-700"
+          >
+            {{ dat === 'datakril' ? translateText('Yuborish') : 'Yuborish' }}
+          </button>
+        </div>
       </div>
     </div>
-  </div>
+  </transition>
 </template>
-
-<style scoped>
-.animated-gradient {
-  background: linear-gradient(45deg, #1a3c34, #4a5568, #2f855a, #2d3748);
-  background-size: 400% 400%;
-  animation: gradientAnimation 15s ease infinite;
-  padding: 1.75rem;
-  min-height: 100vh;
-}
-
-.red {
-  @apply bg-[#ff00006a] rounded-lg border border-white/5 shadow-lg hover:shadow-red-500/10 hover:border-white/10 transition-all duration-300;
-}
-
-.yellow {
-  @apply bg-[#fbff006a] rounded-lg border border-white/5 shadow-lg hover:shadow-red-500/10 hover:border-white/10 transition-all duration-300;
-}
-
-.green {
-  @apply bg-[#04ff006a] rounded-lg border border-white/5 shadow-lg hover:shadow-red-500/10 hover:border-white/10 transition-all duration-300;
-}
-
-@keyframes gradientAnimation {
-  0% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
-  }
-}
-</style>

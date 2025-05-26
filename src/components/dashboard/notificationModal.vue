@@ -1,6 +1,6 @@
 <template>
   <div class="fixed inset-0 bg-black bg-opacity-70 flex justify-end z-40">
-    <div class="bg-gray-800 p-5 w-[500px] max-h-screen overflow-y-auto animate-slide-in-right">
+    <div class="dark:bg-gray-800 bg-gray-200 p-5 w-[500px] max-h-screen overflow-y-auto animate-slide-in-right">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-gray-200 animate-fade-in">{{ dat === 'datakril' ? translateText('Bildirishnomalar') : 'Bildirishnomalar' }}</h2>
         <!-- Notification Type Selector -->
@@ -8,14 +8,14 @@
           <select 
             id="notification-type" 
             v-model="selectedNotificationType" 
-            class="ml-2 p-1 rounded border border-gray-600 bg-gray-900 text-white transition-all duration-300 hover:border-blue-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            class="ml-2 p-1 rounded border border-gray-600 bg-[#0000] dark:text-white transition-all duration-300 hover:border-blue-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400"
           >
             <option value="socket">{{ dat === 'datakril' ? translateText('Tizim ichida muhim xabarlar') : 'Tizim ichida muhim xabarlar' }}</option>
             <option value="axios">{{ dat === 'datakril' ? translateText('Bugalteriya bildirishnomalar') : 'Bugalteriya bildirishnomalar' }}</option>
           </select>
         </div>
         <button 
-          class="text-2xl text-gray-400 hover:text-gray-300 transition-all duration-300 hover:scale-110 hover:rotate-90 animate-fade-in" 
+          class="text-2xl dark:text-gray-400 hover:text-gray-300 transition-all duration-300 hover:scale-110 hover:rotate-90 animate-fade-in" 
           @click="closeModal"
         >
           ×
@@ -23,13 +23,13 @@
       </div>
 
       <!-- Send Notification -->
-      <div v-if="selectedNotificationType === 'socket'" class="p-4 my-4 rounded bg-gray-700 text-white animate-fade-in-up">
+      <div v-if="selectedNotificationType === 'socket'" class="p-4 my-4 rounded dark:bg-gray-700 dark:text-white border-2 border-gray-700 animate-fade-in-up">
         <h2 class="text-lg font-semibold mb-3">{{ dat === 'datakril' ? translateText('Bildirishnoma yuborish') : 'Bildirishnoma yuborish' }}</h2>
         <input 
           v-model="notificationMessage" 
           type="text" 
           :placeholder="dat === 'datakril' ? translateText('Bildirishnoma xabari') : 'Bildirishnoma xabari'" 
-          class="border border-gray-600 bg-gray-900 text-white p-2 mr-2 rounded w-full placeholder-gray-400 transition-all duration-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-gray-800" 
+          class="border border-gray-600 dark:bg-gray-900 text-white dark:placeholder:text-white p-2 mr-2 rounded w-full placeholder-gray-400 transition-all duration-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-gray-800" 
         />
         <button 
           @click="sendNotification" 
@@ -55,11 +55,11 @@
             <div 
               v-for="(notification, index) in socketNotifications" 
               :key="notification.id" 
-              class="p-4 mb-2.5 border border-gray-600 border-l-4 border-l-blue-400 bg-gray-700 relative notification-item hover:bg-gray-600 transition-all duration-300 hover:shadow-lg hover:scale-102"
+            class="p-4 mb-2.5 border dark:text-gray-200 border-gray-600 border-l-4 border-l-blue-400 dark:bg-gray-700 text-gray-700 relative notification-item dark:hover:bg-gray-600 transition-all duration-300 hover:shadow-lg hover:scale-102"
               :style="{ animationDelay: `${index * 100}ms` }"
             >
-              <p class="font-medium my-1 text-gray-200">{{ dat === 'datakril' ? translateText(notification.message) : notification.message }}</p>
-              <p class="text-gray-400 text-sm">{{ formatDate(notification.sentAt) }}</p>
+              <p class="font-medium my-1 ">{{ dat === 'datakril' ? translateText(notification.message) : notification.message }}</p>
+              <p class="text-sm">{{ formatDate(notification.sentAt) }}</p>
               <button 
                 v-if="!notification.isRead" 
                 @click="markAsRead(notification.id, 'socket')" 
@@ -75,16 +75,11 @@
             <div 
               v-for="(notification, index) in axiosNotifications" 
               :key="notification.id" 
-              class="p-4 mb-2.5 border border-gray-600 relative notification-item transition-all duration-300 hover:shadow-lg hover:scale-102"
+              class="p-4 mb-2.5 border border-l-4 border-l-blue-400 dark:text-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 border-gray-600 relative notification-item transition-all duration-300 hover:shadow-lg hover:scale-102"
               :style="{ animationDelay: `${index * 100}ms` }"
-              :class="{
-                'border-l-4 border-l-red-500 bg-red-900 bg-opacity-20 hover:bg-red-900 hover:bg-opacity-30': notification.urgency === 'Due today!',
-                'border-l-4 border-l-amber-500 bg-amber-900 bg-opacity-20 hover:bg-amber-900 hover:bg-opacity-30': notification.urgency === 'Due tomorrow!',
-                'border-l-4 border-l-blue-400 bg-gray-700 hover:bg-gray-600': !notification.urgency || (notification.urgency !== 'Due today!' && notification.urgency !== 'Due tomorrow!')
-              }"
             >
-              <p class="font-medium my-1 text-gray-200">{{ dat === 'datakril' ? translateText(notification.message) : notification.message }}</p>
-              <p class="text-gray-400 text-sm">{{ formatDate(notification.createdAt) }}</p>
+              <p class="font-medium my-1">{{ dat === 'datakril' ? translateText(notification.message) : notification.message }}</p>
+              <p class=" text-sm">{{ formatDate(notification.createdAt) }}</p>
               <button 
                 v-if="!notification.isRead" 
                 @click="markAsRead(notification.id, 'axios')" 
@@ -110,8 +105,22 @@ import { io } from 'socket.io-client';
 import { format } from 'date-fns';
 import { URL } from '@/auth/url';
 import translateText from '@/auth/Translate';
+const dat = ref(localStorage.getItem('til') || 'datalotin');
 
-const dat = inject('dat');
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem('til') || 'datalotin';
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
 const emit = defineEmits(['close']);
 const isConnected = ref(false);
 const socketNotifications = ref([]);
@@ -157,10 +166,14 @@ const setupSocketListeners = () => {
   socket.on('notification', (data) => {
     socketNotifications.value.unshift({
       id: data.id || Date.now(),
-      message: data.message,
+      message: data,
       sentAt: data.sentAt || data.createdAt || new Date(),
       isRead: data.isRead || false,
     });
+    console.log(data);
+    
+
+    
     if (!data.isRead) unreadCount.value += 1;
   });
 
@@ -184,7 +197,6 @@ const setupSocketListeners = () => {
   socket.on('allNotificationsMarkedAsRead', ({ count }) => {
     socketNotifications.value = socketNotifications.value.map((n) => ({ ...n, isRead: true }));
     unreadCount.value = 0;
-    console.log(`Marked ${count} notifications as read`);
   });
 
   socket.on('notifyAllSuccess', ({ message, count }) => {

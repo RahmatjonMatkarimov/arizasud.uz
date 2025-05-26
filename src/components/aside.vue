@@ -1,129 +1,79 @@
 <script setup>
-import { ref, onMounted, computed, inject } from "vue";
-import axios from "axios";
-import { URL } from "@/auth/url.js";
-import { useRoute } from "vue-router";
-import translateText from "@/auth/Translate";
-const isLoading = inject("isLoading"); // Global yuklanish holatini olish
 
-const route = useRoute();
-const id = localStorage.getItem("id");
-const newId = parseInt(id);
-const data = ref({});
-const role = ref({});
-
-
-const fetchAdminData = async () => {
-  isLoading.value = true; // Yuklanishni boshlash
-  try {
-    const response = await axios.get(`${URL}/${localStorage.getItem("role")}/${newId}`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
-    data.value = response.data.permissions[response.data.permissions.length - 1];
-  } catch (error) {
-    console.error("Xatolik yuz berdi:", error);
-  } finally {
-    isLoading.value = false; // Yuklanish tugashi
-  }
-};
-
-onMounted(fetchAdminData);
-const dat = inject('dat');
-
-const menuItems = [
-  { to: "/admin-list", label: "Ishchi hodimlar ro'yxati", condition: true },
-  { to: "/all-contract", label: "Shartnoma tuzish bo'limi", condition: true },
-  { to: "/all-courts", label: "Sud hujjatlari", condition: true },
-  { to: "/admin-task", label: "Yangi shartnomalar ", condition: localStorage.getItem('role')==='admin' },
-  { to: "/yurist-tasks", label: "Yangi shartnomalar ", condition: localStorage.getItem('role')==='yurist' },
-  { to: "/asisstant-task", label: "Yangi shartnomalar ", condition: localStorage.getItem('role')==='yuristAssistant' },
-  { to: "/deliverer-task", label: "Yangi shartnomalar ", condition: localStorage.getItem('role')==='deliverer' },
-  { to: "/remindersAdmin", label: "Ishchilarni bajargan ishlari", condition: () => data.value?.workDone },
-  { to: "/Requirefiles", label: "Imzolanishi kerak boʻlgan fayllar", condition: () => data.value?.userFiles },
-  { to: "/Dashboard", label: "Bugalteriya", condition:true },
-  { to: "/payment", label: "Tizim toʻlovlari", condition: true },
-  { to: "/smile", label: "Stikker qoʻshish", condition: true },
-  { to: "/companyFile", label: "Kampaniya fayllari", condition: () => data.value?.companyDocs },
-  { to: "/commaners", label: "Tizimdagi foydalanuvchilar roʻyxati", condition: true },
-  { to: "/archive", label: "Arxiv", condition: true },
-];
-
-const open = () => {
-  window.open("https://github.com/");
-};
-
-const filteredMenu = computed(() => {
-  return menuItems.filter(item => (typeof item.condition === "function" ? item.condition() : item.condition));
-});
 </script>
 
 <template>
-  <aside class="overflow-y-auto aside-nav">
-    <div class="mt-[200px]">
-      <p v-if="isLoading" class="text-white text-center text-lg">Yuklanmoqda...</p>
-      <template v-else>
-        <router-link :to="item.to" v-for="(item, index) in filteredMenu" :key="index" class="mb-1 group li" :class="{
-          active: route.path === item.to
-        }">
-          <b :class="[
-            'block group-hover:text-white w-[30px]',
-            route.path === item.to ? 'text-white' : 'text-black'
-          ]">
-            {{ index + 1 }}
-          </b>
-          <h1 v-if="dat === 'datalotin'" :class="[
-            'group-hover:text-white first-letter:uppercase',
-            route.path === item.to ? 'text-white' : 'text-black'
-          ]">
-            {{ item.label }}
-          </h1>
-          <h1 v-if="dat === 'datakril'" :class="[
-            'group-hover:text-white first-letter:uppercase',
-            route.path === item.to ? 'text-white' : 'text-black'
-          ]">
-            {{ translateText(item.label) }}
-          </h1>
+  <aside :class="[
+    'fixed top-0 left-0 h-screen bg-gradient-to-br from-blue-600 to-purple-700',
+    'shadow-2xl transition-all duration-500 z-50 backdrop-blur-sm',
+    isCollapsed ? 'w-20' : 'w-96'
+  ]">
+    <!-- Toggle Button -->
+    <button 
+      @click="isCollapsed = !isCollapsed" 
+      class="absolute -right-4 top-5 w-10 h-10 bg-blue-500 hover:bg-blue-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg"
+    >
+      <Icon 
+        :icon="isCollapsed ? 'mdi:menu' : 'mdi:close'" 
+        class="text-white text-xl transition-transform duration-300"
+      />
+    </button>
+
+    <div class="pt-20 px-4 h-full overflow-y-auto">
+      <!-- Loading -->
+      <div v-if="isLoading" class="flex flex-col items-center justify-center h-32 gap-4">
+        <div class="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+        <p v-if="!isCollapsed" class="text-white font-medium">Yuklanmoqda...</p>
+      </div>
+
+      <!-- Menu Items -->
+      <nav v-else class="space-y-2">
+        <router-link 
+          v-for="(item, i) in filteredMenu" 
+          :key="i"
+          :to="item.to" 
+          :class="[
+            'flex items-center p-3 rounded-xl text-white/90 hover:text-white',
+            'bg-white/10 hover:bg-white/20 transition-all duration-300 group',
+            'hover:translate-x-2 hover:shadow-lg relative',
+            route.path === item.to ? 'bg-white/25 translate-x-3 shadow-lg' : ''
+          ]"
+        >
+          <div class="w-10 h-10 flex items-center justify-center bg-white/10 rounded-lg mr-3 group-hover:bg-white/20 transition-colors">
+            <Icon :icon="item.icon" class="text-lg" />
+          </div>
+          
+          <div v-if="!isCollapsed" class="flex-1 min-w-0">
+            <div class="text-xs opacity-75 font-semibold">{{ i + 1 }}</div>
+            <div class="text-sm font-medium truncate">
+              {{ dat === 'datakril' ? translateText(item.label) : item.label }}
+            </div>
+          </div>
+
+          <!-- Tooltip -->
+          <div v-if="isCollapsed" class="absolute left-full ml-4 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
+            {{ dat === 'datakril' ? translateText(item.label) : item.label }}
+            <div class="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-gray-900"></div>
+          </div>
         </router-link>
 
-        <div @click="open()" class="text-black group block li">
-          <b class="text-black block group-hover:text-white w-[30px]">{{ filteredMenu.length + 1 }}</b>
-          <h1 class="text-black group-hover:text-white">
+        <!-- GitHub -->
+        <div @click="open()" class="flex items-center p-3 rounded-xl text-white/90 hover:text-white bg-gray-800 hover:bg-gray-700 transition-all duration-300 group hover:translate-x-2 hover:shadow-lg cursor-pointer relative">
+          <div class="w-10 h-10 flex items-center justify-center bg-white/10 rounded-lg mr-3 group-hover:bg-white/20 transition-colors">
+            <Icon icon="mdi:github" class="text-lg" />
+          </div>
+          
+          <div v-if="!isCollapsed" class="flex-1">
+            <div class="text-xs opacity-75 font-semibold">{{ filteredMenu.length + 1 }}</div>
+            <div class="text-sm font-medium">GitHub</div>
+          </div>
+
+          <div v-if="isCollapsed" class="absolute left-full ml-4 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
             GitHub
-          </h1>
+            <div class="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-gray-900"></div>
+          </div>
         </div>
-      </template>
+      </nav>
     </div>
   </aside>
 </template>
-
-<style scoped>
-.aside-nav {
-  width: 420px;
-  height: 100vh;
-  color: black;
-  --tw-bg-opacity: 1;
-  background-color: rgba(30, 64, 175, var(--tw-bg-opacity));
-  position: fixed;
-}
-
-.li {
-  padding: 15px 20px;
-  background-color: #c4c4c4;
-  transition: background-color 0.3s ease-in-out;
-  display: flex;
-}
-
-.li:hover {
-  background-color: rgba(229, 231, 235, 0.1);
-  cursor: pointer;
-}
-
-.active {
-  background-color: rgba(229, 231, 235, 0.1);
-  color: white !important;
-}
-
-.active:hover h1 {
-  color: white !important;
-}
-</style>

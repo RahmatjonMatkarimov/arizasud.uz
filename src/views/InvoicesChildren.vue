@@ -6,8 +6,24 @@ import { ref, inject, onMounted } from 'vue'
 import * as XLSX from 'xlsx'
 import { useRoute, useRouter } from 'vue-router'
 import PDFViewer from '../components/ppdf.vue'
+import { onUnmounted } from 'vue'
 
-const dat = inject('dat')
+const dat = ref(localStorage.getItem('til') || 'datalotin');
+
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem('til') || 'datalotin';
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
 const router = useRouter()
 const route = useRoute()
 const invoices = ref([])
@@ -101,8 +117,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="background p-7 min-h-screen">
-    <div class="bg-[#8b8b8b0f] rounded-lg shadow-lg p-6">
+  <div class="dark:bg-[#1a2642] dark:text-gray-200 p-7 min-h-screen">
+    <div class="dark:bg-[#8b8b8b0f] bg-gray-300  rounded-lg shadow-xl p-6">
       <div class="flex justify-between items-center mb-6 pb-4 border-b">
         <div class="text-blue-400 font-medium cursor-pointer" @click="router.push('/invoices')">
           ← {{ dat === 'datakril' ? translateText('Orqaga qaytish') : 'Orqaga qaytish' }}
@@ -116,7 +132,7 @@ onMounted(() => {
 
           <table class="w-full border-collapse mt-4">
             <thead>
-              <tr class="grid cardGradent grid-cols-4 gap-2 items-center">
+              <tr class="grid bg-white dark:bg-gradient-to-r from-[#2a3655] to-[#3d4e81] rounded-lg dark:border border-white/5 shadow-lg hover:shadow-blue-500/5 hover:border-white/10 duration-300  ease-in-out transform hover:-translate-y-1 hover:shadow-2xl  grid-cols-4 gap-2 items-center">
                 <th class="p-3 text-center font-semibold">{{ dat === 'datakril' ? translateText('Shartnoma tuzilgan vaqt') : 'Shartnoma tuzilgan vaqt' }}</th>
                 <th class="p-3 text-center font-semibold">{{ dat === 'datakril' ? translateText('Keyingi to\'lov vaqti') : 'Keyingi to\'lov vaqti' }}</th>
                 <th class="p-3 text-center font-semibold">{{ dat === 'datakril' ? translateText('Keyingi to\'lov qilinadigan narx') : 'Keyingi to\'lov qilinadigan narx' }}</th>
@@ -126,15 +142,17 @@ onMounted(() => {
             <tbody>
               <tr v-for="history in item.History" :key="history.id" class="text-center">
                 <td colspan="4" class="pt-2">
-                  <div class="flex justify-between rounded-md py-2 cardGradent items-center">
+                  <div class="flex justify-between bg-white rounded-md py-2 dark:bg-gradient-to-r from-[#2a3655] to-[#3d4e81] dark:border border-white/5 shadow-lg hover:shadow-blue-500/5 hover:border-white/10 duration-300  ease-in-out transform hover:-translate-y-1 hover:shadow-2xl  items-center">
                     <div class="w-full grid grid-cols-4 gap-2 items-center">
                       <div class="text-center text-[16px]">{{ filteridTime(history.startDate) }}</div>
                       <div class="text-center text-[16px]">{{ filteridTime(history.endDate) }}</div>
                       <div class="text-center text-[16px]">{{ FilteredDots(history.totalSum) }}</div>
-                      <button class="border border-gray-300 px-2 py-1 rounded text-sm bg-blue-500 hover:bg-blue-600"
+                      <div>
+                        <button class="border w-[200px] border-gray-300 text-white px-2 py-1 rounded text-sm bg-blue-500 hover:bg-blue-600"
                         @click="handleViewInvoice(history)">
                         {{ dat === 'datakril' ? translateText('Ko\'rish') : 'Ko\'rish' }}
                       </button>
+                    </div>
                     </div>
                   </div>
                 </td>
@@ -155,9 +173,12 @@ onMounted(() => {
   </div>
 
   <!-- PDF Viewer Modal -->
-  <div v-if="selectedFilePath" class="fixed inset-0 z-40 flex min-h-[100vh]  justify-center background items-center">
+  <div v-if="selectedFilePath" class="fixed inset-0 z-40 flex min-h-[100vh]  justify-center dark:bg-[#1a2642] bg-white items-center">
     <div class="absolute top-4 right-4 cursor-pointer" @click="selectedFilePath = null">
-      <img src="../../public/reject-White.png" class="w-10 h-10" alt="{{ dat === 'datakril' ? translateText('Yopish') : 'Yopish' }}">
+      <button 
+          class="text-2xl dark:text-gray-400 hover:text-gray-300 transition-all duration-300 hover:scale-110 hover:rotate-90 animate-fade-in">
+          ×
+      </button>
     </div>
     <div class="w-full max-w-5xl p-5 max-h-[100vh] overflow-auto">
       <PDFViewer v-if="selectedFilePath" :file-path="selectedFilePath" />
@@ -165,14 +186,6 @@ onMounted(() => {
   </div>
 </template>
 <style scoped>
-.animated-gradient {
-  background: linear-gradient(45deg, #23385F, #3A4C76, #56688F, #23385F);
-  background-size: 400% 400%;
-  animation: gradientAnimation 15s ease infinite;
-  padding: 1.75rem;
-  min-height: 100vh;
-}
-
 .cardGradient {
   background: linear-gradient(45deg, #3A4C76, #23385F, #56688F, #23385F);
   background-size: 400% 400%;

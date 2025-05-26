@@ -1,8 +1,8 @@
 <template>
-    <div class="background p-7 min-h-screen">
-        <div class="bg-black bg-opacity-20 container mx-auto rounded-lg shadow-lg p-6">
+    <div class="dark:bg-[#1a2642] bg-gray-200 dark:text-gray-200 p-7 min-h-screen">
+        <div class="dark:bg-black dark:bg-opacity-20 bg-white container mx-auto rounded-lg shadow-2xl p-6">
             <div class="flex justify-between items-center mb-6 pb-4 border-b">
-                <div class="text-blue-400 font-medium cursor-pointer" @click="router.push('/salary')">
+                <div class="dark:text-white text-black dark:text-blue-400 font-medium cursor-pointer" @click="router.push('/salary')">
                     {{ dat === 'datakril' ? translateText('← Orqaga qaytish') : '← Orqaga qaytish' }}
                 </div>
             </div>
@@ -10,7 +10,7 @@
                 <div v-for="item in users" :key="item.id">
                     <div class="flex gap-4">
                         <div class="flex relative justify-between w-full">
-                            <div class="flex flex-col gap-1">
+                            <div class="flex flex-col w-full gap-1">
                                 <img :src="URL + '/upload/' + item.img" class="size-[200px] border-2" alt="{{ dat === 'datakril' ? translateText('Ishchi rasmi') : 'Ishchi rasmi' }}">
                                 <h1 class="text-md">
                                     <span class="text-md font-bold">{{ dat === 'datakril' ? translateText('F.I.O:') : 'F.I.O:' }} </span> {{ dat === 'datakril' ? translateText(`${item.name} ${item.surname} ${item.dadname}`) : `${item.name} ${item.surname} ${item.dadname}` }}
@@ -22,25 +22,25 @@
                                     <span class="text-md font-bold">{{ dat === 'datakril' ? translateText('Ishchini lavozimi:') : 'Ishchini lavozimi:' }} </span> {{ dat === 'datakril' ? translateText(item.lavozimi) : item.lavozimi }}
                                 </h1>
                             </div>
-                            <div class="flex gap-4">
+                            <div class="flex gap-6">
                                 <div v-for="card in cards" :key="card.title"
-                                    @click="card.modal ? openRejectModal() : null"
-                                    class="bg-white w-[300px] h-[180px] rounded-xl shadow p-6">
+                                    @click="card.modal ? openRejectModal() : null ,card.modal1 ? openModal('To\'liq hisob', $event) : null"
+                                    :class="`w-[400px] h-[180px] rounded-xl shadow p-6 ${card.bg}`">
                                     <div class="flex items-center gap-2">
                                         <img class="w-[30px] " :src="card.icon" alt="{{ dat === 'datakril' ? translateText('Belgi') : 'Belgi' }}">
                                         <div class="flex items-center gap-2 mb-2">
-                                            <h2 class="text-xl font-semibold text-gray-800">{{ dat === 'datakril' ? translateText(card.title) : card.title }}</h2>
+                                            <h2 class="text-xl font-semibold dark:text-white text-gray-800">{{ dat === 'datakril' ? translateText(card.title) : card.title }}</h2>
                                         </div>
                                     </div>
-                                    <p :class="card.colorClass + ' text-3xl font-bold'">{{ dots(card.value) }} {{ dat === 'datakril' ? translateText('so\'m') : 'so\'m' }}</p>
-                                    <p class="text-sm text-gray-500 mt-1">
-                                        <span class="font-semibold text-md text-gray-500">{{ dat === 'datakril' ? translateText(card.increase) : card.increase }}</span>
+                                    <p :class="card.colorClass + ' text-3xl font-bold' ">{{ dots(card.value) }} {{ dat === 'datakril' ? translateText('so\'m') : 'so\'m' }}</p>
+                                    <p class="text-sm dark:text-white text-black mt-1">
+                                        <span class="font-semibold text-md">{{ dat === 'datakril' ? translateText(card.increase) : card.increase }}</span>
                                     </p>
                                 </div>
                             </div>
                             <div></div>
-                            <div class="flex absolute right-3 bottom-3 items-end">
-                                <div class="flex items-end gap-4">
+                            <div class="flex absolute flex-wrap right-3 bottom-3 items-end">
+                                <div class="flex flex-wrap items-end gap-4">
                                 <button @click="bonus(item)"
                                     class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
                                     {{ dat === 'datakril' ? translateText('Bonus maoshni qo\'shish') : 'Bonus maoshni qo\'shish' }}
@@ -49,13 +49,13 @@
                                     class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
                                     {{ dat === 'datakril' ? translateText('Oylik maoshni hisoblash') : 'Oylik maoshni hisoblash' }}
                                 </button>
-                                    <select v-model="selectedYear" class="border bg-[#fff0] rounded-md p-2">
-                                        <option class="text-black" value="">{{ dat === 'datakril' ? translateText('Yil tanlang') : 'Yil tanlang' }}</option>
-                                        <option class="text-black" v-for="year in years" :key="year" :value="year">{{ year }}</option>
+                                    <select v-model="selectedYear" class="border border-gray-500 dark:border-gray-200 bg-[#fff0] rounded-md p-2">
+                                        <option class="dark:text-white text-black" value="">{{ dat === 'datakril' ? translateText('Yil tanlang') : 'Yil tanlang' }}</option>
+                                        <option class="dark:text-white text-black" v-for="year in years" :key="year" :value="year">{{ year }}</option>
                                     </select>
-                                    <select v-model="selectedMonth" class="border bg-[#fff0] rounded-md p-2">
-                                        <option class="text-black" value="">{{ dat === 'datakril' ? translateText('Oy tanlang') : 'Oy tanlang' }}</option>
-                                        <option class="text-black" v-for="month in months" :key="month.value" :value="month.value">{{ month.name }}</option>
+                                    <select v-model="selectedMonth" class="border border-gray-500 dark:border-gray-200 bg-[#fff0] rounded-md p-2">
+                                        <option class="dark:text-white text-black" value="">{{ dat === 'datakril' ? translateText('Oy tanlang') : 'Oy tanlang' }}</option>
+                                        <option class="dark:text-white text-black" v-for="month in months" :key="month.value" :value="month.value">{{ month.name }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -63,7 +63,7 @@
                     </div>
                     <table class="w-full border-collapse mt-4">
                         <thead>
-                            <tr class="w-full grid cardGradient object-cover grid-cols-6 gap-2 items-center">
+                            <tr class="w-full grid dark:bg-gradient-to-r from-[#2a3655] to-[#3d4e81] rounded-lg border-black/50 border shadow-lg hover:shadow-blue-500/5  duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-2xl bg-white object-cover grid-cols-6 gap-2 items-center">
                                 <th class="p-3 text-center font-semibold">{{ dat === 'datakril' ? translateText('Ishga kelgan') : 'Ishga kelgan' }}</th>
                                 <th class="p-3 text-center font-semibold">{{ dat === 'datakril' ? translateText('Tushlikga ketgan') : 'Tushlikga ketgan' }}</th>
                                 <th class="p-3 text-center font-semibold">{{ dat === 'datakril' ? translateText('Tushlikdan kelgan') : 'Tushlikdan kelgan' }}</th>
@@ -76,7 +76,7 @@
                             <tr v-for="history in filteredWorkDays(item.workDays)" :key="history.id"
                                 class="text-center">
                                 <td colspan="3" class="pt-2">
-                                    <div class="flex justify-between rounded-md py-2 cardGradient items-center">
+                                    <div class="flex justify-between rounded-md py-2 dark:bg-gradient-to-r from-[#2a3655] to-[#3d4e81] border border-black/50 hover:shadow-blue-500/5 hover:border-white/10 duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-2xl bg-white items-center">
                                         <div class="w-full grid grid-cols-6 gap-2 items-center">
                                             <div class="text-center text-[16px]">{{ filteridTime(history.checkIn) }}</div>
                                             <div class="text-center text-[16px]">{{ filteridTime(history.lunchStart) }}</div>
@@ -93,22 +93,25 @@
                             </tr>
                         </tbody>
                     </table>
+                    <div class="flex justify-between items-center mt-4 gap-4">
+                        <div>
+                        {{ dat === 'datakril' ? translateText('Jami') : 'Jami' }}: {{ filteredWorkDays(item.workDays).length }}
+                        </div>
+                        <button @click="downloadExcel" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                            {{ dat === 'datakril' ? translateText('Excel qilib yuklab olish') : 'Excel qilib yuklab olish' }}
+                        </button>
+                    </div>
                 </div>
             </div>
-            <div class="flex justify-end mt-4 gap-4">
-                <button @click="downloadExcel" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-                    {{ dat === 'datakril' ? translateText('Excel qilib yuklab olish') : 'Excel qilib yuklab olish' }}
-                </button>
-            </div>
             <div v-if="salary" class="bg-black inset-0 flex fixed bg-opacity-70 justify-center items-center">
-                <div v-if="salary" class="p-6 max-w-md mx-auto bg-white rounded-xl w-[400px] shadow-md space-y-4">
-                    <p class="text-black text-[20px]"><strong class="text-black text-[20px]">{{ dat === 'datakril' ? translateText('Oy:') : 'Oy:' }}</strong> {{ salary.month }}</p>
-                    <p class="text-black text-[20px]"><strong class="text-black text-[20px]">{{ dat === 'datakril' ? translateText('Jami soat:') : 'Jami soat:' }}</strong> {{ salary.totalHours }}</p>
-                    <p class="text-black text-[20px]"><strong class="text-black text-[20px]">{{ dat === 'datakril' ? translateText('Jami maosh:') : 'Jami maosh:' }}</strong> {{ salary.totalSalary }}</p>
-                    <p class="text-black text-[20px]"><strong class="text-black text-[20px]">{{ dat === 'datakril' ? translateText('Bonus:') : 'Bonus:' }}</strong> {{ salary.bonus }}</p>
-                    <p class="text-black text-[20px]"><strong class="text-black text-[20px]">{{ dat === 'datakril' ? translateText('Jarimalar:') : 'Jarimalar:' }}</strong> {{ salary.deductions }}</p>
-                    <p class="text-black text-[20px]"><strong class="text-black text-[20px]">{{ dat === 'datakril' ? translateText('Yakuniy maosh:') : 'Yakuniy maosh:' }}</strong> {{ salary.finalSalary }}</p>
-                    <button class="w-full py-2 bg-gray-300 text-[20px] text-gray-800 rounded hover:bg-gray-400"
+                <div v-if="salary" class="p-6 max-w-md mx-auto bg-white dark:bg-gray-700 rounded-xl w-[400px] shadow-md space-y-4">
+                    <p class="dark:text-white text-black text-[20px]"><strong class="dark:text-white text-black text-[20px]">{{ dat === 'datakril' ? translateText('Oy:') : 'Oy:' }}</strong> {{ salary.month }}</p>
+                    <p class="dark:text-white text-black text-[20px]"><strong class="dark:text-white text-black text-[20px]">{{ dat === 'datakril' ? translateText('Jami soat:') : 'Jami soat:' }}</strong> {{ salary.totalHours }}</p>
+                    <p class="dark:text-white text-black text-[20px]"><strong class="dark:text-white text-black text-[20px]">{{ dat === 'datakril' ? translateText('Jami maosh:') : 'Jami maosh:' }}</strong> {{ salary.totalSalary }}</p>
+                    <p class="dark:text-white text-black text-[20px]"><strong class="dark:text-white text-black text-[20px]">{{ dat === 'datakril' ? translateText('Bonus:') : 'Bonus:' }}</strong> {{ salary.bonus }}</p>
+                    <p class="dark:text-white text-black text-[20px]"><strong class="dark:text-white text-black text-[20px]">{{ dat === 'datakril' ? translateText('Jarimalar:') : 'Jarimalar:' }}</strong> {{ salary.deductions }}</p>
+                    <p class="dark:text-white text-black text-[20px]"><strong class="dark:text-white text-black text-[20px]">{{ dat === 'datakril' ? translateText('Yakuniy maosh:') : 'Yakuniy maosh:' }}</strong> {{ salary.finalSalary }}</p>
+                    <button class="w-full py-2 dark:bg-gray-900 bg-gray-300 text-[20px] text-gray-800 dark:text-gray-200 rounded hover:bg-gray-400"
                         @click="salary = false">
                         {{ dat === 'datakril' ? translateText('Bekor qilish') : 'Bekor qilish' }}
                     </button>
@@ -124,12 +127,12 @@
                         <input
                           v-model="formattedTotal"
                           type="text"
-                          class="w-full border border-gray-300 text-black rounded text-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          class="w-full border border-gray-300 dark:text-white text-black rounded text-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                           :placeholder="dat === 'datakril' ? translateText('Masalan: 50.000') : 'Masalan: 50.000'"
                         />
                         <label class="block text-md font-medium text-gray-600">{{ dat === 'datakril' ? translateText('Sabab') : 'Sabab' }}</label>
                         <input v-model="sabab" type="text"
-                            class="w-full border border-gray-300 text-black rounded text-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            class="w-full border border-gray-300 dark:text-white text-black rounded text-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             :placeholder="dat === 'datakril' ? translateText('Sabab kiriting') : 'Sabab kiriting'" />
                     </div>
                     <div class="flex justify-end space-x-2">
@@ -148,34 +151,133 @@
     </div>
     <div v-if="reject" class="fixed inset-0 bg-black flex justify-center z-40 bg-opacity-70">
         <div
-            class="bg-gray-700 top-20 relative h-[85%] w-full mx-auto max-w-[70%] rounded-lg shadow-lg overflow-y-auto">
-            <h1 class="text-2xl border-b-2 p-4 border-gray-500 text-white font-semibold">{{ dat === 'datakril' ? translateText('Bonuslar ro\'yxati') : 'Bonuslar ro\'yxati' }}</h1>
-            <img @click="reject = false" src="../../../public/reject-White.png"
-                class="w-[20px] absolute top-4 right-4 cursor-pointer" alt="{{ dat === 'datakril' ? translateText('Yopish') : 'Yopish' }}">
+            class="dark:bg-gray-700 bg-gray-300  text-gray-800 dark:text-gray-200 top-20 relative h-[85%] w-full mx-auto max-w-[70%] rounded-lg shadow-lg overflow-y-auto">
+            <h1 class="text-2xl border-b-2 p-4 border-gray-500 font-semibold">{{ dat === 'datakril' ? translateText('Bonuslar ro\'yxati') : 'Bonuslar ro\'yxati' }}</h1>
+    <button @click="reject = false"
+          class="text-[50px] absolute -top-2 right-4 cursor-pointer dark:text-gray-400 dark:hover:text-gray-300 transition-all duration-300 hover:scale-110 hover:rotate-90 animate-fade-in">
+          ×
+    </button>
             <div class="p-4 space-y-3">
                 <div v-for="(item, index) in users[0].Bonus" :key="item.id"
-                    class="bg-gray-600 text-white rounded-lg p-4 shadow flex justify-between items-center hover:bg-gray-500 transition">
-                    <div>
-                        <p class="text-md text-gray-300">#{{ index + 1 }}</p>
+                    class="dark:bg-gray-600 bg-white rounded-lg p-4 shadow flex justify-between items-center dark:hover:bg-gray-500 transition">
+                    <div class="flex items-center gap-4">
+                        <p class="text-md ">#{{ index + 1 }}</p>
                         <p class="text-xl font-medium">{{ item.description }}</p>
                     </div>
-                    <p class="text-green-400 font-semibold text-xl">{{ item.amount }} {{ dat === 'datakril' ? translateText('so\'m') : 'so\'m' }}</p>
+                    <p class="dark:text-green-400 text-green-700 font-semibold text-xl">{{ item.amount }} {{ dat === 'datakril' ? translateText('so\'m') : 'so\'m' }}</p>
                 </div>
             </div>
         </div>
     </div>
+        <div 
+          v-if="isModalOpen" 
+          class="modal fixed bg-white dark:bg-slate-800 rounded-xl p-8  shadow-xl z-50 border border-gray-100 dark:border-slate-700 bg-opacity-100 dark:bg-opacity-100 transition-all duration-300"
+          :style="{ top: `${modalPosition.top - 40}px`, left: `${modalPosition.left - 400 }px` }"
+        >
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white tracking-tight">
+              {{ dat === 'datakril'? translateText(selectedKpiTitle) : selectedKpiTitle }}
+            </h2>
+            <button 
+              @click="isModalOpen = false" 
+              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div class="flex gap-2">
+                      <div class="space-y-4">
+                        <h1 class="text-2xl font-semibold text-gray-900 dark:text-white tracking-tight">
+                {{ dat === 'datakril' ? translateText("Bonus") : "Bonus" }}
+            </h1>
+            <div class="flex items-center p-3 bg-gray-50 dark:bg-slate-700 rounded-lg dark:border-none border border-gray-800">
+              <span class="text-gray-600 dark:text-gray-300 font-medium w-[200px]">{{ dat === 'datakril' ? translateText('Umumiy foyda:') : 'Umumiy foyda:' }}</span>
+              <span class="ml-auto font-semibold text-gray-800 dark:text-white">
+                {{ formatNumberWithDots(cards[1].value) }} {{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
+              </span>
+            </div>
+            <div class="flex items-center p-3 bg-gray-50 dark:bg-slate-700 rounded-lg dark:border-none border border-gray-800">
+              <span class="text-gray-600 dark:text-gray-300 font-medium w-[200px]">{{ dat === 'datakril' ? translateText("Jismoniy shaxs daromad solig'i (JShDS) – 12%") : "Jismoniy shaxs daromad solig'i (JShDS) – 12%" }}</span>
+              <span class="ml-auto font-semibold text-gray-800 dark:text-white">
+                {{ formatNumberWithDots(hisoblaFoiz(cards[1].value, 12)) }} {{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
+              </span>
+            </div>
+            <div class="flex items-center p-3 bg-gray-50 dark:bg-slate-700 rounded-lg dark:border-none border border-gray-800">
+              <span class="text-gray-600 dark:text-gray-300 font-medium w-[200px]">{{ dat === 'datakril' ? translateText("Majburiy pensiya badali (shaxsiy jamg'arma) – 1%") : "Majburiy pensiya badali (shaxsiy jamg'arma) – 1%" }}</span>
+              <span class="ml-auto font-semibold text-gray-800 dark:text-white">
+                {{ formatNumberWithDots(hisoblaFoiz(cards[1].value, 1)) }} {{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
+              </span>
+            </div>
+            <div class="flex items-center p-3 bg-green-50 dark:bg-green-900/50 rounded-lg dark:border-none border border-gray-800">
+              <span class="text-gray-600 dark:text-gray-300 font-medium w-[200px]">{{ dat === 'datakril' ? translateText("Sof foyda:") : "Sof foyda:" }}</span>
+             <span class="ml-auto font-bold text-yellow-600 dark:text-yellow-400">
+                {{ formatNumberWithDots(cards[1].value - hisoblaFoiz(cards[1].value, 13)) }} {{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
+              </span>
+            </div>
+          </div>
+          <div class="space-y-4">
+            <h1 class="text-2xl font-semibold text-gray-900 dark:text-white tracking-tight">
+                {{ dat === 'datakril' ? translateText("Oylik daromat") : "Oylik daromat" }}
+            </h1>
+            <div class="flex items-center p-3 bg-gray-50 dark:bg-slate-700 rounded-lg dark:border-none border border-gray-800">
+              <span class="text-gray-600 dark:text-gray-300 font-medium w-[200px]">{{ dat === 'datakril' ? translateText('Umumiy foyda:') : 'Umumiy foyda:' }}</span>
+              <span class="ml-auto font-semibold text-gray-800 dark:text-white">
+                {{ formatNumberWithDots(cards[2].value) }} {{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
+              </span>
+            </div>
+            <div class="flex items-center p-3 bg-gray-50 dark:bg-slate-700 rounded-lg dark:border-none border border-gray-800">
+              <span class="text-gray-600 dark:text-gray-300 font-medium w-[200px]">{{ dat === 'datakril' ? translateText("Jismoniy shaxs daromad solig'i (JShDS) – 12%") : "Jismoniy shaxs daromad solig'i (JShDS) – 12%" }}</span>
+              <span class="ml-auto font-semibold text-gray-800 dark:text-white">
+                {{ formatNumberWithDots(hisoblaFoiz(cards[2].value, 12)) }} {{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
+              </span>
+            </div>
+            <div class="flex items-center p-3 bg-gray-50 dark:bg-slate-700 rounded-lg dark:border-none border border-gray-800">
+              <span class="text-gray-600 dark:text-gray-300 font-medium w-[200px]">{{ dat === 'datakril' ? translateText("Majburiy pensiya badali (shaxsiy jamg'arma) – 1%") : "Majburiy pensiya badali (shaxsiy jamg'arma) – 1%" }}</span>
+              <span class="ml-auto font-semibold text-gray-800 dark:text-white">
+                {{ formatNumberWithDots(hisoblaFoiz(cards[2].value, 1)) }} {{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
+              </span>
+            </div>
+            <div class="flex items-center p-3 bg-green-50 dark:bg-green-900/50 rounded-lg dark:border-none border border-gray-800">
+              <span class="text-gray-600 dark:text-gray-300 font-medium w-[200px]">{{ dat === 'datakril' ? translateText("Sof foyda:") : "Sof foyda:" }}</span>
+              <span class="ml-auto font-bold text-yellow-600 dark:text-yellow-400">
+                {{ formatNumberWithDots(cards[2].value - hisoblaFoiz(cards[2].value, 13)) }} {{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
+              </span>
+            </div>
+          </div>
+
+          </div>
+            <div>
+            <div class="flex items-center mt-4 p-3 bg-red-50 dark:bg-green-900/50 rounded-lg dark:border-none border border-gray-800">
+              <span class="text-gray-600 dark:text-gray-300 font-medium w-[200px]">{{ dat === 'datakril' ? translateText('Umumiy oylik:') : 'Umumiy oylik:' }}</span>
+              <span class="ml-auto font-semibold text-green-600 dark:text-green-400">
+                {{ formatNumberWithDots(cards[2].value - hisoblaFoiz(cards[2].value, 13) + cards[1].value - hisoblaFoiz(cards[2].value, 13)) }} {{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
+              </span>
+            </div>
+            </div>
+          <div class="mt-6 flex justify-end">
+            <button 
+              @click="isModalOpen = false" 
+              class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
+            >
+              {{ dat === 'datakril' ? translateText("Yopish") : "Yopish" }}
+            </button>
+          </div>
+        </div>
 </template>
 
 <script setup>
 import { URL } from '@/auth/url'
 import axios from 'axios'
-import { ref, computed, inject } from 'vue'
+import { ref, computed, inject, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useSalary } from './index.js'
 import * as XLSX from 'xlsx'
 import translateText from '@/auth/Translate.js'
 import dots from '@/auth/dots'
 import { ChartBar, CalendarDays, Users, Dot } from 'lucide-vue-next';
+import { onUnmounted } from 'vue'
 const router = useRouter()
 const route = useRoute()
 const id = route.query.id
@@ -185,7 +287,22 @@ const modals = ref(false)
 const sabab = ref('')
 const total = ref(null)
 const workdayId = ref(null)
-const dat = inject('dat')
+const dat = ref(localStorage.getItem('til') || 'datalotin');
+
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem('til') || 'datalotin';
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
 const reject = ref(false)
 
 const openRejectModal = () => {
@@ -237,23 +354,29 @@ const cards = ref([
         title: 'Jarima summasi',
         value: '',
         increase: 'Belgilangan vaqtdan kechga qolganligi uchun oylikidan kesilgan jarima summasi',
-        colorClass: 'text-red-500',
+        colorClass: 'text-red-600',
+        bg: 'bg-red-500/20',
         modal: false,
+        modal1: false,
         icon: '/money.png',
     },
     {
         title: 'Bonus',
         value: '',
         increase: 'Faollik ko\'rsatganligi uchun shu kungacha yigilgan rag\'batlantirish summasi',
-        colorClass: 'text-yellow-500',
+        colorClass: 'text-yellow-600',
         modal: true,
+        bg: 'bg-yellow-500/20',
+        modal1: false,
         icon: '/bonus.png'
     },
     {
         title: 'Oylik daromad',
         value: '',
+        bg: 'bg-green-500/20',
         increase: 'Shu oyda ushchi uchun hisoblangan jami oylik daromad',
-        colorClass: 'text-green-500',
+        colorClass: 'text-green-600',
+        modal1: true,
         modal: false,
         icon: '/coin.png'
     },
@@ -261,10 +384,28 @@ const cards = ref([
 
 function formatNumberWithDots(number) {
   if (!number) return ''
-  const str = number.toString()
+  const str = Math.floor(number).toString()
   return str.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
 }
-
+const isModalOpen = ref(false)
+const selectedKpiTitle = ref('')
+const modalPosition = ref({ top: 0, left: 0 })
+const openModal = (title, event) => {
+  selectedKpiTitle.value = title
+  const card = event.currentTarget
+  const rect = card.getBoundingClientRect()
+  const scrollY = window.scrollY
+  const scrollX = window.scrollX
+  modalPosition.value = {
+    top: rect.bottom + scrollY + 10,
+    left: rect.left + scrollX
+  }
+  isModalOpen.value = true
+  gsap.fromTo('.modal', 
+    { opacity: 0, y: -20 }, 
+    { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }
+  )
+}
 const getSalery = async () => {
     try {
         const now = new Date();
@@ -294,7 +435,7 @@ const getSalery = async () => {
             },
             {
                 ...cards.value[2],
-                value: Math.floor(res.data.finalSalary)
+                value: Math.floor(res.data.baseSalary)
             }
         ];
         console.log(res.data)
@@ -332,7 +473,9 @@ const handleCalculateSalary = async (item) => {
         alert('Maosh hisoblashda xatolik yuz berdi!')
     }
 }
-
+function hisoblaFoiz(value, percent) {
+  return (value * percent) / 100;
+}
 const monthNames = [
     'Yanvar', 'Fevral', 'Mart', 'Aprel',
     'May', 'Iyun', 'Iyul', 'Avgust',
