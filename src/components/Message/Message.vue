@@ -1,10 +1,10 @@
 <template>
   <div
-    class="min-w-full mx-auto top-[100px] h-[calc(100vh-100px)] fixed border-2 rounded-2xl border-teal-500 bg-gray-200 dark:bg-gradient-to-br from-gray-900 to-gray-800 backdrop-blur-md">
+    class="w-[96%] mx-auto top-[90px] h-[calc(101vh-100px)] fixed bg-gray-200 dark:bg-gradient-to-br from-gray-900 to-gray-800 backdrop-blur-md">
     <div id="" class="relative flex min-w-full min-h-screen justify-between h-full">
       <div class="w-full container flex flex-col mx-auto items-center justify-center p-4">
         <div ref="messagesContainer"
-          class="min-w-full mb-[220px] mt-[100px] h-[calc(100%-100px)] overflow-y-auto p-4 space-y-4 scrollbar-custom">
+          class="min-w-full mb-[220px] h-[calc(100%-100px)] overflow-y-auto p-4 space-y-4 scrollbar-custom">
           <div v-for="message in messages" :key="message.id" :ref="el => messageRefs[message.id] = el"
             :class="['flex', message.senderId === user?.id ? 'justify-end' : 'justify-start']"@dblclick="handleReply(message)"
             @contextmenu.prevent="showContextMenu($event, message)">

@@ -1,11 +1,11 @@
 <script setup>
 import { ref, inject, onMounted, computed } from 'vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faUsers, faBuilding, faUserTie, faUserPlus } from '@fortawesome/free-solid-svg-icons'
+import { faUsers, faBuilding, faUserTie, faUserPlus, faFileText, faTruck, faCalculator } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import translateText from '@/auth/Translate'
 
-library.add(faUsers, faBuilding, faUserTie, faUserPlus)
+library.add(faUsers, faBuilding, faUserTie, faUserPlus, faFileText, faTruck, faCalculator)
 
 import { useRouter } from 'vue-router'
 import axios from 'axios'
@@ -16,224 +16,127 @@ const id = parseInt(localStorage.getItem("id"));
 const newId = parseInt(id);
 const data = ref({});
 
-
 const fetchAdminData = async () => {
-  try {
-    const response = await axios.get(`${URL}/${localStorage.getItem("role")}/${newId}`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
-    data.value = response.data.permissions[response.data.permissions.length - 1];
-  } catch (error) {
-    console.error("Xatolik yuz berdi:", error);
-  }
+    try {
+        const response = await axios.get(`${URL}/${localStorage.getItem("role")}/${newId}`, {
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        });
+        data.value = response.data.permissions[response.data.permissions.length - 1];
+    } catch (error) {
+        console.error("Xatolik yuz berdi:", error);
+    }
 };
 
 const cards = ref([
     {
         title: 'Barcha Ishchilar Ro\'yxati',
+        description: 'Tizimda ro\'yxatdan o\'tgan barcha hodimlarni ko\'rish',
         icon: ['fas', 'users'],
-        bgColor: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        iconColor: '#ffffff',
+        bgColor1: '#4F46E5',
+        bgColor: '#4F46E530',
         routerLink: '/all',
         condition: true
     },
     {
-        title: 'Hujjatini Yaratuvchi Devonxona Mudiri',
+        title: 'Hujjatni Yaratuvchi Devonxona Mudiri',
+        description: 'Rasmiy hujjatlar va devonxona boshqaruvi',
         icon: ['fas', 'building'],
-        bgColor: 'linear-gradient(135deg, #2af598 0%, #009efd 100%)',
-        iconColor: '#ffffff',
+        bgColor1: '#10B981',
+        bgColor: '#10B98130',
         routerLink: '/operators',
         condition: () => data.value?.call_centres
     },
     {
         title: 'Yurist-Ekspert Yaratish Bo\'limi',
+        description: 'Huquqiy masalalar va ekspert xulosalari',
+        bgColor1: '#F59E0B',
+        bgColor: '#F59E0B30',
         icon: ['fas', 'user-tie'],
-        bgColor: 'linear-gradient(135deg, #f6d365 0%, #fda085 100%)',
-        iconColor: '#ffffff',
         routerLink: '/yurists',
-        condition: () => data.value?.yurists 
+        condition: () => data.value?.yurists
     },
-
     {
         title: 'Ishchi Hodimlarni Yaratish (Admin Yaratish)',
+        description: 'Yangi hodimlar qo\'shish va admin huquqlari berish',
         icon: ['fas', 'user-plus'],
-        bgColor: 'linear-gradient(135deg, #5ee7df 0%, #b490ca 100%)',
-        iconColor: '#ffffff',
+        bgColor1: '#14B8A6',
+        bgColor: '#14B8A630',
         routerLink: '/admins',
         condition: () => data.value?.admins
     },
     {
         title: 'Yurist Yordamchisini Yaratish Bo\'limi',
-        icon: ['fas', 'user-tie'],
-        bgColor: 'linear-gradient(300deg, #5ee7df 4%, #b490ca 90%)',
-        iconColor: '#ffffff',
+        description: 'Yurist yordamchilari va legal support',
+        icon: ['fas', 'file-text'],
+        bgColor: '#8B5CF630',
+        bgColor1: '#8B5CF6',
         routerLink: '/asinstant',
         condition: () => data.value?.admins
     },
     {
-        title: 'Kuryer   Yaratish Bo\'limi',
-        icon: ['fas', 'user-tie'],
-        bgColor: 'linear-gradient(135deg, #f6d365 40%, #fda085 90%)',
-        iconColor: '#ffffff',
+        title: 'Kuryer Yaratish Bo\'limi',
+        description: 'Kuryer xizmatlari va yetkazib berish',
+        icon: ['fas', 'truck'],
+        bgColor1: '#EAB308',
+        bgColor: '#EAB30830',
         routerLink: '/deliverer',
         condition: () => data.value?.admins
     },
     {
         title: 'Bugalter Yaratish Bo\'limi',
-        icon: ['fas', 'user'],
-        bgColor: 'linear-gradient(330deg, #5ee7df 5%, #b490ca 90%)',
-        iconColor: '#ffffff',
+        description: 'Moliyaviy hisobotlar va buxgalteriya',
+        icon: ['fas', 'calculator'],
+        bgColor: '#06B6D430',
+        bgColor1: '#06B6D4',
         routerLink: '/bugalter',
         condition: () => data.value?.admins
     },
 ])
 
 const filteredMenu = computed(() => {
-  return cards.value.filter(item =>
-    typeof item.condition === "function" ? item.condition() : item.condition
-  );
+    return cards.value.filter(item =>
+        typeof item.condition === "function" ? item.condition() : item.condition
+    );
 });
 
 onMounted(fetchAdminData);
-
 </script>
 
 <template>
-    <div class="flex justify-center mt-8 items-center">
-        <h1
-            class="text-black text-[40px] font-bold text-center bg-lime-500 border-[3px] border-black rounded-lg py-2 px-[100px]">
-            {{ dat === 'datakril' ? translateText('Ishchi hodimlar bo\'limi') : 'Ishchi hodimlar bo\'limi' }}
-        </h1>
-    </div>
-    <div class="app-container">
-        <div class="cards-container">
-            <div v-for="(card, index) in filteredMenu" :key="index" class="card" @click="router.push(`${card.routerLink}`)"
-                :style="{ background: card.bgColor }">
-                <div class="card-content">
-                    <font-awesome-icon :icon="card.icon" class="card-icon" :style="{ color: card.iconColor }" />
-                    <h3 class="card-title">{{ dat === 'datakril' ? translateText(card.title) : card.title }}</h3>
+    <div class="dark:bg-gray-800 dark:text-gray-200/70 min-h-screen bg-gray-200">
+        <div class="mx-auto mb-4 p-4">
+            <div class="flex justify-center pt-4 items-center">
+                <h1
+                    class=" text-[40px] font-bold text-center bg-gradient-to-r from-blue-800/50 to-purple-500/5 text-white border-2 mb-4 border-white rounded-lg py-2 px-[100px]">
+                    {{ dat === 'datakril' ? translateText('Ishchi hodimlar bo\'limi') : 'Ishchi hodimlar bo\'limi' }}
+                </h1>
+            </div>
+
+            <!-- Cards Grid -->
+            <div class=" mx-auto grid grid-cols-3 gap-6 p-4">
+                <div v-for="(card, index) in filteredMenu" :key="index"
+                    class="rounded-xl p-6 cursor-pointer transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1 relative overflow-hidden group"
+                    @click="router.push(`${card.routerLink}`)" :style="{
+                        backgroundColor: card.bgColor,
+                        '--border-color': card.bgColor1
+                    }">
+                    <div class="relative z-10 flex flex-col h-full">
+                        <!-- Icon Container -->
+                        <div class="w-16 h-16 rounded-xl flex items-center justify-center mb-4 transition-all duration-300 group-hover:bg-black/30"
+                            :style="{ backgroundColor: card.bgColor1 }">
+                            <font-awesome-icon :icon="card.icon" class="text-4xl text-white" />
+                        </div>
+
+                        <!-- Title -->
+                        <h3 class="text-xl font-semibold mb-3 leading-snug">
+                            {{ dat === 'datakril' ? translateText(card.title) : card.title }}
+                        </h3>
+                    </div>
+                    <!-- Bottom border animation -->
+                    <div class="absolute bottom-0 left-0 w-0 h-1 transition-all duration-400 group-hover:w-full"
+                        :style="{ backgroundColor: card.bgColor1 }"></div>
                 </div>
-                <div class="card-overlay"></div>
             </div>
         </div>
     </div>
 </template>
-
-<style scoped>
-.app-container {
-    min-height: 100vh;
-    padding: 2rem;
-    background: #f8f9fa;
-}
-
-.main-title {
-    text-align: center;
-    color: #2d3748;
-    font-size: 2.5rem;
-    margin-bottom: 3rem;
-    font-weight: 700;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.cards-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-    padding: 1rem;
-}
-
-.card {
-    position: relative;
-    border-radius: 20px;
-    overflow: hidden;
-    padding: 2rem;
-    min-height: 200px;
-    cursor: pointer;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-}
-
-.card:hover {
-    /* background: white !important; */
-    transform: translateY(-5px);
-}
-
-/* .card:hover .card-title {
-    color: #2d3748;
-} */
-.card:nth-child(1):hover .card-icon {
-    color: #667eea !important;
-}
-
-.card:nth-child(2):hover .card-icon {
-    color: #2af598 !important;
-}
-
-.card:nth-child(3):hover .card-icon {
-    color: #f6d365 !important;
-}
-
-.card:nth-child(4):hover .card-icon {
-    color: #5ee7df !important;
-}
-
-.card-content {
-    position: relative;
-    z-index: 2;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.card-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(255, 255, 255, 0.1);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.card-icon {
-    font-size: 3rem;
-    margin-bottom: 1.5rem;
-    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
-    transition: color 0.3s ease;
-}
-
-.card-title {
-    color: white;
-    font-size: 1.25rem;
-    text-align: center;
-    margin: 0;
-    font-weight: 600;
-    line-height: 1.4;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-    transition: color 0.3s ease;
-}
-
-@media (max-width: 768px) {
-    .app-container {
-        padding: 1rem;
-    }
-
-    .main-title {
-        font-size: 2rem;
-        margin-bottom: 2rem;
-    }
-
-    .cards-container {
-        grid-template-columns: 1fr;
-    }
-
-    .card {
-        min-height: 180px;
-    }
-}
-</style>

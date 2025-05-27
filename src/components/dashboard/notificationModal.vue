@@ -11,7 +11,7 @@
             class="ml-2 p-1 rounded border border-gray-600 bg-[#0000] dark:text-white transition-all duration-300 hover:border-blue-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400"
           >
             <option value="socket">{{ dat === 'datakril' ? translateText('Tizim ichida muhim xabarlar') : 'Tizim ichida muhim xabarlar' }}</option>
-            <option value="axios">{{ dat === 'datakril' ? translateText('Bugalteriya bildirishnomalar') : 'Bugalteriya bildirishnomalar' }}</option>
+            <option v-if="axiosNotifications.length" value="axios">{{ dat === 'datakril' ? translateText('Bugalteriya bildirishnomalar') : 'Bugalteriya bildirishnomalar' }}</option>
           </select>
         </div>
         <button 

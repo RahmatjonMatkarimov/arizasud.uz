@@ -1,74 +1,58 @@
 <template>
-  <div v-if="modal" class="fixed flex justify-center items-center w-full h-full inset-0 bg-black bg-opacity-80">
-    <div class="absolute bg-slate-800 p-10">
-      <input v-model="sms" type="text" class="rounded-xl p-3 text-black outline-none" placeholder="SMSni kiriting" />
-    </div>
-  </div>
-  <div>
-    <div class="flex flex-col items-center justify-center">
-      <div class="min-h-[450px] max-w-[650px] shadow-2xl text-center m-5 p-9 w-full bg-blue-500 rounded-[25px]">
-        <h1 class="text-[45px]">Tizimga kirish</h1>
-        <form @submit.prevent="setData">
-          <input v-model="username" class="rounded-[10px] shadow-2xl w-full text-black my-2 p-2 mt-7 outline-none"
-            placeholder="username" type="text" required />
-          <div class="relative">
-            <input v-model="password" :type="showPassword ? 'text' : 'password'"
-              class="w-full text-black p-2 my-2 border rounded-lg pr-10" placeholder="Parol" />
-            <button type="button" @click="showPassword = !showPassword"
-              class="absolute inset-y-0 right-3 flex items-center">
-              <img :src="showPassword ? '/eyes.png' : '/eye.png'" alt="Ko'rinishni almashtirish" class="w-5 h-5" />
-            </button>
-          </div>
-          <input v-model="tell" class="rounded-[10px] shadow-2xl w-full text-black my-2 p-2 outline-none"
-            placeholder="telefon raqam" type="number" required />
-          <input v-model="jshshr" class="rounded-[10px] shadow-2xl w-full text-black my-2 p-2 outline-none"
-            placeholder="JSHSHR" type="number" required />
-        </form>
-        <button @click="setData"
-          class="bg-lime-600 shadow-2xl hover:bg-lime-700 duration-500 px-14 rounded-[25px] mt-12 py-3">Tizimga
-          Kirish</button>
-        <p v-if="error" class="text-red-500 mt-4">{{ error }}</p>
-      </div>
-      <div class="bg-red-700 flex justify-center items-start gap-10 rounded-[20px] p-10">
-        <div class="">
-          <img class="w-96 rounded-[20px]" src="/unnamed.webp" alt="">
+  <div class="min-h-screen bg-slate-200 flex items-center justify-center px-4">
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 animate-slide-up border border-slate-300">
+      <h2 class="text-3xl font-bold text-slate-800 text-center mb-6 animate-fade-in">Tizimga Kirish</h2>
+
+      <form @submit.prevent="setData" class="space-y-4 animate-fade-in delay-200">
+        <input
+          v-model="username"
+          type="text"
+          placeholder="Foydalanuvchi nomi"
+          class="input-field"
+          required
+        />
+
+        <div class="relative">
+          <input
+            v-model="password"
+            :type="showPassword ? 'text' : 'password'"
+            placeholder="Parol"
+            class="input-field pr-10"
+            required
+          />
+          <button type="button" @click="showPassword = !showPassword" class="absolute right-3 top-1/2 -translate-y-1/2">
+            <img :src="showPassword ? '/eyes.png' : '/eye.png'" class="w-5 h-5 opacity-70" />
+          </button>
         </div>
-        <div>
-          <h1 class="text-center text-[25px] font-bold bg-yellow-600 w-[330px] rounded-2xl ">DIQQAT&nbsp! &nbsp
-            ESLATMA&nbsp! </h1> <br>
-          <p class="">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspOʼzbekiston
-            Respublikasida internet saytlarini buzib kirish bilan bogʼliq jinoyatlar uchun
-            javobgarlik Oʼzbekiston Respublikasining Qonuniy hujjatlarida aniq belgilangan. Bu kabi harakatlar jinoiy
-            javobgarlikni keltirib chiqaradi va bu masala Oʼzbekiston Respublikasining Jinoyat kodeksida bayon
-            etilgan.<br>
-            Oʼzbekiston Respublikasi Jinoyat kodeksi:
-            278-moddasida "Kompьyuter maʼlumotlari va vositalarini oʼgʼirlash, yoʼq qilish, oʼzgartirish yoki bloklash".
-            Bu
-            moddaga koʼra, agar shaxs kompьyuter maʼlumotlarini oʼzgartirish, yoʼq qilish yoki bloklash orqali buzib
-            kirsa, u jinoiy javobgarlikka tortiladi. Buning uchun belgilangan jazo turlari qamoq, jarima yoki boshqa
-            turdagi jazolarni oʼz ichiga oladi. Bundan tashqari
-            278^1-moddasiga koʼra "Kompьyuter maʼlumotlariga noqonuniy kirish". Аgar shaxs kompьyuter tizimiga ruxsatsiz
-            kirsa, u
-            holda u mazkur moddaga koʼra javobgarlikka tortiladi. <br>
-            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspOʼzbekiston Respublikasi Maʼmuriy
-            javobgarlik toʼgʼrisidagi kodeks: <br>
-            Maʼmuriy huquqbuzarliklar toʼgʼrisidagi kodeksda ham internet tarmoqlarini buzib kirish kabi mayda
-            huquqbuzarliklar uchun javobgarlik belgilangan <br>
-            Ushbu qonunchilik asosida, internet saytlarini buzib kirish kabi harakatlar jinoyat hisoblanadi va jinoiy
-            javobgarlikni keltirib chiqaradi. Jinoyat sodir etgan shaxslar qonun oldida javob beradi.
-          </p>
-        </div>
-      </div>
+
+        <input v-model="tell" type="number" placeholder="Telefon raqam" class="input-field"  />
+        <input v-model="jshshr" type="number" placeholder="JSHSHR" class="input-field"  />
+
+        <button
+          type="submit"
+          class="w-full bg-blue-700 hover:bg-blue-800 active:scale-95 transition-transform text-white py-3 rounded-xl font-semibold shadow-md"
+        >
+          Kirish
+        </button>
+
+        <p
+          v-if="error"
+          class="text-red-500 text-center mt-2 animate-shake"
+        >
+          {{ error }}
+        </p>
+      </form>
     </div>
   </div>
 </template>
 
 <script setup>
 import axios from "axios";
-import { ref, onMounted, inject } from "vue";
+import { ref, inject } from "vue";
 import { useRouter } from "vue-router";
 import { URL } from "../auth/url";
-const isLoading = inject('isLoading');
+
+const isLoading = inject("isLoading");
 const password = ref("");
 const username = ref("");
 const jshshr = ref("");
@@ -91,7 +75,7 @@ const setData = async () => {
     return;
   }
 
-  isLoading.value = true; // Yuklanishni boshlash
+  isLoading.value = true;
   try {
     const res = await axios.post(url, {
       username: username.value.trim(),
@@ -111,9 +95,7 @@ const setData = async () => {
 
       if (!role) {
         error.value = "Foydalanuvchi roli aniqlanmadi.";
-      } else if (typeof role !== "string") {
-        error.value = "Noto‘g‘ri rol formati.";
-      } else if (["admin", "bigAdmin", "yuristAssistant",'accauntant','deliverer', "yurist", "manager"].includes(role.trim())) {
+      } else if (["admin", "bigAdmin", "yuristAssistant", "accauntant", "deliverer", "yurist", "manager"].includes(role.trim())) {
         router.push(`/admin-list`);
       } else {
         error.value = "Bu rolda tizimga kirish taqiqlangan.";
@@ -122,9 +104,54 @@ const setData = async () => {
   } catch (err) {
     error.value = "Login yoki parol noto'g'ri.";
   } finally {
-    isLoading.value = false; // Yuklanish tugashi
+    isLoading.value = false;
   }
 };
-
-onMounted(isMobileDevice);
 </script>
+
+<style scoped>
+.input-field {
+  @apply w-full px-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition shadow-sm;
+}
+
+/* Animations */
+@keyframes slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-slide-up {
+  animation: slide-up 0.6s ease-out;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.animate-fade-in {
+  animation: fade-in 1s ease-in;
+}
+.delay-200 {
+  animation-delay: 0.2s;
+  animation-fill-mode: both;
+}
+
+/* Shake for error */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+.animate-shake {
+  animation: shake 0.4s ease-in-out;
+}
+</style>

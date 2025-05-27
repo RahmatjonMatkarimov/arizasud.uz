@@ -2,72 +2,178 @@
   <div>
     <!-- Header -->
     <header :class="[
-      'fixed top-0 bg-[#1e2a46] z-20 flex justify-between items-center px-6 py-4 h-[90px] shadow-sm',
-      isCollapsed ? 'left-20 w-[calc(100%-5rem)]' : 'left-96 w-[calc(100%-24rem)]'
+      'fixed top-0 z-20 flex justify-between items-center px-6 py-4 h-[90px] shadow-xl transition-all duration-300',
+      isCollapsed ? 'left-20 w-[calc(100%-5rem)]' : 'left-80 w-[calc(100%-20rem)]',
+      // Dark mode
+      'dark:bg-gradient-to-r dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 dark:border-b dark:border-slate-700/50',
+      // Light mode
+      'bg-gradient-to-r from-white via-gray-50 to-white border-b border-gray-200/80 backdrop-blur-sm'
     ]">
-      <router-link to="/profile">
-        <div class="w-[70px] h-[68px] rounded-full overflow-hidden">
-          <img :src="getProfileImage(userInfoLotin.img)" alt="Profile" class="w-full h-full object-cover" />
+        <!-- Search Box -->
+        <div class="relative hidden md:flex items-center">
+          <Icon icon="line-md:search" width="20" height="20" :class="[
+            'absolute left-3',
+            // Dark mode
+            'dark:text-slate-400',
+            // Light mode
+            'text-gray-400'
+          ]" />
+          <input type="text" v-model="searchStore.query" :placeholder="$t('qidiruv')" :class="[
+            'pl-10 pr-4 py-2.5 border rounded-xl w-48 md:w-64 transition-all duration-300',
+            // Dark mode
+            'dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200 dark:focus:border-emerald-400 dark:focus:bg-slate-700 dark:placeholder-slate-400 dark:hover:border-slate-500',
+            // Light mode
+            'border-gray-300 bg-white/80 text-gray-700 focus:border-blue-400 focus:bg-white placeholder-gray-500 hover:border-gray-400 shadow-sm focus:shadow-md backdrop-blur-sm'
+          ]" />
         </div>
-      </router-link> 
-      <div class="flex items-center space-x-4">
+      
+      <div class="flex items-center space-x-6">
+        <Dark />
+
         <!-- Chat Icon -->
         <div @click="navigateToChat" class="relative cursor-pointer group">
-          <Icon icon="token:chat" width="50" height="50" class="text-white" />
+          <div :class="[
+            'p-2 rounded-xl transition-all duration-300 hover:scale-110',
+            // Dark mode
+            'dark:bg-slate-700/50 dark:hover:bg-emerald-500/20',
+            // Light mode
+            'bg-gray-100/80 hover:bg-blue-100/80 shadow-md hover:shadow-lg'
+          ]">
+            <Icon icon="token:chat" width="28" height="28" :class="[
+              'transition-colors duration-300',
+              // Dark mode
+              'dark:text-slate-300 dark:hover:text-emerald-400',
+              // Light mode
+              'text-gray-600 hover:text-blue-600'
+            ]" />
+          </div>
           <span v-if="messageCount > 0"
-            class="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1 rounded-full">
+            class="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full min-w-[18px] text-center shadow-lg">
             {{ messageCount }}
           </span>
-          <div class="absolute w-32 -left-12 top-14 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <div class="bg-white text-gray-800 text-center py-1 px-2 rounded-md shadow-md">
+          <div class="absolute w-32 -left-12 top-14 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
+            <div :class="[
+              'text-center py-2 px-3 rounded-lg shadow-xl border',
+              // Dark mode
+              'dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200',
+              // Light mode
+              'bg-white border-gray-200 text-gray-700 shadow-2xl'
+            ]">
               {{ dat === 'datakril' ? translateText('Xabarlar') : 'Xabarlar' }}
             </div>
-            <div
-              class="w-0 h-0 border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-white mx-auto -mt-8 mb-2">
-            </div>
+            <div :class="[
+              'w-0 h-0 border-l-4 border-r-4 border-b-4 border-l-transparent border-r-transparent mx-auto -mt-4',
+              // Dark mode
+              'dark:border-b-slate-800',
+              // Light mode
+              'border-b-white'
+            ]"></div>
           </div>
         </div>
+        
         <!-- Notifications -->
         <div @click="showNotificationModal" class="relative cursor-pointer group">
-          <Icon icon="pajamas:notifications" class="text-white" width="40" height="40" />
+          <div :class="[
+            'p-2 rounded-xl transition-all duration-300 hover:scale-110',
+            // Dark mode
+            'dark:bg-slate-700/50 dark:hover:bg-emerald-500/20',
+            // Light mode
+            'bg-gray-100/80 hover:bg-blue-100/80 shadow-md hover:shadow-lg'
+          ]">
+            <Icon icon="pajamas:notifications" width="28" height="28" :class="[
+              'transition-colors duration-300',
+              // Dark mode
+              'dark:text-slate-300 dark:hover:text-emerald-400',
+              // Light mode
+              'text-gray-600 hover:text-blue-600'
+            ]" />
+          </div>
           <span v-if="unreadCount > 0"
-            class="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1 rounded-full">
+            class="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full min-w-[18px] text-center shadow-lg">
             {{ unreadCount }}
           </span>
-          <div
-            class="absolute w-32 -left-12 top-12 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <div class="bg-white text-gray-800 text-center py-1 px-2 rounded-md shadow-md">
+          <div class="absolute w-36 -left-14 top-14 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
+            <div :class="[
+              'text-center py-2 px-3 rounded-lg shadow-xl border',
+              // Dark mode
+              'dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200',
+              // Light mode
+              'bg-white border-gray-200 text-gray-700 shadow-2xl'
+            ]">
               {{ dat === 'datakril' ? translateText('Bildirishnomalar') : 'Bildirishnomalar' }}
             </div>
-            <div
-              class="w-0 h-0 border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-white mx-auto -mt-8 mb-2">
-            </div>
+            <div :class="[
+              'w-0 h-0 border-l-4 border-r-4 border-b-4 border-l-transparent border-r-transparent mx-auto -mt-4',
+              // Dark mode
+              'dark:border-b-slate-800',
+              // Light mode
+              'border-b-white'
+            ]"></div>
           </div>
         </div>
+        
         <!-- Language Selector -->
         <div class="relative group">
-          <div class="flex items-center cursor-pointer" @click="toggleLanguageDropdown">
-            <Icon icon="mdi:earth" width="30" height="30" class="text-white mr-2" />
-            <span class="text-white text-[20px] font-medium">{{ selectedLanguage.label }}</span>
+          <div :class="[
+            'flex items-center cursor-pointer p-2 rounded-xl transition-all duration-300 hover:scale-105',
+            // Dark mode
+            'dark:bg-slate-700/50 dark:hover:bg-emerald-500/20',
+            // Light mode
+            'bg-gray-100/80 hover:bg-blue-100/80 shadow-md hover:shadow-lg'
+          ]" @click="toggleLanguageDropdown">
+            <Icon icon="mdi:earth" width="24" height="24" :class="[
+              'transition-colors duration-300 mr-2',
+              // Dark mode
+              'dark:text-slate-300 dark:hover:text-emerald-400',
+              // Light mode
+              'text-gray-600 hover:text-blue-600'  
+            ]" />
+            <span :class="[
+              'text-sm font-medium',
+              // Dark mode
+              'dark:text-slate-200',
+              // Light mode
+              'text-gray-700'
+            ]">{{ selectedLanguage.label }}</span>
           </div>
           <!-- Dropdown Menu -->
-          <div v-if="isLanguageDropdownOpen"
-            class="absolute right-0 mt-2 w-32 dark:bg-gray-600 bg-white rounded-md shadow-lg z-50 overflow-hidden transition-all duration-300 transform origin-top scale-y-0 group-hover:scale-y-100"
-            :class="{ 'scale-y-100': isLanguageDropdownOpen }">
+          <div v-if="isLanguageDropdownOpen" :class="[
+            'absolute right-0 mt-2 w-36 rounded-xl shadow-2xl z-50 overflow-hidden transform transition-all duration-300 origin-top border',
+            // Dark mode
+            'dark:bg-slate-800 dark:border-slate-600',
+            // Light mode
+            'bg-white border-gray-200',
+            { 'scale-y-100 opacity-100': isLanguageDropdownOpen, 'scale-y-0 opacity-0': !isLanguageDropdownOpen }
+          ]">
             <div v-for="(lang, index) in languages" :key="index"
-              @click="changeLanguage(lang.code)"
-              class="px-4 py-2 dark:text-gray-200 text-gray-800 transition-colors duration-200 cursor-pointer">
+              @click="changeLanguage(lang.code)" :class="[
+                'px-4 py-3 transition-all duration-200 cursor-pointer border-b last:border-b-0',
+                // Dark mode
+                'dark:text-slate-200 dark:hover:bg-emerald-500/20 dark:hover:text-emerald-300 dark:border-slate-700',
+                // Light mode
+                'text-gray-700 hover:bg-blue-50 hover:text-blue-700 border-gray-100'
+              ]">
               {{ lang.label }}
             </div>
           </div>
         </div>
-        <!-- Search Box -->
-        <div class="relative hidden md:flex items-center">
-          <Icon icon="line-md:search" width="24" height="24" class="absolute left-3 text-gray-400" />
-          <input type="text" v-model="searchStore.query" :placeholder="$t('qidiruv')"
-            class="pl-10 pr-4 py-2 border border-gray-300 rounded-md bg-transparent text-white focus:outline-none focus:border-blue-500 w-48 md:w-64 transition-all duration-200 placeholder-gray-400" />
+        
+
+        <router-link to="/profile" class="hover:scale-105 border-l-2 border-gray-600 pl-5 flex justify-end items-center gap-4 transition-transform duration-200">
+          <div class="flex flex-col items-end">
+            <h1 class="dark:text-gray-200 text-gray-800">{{ dat === 'datakril' ? translateText(`${userInfoLotin.name} ${userInfoLotin.surname} ${userInfoLotin.dadname}`):`${userInfoLotin.name} ${userInfoLotin.surname} ${userInfoLotin.dadname}` }}</h1>
+            <h1 class="dark:text-gray-200/50 to-gray-800/50">{{ dat === 'datakril' ? translateText(userInfoLotin.lavozimi):userInfoLotin.lavozimi }}</h1>
+          </div>
+        <div :class="[
+          'w-[60px] h-[60px] rounded-full overflow-hidden ring-2 transition-all duration-300',
+          // Dark mode
+          'dark:ring-emerald-400/30 dark:hover:ring-emerald-400/60',
+          // Light mode  
+          'ring-blue-400/40 hover:ring-blue-500/70 shadow-lg hover:shadow-xl'
+        ]">
+          <img :src="getProfileImage(userInfoLotin.img)" alt="Profile" class="w-full h-full object-cover" />
         </div>
-        <Dark />
+      </router-link> 
       </div>
     </header>
 
@@ -75,85 +181,215 @@
     <NotificationModal v-if="showModal" @close="closeNotificationModal" />
 
     <!-- Main Layout -->
-    <div class="flex min-h-screen bg-gray-100">
+    <div class="flex min-h-screen">
       <aside :class="[
-        'fixed top-0 left-0 h-screen bg-gradient-to-br from-blue-600 to-purple-700',
-        'shadow-2xl transition-all duration-500 z-50 backdrop-blur-sm',
-        isCollapsed ? 'w-20' : 'w-96'
+        'fixed top-0 left-0 h-screen shadow-2xl transition-all duration-500 z-50 border-r',
+        isCollapsed ? 'w-20' : 'w-80',
+        // Dark mode
+        'dark:bg-gradient-to-b dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 dark:border-slate-700/50',
+        // Light mode
+        'bg-gradient-to-b from-white via-gray-200 to-white border-gray-200/80 backdrop-blur-sm'
       ]">
         <!-- Toggle Button -->
         <button 
           @click="isCollapsed = !isCollapsed" 
-          class="absolute -right-4 top-5 w-10 h-10 bg-blue-500 hover:bg-blue-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg"
+          :class="[
+            'absolute -right-6 top-[100px] w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg ring-2',
+            // Dark mode
+            'dark:bg-gradient-to-r dark:from-emerald-500 dark:to-emerald-600 dark:hover:from-emerald-600 dark:hover:to-emerald-700 dark:ring-emerald-400/30',
+            // Light mode
+            'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 ring-blue-400/40'
+          ]"
         >
           <Icon 
-            :icon="isCollapsed ? 'mdi:menu' : 'mdi:close'" 
-            class="text-white text-xl transition-transform duration-300"
+            :icon="isCollapsed ? 'mdi:chevron-right' : 'mdi:chevron-left'" 
+            class="text-white text-lg transition-transform duration-300"
           />
         </button>
 
-        <div class="pt-20 px-4 h-full overflow-y-auto">
+        <div class="mt-4 px-3 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-transparent">
           <!-- Loading -->
           <div v-if="isLoading" class="flex flex-col items-center justify-center h-32 gap-4">
-            <div class="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-            <p v-if="!isCollapsed" class="text-white font-medium">Yuklanmoqda...</p>
+            <div :class="[
+              'w-8 h-8 border-2 rounded-full animate-spin',
+              // Dark mode
+              'dark:border-slate-600 dark:border-t-emerald-400',
+              // Light mode
+              'border-gray-300 border-t-blue-500'
+            ]"></div>
+            <p v-if="!isCollapsed" :class="[
+              'font-medium',
+              // Dark mode
+              'dark:text-slate-300',
+              // Light mode
+              'text-gray-600'
+            ]">Yuklanmoqda...</p>
           </div>
 
           <!-- Menu Items -->
-          <nav v-else class="space-y-2">
+          <nav v-else class="space-y-3">
             <router-link 
               v-for="(item, i) in filteredMenu" 
               :key="i"
               :to="item.to" 
               :class="[
-                'flex items-center p-3 rounded-xl text-white/90 hover:text-white',
-                'bg-white/10 hover:bg-white/20 transition-all duration-300 group',
-                'hover:translate-x-2 hover:shadow-lg relative',
-                route.path === item.to ? 'bg-white/25 translate-x-3 shadow-lg' : ''
+                'flex items-center rounded-xl shadow-xl transition-all duration-300 group relative overflow-hidden',
+                isCollapsed ? 'p-3 justify-center' : 'p-4',
+                route.path === item.to 
+                  ? [
+                      // Dark mode active
+                      'dark:bg-gradient-to-r dark:from-emerald-500/20 dark:to-emerald-600/20 dark:text-emerald-300 dark:shadow-lg dark:border dark:border-emerald-500/30',
+                      // Light mode active  
+                      'bg-gradient-to-r from-blue-500/15 to-blue-600/15 text-blue-700 shadow-lg border border-blue-400/40'
+                    ]
+                  : [
+                      // Dark mode inactive
+                      'dark:text-slate-300 dark:hover:text-white dark:hover:bg-gradient-to-r dark:hover:from-slate-700/50 dark:hover:to-slate-600/50 dark:hover:shadow-md',
+                      // Light mode inactive
+                      'text-gray-600 hover:text-gray-800 hover:bg-gradient-to-r hover:from-gray-100/80 hover:to-gray-50/80 hover:shadow-md'
+                    ]
               ]"
             >
-              <div class="w-10 h-10 flex items-center justify-center bg-white/10 rounded-lg mr-3 group-hover:bg-white/20 transition-colors">
-                <Icon :icon="item.icon" class="text-lg" />
+              <!-- Background Animation -->
+              <div :class="[
+                'absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-300',
+                // Dark mode
+                'dark:from-emerald-500/10 dark:to-transparent',
+                // Light mode
+                'from-blue-500/8 to-transparent'
+              ]"></div>
+              
+              <div :class="[
+                'flex items-center justify-center rounded-lg transition-all duration-300 relative z-10',
+                isCollapsed ? 'w-8 h-8' : 'w-10 h-10 mr-4',
+                // Dark mode
+                'dark:bg-slate-700/50 dark:group-hover:bg-emerald-500/20',
+                // Light mode
+                'bg-gray-100/70 group-hover:bg-blue-100/60'
+              ]">
+                <Icon :icon="item.icon" :class="[
+                  'transition-colors duration-300',
+                  isCollapsed ? 'text-base' : 'text-lg',
+                  route.path === item.to 
+                    ? [
+                        // Dark mode active
+                        'dark:text-emerald-400',
+                        // Light mode active
+                        'text-blue-600'
+                      ]
+                    : [
+                        // Dark mode inactive
+                        'dark:text-slate-400 dark:group-hover:text-emerald-400',
+                        // Light mode inactive
+                        'text-gray-500 group-hover:text-blue-600'
+                      ]
+                ]" />
               </div>
               
-              <div v-if="!isCollapsed" class="flex-1 min-w-0">
-                <div class="text-xs opacity-75 font-semibold">{{ i + 1 }}</div>
+              <div v-if="!isCollapsed" class="flex-1 min-w-0 relative z-10">
                 <div class="text-sm font-medium truncate">
                   {{ dat === 'datakril' ? translateText(item.label) : item.label }}
                 </div>
               </div>
 
-              <!-- Tooltip -->
-              <div v-if="isCollapsed" class="absolute left-full ml-4 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
+              <!-- Active Indicator -->
+              <div v-if="route.path === item.to" :class="[
+                'absolute right-0 top-1/2 -translate-y-1/2 w-1 h-8 rounded-l-full',
+                isCollapsed ? 'hidden' : '',
+                // Dark mode
+                'dark:bg-gradient-to-b dark:from-emerald-400 dark:to-emerald-600',
+                // Light mode
+                'bg-gradient-to-b from-blue-500 to-blue-600'
+              ]"></div>
+
+              <!-- Tooltip for collapsed state -->
+              <div v-if="isCollapsed" :class="[
+                'absolute left-full ml-3 px-3 py-2 text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap pointer-events-none z-20 border',
+                // Dark mode
+                'dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200',
+                // Light mode
+                'bg-white border-gray-200 text-gray-700 shadow-xl'
+              ]">
                 {{ dat === 'datakril' ? translateText(item.label) : item.label }}
-                <div class="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-gray-900"></div>
+                <div :class="[
+                  'absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent',
+                  // Dark mode
+                  'dark:border-r-slate-800',
+                  // Light mode
+                  'border-r-white'
+                ]"></div>
               </div>
             </router-link>
 
             <!-- GitHub -->
-            <div @click="open()" class="flex items-center p-3 rounded-xl text-white/90 hover:text-white bg-gray-800 hover:bg-gray-700 transition-all duration-300 group hover:translate-x-2 hover:shadow-lg cursor-pointer relative">
-              <div class="w-10 h-10 flex items-center justify-center bg-white/10 rounded-lg mr-3 group-hover:bg-white/20 transition-colors">
-                <Icon icon="mdi:github" class="text-lg" />
+            <div @click="open()" :class="[
+              'flex items-center rounded-xl transition-all duration-300 group cursor-pointer relative overflow-hidden',
+              isCollapsed ? 'p-3 justify-center' : 'p-4',
+              // Dark mode
+              'dark:text-slate-300 dark:hover:text-white dark:hover:bg-gradient-to-r dark:hover:from-slate-700/50 dark:hover:to-slate-600/50 dark:hover:shadow-md',
+              // Light mode
+              'text-gray-600 hover:text-gray-800 hover:bg-gradient-to-r hover:from-purple-50/80 hover:to-indigo-50/80 hover:shadow-md'
+            ]">
+              <!-- Background Animation -->
+              <div :class="[
+                'absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-300',
+                // Dark mode
+                'dark:from-purple-500/10 dark:to-transparent',
+                // Light mode
+                'from-purple-500/8 to-transparent'
+              ]"></div>
+              
+              <div :class="[
+                'flex items-center justify-center rounded-lg transition-all duration-300 relative z-10',
+                isCollapsed ? 'w-8 h-8' : 'w-10 h-10 mr-4',
+                // Dark mode
+                'dark:bg-slate-700/50 dark:group-hover:bg-purple-500/20',
+                // Light mode
+                'bg-gray-100/70 group-hover:bg-purple-100/60'
+              ]">
+                <Icon icon="mdi:github" :class="[
+                  'transition-colors duration-300',
+                  isCollapsed ? 'text-base' : 'text-lg',
+                  // Dark mode
+                  'dark:text-slate-400 dark:group-hover:text-purple-400',
+                  // Light mode
+                  'text-gray-500 group-hover:text-purple-600'
+                ]" />
               </div>
               
-              <div v-if="!isCollapsed" class="flex-1">
-                <div class="text-xs opacity-75 font-semibold">{{ filteredMenu.length + 1 }}</div>
+              <div v-if="!isCollapsed" class="flex-1 shadow-xl relative z-10">
                 <div class="text-sm font-medium">GitHub</div>
               </div>
 
-              <div v-if="isCollapsed" class="absolute left-full ml-4 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
+              <!-- Tooltip for collapsed state -->
+              <div v-if="isCollapsed" :class="[
+                'absolute left-full shadow-xl ml-3 px-3 py-2 text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap pointer-events-none z-20 border',
+                // Dark mode
+                'dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200',
+                // Light mode
+                'bg-white border-gray-200 text-gray-700 shadow-xl'
+              ]">
                 GitHub
-                <div class="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-gray-900"></div>
+                <div :class="[
+                  'absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent',
+                  // Dark mode
+                  'dark:border-r-slate-800',
+                  // Light mode
+                  'border-r-white'
+                ]"></div>
               </div>
             </div>
           </nav>
         </div>
       </aside>
+      
       <main :class="[
-        'flex-1 mt-[90px] transition-all duration-500 ease-in-out',
-        isCollapsed ? 'ml-20' : 'ml-96'
+        'flex-1 mt-[90px] transition-all duration-500 ease-in-out min-h-[calc(100vh-90px)]',
+        isCollapsed ? 'ml-20' : 'ml-80'
       ]">
-        <router-view />
+        <div class="">
+          <router-view />
+        </div>
       </main>
     </div>
   </div>
@@ -452,25 +688,3 @@ onUnmounted(() => {
   }
 })
 </script>
-
-<style scoped>
-/* Ensure smooth transitions for language dropdown and other hover effects */
-.group:hover .scale-y-0 {
-  transform: scale-y(1);
-}
-
-/* Ensure header and aside do not interfere with each other */
-header {
-  z-index: 20; /* Header above main content but below aside */
-  transition: left 0.5s ease-in-out, width 0.5s ease-in-out; /* Smooth transitions for header */
-}
-
-aside {
-  z-index: 50; /* Aside above both header and main content */
-}
-
-/* Optional: Add padding to main content for better spacing */
-main {
-  padding: 1rem;
-}
-</style>
