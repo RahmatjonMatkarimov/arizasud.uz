@@ -82,7 +82,7 @@ import { URL } from '@/auth/url.js';
 import translateText from '@/auth/Translate';
 import { Icon } from '@iconify/vue';
 const dat = ref(localStorage.getItem('til') || 'datalotin');
-
+const router = useRouter();
 let intervalId1 = null;
 const checkLanguageChange = () => {
   const currentLang = localStorage.getItem('til') || 'datalotin';
@@ -106,7 +106,7 @@ const admins = ref([]);
 
 // Search functionality
 import { useSearchStore } from '@/components/Templates/searchQuary'
-import router from '@/router';
+import { useRouter } from 'vue-router';
 const searchStore = useSearchStore()
 
 // Computed property for filtered admins

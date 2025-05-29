@@ -1,10 +1,10 @@
 <template>
   <div
-    class="w-[96%] mx-auto top-[90px] h-[calc(101vh-100px)] fixed bg-gray-200 dark:bg-gradient-to-br from-gray-900 to-gray-800 backdrop-blur-md">
-    <div id="" class="relative flex min-w-full min-h-screen justify-between h-full">
+    class="mx-auto bg-gray-200 h-[calc(101vh-100px)] dark:bg-gradient-to-br from-gray-900 to-gray-800">
+    <div id="" class="relative flex min-w-full  justify-between h-full">
       <div class="w-full container flex flex-col mx-auto items-center justify-center p-4">
         <div ref="messagesContainer"
-          class="min-w-full mb-[220px] h-[calc(100%-100px)] overflow-y-auto p-4 space-y-4 scrollbar-custom">
+          class="min-w-full mb-[50px] h-[calc(100%-100px)] overflow-y-auto p-4 space-y-4 scrollbar-custom">
           <div v-for="message in messages" :key="message.id" :ref="el => messageRefs[message.id] = el"
             :class="['flex', message.senderId === user?.id ? 'justify-end' : 'justify-start']"@dblclick="handleReply(message)"
             @contextmenu.prevent="showContextMenu($event, message)">
@@ -172,7 +172,7 @@
         </div>
       </div>
 
-      <button v-if="showScrollButton" @click="scrollToBottom"
+      <button v-if="false" @click="scrollToBottom"
         class="fixed bottom-[160px] bg-teal-500 text-white p-2 rounded-full shadow-lg hover:bg-teal-600 transition animate-pulse">
         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
@@ -333,11 +333,9 @@ import { io } from 'socket.io-client';
 import { debounce } from 'lodash';
 import { URL } from '@/auth/url';
 import axios from 'axios';
-import { inject } from 'vue';
 import translateText from '@/auth/Translate';
 import translateTextLotin from '@/auth/lotin';
 import { Icon } from '@iconify/vue';
-import Dark from '../dark.vue';
 
 // User data from localStorage
 const user = ref({
@@ -345,8 +343,22 @@ const user = ref({
   username: localStorage.getItem('username') || 'TestUser',
 });
 
-// Reactive state
-const dat = inject('dat')
+const dat = ref(localStorage.getItem('til') || 'datalotin');
+
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem('til') || 'datalotin';
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
 const socket = ref(null);
 const messages = ref([]);
 const newMessage = ref('');

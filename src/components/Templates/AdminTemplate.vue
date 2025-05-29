@@ -23,7 +23,7 @@
             // Dark mode
             'dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200 dark:focus:border-emerald-400 dark:focus:bg-slate-700 dark:placeholder-slate-400 dark:hover:border-slate-500',
             // Light mode
-            'border-gray-300 bg-white/80 text-gray-700 focus:border-blue-400 focus:bg-white placeholder-gray-500 hover:border-gray-400 shadow-sm focus:shadow-md backdrop-blur-sm'
+            'border-gray-300 bg-white/80 text-gray-700 focus:border-blue-400 focus:bg-white placeholder-gray-500 hover:border-gray-400 shadow-sm focus:shadow-md '
           ]" />
         </div>
       
@@ -490,6 +490,7 @@ const changeLanguage = (langCode) => {
   dat.value = data
   locale.value = langCode
   localStorage.setItem('til', data)
+  inject('dat', data)
   selectedLanguage.value = languages.value.find(lang => lang.code === langCode)
   isLanguageDropdownOpen.value = false
 }

@@ -107,7 +107,7 @@ onMounted(fetchAdminData);
         <div class="mx-auto mb-4 p-4">
             <div class="flex justify-center pt-4 items-center">
                 <h1
-                    class=" text-[40px] font-bold text-center bg-gradient-to-r from-blue-800/50 to-purple-500/5 text-white border-2 mb-4 border-white rounded-lg py-2 px-[100px]">
+                    class=" text-[40px] font-bold text-center bg-gradient-to-r from-blue-800/50 to-purple-500/50 text-white border-2 mb-4 border-white rounded-lg py-2 px-[100px]">
                     {{ dat === 'datakril' ? translateText('Ishchi hodimlar bo\'limi') : 'Ishchi hodimlar bo\'limi' }}
                 </h1>
             </div>
