@@ -338,7 +338,7 @@ import { io } from "socket.io-client";
 import { useRouter } from "vue-router";
 import { useI18n } from 'vue-i18n';
 import { Icon } from '@iconify/vue';
-import translateText from "@/auth/Translate";
+import translateText from '@/auth/Translate';
 
 const buttonRefs = ref({});
 const modalPosition = ref({});
@@ -401,7 +401,6 @@ const updatednewPassword2 = ref("");
 const Count = ref(null);
 const existingImage = ref(null);
 import { useSearchStore } from '@/components/Templates/searchQuary'
-import translateText from "@/auth/Translate";
 const searchStore = useSearchStore()
 // Computed property to filter admins based on search query
 const filteredAdmins = computed(() => {
@@ -417,7 +416,6 @@ const filteredAdmins = computed(() => {
     );
   });
 });
-
 
 const getData = async () => {
   try {
