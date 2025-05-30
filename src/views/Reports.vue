@@ -416,7 +416,7 @@ select:focus {
 </style>
 
 <template>
-  <div class="dark:bg-[#1a2642] p-7 min-h-screen">
+  <div class="dark:bg-[#1a2642] text-gray-800  dark:text-gray-200 p-7 min-h-screen">
     <!-- Invoices List View -->
     <div v-if="!showDetails" class="rounded-lg p-6 table-container">
       <div class="mb-6">
@@ -613,11 +613,11 @@ select:focus {
   <!-- Create Report Modal -->
   <transition name="modal">
     <div
-      v-if="Showmodal"
+      v-if="Showmodal" @click="Showmodal = false"
       class="fixed inset-0 bg-black bg-opacity-80 z-40 flex justify-center items-center"
     >
-      <div
-        class="bg-slate-800 w-[600px] top-0 duration-500 rounded-lg p-6 relative flex flex-col gap-2"
+      <div @click.stop
+        class="bg-slate-800 text-white w-[600px] top-0 duration-500 rounded-lg p-6 relative flex flex-col gap-2"
       >
         <img
           @click="Showmodal = false"
@@ -690,11 +690,13 @@ select:focus {
   <!-- Repayment Modal -->
   <transition name="modal">
     <div
-      v-if="modal"
+      v-if="modal" @click="modal = false"
       class="fixed inset-0 group bg-black bg-opacity-80 z-40 flex justify-center items-center"
     >
       <div
-        class="bg-slate-800 w-[500px] top-0 rounded-lg p-6 relative flex flex-col gap-2"
+      @click.stop
+
+        class="bg-slate-800 w-[500px] top-0 text-white rounded-lg p-6 relative flex flex-col gap-2"
       >
         <img
           @click="modal = false"

@@ -10,7 +10,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth) {
     if (!isAuthenticated()) {
-      next({ name: '' });
+      next({ name: 'home' });
     } else {
       const userRole = getRoleFromToken();
       if (to.meta.allowedRoles?.length && !to.meta.allowedRoles.includes(userRole)) {

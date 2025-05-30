@@ -18,7 +18,7 @@ import {
   faFileInvoice, 
   faMoneyBillTransfer, 
   faMoneyCheckDollar, 
-  faChartPie,
+  faChartPie,faGlobe,
   faUser,
   faSearch,
   faBell
@@ -31,7 +31,7 @@ library.add(
   faMoneyCheckDollar, 
   faChartPie,
   faUser,
-  faSearch,
+  faSearch,faGlobe,
   faBell
 );
 

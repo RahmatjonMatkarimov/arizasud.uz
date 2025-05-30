@@ -25,6 +25,7 @@ const menuItems = [
   { name: 'Ishchilar oyligini hisoblash', icon: 'money-check-dollar', path: '/salary' },
   { name: 'Xarajatlar', icon: 'chart-pie', path: '/reports' },
   { name: 'Shartnoma qarzlari', icon: 'user', path: '/clients' },
+  { name: 'Kerakli tarmoqlar', icon: 'globe', path: '/link' },
 ]
 
 // Timeline for better animation control
@@ -352,7 +353,7 @@ onMounted(() => {
         <div class="hover-overlay absolute inset-0  h-full pointer-events-none"></div>
         
         <!-- Icon with animations -->
-        <font-awesome-icon :icon="item.icon" class="menu-icon w-5 transition-all duration-300 ease-in-out"
+        <font-awesome-icon :icon="['fas',item.icon]" class="menu-icon w-5 transition-all duration-300 ease-in-out"
           :class="{ 'mr-3': isAsideVisible }" />
         
         <!-- Text with fade animation -->

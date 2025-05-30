@@ -1,7 +1,11 @@
 <template>
   <div class="min-h-screen bg-slate-200 flex items-center justify-center px-4">
-    <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 animate-slide-up border border-slate-300">
-      <h2 class="text-3xl font-bold text-slate-800 text-center mb-6 animate-fade-in">Tizimga Kirish</h2>
+    <div
+      class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 animate-slide-up border border-slate-300"
+    >
+      <h2 class="text-3xl font-bold text-slate-800 text-center mb-6 animate-fade-in">
+        Tizimga Kirish
+      </h2>
 
       <form @submit.prevent="setData" class="space-y-4 animate-fade-in delay-200">
         <input
@@ -20,13 +24,25 @@
             class="input-field pr-10"
             required
           />
-          <button type="button" @click="showPassword = !showPassword" class="absolute right-3 top-1/2 -translate-y-1/2">
-            <img :src="showPassword ? '/eyes.png' : '/eye.png'" class="w-5 h-5 opacity-70" />
+          <button
+            type="button"
+            @click="showPassword = !showPassword"
+            class="absolute right-3 top-1/2 -translate-y-1/2"
+          >
+            <img
+              :src="showPassword ? '/eyes.png' : '/eye.png'"
+              class="w-5 h-5 opacity-70"
+            />
           </button>
         </div>
 
-        <input v-model="tell" type="number" placeholder="Telefon raqam" class="input-field"  />
-        <input v-model="jshshr" type="number" placeholder="JSHSHR" class="input-field"  />
+        <input
+          v-model="tell"
+          type="number"
+          placeholder="Telefon raqam"
+          class="input-field"
+        />
+        <input v-model="jshshr" type="number" placeholder="JSHSHR" class="input-field" />
 
         <button
           type="submit"
@@ -35,10 +51,7 @@
           Kirish
         </button>
 
-        <p
-          v-if="error"
-          class="text-red-500 text-center mt-2 animate-shake"
-        >
+        <p v-if="error" class="text-red-500 text-center mt-2 animate-shake">
           {{ error }}
         </p>
       </form>
@@ -82,10 +95,9 @@ const setData = async () => {
       password: password.value.trim(),
     });
 
-    id.value = res.data.data.user.id;
-    localStorage.setItem("id", res.data.data.user.id);
-
     if (res.data.statusCode === 200) {
+      id.value = res.data.data.user.id;
+      localStorage.setItem("id", res.data.data.user.id);
       const token = res.data.data.token;
       const role = res.data.data.user.role;
       const expirationTime = new Date().getTime() + 3600000;
@@ -95,7 +107,17 @@ const setData = async () => {
 
       if (!role) {
         error.value = "Foydalanuvchi roli aniqlanmadi.";
-      } else if (["admin", "bigAdmin", "yuristAssistant", "accauntant", "deliverer", "yurist", "manager"].includes(role.trim())) {
+      } else if (
+        [
+          "admin",
+          "bigAdmin",
+          "yuristAssistant",
+          "accauntant",
+          "deliverer",
+          "yurist",
+          "manager",
+        ].includes(role.trim())
+      ) {
         router.push(`/admin-list`);
       } else {
         error.value = "Bu rolda tizimga kirish taqiqlangan.";
@@ -147,9 +169,18 @@ const setData = async () => {
 
 /* Shake for error */
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20%, 60% { transform: translateX(-8px); }
-  40%, 80% { transform: translateX(8px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-8px);
+  }
+  40%,
+  80% {
+    transform: translateX(8px);
+  }
 }
 .animate-shake {
   animation: shake 0.4s ease-in-out;

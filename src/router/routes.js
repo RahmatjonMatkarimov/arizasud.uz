@@ -1,17 +1,3 @@
-import Dashboard from '@/views/Dashboard.vue'
-import Transactions from '../views/Transactions.vue'
-import Invoices from '../views/Invoices.vue'
-import Payroll from '../views/Payroll.vue'
-import Reports from '../views/Reports.vue'
-import Profile from '../views/Profile.vue'
-import invoicesChild from '../views/InvoicesChildren.vue'
-import reportsChild from '../views/ReportsChildren.vue'
-import main from '@/components/Templates/template.vue'
-import salaryCalculator from '@/components/admins/salaryCalculator.vue'
-import salary from '@/components/Salery/index.vue'
-import salaryChange from '@/components/Salery/Salerychange.vue'
-import clients from '@/components/dashboard/clents.vue'
-
 export const routes = [
   { path: '/edit/:id/:id2?', name: 'editFile', component: () => import('@/components/main/file/file.vue') },
   { path: '/CommonerLogin', name: 'CommonerLogin', component: () => import('@/components/filePage/fileLogin.vue') },
@@ -41,117 +27,26 @@ export const routes = [
   {
     path: '/ashboard',
     name: 'bugalter',
-    component: main,
+    component: () => import('@/components/Templates/template.vue'),
     meta: { title: 'bugalter' },
-    children:[
-      {
-        path: '/Dashboard',
-        name: 'Dashboard',
-        component: Dashboard,
-        meta: { title: 'Dashboard' }
-      },
-      {
-        path: '/transactions',
-        name: 'Transactions',
-        component: Transactions,
-        meta: { title: 'Transactions' }
-      },
-      {
-        path: '/clients',
-        name: 'clients',
-        component: clients,
-        meta: { title: 'clients' }
-      },
-      {
-        path: '/invoicesChild',
-        name: 'invoicesChild',
-        component: invoicesChild,
-        meta: { title: 'invoicesChild' }
-      },
-      {
-        path: '/reportsChild',
-        name: 'reportsChild',
-        component: reportsChild,
-        meta: { title: 'reportsChild' }
-      },
-      {
-        path: '/salaryCalculator',
-        name: 'salaryCalculator',
-        component: salaryCalculator,
-        meta: { title: 'salaryCalculator' }
-      },
-      {
-        path: '/salaryChange',
-        name: 'salaryChange',
-        component: salaryChange,
-        meta: { title: 'salaryChange' }
-      },
-      {
-        path: '/salary',
-        name: 'salary',
-        component: salary,
-        meta: { title: 'salary' }
-      },
-      {
-        path: '/invoices',
-        name: 'Invoices',
-        component: Invoices,
-        meta: { title: 'Invoices' }
-      },
-      {
-        path: '/payroll',
-        name: 'Payroll',
-        component: Payroll,
-        meta: { title: 'Payroll' }
-      },
-      {
-        path: '/reports',
-        name: 'Reports',
-        component: Reports,
-        meta: { title: 'Reports' }
-      },
-      {
-        path: '/profile',
-        name: 'Profile',
-        component: Profile,
-        meta: { title: 'Profile' }
-      },
-      {
-        path: '/transactions',
-        name: 'Transactions',
-        component: Transactions,
-        meta: { title: 'Transactions' }
-      },
-      {
-        path: '/invoices',
-        name: 'Invoices',
-        component: Invoices,
-        meta: { title: 'Invoices' }
-      },
-      {
-        path: '/payroll',
-        name: 'Payroll',
-        component: Payroll,
-        meta: { title: 'Payroll' }
-      },
-      {
-        path: '/reports',
-        name: 'Reports',
-        component: Reports,
-        meta: { title: 'Reports' }
-      },
-      {
-        path: '/profile',
-        name: 'Profile',
-        component: Profile,
-        meta: { title: 'Profile' }
-      },
+    children: [
+      { path: '/Dashboard', component: () => import('@/views/Dashboard.vue') },
+      { path: '/transactions', component: () => import('@/views/Transactions.vue') },
+      { path: '/clients', component: () => import('@/components/dashboard/clents.vue') },
+      { path: '/invoicesChild', component: () => import('@/views/InvoicesChildren.vue') },
+      { path: '/reportsChild', component: () => import('@/views/ReportsChildren.vue') },
+      { path: '/salaryCalculator', component: () => import('@/components/admins/salaryCalculator.vue') },
+      { path: '/salaryChange', component: () => import('@/components/Salery/Salerychange.vue') },
+      { path: '/salary', component: () => import('@/components/Salery/index.vue') },
+      { path: '/invoices', component: () => import('@/views/Invoices.vue') },
+      { path: '/payroll', component: () => import('@/views/Payroll.vue') },
+      { path: '/reports', component: () => import('@/views/Reports.vue') },
+      { path: '/link', component: () => import('@/components/dashboard/links.vue') },
+      { path: '/profile', component: () => import('@/views/Profile.vue') },
     ],
-    meta: { requiresAuth: true, allowedRoles: ['admin', 'manager', 'yuristAssistant','accauntant', 'deliverer', 'yurist', 'bigAdmin'] },
-    
+    meta: { requiresAuth: true, allowedRoles: ['admin', 'manager', 'yuristAssistant', 'accauntant', 'deliverer', 'yurist', 'bigAdmin'] },
   },
-
-    {
+  {
     path: '/admin',
     component: () => import('@/components/Templates/AdminTemplate.vue'),
     children: [
@@ -213,6 +108,6 @@ export const routes = [
       { path: '/deliverer-task', component: () => import('@/components/admins/delivier-tasks.vue') },
       { path: '/bugalter', component: () => import('@/components/admins/bugalter.vue') },
     ],
-    meta: { requiresAuth: true, allowedRoles: ['admin', 'manager', 'yuristAssistant','accauntant', 'deliverer', 'yurist', 'bigAdmin'] },
+    meta: { requiresAuth: true, allowedRoles: ['admin', 'manager', 'yuristAssistant', 'accauntant', 'deliverer', 'yurist', 'bigAdmin'] },
   },
 ];
