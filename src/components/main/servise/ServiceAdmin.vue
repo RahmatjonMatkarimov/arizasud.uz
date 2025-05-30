@@ -153,24 +153,10 @@ const router = useRouter();
 const numericId = ref(parseInt(route.params.id));
 const dat = inject('dat');
 
-const translitMap = {
-  "ch": "ч", "sh": "ш", "yo": "ё", "yu": "ю", "ya": "я", "ye": "е", "oʻ": "ў", "g‘": "ғ",
-  "a": "а", "b": "б", "d": "д", "e": "э", "f": "ф", "g": "г", "h": "ҳ", "i": "и", "j": "ж",
-  "k": "к", "l": "л", "m": "м", "n": "н", "o": "о", "p": "п", "q": "қ", "r": "р", "s": "с",
-  "t": "т", "u": "у", "v": "в", "x": "х", "y": "й", "z": "з", "'": "ъ"
-};
-
 const hasFilesAtRoot = computed(() => ServiceData.value.some(item => !item.isFolder));
 const hasFoldersAtRoot = computed(() => ServiceData.value.some(item => item.isFolder));
 
-const translateText = (text) => {
-  if (!text) return '';
-  let translated = text.toLowerCase();
-  for (const key in translitMap) {
-    translated = translated.replace(new RegExp(key, "g"), translitMap[key]);
-  }
-  return translated;
-};
+import translateText from "@/auth/Translate";
 
 onMounted(async () => {
   ServiceId.value = numericId.value;

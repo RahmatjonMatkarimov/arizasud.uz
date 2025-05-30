@@ -129,7 +129,6 @@ const toggleModal = () => {
 };
 
 const id = localStorage.getItem("id");
-const adminId = parseInt(id);
 
 const Modal = () => {
   PutModal.value = !PutModal.value;
@@ -161,22 +160,8 @@ const func = async (id) => {
 
 const data = ref([]);
 const dat = inject('dat');
+import translateText from "@/auth/Translate";
 
-const translitMap = {
-  "ch": "ч", "sh": "ш", "yo": "ё", "yu": "ю", "ya": "я", "ye": "е", "oʻ": "ў", "g‘": "ғ",
-  "a": "а", "b": "б", "d": "д", "e": "э", "f": "ф", "g": "г", "h": "ҳ", "i": "и", "j": "ж",
-  "k": "к", "l": "л", "m": "м", "n": "н", "o": "о", "p": "п", "q": "қ", "r": "р", "s": "с",
-  "t": "т", "u": "у", "v": "в", "x": "х", "y": "й", "z": "з", "'": "ъ"
-};
-
-const translateText = (text) => {
-  let translated = text.toLowerCase();
-  for (const key in translitMap) {
-    const regex = new RegExp(key, "g");
-    translated = translated.replace(regex, translitMap[key]);
-  }
-  return translated;
-};
 
 const getData = async () => {
   try {

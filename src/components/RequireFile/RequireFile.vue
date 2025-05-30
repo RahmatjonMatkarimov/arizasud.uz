@@ -200,12 +200,6 @@ const route = useRoute()
 const id = ref(parseInt(route.params.id))
 const data = ref('')
 const userID = ref(parseInt(localStorage.getItem('id')))
-const translitMap = {
-  "ch": "ч", "sh": "ш", "yo": "ё", "yu": "ю", "ya": "я", "ye": "е", "oʻ": "ў", "g‘": "ғ",
-  "a": "а", "b": "б", "d": "д", "e": "э", "f": "ф", "g": "г", "h": "ҳ", "i": "и", "j": "ж",
-  "k": "к", "l": "л", "m": "м", "n": "н", "o": "о", "p": "п", "q": "қ", "r": "р", "s": "с",
-  "t": "т", "u": "у", "v": "в", "x": "х", "y": "й", "z": "з", "'": "ъ"
-}
 const isLoading = inject('isLoading');
 
 const getStatusText = (status) => {
@@ -216,14 +210,8 @@ const getStatusText = (status) => {
   if (status === 'revision') return 'Qayta korib chiqish talab etiladi';
   return status;
 };
-const translateText = (text) => {
-  let translated = text.toLowerCase()
-  for (const key in translitMap) {
-    const regex = new RegExp(key, "g")
-    translated = translated.replace(regex, translitMap[key])
-  }
-  return translated
-}
+import translateText from "@/auth/Translate";
+
 const getdata = async () => {
   isLoading.value = true;
 

@@ -43,20 +43,7 @@ import { ref, onMounted, onUnmounted } from "vue";
 import MapAdmin from "./map.vue";
 import { URL } from "../../auth/url";
 
-const translitMap = {
-  "ch": "ч", "sh": "ш", "yo": "ё", "yu": "ю", "ya": "я", "ye": "е", "oʻ": "ў", "g‘": "ғ",
-  "a": "а", "b": "б", "d": "д", "e": "э", "f": "ф", "g": "г", "h": "ҳ", "i": "и", "j": "ж",
-  "k": "к", "l": "л", "m": "м", "n": "н", "o": "о", "p": "п", "q": "қ", "r": "р", "s": "с",
-  "t": "т", "u": "у", "v": "в", "x": "х", "y": "й", "z": "з", "'": "ъ"
-};
-
-const latinToCyrillic = (text) => {
-  let result = text || '';
-  Object.keys(translitMap).sort((a, b) => b.length - a.length).forEach(key => {
-    result = result.replace(new RegExp(key, 'gi'), translitMap[key]);
-  });
-  return result;
-};
+import latinToCyrillic from "@/auth/Translate";
 
 const rawData = ref([]);
 const data = ref([]);

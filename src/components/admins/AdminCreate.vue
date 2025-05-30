@@ -338,6 +338,7 @@ import { io } from "socket.io-client";
 import { useRouter } from "vue-router";
 import { useI18n } from 'vue-i18n';
 import { Icon } from '@iconify/vue';
+import translateText from "@/auth/Translate";
 
 const buttonRefs = ref({});
 const modalPosition = ref({});
@@ -400,6 +401,7 @@ const updatednewPassword2 = ref("");
 const Count = ref(null);
 const existingImage = ref(null);
 import { useSearchStore } from '@/components/Templates/searchQuary'
+import translateText from "@/auth/Translate";
 const searchStore = useSearchStore()
 // Computed property to filter admins based on search query
 const filteredAdmins = computed(() => {
@@ -416,22 +418,6 @@ const filteredAdmins = computed(() => {
   });
 });
 
-const translitMap = {
-  "ch": "ч", "sh": "ш", "yo": "ё", "yu": "ю", "ya": "я", "ye": "е", "o'": "ў", "g'": "ғ",
-  "a": "а", "b": "б", "d": "д", "e": "э", "f": "ф", "g": "г", "h": "ҳ", "i": "и", "j": "ж",
-  "k": "к", "l": "л", "m": "м", "n": "н", "o": "о", "p": "п", "q": "қ", "r": "р", "s": "с",
-  "t": "т", "u": "у", "v": "в", "x": "х", "y": "й", "z": "з", "'": "ў"
-};
-
-const translateText = (text) => {
-  if (!text) return '';
-  let translated = text.toLowerCase();
-  for (const key in translitMap) {
-    const regex = new RegExp(key, "g");
-    translated = translated.replace(regex, translitMap[key]);
-  }
-  return translated;
-};
 
 const getData = async () => {
   try {

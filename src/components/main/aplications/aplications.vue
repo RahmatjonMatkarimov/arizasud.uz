@@ -64,22 +64,8 @@ const imageBaseUrl = `${URL}/upload`;
 const router = useRouter();
 const route = useRoute();
 const id1 = route.params.id;
+import translateText from "@/auth/Translate";
 
-const translitMap = {
-  ch: "ч", sh: "ш", yo: "ё", yu: "ю", ya: "я", ye: "е", "oʻ": "ў", "g‘": "ғ",
-  a: "а", b: "б", d: "д", e: "э", f: "ф", g: "г", h: "ҳ", i: "и", j: "ж",
-  k: "к", l: "л", m: "м", n: "н", o: "о", p: "п", q: "қ", r: "р", s: "с",
-  t: "т", u: "у", v: "в", x: "х", y: "й", z: "з", "'": "ъ"
-};
-
-const translateText = (text) => {
-  if (!text) return "";
-  let translated = text.toLowerCase();
-  for (const [key, value] of Object.entries(translitMap)) {
-    translated = translated.replace(new RegExp(key, "g"), value);
-  }
-  return translated;
-};
 
 const ServiceData = ref([]);
 const getData = async () => {
