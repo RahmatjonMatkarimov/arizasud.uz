@@ -3,7 +3,7 @@
     <form @submit.prevent="uploadCourt" ref="form">
       <div>
         <input
-            v-model="courtName"
+            v-model="courtName1"
             class="text-black w-full outline-none p-3 mt-9 rounded-[15px]"
             type="text"
             id="name"
@@ -12,8 +12,8 @@
       </div>
       <div>
         <input
-            ref="fileInput"
-            @change="onFileChange"
+            ref="fileInput1"
+            @change="onFileChange1"
             type="file"
             id="file"
             accept="image/*"
@@ -27,8 +27,8 @@
         {{ $t('yuklash') }}
       </button>
     </form>
-    <p v-if="successMessage" style="color: green">{{ successMessage }}</p>
-    <p v-if="errorMessage" style="color: red">{{ errorMessage }}</p>
+    <p v-if="successMessage1" style="color: green">{{ successMessage1 }}</p>
+    <p v-if="errorMessage1" style="color: red">{{ errorMessage1 }}</p>
   </div>
 </template>
 
@@ -40,25 +40,25 @@ import { URL } from "../../../auth/url.js";
 
 export default {
   setup() {
-    const courtName = ref("");
-    const file = ref(null);
-    const successMessage = ref("");
-    const errorMessage = ref("");
+    const courtName1 = ref("");
+    const file1 = ref(null);
+    const successMessage1 = ref("");
+    const errorMessage1 = ref("");
     const route = useRoute(); // Fixed typo: useRoute not router
     const form = ref(null);
-    const fileInput = ref(null);
+    const fileInput1 = ref(null);
 
-    const onFileChange = (event) => {
-      file.value = event.target.files[0];
+    const onFileChange1 = (event) => {
+      file1.value = event.target.files[0];
     };
 
-    const id = route.params.id;
+    const id1 = route.params.id;
 
     const uploadCourt = async () => {
       const formData = new FormData();
-      formData.append("name", courtName.value);
-      formData.append("file", file.value); // Matches backend FileInterceptor
-      formData.append("courtsId", id);
+      formData.append("name", courtName1.value);
+      formData.append("file", file1.value); // Matches backend FileInterceptor
+      formData.append("courtsId", id4);
 
       try {
         await axios.post(`${URL}/services`, formData, { // Fixed endpoint name
@@ -67,27 +67,26 @@ export default {
           },
         });
 
-        successMessage.value = "Service muvaffaqiyatli yuklandi!";
-        errorMessage.value = "";
-        courtName.value = "";
-        file.value = null;
-        window.location.reload()
-        if (fileInput.value) fileInput.value.value = ""; // Reset file input
+        successMessage1.value = "Service muvaffaqiyatli yuklandi!";
+        errorMessage1.value = "";
+        courtName1.value = "";
+        file1.value = null;
+        if (fileInput1.value) fileInput1.value = ""; // Reset file input
       } catch (error) {
-        errorMessage.value = "Yuklashda xato yuz berdi: " + (error.response?.data?.message || error.message);
-        successMessage.value = "";
+        errorMessage1.value = "Yuklashda xato yuz berdi: " + (error.response?.data?.message || error.message);
+        successMessage1.value = "";
       }
     };
 
     return {
-      courtName,
-      file,
-      successMessage,
-      errorMessage,
-      onFileChange,
+      courtName1,
+      file1,
+      successMessage1,
+      errorMessage1,
+      onFileChange1,
       uploadCourt,
       form,
-      fileInput,
+      fileInput1,
     };
   },
 };
@@ -98,6 +97,6 @@ form {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-width: 300px;
+  max-width: 100%;
 }
 </style>

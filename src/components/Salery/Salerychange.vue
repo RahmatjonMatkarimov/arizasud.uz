@@ -317,13 +317,8 @@
           class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg w-full max-w-sm space-y-4"
           @click.stop
         >
-          <h2 class="text-md font-semibold dark:text-gray-300
-           text-gray-700">
-            {{
-              dat === "datakril"
-                ? translateText("Bonus qo‘shish")
-                : "Bonus qo‘shish"
-            }}
+          <h2 class="text-md font-semibold dark:text-gray-300 text-gray-700">
+            {{ dat === "datakril" ? translateText("Bonus qo‘shish") : "Bonus qo‘shish" }}
           </h2>
           <div class="space-y-2">
             <label class="block text-md font-medium text-gray-600 dark:text-gray-300">{{
@@ -337,7 +332,7 @@
                 dat === 'datakril' ? translateText('Masalan: 50.000') : 'Masalan: 50.000'
               "
             />
-            <label class="block text-md font-medium text-gray-600  dark:text-gray-300">{{
+            <label class="block text-md font-medium text-gray-600 dark:text-gray-300">{{
               dat === "datakril" ? translateText("Sabab") : "Sabab"
             }}</label>
             <input
@@ -404,9 +399,8 @@
       </div>
     </div>
   </div>
-  <div  v-if="isModalOpen" class="fixed z-40 inset-0" @click="isModalOpen = false">
+  <div v-if="isModalOpen" class="fixed z-40 inset-0" @click="isModalOpen = false">
     <div
-     
       @click.stop
       class="modal fixed bg-white dark:bg-slate-800 rounded-xl p-8 shadow-xl z-50 border border-gray-100 dark:border-slate-700 bg-opacity-100 dark:bg-opacity-100 transition-all duration-300"
       :style="{
@@ -647,6 +641,7 @@ const addBonus = async () => {
     modals.value = false;
     total.value = null;
     sabab.value = "";
+    getUser();
     getSalery();
   } catch (err) {
     console.error("Error adding bonus:", err);
