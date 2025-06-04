@@ -447,6 +447,7 @@ const menuItems = [
   { to: "/companyFile", label: "Kampaniya fayllari", icon: "mdi:office-building", condition: () => data.value?.companyDocs },
   { to: "/commaners", label: "Tizimdagi foydalanuvchilar roʻyxati", icon: "mdi:account-multiple", condition: true },
   { to: "/archive", label: "Arxiv", icon: "mdi:archive-outline", condition: true },
+  { to: "/category", label: "category", icon: "mdi:archive-outline", condition: true },
 ];
 
 const filteredMenu = computed(() => {

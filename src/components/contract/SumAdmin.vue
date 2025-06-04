@@ -122,7 +122,7 @@
 </template>
 
 <script setup>
-import { ref, inject, onMounted } from 'vue';
+import { ref, inject, onMounted, onUnmounted } from 'vue';
 import axios from 'axios';
 import { URL } from '../../auth/url.js';
 import translateText from '@/auth/Translate.js';
@@ -133,7 +133,23 @@ const postError = ref(null);
 const putError = ref(null);
 const deleteError = ref(null);
 const loading = ref(false);
-const dat = inject('dat');
+const dat = ref(localStorage.getItem("til") || "datalotin");
+
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem("til") || "datalotin";
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
 const role = localStorage.getItem('role');
 const showPostModal = ref(false);
 const showPutModal = ref(false);

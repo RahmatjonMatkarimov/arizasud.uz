@@ -16,7 +16,23 @@ const router = useRouter();
 const id = ref(route.params.id);
 const onlineAdmins = ref([]);
 const socket = io(URL);
-const dat = inject('dat');
+const dat = ref(localStorage.getItem("til") || "datalotin");
+
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem("til") || "datalotin";
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
 
 const fetchUserData = async () => {
   try {

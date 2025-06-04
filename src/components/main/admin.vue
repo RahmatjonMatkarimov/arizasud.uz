@@ -1,6 +1,6 @@
 <template>
   <div
-    class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 transition-colors duration-300"
+    class="min-h-screen bg-gray-200 dark:bg-gradient-to-br dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 transition-colors duration-300"
   >
     <!-- Header Section -->
     <header class="relative pt-12 pb-8 overflow-hidden">
@@ -929,9 +929,8 @@
             v-for="item in data"
             :key="item.id"
             @click="goToPath(item.id)"
-            class="group relative bg-white/80 dark:bg-slate-700/80 backdrop-blur-sm border-2 border-slate-200/50 dark:border-slate-600/50 hover:border-lime-400/50 dark:hover:border-lime-500/50 rounded-2xl p-6 cursor-pointer transition-all duration-300 hover:shadow-xl dark:hover:shadow-lime-500/10 hover:-translate-y-2 transform"
+            class="group relative bg-white/80 dark:bg-slate-700/80 backdrop-blur-sm border-2 border-slate-400/50 dark:border-slate-600/50 hover:border-lime-400/50 dark:hover:border-lime-500/50 rounded-2xl p-6 cursor-pointer transition-all hover:shadow-2xl duration-300 shadow-xl dark:hover:shadow-lime-500/10 hover:-translate-y-2 transform"
           >
-            <!-- Gradient overlay on hover -->
             <div
               class="absolute inset-0 bg-gradient-to-br from-lime-400/10 to-emerald-500/10 dark:from-lime-400/5 dark:to-emerald-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
             ></div>
@@ -1069,6 +1068,7 @@ const asd = ref(false);
 const selectedId = ref(null);
 const selectedCourtWorkStatus = ref(false);
 const data = ref([]);
+const userId = ref(localStorage.getItem("id") || "0");
 const loading = ref(true);
 const courtName = ref("");
 const file = ref(null);
@@ -1181,13 +1181,39 @@ const func = async (id, event) => {
 
 const getData = async () => {
   loading.value = true;
+  errorMessage.value = null;
+
   try {
     const response = await fetch(url);
-    if (!response.ok) throw new Error(response.statusText);
+    if (!response.ok) throw new Error(`HTTP xato: ${response.status}`);
+
     const result = await response.json();
+
+    // Diagnostika: olingan ma'lumotlarni konsolda ko'rish
+    console.log("API natijasi:", result);
+
+    // Filtratsiya:
     const filteredData = result
-      .filter((item) => item.status === "active")
-      .sort((a, b) => a.id - b.id);
+      .filter((item) => item.status === "active") // faqat active statusli
+      .filter((item) => {
+        // allowed massiv emas bo'lsa false qaytaramiz
+        if (!Array.isArray(item.allowed)) return false;
+
+        const targetId = String(userId.value).trim(); // xavfsiz tekshirish uchun
+
+        return item.allowed.some((u) => {
+          // agar userId maydoni bo'lmasa ham false
+          if (typeof u.userId === "undefined") return false;
+
+          // stringga o'tkazib solishtiramiz
+          return String(u.userId).trim() === targetId;
+        });
+      })
+      .sort((a, b) => a.id - b.id); // id bo'yicha saralash
+
+    // Diagnostika: yakuniy filtrlangan ma'lumotlar
+    console.log("Filtrlangan ma'lumot:", filteredData);
+
     data.value = filteredData;
   } catch (error) {
     console.error("Xatolik:", error);

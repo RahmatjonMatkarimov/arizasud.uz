@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed, inject } from 'vue';
+import { ref, onMounted, computed, inject, onUnmounted } from 'vue';
 import axios from 'axios';
 import { URL1 } from '@/auth/url';
 import { useRouter } from 'vue-router';
@@ -9,7 +9,23 @@ import { uz } from 'date-fns/locale';
 const data = ref([]);
 const searchQuery = ref('');
 const router = useRouter();
-const dat = inject('dat');
+const dat = ref(localStorage.getItem("til") || "datalotin");
+
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem("til") || "datalotin";
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
 
 
 const gotToPath = (id) => {

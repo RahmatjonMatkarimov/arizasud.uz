@@ -1,5 +1,5 @@
 <script setup>
-import { ref, inject, onMounted, computed } from 'vue'
+import { ref, inject, onMounted, computed, onUnmounted } from 'vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faUsers, faBuilding, faUserTie, faUserPlus, faFileText, faTruck, faCalculator } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -11,7 +11,23 @@ import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { URL } from '@/auth/url'
 const router = useRouter()
-const dat = inject('dat')
+const dat = ref(localStorage.getItem("til") || "datalotin");
+
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem("til") || "datalotin";
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
 const id = parseInt(localStorage.getItem("id"));
 const newId = parseInt(id);
 const data = ref({});

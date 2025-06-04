@@ -25,9 +25,26 @@
 </template>
 
 <script setup>
-import { inject, computed } from 'vue';
+import { onMounted } from 'vue';
+import { inject, computed, onUnmounted } from 'vue';
 
-const dat = inject('dat');
+const dat = ref(localStorage.getItem("til") || "datalotin");
+
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem("til") || "datalotin";
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
 
 const formattedTitle = computed(() => {
     if (dat.value === 'datalotin') {

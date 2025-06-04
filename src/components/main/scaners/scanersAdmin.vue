@@ -129,14 +129,30 @@
 </template>
 
 <script setup>
-import { ref, onMounted, inject } from 'vue';
+import { ref, onMounted, inject, onUnmounted } from 'vue';
 import axios from 'axios';
 import { URL } from '@/auth/url';
 import translateText from '@/auth/Translate';
 
 // API Base URL
 const API_URL = URL + '/scanners';
-const dat = inject('dat');
+const dat = ref(localStorage.getItem("til") || "datalotin");
+
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem("til") || "datalotin";
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
 const scanners = ref([]);
 const newScanner = ref({ name: '', img: null, workStatus: false });
 const editingScanner = ref(null);

@@ -64,7 +64,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, inject, watch, computed } from 'vue';
+import { ref, onMounted, inject, watch, computed, onUnmounted } from 'vue';
 import axios from 'axios';
 import { useRoute } from 'vue-router';
 import { URL } from '@/auth/url';
@@ -78,7 +78,23 @@ pdfjsLib.GlobalWorkerOptions.workerSrc =
 const BASE_URL = URL;
 const API_URL = `${BASE_URL}/signingFiles/signing`;
 const createdAt = ref('');
-const dat = inject('dat');
+const dat = ref(localStorage.getItem("til") || "datalotin");
+
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem("til") || "datalotin";
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
 const qwen = ref(false);
 const showPdfModal = ref(true);
 const pdfUrl = ref('');

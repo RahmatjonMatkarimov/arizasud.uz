@@ -175,7 +175,7 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted, inject, computed, watch } from 'vue'
+import { ref, onMounted, inject, computed, watch, onUnmounted } from 'vue'
 import axios from 'axios'
 import { URL } from '../../../auth/url.js'
 import { useRoute } from 'vue-router'
@@ -188,7 +188,23 @@ const showModal = ref(false)
 const showPdfModal = ref(false)
 const pdfUrl = ref('')
 const selectedFileId = ref(null)
-const dat = inject('dat')
+const dat = ref(localStorage.getItem("til") || "datalotin");
+
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem("til") || "datalotin";
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
 const asd = ref(false)
 const asds = ref(false)
 const massage = ref('')

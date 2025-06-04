@@ -184,7 +184,8 @@
 </template>
 
 <script setup>
-import { inject, ref } from "vue";
+import { inject, onUnmounted, ref } from "vue";
+import { onMounted } from "vue";
 import { URL } from "../../auth/url.js";
 import axios from "axios";
 import { useRouter } from "vue-router";
@@ -202,7 +203,23 @@ const errorMessage = ref("");
 const selectedId = ref(null);
 const editingFileId = ref(null);
 const imageBaseUrl = `${URL}/uploads`;
-const dat = inject("dat");
+const dat = ref(localStorage.getItem("til") || "datalotin");
+
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem("til") || "datalotin";
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
 
 import translateText from "@/auth/Translate";
 

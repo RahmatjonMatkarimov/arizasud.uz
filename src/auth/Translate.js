@@ -15,11 +15,11 @@ const translateText = (text) => {
     const oneLetterKeys = Object.keys(translitMap).filter(key => key.length === 1);
     for (const key of twoLetterKeys) {
         const regex = new RegExp(key, "g");
-        translated = translated.replace(regex, translitMap[key]);
+        translated = translated?.replace(regex, translitMap[key]);
     }
     for (const key of oneLetterKeys) {
         const regex = new RegExp(key, "g");
-        translated = translated.replace(regex, translitMap[key]);
+        translated = translated?.replace(regex, translitMap[key]);
     }
 
     return translated;

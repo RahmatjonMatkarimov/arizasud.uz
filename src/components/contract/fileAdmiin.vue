@@ -83,7 +83,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, inject } from 'vue';
+import { ref, computed, onMounted, inject, onUnmounted } from 'vue';
 import { URL } from '../../auth/url.js';
 import { useRouter } from 'vue-router';
 import translateText from '@/auth/Translate.js';
@@ -100,7 +100,23 @@ const showModal = ref(false);
 const modalType = ref('');
 const modalTitle = ref('');
 const modalResponse = ref(null);
-const dat = inject('dat');
+const dat = ref(localStorage.getItem("til") || "datalotin");
+
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem("til") || "datalotin";
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
 const modalResponseMessage = ref('');
 const role = localStorage.getItem('role');
 

@@ -131,10 +131,11 @@
 </template>
 
 <script setup>
-import { inject, ref, watch } from "vue";
+import { inject, onUnmounted, ref, watch } from "vue";
 import axios from "axios";
 import { URL } from "../../auth/url";
 import translateText from "@/auth/Translate";
+import { onMounted } from "vue";
 
 const PutId = ref(null);
 const PutModal = ref(false);
@@ -149,7 +150,23 @@ const selectedItem = ref({ isActive: false }); // Store the selected item for th
 const imageBaseUrl = `${URL}/upload`;
 
 const datakril = ref([]);
-const dat = inject('dat');
+const dat = ref(localStorage.getItem("til") || "datalotin");
+
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem("til") || "datalotin";
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
 const isLoading = inject('isLoading');
 
 // Fetch data from the backend

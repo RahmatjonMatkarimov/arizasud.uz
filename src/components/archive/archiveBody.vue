@@ -1,11 +1,27 @@
 <script setup>
-import { ref, onMounted, inject } from 'vue';
+import { ref, onMounted, inject, onUnmounted } from 'vue';
 import { useRoute } from "vue-router";
 import axios from "axios";
 import { URL } from "@/auth/url.js";
 import translateText from "@/auth/Translate.js";
 
-const dat = inject('dat');
+const dat = ref(localStorage.getItem("til") || "datalotin");
+
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem("til") || "datalotin";
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
 const items = ref([]);
 const loading = ref(false);
 const showCheckboxes = ref(false);

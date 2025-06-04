@@ -94,7 +94,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, inject } from "vue";
+import { ref, onMounted, inject, onUnmounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { URL } from "../../auth/url.js";
 import axios from "axios";
@@ -110,7 +110,23 @@ const editingFileId = ref(null);
 const route = useRoute();
 const router = useRouter();
 const numericId = ref(parseInt(route.params.id));
-const dat = inject('dat', 'default');
+const dat = ref(localStorage.getItem("til") || "datalotin");
+
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem("til") || "datalotin";
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
 const showPdfModal = ref(false);
 const pdfUrl = ref('');
 const isFullScreen = ref(false);

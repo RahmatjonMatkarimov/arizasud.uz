@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, inject } from 'vue';
+import { ref, onMounted, inject, onUnmounted } from 'vue';
 import axios from "axios";
 import { URL } from '@/auth/url';
 
@@ -10,7 +10,23 @@ const smileys = ref([]);
 const isUploadModalOpen = ref(false);
 const isDeleteModalOpen = ref(false);
 const selectedSmiley = ref(null);
-const dat = inject('dat');
+const dat = ref(localStorage.getItem("til") || "datalotin");
+
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem("til") || "datalotin";
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
 
 const handleFileChange = (event) => {
   const selectedFile = event.target.files[0];

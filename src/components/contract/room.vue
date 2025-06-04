@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import axios from 'axios';
 import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router';
 import { URL } from '@/auth/url.js';
@@ -47,7 +47,23 @@ function cancelLeave() {
 
 const route = useRoute();
 const isLoading = inject('isLoading');
-const dat = inject('dat');
+const dat = ref(localStorage.getItem("til") || "datalotin");
+
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem("til") || "datalotin";
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
 const router = useRouter();
 const id = parseInt(route.params.id);
 const clientData = ref(null);

@@ -17,9 +17,27 @@
 <script setup>
 import { useRouter } from 'vue-router';
 import translateText from '@/auth/Translate';
-import { inject } from 'vue';
+import { inject, onUnmounted } from 'vue';
+import { onMounted } from 'vue';
+import { ref } from 'vue';
 const router = useRouter();
-const dat = inject('dat')
+const dat = ref(localStorage.getItem("til") || "datalotin");
+
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem("til") || "datalotin";
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
 const sections = [
   { path: 'courts', title: '1-bolim' },
   { path: 'services', title: '2-bolim' },

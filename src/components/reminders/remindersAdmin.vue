@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { ref, onMounted, inject } from 'vue';
+import { ref, onMounted, inject, onUnmounted } from 'vue';
 import axios from 'axios';
 import { URL } from '@/auth/url';
 import translateText from '@/auth/Translate';
@@ -38,7 +38,23 @@ export default {
   setup() {
     const userId = parseInt(localStorage.getItem('id')) || null;
     const data = ref([]);
-    const dat = inject('dat');
+const dat = ref(localStorage.getItem("til") || "datalotin");
+
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem("til") || "datalotin";
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
 
     const fetchWorkLogs = async () => {
       try {

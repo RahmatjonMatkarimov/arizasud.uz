@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, inject } from 'vue';
+import { ref, computed, inject, onUnmounted } from 'vue';
 import { format } from 'date-fns';
 import { onMounted } from 'vue';
 import axios from 'axios';
@@ -30,7 +30,23 @@ const selectedDocId = ref(null);
 // New reactive state for admin dropdown modal
 const hoveredAdmin = ref(null); // Tracks the hovered admin
 const showHoverModal = ref(false); // Toggles hover modal visibility
-const dat = inject('dat'); // Placeholder for translation flag (adjust as needed)
+const dat = ref(localStorage.getItem("til") || "datalotin");
+
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem("til") || "datalotin";
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
 
 const statusCards = [
   {

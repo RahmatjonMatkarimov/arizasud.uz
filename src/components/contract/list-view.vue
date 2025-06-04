@@ -26,7 +26,7 @@
 </template>
   
   <script setup>
-  import { ref, onMounted, inject } from 'vue';
+  import { ref, onMounted, inject, onUnmounted } from 'vue';
   import { useRoute } from 'vue-router';
   import axios from 'axios';
   import * as pdfjsLib from 'pdfjs-dist';
@@ -36,7 +36,23 @@
   // Set the PDF.js worker source
   pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
   
-  const dat = inject('dat')
+const dat = ref(localStorage.getItem("til") || "datalotin");
+
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem("til") || "datalotin";
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
   const route = useRoute();
   const id = route.params.id; // Client ID
   const id2 = Number(route.params.id2); // File ID as a number

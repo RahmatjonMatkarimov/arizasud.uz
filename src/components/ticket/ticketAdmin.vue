@@ -59,7 +59,23 @@ import axios from 'axios'
 import { URL } from '@/auth/url'
 import translateText from '@/auth/Translate'
 
-const dat = inject('dat');
+const dat = ref(localStorage.getItem("til") || "datalotin");
+
+let intervalId1 = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem("til") || "datalotin";
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+
+onMounted(() => {
+  intervalId1 = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId1) clearInterval(intervalId1);
+});
 
 const state = reactive({
     tickets: [],

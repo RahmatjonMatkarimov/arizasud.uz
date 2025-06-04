@@ -44,13 +44,30 @@
 </template>
 
 <script setup>
-import { inject, ref, toRef } from "vue"
+import { inject, onUnmounted, ref, toRef } from "vue"
 import axios from "axios"
 import { URL } from '@/auth/url.js'
 import { useRouter } from "vue-router"
 import translateText from "@/auth/Translate"
+import { onMounted } from "vue"
 
-const dat = inject('dat')
+const dat = ref(localStorage.getItem("til") || "datalotin");
+
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem("til") || "datalotin";
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
 const props = defineProps(['isOpen'])
 const isOpen = toRef(props, 'isOpen')
 const bioId = ref("")
