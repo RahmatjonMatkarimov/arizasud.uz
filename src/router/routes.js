@@ -18,6 +18,7 @@ export const routes = [
   { path: '/room-file/:id', name: 'clientOpenfile', component: () => import('@/components/contract/room-file.vue') },
   { path: '/aplications/:id', name: 'aplications', component: () => import('@/components/main/aplications/aplications.vue') },
   { path: '/screen', name: 'screen', component: () => import('@/components/filePage/dakument.vue') },
+  { path: '/warehouseRoom/:id', name:'warehouseRoom', component: () => import('@/components/qrcode/WerehouseOpenRoom.vue') },
   { path: '/room-lists/:id1/:id', component: () => import('@/components/contract/room-lists.vue') },
   { path: '/clientLogin', name: 'clientLogin', component: () => import('@/components/contract/cilendLogin.vue') },
   { path: '/ticket', name: 'ticket', component: () => import('@/components/ticket/ticket.vue') },
@@ -109,7 +110,6 @@ export const routes = [
       { path: '/bugalter', component: () => import('@/components/admins/bugalter.vue') },
       { path: '/category', component: () => import('@/components/qrcode/CategoryView.vue') },
       { path: '/warehouse', component: () => import('@/components/qrcode/WarehouseView.vue') },
-      { path: '/warehouseRoom/:id', component: () => import('@/components/qrcode/WerehouseOpenRoom.vue') },
       { path: '/print', component: ()=> import('@/components/qrcode/print.vue') }
     ],
     meta: { requiresAuth: true, allowedRoles: ['admin', 'manager', 'yuristAssistant', 'accauntant', 'deliverer', 'yurist', 'bigAdmin'] },
