@@ -42,11 +42,11 @@
       leave-from-class="opacity-100 scale-100"
       leave-to-class="opacity-0 scale-95"
     >
-      <div v-if="showModal" class="fixed inset-0 z-50 w-full h-full flex items-center bg-black/60 dark:bg-black/80 backdrop-blur-md justify-center p-4">
+      <div @click.self="showModal = false" v-if="showModal" class="fixed inset-0 z-50 w-full h-full flex items-center bg-black/60 dark:bg-black/80 backdrop-blur-md justify-center p-4">
         <div class="relative w-full max-w-md bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl border border-white/20 dark:border-gray-700/50 shadow-2xl flex flex-col items-center justify-center p-8 rounded-3xl transform transition-all duration-300 hover:shadow-3xl">
           <div class="absolute -inset-1 bg-gradient-to-r from-emerald-400 to-blue-500 rounded-3xl blur opacity-20"></div>
           
-          <button @click="toggleModal" class="absolute top-4 right-4 p-3 rounded-full bg-gray-100/80 dark:bg-gray-700/80 hover:bg-red-100 dark:hover:bg-red-900/50 transition-all duration-200 hover:scale-110 hover:rotate-90 group">
+          <button @click="toggleModal" class="absolute z-40 top-4 right-4 p-3 rounded-full bg-gray-100/80 dark:bg-gray-700/80 hover:bg-red-100 dark:hover:bg-red-900/50 transition-all duration-200 hover:scale-110 hover:rotate-90 group">
             <svg class="w-5 h-5 text-gray-500 dark:text-gray-400 group-hover:text-red-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
@@ -115,7 +115,7 @@
                   <svg class="w-5 h-5 transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                   </svg>
-                  <span>Yuklash</span>
+                  <span>{{dat === 'datakril' ? translateText('Yuklash') : 'Yuklash'}}</span>
                 </div>
               </button>
             </form>
@@ -129,7 +129,7 @@
               leave-to-class="opacity-0 translate-y-2"
             >
               <div v-if="successMessage" class="mt-6 p-4 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-700 rounded-xl">
-                <p class="text-emerald-700 dark:text-emerald-300 font-medium text-center">{{ successMessage }}</p>
+                <p class="text-emerald-700 dark:text-emerald-300 font-medium text-center">{{  dat === 'datakrkil' ? translateText(successMessage):successMessage  }}</p>
               </div>
             </Transition>
             
@@ -142,7 +142,7 @@
               leave-to-class="opacity-0 translate-y-2"
             >
               <div v-if="errorMessage" class="mt-6 p-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-700 rounded-xl">
-                <p class="text-red-700 dark:text-red-300 font-medium text-center">{{ errorMessage }}</p>
+                <p class="text-red-700 dark:text-red-300 font-medium text-center">{{ dat === 'datakril' ? translateText(errorMessage) : errorMessage }}</p>
               </div>
             </Transition>
           </div>
@@ -159,11 +159,11 @@
       leave-from-class="opacity-100 scale-100"
       leave-to-class="opacity-0 scale-95"
     >
-      <div v-if="asd" class="fixed inset-0 z-50 w-full h-full flex items-center bg-black/60 dark:bg-black/80 backdrop-blur-md justify-center p-4">
+      <div v-if="asd" @click.self="asd = false" class="fixed inset-0 z-50 w-full h-full flex items-center bg-black/60 dark:bg-black/80 backdrop-blur-md justify-center p-4">
         <div class="relative w-full max-w-sm bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl border border-white/20 dark:border-gray-700/50 shadow-2xl flex flex-col items-center justify-center p-8 rounded-3xl">
           <div class="absolute -inset-1 bg-gradient-to-r from-orange-400 to-red-500 rounded-3xl blur opacity-20"></div>
           
-          <button @click="asd = false" class="absolute top-4 right-4 p-3 rounded-full bg-gray-100/80 dark:bg-gray-700/80 hover:bg-red-100 dark:hover:bg-red-900/50 transition-all duration-200 hover:scale-110 hover:rotate-90 group">
+          <button @click="asd = false" class="absolute top-4 z-40 right-4 p-3 rounded-full bg-gray-100/80 dark:bg-gray-700/80 hover:bg-red-100 dark:hover:bg-red-900/50 transition-all duration-200 hover:scale-110 hover:rotate-90 group">
             <svg class="w-5 h-5 text-gray-500 dark:text-gray-400 group-hover:text-red-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
@@ -176,7 +176,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"></path>
                 </svg>
               </div>
-              <h3 class="text-2xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">Amallar</h3>
+              <h3 class="text-2xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">{{ dat === 'datakril' ? translateText(`Amallar`) :'Amallar' }}</h3>
             </div>
             
             <div class="space-y-4">
@@ -190,7 +190,7 @@
                   <svg class="w-5 h-5 transition-transform duration-300 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                   </svg>
-                  <span>O'zgartirish</span>
+                  <span>{{ dat === 'darakril' ? translateText(`O'zgartirish`) :`O'zgartirish` }}</span>
                 </div>
               </button>
 
@@ -204,7 +204,7 @@
                   <svg class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                   </svg>
-                  <span>O'chirish</span>
+                  <span>{{ dat === `datakril` ? translateText(`O'chirish`) : `O'chirish` }}</span>
                 </div>
               </button>
             </div>
@@ -222,11 +222,11 @@
       leave-from-class="opacity-100 scale-100"
       leave-to-class="opacity-0 scale-95"
     >
-      <div v-if="PutModal" class="fixed inset-0 z-50 w-full h-full flex items-center bg-black/60 dark:bg-black/80 backdrop-blur-md justify-center p-4">
+      <div v-if="PutModal" @click.self="PutModal = false" class="fixed inset-0 z-50 w-full h-full flex items-center bg-black/60 dark:bg-black/80 backdrop-blur-md justify-center p-4">
         <div class="relative w-full max-w-md bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl border border-white/20 dark:border-gray-700/50 shadow-2xl flex flex-col items-center justify-center p-8 rounded-3xl">
           <div class="absolute -inset-1 bg-gradient-to-r from-blue-400 to-purple-500 rounded-3xl blur opacity-20"></div>
           
-          <button @click="Modal" class="absolute top-4 right-4 p-3 rounded-full bg-gray-100/80 dark:bg-gray-700/80 hover:bg-red-100 dark:hover:bg-red-900/50 transition-all duration-200 hover:scale-110 hover:rotate-90 group">
+          <button @click="Modal" class="absolute z-40 top-4 right-4 p-3 rounded-full bg-gray-100/80 dark:bg-gray-700/80 hover:bg-red-100 dark:hover:bg-red-900/50 transition-all duration-200 hover:scale-110 hover:rotate-90 group">
             <svg class="w-5 h-5 text-gray-500 dark:text-gray-400 group-hover:text-red-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
@@ -292,7 +292,7 @@
                   <svg class="w-5 h-5 transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                   </svg>
-                  <span>Yangilash</span>
+                  <span>{{ dat === 'datakril' ? translateText(`Yangilash`) : `Yangilash` }}</span>
                 </div>
               </button>
             </form>
@@ -306,7 +306,7 @@
               leave-to-class="opacity-0 translate-y-2"
             >
               <div v-if="successMessage" class="mt-6 p-4 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-700 rounded-xl">
-                <p class="text-emerald-700 dark:text-emerald-300 font-medium text-center">{{ successMessage }}</p>
+                <p class="text-emerald-700 dark:text-emerald-300 font-medium text-center">{{ dat === 'datakril' ? translateText(successMessage) :successMessage }}</p>
               </div>
             </Transition>
             
@@ -319,7 +319,7 @@
               leave-to-class="opacity-0 translate-y-2"
             >
               <div v-if="errorMessage" class="mt-6 p-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-700 rounded-xl">
-                <p class="text-red-700 dark:text-red-300 font-medium text-center">{{ errorMessage }}</p>
+                <p class="text-red-700 dark:text-red-300 font-medium text-center">{{ dat === 'datakril' ? translateText(errorMessage):errorMessage}}</p>
               </div>
             </Transition>
           </div>
@@ -341,7 +341,7 @@
             <svg class="relative w-6 h-6 transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
             </svg>
-            <span class="relative text-lg">Qo'shish</span>
+            <span class="relative text-lg">{{ dat === 'datakril' ? translateText(`Qo'shish`) : `Qo'shish` }}</span>
             <div class="absolute -inset-2 bg-gradient-to-r from-emerald-400/30 to-blue-600/30 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
           </button>
         </div>
@@ -375,7 +375,7 @@
                 >
                   <button 
                     @click.stop="func(item)" 
-                    class="absolute top-2 right-1 p-3 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 hover:rotate-90"
+                    class="absolute top-2 right-1 p-3 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 z-40 hover:scale-110 hover:rotate-90"
                   >
                     <svg class="w-5 h-5 text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-200" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path>
@@ -384,7 +384,7 @@
                   
                   <div class="relative z-10 space-y-6">
                     <div class="relative transition-transform duration-500">
-                      <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-4 bg-slate-700 group-hover:bg-blue-500/20 text-slate-300 transition-colors duration-300 relative  overflow-hidden shadow-xl border-2 border-white/50 dark:border-gray-600/50">
+                      <div class="w-full h-[200px] rounded-lg p-2 flex items-center justify-center mb-4 bg-slate-700 dark:group-hover:bg-blue-500/20 text-slate-300 transition-colors duration-300 relative  overflow-hidden shadow-xl border-2 border-white/50 dark:border-gray-600/50">
                         <img 
                           v-if="item.img" 
                           :src="getImageUrl(item.img)" 
@@ -401,7 +401,7 @@
                     
                     <div class="space-y-2">
                       <h3 class="text-xl font-bold text-gray-800 dark:text-white transition-colors duration-300 leading-tight">
-                        {{ item.name }}
+                        {{ dat === 'datakril' ? translateText(item.name) :item.name }}
                       </h3>
                     </div>
                   </div>
@@ -422,8 +422,8 @@
                   </svg>
                 </div>
               </div>
-              <h3 class="text-2xl font-bold text-gray-500 dark:text-gray-400 mb-3">Hozircha bo'limlar yo'q</h3>
-              <p class="text-gray-400 dark:text-gray-500 mb-6">Yangi bo'lim qo'shish uchun yuqoridagi tugmani bosing</p>
+              <h3 class="text-2xl font-bold text-gray-500 dark:text-gray-400 mb-3">{{ dat === 'datakril' ? translateText(`Hozircha bo'limlar yo'q`) : `Hozircha bo'limlar yo'q` }}</h3>
+              <p class="text-gray-400 dark:text-gray-500 mb-6">{{ dat === 'datakril' ?translateText(`Yangi bo'lim qo'shish uchun yuqoridagi tugmani bosing`) : `Yangi bo'lim qo'shish uchun yuqoridagi tugmani bosing` }}</p>
               <button 
                 @click="toggleModal"
                 class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-blue-600 hover:from-emerald-600 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
@@ -431,7 +431,7 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                 </svg>
-                Birinchi bo'limni qo'shish
+                {{ dat === 'datakril' ?translateText(`Birinchi bo'limni qo'shish`):`Birinchi bo'limni qo'shish` }}
               </button>
             </div>
           </div>
@@ -509,6 +509,7 @@ const uploadCourt = async () => {
       courtName.value = "";
       url.value = "";
       file.value = null;
+      showModal.value = false
       
       // Reset file input
       const fileInput = document.getElementById('file');
@@ -594,6 +595,7 @@ const updateCourt = async () => {
       errorMessage.value = "";
       
       await getData();
+      PutModal.value = false
       
       // Auto close modals after success
       setTimeout(() => {

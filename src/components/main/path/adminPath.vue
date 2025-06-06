@@ -855,21 +855,24 @@
         </div>
       </div>
     </div>
-    <div v-if="asd" @click="asd = false" class="fixed inset-0 z-40">
+    <div
+      v-if="asd"
+      @click="asd = false"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+    >
       <div
-        :style="modalPosition"
         @click.stop
-        class="absolute w-full max-w-md mx-4 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700/50 overflow-hidden"
+        class="relative w-full max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-6 bg-white/95 dark:bg-gray-900/95 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/30 dark:border-gray-700/60 overflow-hidden transition-all duration-300"
       >
         <div
-          class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"
+          class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600"
         ></div>
         <button
           @click="func(null)"
-          class="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-gray-100/80 dark:bg-gray-800/80 hover:bg-red-50 dark:hover:bg-red-900/50 transition-all duration-300 hover:scale-110 hover:rotate-90 group"
+          class="absolute top-5 right-5 z-10 w-12 h-12 flex items-center justify-center rounded-full bg-gray-100/90 dark:bg-gray-800/90 hover:bg-red-100 dark:hover:bg-red-900/60 transition-all duration-300 hover:scale-110 hover:rotate-90 group"
         >
           <svg
-            class="w-5 h-5 text-gray-600 dark:text-gray-400 group-hover:text-red-500 transition-colors"
+            class="w-6 h-6 text-gray-600 dark:text-gray-300 group-hover:text-red-500 transition-colors"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -877,32 +880,32 @@
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
-              stroke-width="2"
+              stroke-width="2.5"
               d="M6 18L18 6M6 6l12 12"
             ></path>
           </svg>
         </button>
 
         <!-- Modal content -->
-        <div class="p-8 pt-12">
+        <div class="p-10 pt-16">
           <!-- Action buttons -->
-          <div class="space-y-4 mb-6">
+          <div class="space-y-6 mb-8">
             <!-- Edit button -->
             <button
               @click="Modal"
-              class="group relative w-full overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 dark:from-emerald-600 dark:to-teal-700 p-4 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1"
+              class="group relative w-full overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 dark:from-emerald-600 dark:to-teal-700 p-5 shadow-lg hover:shadow-xl transition-all duration-500 hover:scale-[1.03] hover:-translate-y-1"
             >
               <div
                 class="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               ></div>
               <div
-                class="relative flex items-center justify-center gap-3 text-white font-semibold text-lg"
+                class="relative flex items-center justify-center gap-4 text-white font-semibold text-xl"
               >
                 <div
-                  class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                  class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
                 >
                   <svg
-                    class="w-5 h-5"
+                    class="w-6 h-6"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -910,7 +913,7 @@
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
-                      stroke-width="2"
+                      stroke-width="2.5"
                       d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                     ></path>
                   </svg>
@@ -922,19 +925,19 @@
             <!-- Delete button -->
             <button
               @click="removeSelectedItems"
-              class="group relative w-full overflow-hidden rounded-2xl bg-gradient-to-r from-red-500 to-rose-600 dark:from-red-600 dark:to-rose-700 p-4 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1"
+              class="group relative w-full overflow-hidden rounded-2xl bg-gradient-to-r from-red-500 to-rose-600 dark:from-red-600 dark:to-rose-700 p-5 shadow-lg hover:shadow-xl transition-all duration-500 hover:scale-[1.03] hover:-translate-y-1"
             >
               <div
                 class="absolute inset-0 bg-gradient-to-r from-red-400 to-rose-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               ></div>
               <div
-                class="relative flex items-center justify-center gap-3 text-white font-semibold text-lg"
+                class="relative flex items-center justify-center gap-4 text-white font-semibold text-xl"
               >
                 <div
-                  class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                  class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
                 >
                   <svg
-                    class="w-5 h-5"
+                    class="w-6 h-6"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -942,7 +945,7 @@
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
-                      stroke-width="2"
+                      stroke-width="2.5"
                       d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                     ></path>
                   </svg>
@@ -954,19 +957,19 @@
 
           <!-- Status toggle card -->
           <div
-            class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 dark:from-gray-800 dark:via-gray-700 dark:to-gray-800 border border-gray-200/50 dark:border-gray-600/50 p-6 shadow-xl hover:shadow-xl transition-all duration-500 hover:scale-[1.01] group"
+            class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 dark:from-gray-800 dark:via-gray-700 dark:to-gray-800 border border-gray-200/60 dark:border-gray-600/60 p-8 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-[1.01] group"
           >
             <!-- Decorative elements -->
             <div
-              class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full -translate-y-16 translate-x-16 group-hover:scale-110 transition-transform duration-700"
+              class="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-blue-500/15 to-purple-500/15 rounded-full -translate-y-20 translate-x-20 group-hover:scale-110 transition-transform duration-700"
             ></div>
             <div
-              class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-emerald-500/10 to-teal-500/10 rounded-full translate-y-12 -translate-x-12 group-hover:scale-110 transition-transform duration-700"
+              class="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-emerald-500/15 to-teal-500/15 rounded-full translate-y-16 -translate-x-16 group-hover:scale-110 transition-transform duration-700"
             ></div>
 
             <div class="relative flex items-center justify-between">
               <div class="flex-1">
-                <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100 mb-1">
+                <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">
                   {{
                     dat === "datakril"
                       ? translateText("Ishga tushirish")
@@ -976,9 +979,9 @@
               </div>
 
               <!-- Toggle switch -->
-              <div class="flex items-center gap-3">
+              <div class="flex items-center gap-4">
                 <span
-                  class="text-sm font-medium text-gray-500 dark:text-gray-400 transition-colors"
+                  class="text-base font-medium text-gray-500 dark:text-gray-400 transition-colors"
                   :class="!workStatus ? 'text-gray-700 dark:text-gray-300' : ''"
                 >
                   Off
@@ -992,16 +995,15 @@
                     class="sr-only peer"
                   />
                   <div
-                    class="relative w-16 h-8 bg-gradient-to-r from-gray-300 to-gray-400 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-8 peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all after:duration-300 after:shadow-lg peer-checked:bg-gradient-to-r peer-checked:from-emerald-500 peer-checked:to-teal-600 hover:shadow-lg transition-all duration-300 cursor-pointer"
+                    class="relative w-20 h-10 bg-gradient-to-r from-gray-300 to-gray-400 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-10 peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:rounded-full after:h-8 after:w-8 after:transition-all after:duration-300 after:shadow-lg peer-checked:bg-gradient-to-r peer-checked:from-emerald-500 peer-checked:to-teal-600 hover:shadow-xl transition-all duration-300 cursor-pointer"
                   ></div>
-                  <!-- Glow effect -->
                   <div
                     class="absolute inset-0 rounded-full opacity-0 peer-checked:opacity-100 bg-gradient-to-r from-emerald-400 to-teal-500 blur-md transition-opacity duration-300 -z-10"
                   ></div>
                 </label>
 
                 <span
-                  class="text-sm font-medium text-gray-500 dark:text-gray-400 transition-colors"
+                  class="text-base font-medium text-gray-500 dark:text-gray-400 transition-colors"
                   :class="workStatus ? 'text-emerald-600 dark:text-emerald-400' : ''"
                 >
                   On
@@ -1010,17 +1012,17 @@
             </div>
 
             <!-- Status indicator -->
-            <div class="mt-4 pt-4 border-t border-gray-600/50 dark:border-gray-600/50">
-              <div class="flex items-center gap-2">
+            <div class="mt-6 pt-6 border-t border-gray-200/50 dark:border-gray-600/70">
+              <div class="flex items-center gap-3">
                 <div
-                  class="w-2 h-2 rounded-full transition-all duration-300"
+                  class="w-3 h-3 rounded-full transition-all duration-300"
                   :class="
                     workStatus
-                      ? 'bg-emerald-500 shadow-emerald-500/50 shadow-md animate-pulse'
+                      ? 'bg-emerald-500 shadow-emerald-500/50 shadow-lg animate-pulse'
                       : 'bg-gray-400'
                   "
                 ></div>
-                <span class="text-xs font-medium text-gray-600 dark:text-gray-400">
+                <span class="text-sm font-medium text-gray-600 dark:text-gray-400">
                   {{
                     workStatus
                       ? dat === "datakril"
@@ -1045,12 +1047,12 @@
       <div
         @click.stop
         :style="modalPosition"
-        class="absolute bg-white border-2 dark:bg-gray-800 shadow-2xl dark:shadow-gray-900/50 rounded-2xl z-50  min-w-[160px] border-gray-400 dark:border-gray-700 animate-in zoom-in-95 slide-in-from-top-2 duration-200 delay-100"
+        class="absolute bg-white border-2 dark:bg-gray-800 shadow-2xl dark:shadow-gray-900/50 rounded-2xl z-50 min-w-[160px] border-gray-400 dark:border-gray-700 animate-in zoom-in-95 slide-in-from-top-2 duration-200 delay-100"
       >
         <!-- Tahrirlash -->
         <div
           @click.stop="Modalfile()"
-          class="flex items-center border-b-2 border-gray-400 dark:border-gray-700  gap-3 p-3 cursor-pointer transition-all duration-200 hover:bg-amber-50 dark:hover:bg-amber-900/20 active:scale-95 group mb-1"
+          class="flex items-center border-b-2 border-gray-400 dark:border-gray-700 gap-3 p-3 cursor-pointer transition-all duration-200 hover:bg-amber-50 dark:hover:bg-amber-900/20 active:scale-95 group mb-1"
         >
           <Icon
             icon="uil:edit"
@@ -1120,47 +1122,47 @@
           {{ dat === "datakril" ? translateText("Bo'lim yaratish") : "Bo'lim yaratish" }}
         </button>
       </div>
-    <div class="w-full z-0 max-w-[1400px] mt-6 mx-auto">
-      <Splide
-        :options="{
-          perPage: 4,
-          autoplay: false,
-          pagination: true,
-          arrows: true,
-          gap: '1rem',
-          breakpoints: {
-            640: { perPage: 1 },
-            768: { perPage: 2 },
-          },
-        }"
-        class="h-[180px] flex items-center justify-center"
-      >
-        <SplideSlide
-          class="z-50"
-          v-for="item in courts"
-          @click="reload(item.id)"
-          :key="item.id"
+      <div class="w-full z-0 max-w-[1400px] mt-6 mx-auto">
+        <Splide
+          :options="{
+            perPage: 4,
+            autoplay: false,
+            pagination: true,
+            arrows: true,
+            gap: '1rem',
+            breakpoints: {
+              640: { perPage: 1 },
+              768: { perPage: 2 },
+            },
+          }"
+          class="h-[180px] flex items-center justify-center"
         >
-          <div
-            class="carousel-item relative min-h-full flex items-center gap-4 dark:bg-gray-800/10 group duration-300 dark:hover:bg-blue-950 hover:shadow-strong shadow-white bg-white border-4 border-gray-300 dark:border-gray-700 rounded-lg p-4 cursor-pointer"
+          <SplideSlide
+            class="z-50"
+            v-for="item in courts"
+            @click="reload(item.id)"
+            :key="item.id"
           >
             <div
-              class="bg-gradient-to-br to-purple-600 from-blue-500 min-h-12 max-h-12 min-w-12 max-w-12 flex rounded-lg justify-center items-center p-2"
+              class="carousel-item relative min-h-full flex items-center gap-4 dark:bg-gray-800/10 group duration-300 dark:hover:bg-blue-950 hover:shadow-strong shadow-white bg-white border-4 border-gray-300 dark:border-gray-700 rounded-lg p-4 cursor-pointer"
             >
-              <img
-                v-if="item.img"
-                :src="getImageUrl(item.img)"
-                alt="Court Image"
-                class="min-w-10 min-h-10 max-w-10 max-h-10 rounded-md"
-              />
+              <div
+                class="bg-gradient-to-br to-purple-600 from-blue-500 min-h-12 max-h-12 min-w-12 max-w-12 flex rounded-lg justify-center items-center p-2"
+              >
+                <img
+                  v-if="item.img"
+                  :src="getImageUrl(item.img)"
+                  alt="Court Image"
+                  class="min-w-10 min-h-10 max-w-10 max-h-10 rounded-md"
+                />
+              </div>
+              <h3 class="text-md font-medium text-black dark:text-gray-200 truncate-text">
+                {{ dat === "datakril" ? translateText(item.name) : item.name }}
+              </h3>
             </div>
-            <h3 class="text-md font-medium text-black dark:text-gray-200 truncate-text">
-              {{ dat === "datakril" ? translateText(item.name) : item.name }}
-            </h3>
-          </div>
-        </SplideSlide>
-      </Splide>
-    </div>
+          </SplideSlide>
+        </Splide>
+      </div>
       <div
         v-if="data.length == 0"
         class="text-black flex flex-col justify-center mt-16 items-center"
@@ -1180,7 +1182,6 @@
                 :class="[`${index % 3 ? 'text-red-600' : 'text-blue-600'}`]"
                 width="40"
                 height="40"
-
               />
             </div>
             <h1 class="flex-1 text-xl" @click="goToCard(item.id)">
@@ -1205,29 +1206,29 @@
               v-for="item in data"
               :key="item.id"
               @click="goToPath(item.id)"
-              class="relative dark:bg-gray-800/10 group hover:scale-105 duration-300 dark:hover:bg-blue-950 hover:shadow-strong shadow-white bg-white border-4 border-gray-300 dark:border-gray-700 rounded-lg p-6"
+              class="relative dark:bg-gray-800/10 h-[380px] group hover:scale-105 duration-300 dark:hover:bg-blue-950 hover:shadow-strong shadow-white bg-white border-4 border-gray-300 dark:border-gray-700 rounded-lg p-6"
             >
               <Icon
                 @click.stop="func(item.id, $event)"
                 icon="qlementine-icons:menu-dots-24"
                 width="40"
                 height="40"
-                class="absolute top-1 right-3 z-10 rotate-90 cursor-pointer dark:text-gray-300  transition-colors duration-200"
+                class="absolute top-1 right-3 z-10 rotate-90 cursor-pointer dark:text-gray-300 transition-colors duration-200"
               />
               <div class="flex flex-col justify-center gap-4">
                 <div
-                  class="bg-gradient-to-br to-purple-600 from-blue-500 h-16 w-16 flex rounded-lg justify-center items-center p-2"
+                  class="bg-gradient-to-br to-purple-600 from-blue-500 h-[250px] w-full flex rounded-lg justify-center items-center p-2"
                 >
                   <img
                     v-if="item.img"
                     :src="getImageUrl(item.img)"
                     alt="Court Image"
-                    class="w-14 h-14 rounded-md"
+                    class="w-full h-full rounded-md"
                   />
                 </div>
-                <h3 class="text-lg font-medium dark:text-gray-200 text-black">
+                <h3 class="text-lg font-medium break-words w-[400px] dark:text-gray-200 text-black line-clamp-2">
                   {{ dat === "datakril" ? translateText(item.name) : item.name }}
-                </h3>
+                </h3>   
               </div>
               <div
                 v-if="item.workStatus"
@@ -1554,14 +1555,18 @@ const updatefileCourt = async () => {
     await getCourts();
   } catch (error) {
     errorMessage.value =
-      dat.value === "datakril" ? translateText("Yangilashda xatolik!") : "Yangilashda xatolik!";
+      dat.value === "datakril"
+        ? translateText("Yangilashda xatolik!")
+        : "Yangilashda xatolik!";
   }
 };
 
 const updateCourt = async () => {
   if (!courtName.value) {
     errorMessage.value =
-      dat.value === "datakril" ? translateText("Sud nomini kiriting!") : "Sud nomini kiriting!";
+      dat.value === "datakril"
+        ? translateText("Sud nomini kiriting!")
+        : "Sud nomini kiriting!";
     return;
   }
   const formData = new FormData();
@@ -1583,7 +1588,9 @@ const updateCourt = async () => {
     await getCourts();
   } catch (error) {
     errorMessage.value =
-      dat.value === "datakril" ? translateText("Yangilashda xatolik!") : "Yangilashda xatolik!";
+      dat.value === "datakril"
+        ? translateText("Yangilashda xatolik!")
+        : "Yangilashda xatolik!";
   }
 };
 
@@ -1628,7 +1635,9 @@ const removeSelectedItems = async () => {
     await getCourts();
   } catch (error) {
     errorMessage.value =
-      dat.value === "datakril" ? translateText("O'chirishda xatolik!") : "O'chirishda xatolik!";
+      dat.value === "datakril"
+        ? translateText("O'chirishda xatolik!")
+        : "O'chirishda xatolik!";
   }
 };
 

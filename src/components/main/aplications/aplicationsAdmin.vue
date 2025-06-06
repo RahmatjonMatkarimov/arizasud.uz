@@ -2,9 +2,9 @@
   <div
     v-if="showModal"
     class="fixed inset-0 z-50 w-full h-full flex items-center justify-center bg-black/40 dark:bg-black/70 backdrop-blur-md"
-    @click.self="toggleModal"
+    @click.self="toggleModal(),showModal = false"
   >
-    <div
+    <div @click.stop
       class="relative w-full max-w-lg mx-4 transform transition-all duration-300 ease-out"
     >
       <!-- Modal Container with Glass Effect -->
@@ -614,11 +614,11 @@
   </div>
 
   <div
-    v-if="fileModal"
+    v-if="fileModal" @click="fileModal = false"
     class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 dark:bg-black/90 backdrop-blur-md animate-in fade-in duration-300"
   >
     <!-- Main Modal Container -->
-    <div
+    <div @click.stop
       class="relative w-full max-w-lg transform animate-in zoom-in-95 duration-300 slide-in-from-bottom-4"
     >
       <!-- Glassmorphism Background -->
@@ -920,11 +920,11 @@
   </div>
 
   <div
-    v-if="PutModal"
+    v-if="PutModal" @click="PutModal = false"
     class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 dark:bg-black/90 backdrop-blur-md animate-in fade-in duration-300"
   >
     <!-- Main Modal Container -->
-    <div
+    <div @click.stop
       class="relative w-full max-w-lg transform animate-in zoom-in-95 duration-300 slide-in-from-bottom-4"
     >
       <!-- Glassmorphism Background -->
@@ -1636,7 +1636,7 @@
             v-for="item in data"
             :key="item.id"
             @click="goToPath(item.id)"
-            class="relative dark:bg-gray-800/10 group hover:scale-105 duration-300 dark:hover:bg-blue-950 hover:shadow-strong shadow-white bg-white border-4 border-gray-300 dark:border-gray-700 rounded-lg p-6"
+            class="relative dark:bg-gray-800/10 h-[380px] group hover:scale-105 duration-300 dark:hover:bg-blue-950 hover:shadow-strong shadow-white bg-white border-4 border-gray-300 dark:border-gray-700 rounded-lg p-6"
           >
             <Icon
               @click.stop="func(item)"
@@ -1647,16 +1647,16 @@
             />
             <div class="flex flex-col justify-center gap-4">
               <div
-                class="bg-gradient-to-br to-purple-600 from-blue-500 h-16 w-16 flex rounded-lg justify-center items-center p-2"
+                class="bg-gradient-to-br to-purple-600 from-blue-500 h-[250px] w-full flex rounded-lg justify-center items-center p-2"
               >
                 <img
                   v-if="item.img"
                   :src="getImageUrl(item.img)"
                   alt="Court Image"
-                  class="w-14 h-14 rounded-md"
+                  class="w-full h-full rounded-md"
                 />
               </div>
-              <h3 class="text-lg font-medium dark:text-gray-200 text-black">
+              <h3 class="text-lg w-[400px] line-clamp-2 break-words font-medium dark:text-gray-200 text-black">
                 {{ dat === "datakril" ? translateText(item.name) : item.name }}
               </h3>
             </div>

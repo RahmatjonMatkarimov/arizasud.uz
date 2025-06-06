@@ -655,170 +655,180 @@
       </div>
     </Transition>
     <!-- Action Modal -->
-    <Transition name="dropdown" appear>
-      <div v-if="asd" class="fixed inset-0 z-50" @click.self="func(null)">
-        <div
-          :style="modalPosition"
-          class="absolute bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 w-72 p-2 backdrop-blur-sm"
-        >
-          <div class="space-y-1">
-            <!-- Edit Button -->
-            <button
-              @click="Modal"
-              class="w-full flex items-center p-4 hover:bg-lime-50 dark:hover:bg-lime-900/30 text-slate-700 dark:text-slate-300 hover:text-lime-700 dark:hover:text-lime-400 rounded-xl transition-all duration-200 group"
-            >
-              <div
-                class="p-2 bg-lime-100 dark:bg-lime-900/50 rounded-lg mr-4 group-hover:bg-lime-200 dark:group-hover:bg-lime-800/50 transition-colors"
-              >
-                <svg
-                  class="w-5 h-5 text-lime-600 dark:text-lime-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                  ></path>
-                </svg>
-              </div>
-              <div>
-                <span class="font-semibold text-start text-sm block">{{
-                  dat === "datakril" ? translateText("Tahrirlash") : "Tahrirlash"
-                }}</span>
-                <span class="text-xs text-start text-slate-500 dark:text-slate-400">{{
-                  dat === "datakril"
-                    ? translateText("Ma'lumotlarni o'zgartirish")
-                    : "Ma'lumotlarni o'zgartirish"
-                }}</span>
-              </div>
-            </button>
-
-            <!-- Delete Button -->
-            <button
-              @click="removeSelectedItems"
-              class="w-full flex items-center p-4 hover:bg-red-50 dark:hover:bg-red-900/30 text-slate-700 dark:text-slate-300 hover:text-red-700 dark:hover:text-red-400 rounded-xl transition-all duration-200 group"
-            >
-              <div
-                class="p-2 bg-red-100 dark:bg-red-900/50 rounded-lg mr-4 group-hover:bg-red-200 dark:group-hover:bg-red-800/50 transition-colors"
-              >
-                <svg
-                  class="w-5 h-5 text-red-600 dark:text-red-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                  ></path>
-                </svg>
-              </div>
-              <div>
-                <span class="font-semibold text-start text-sm block">{{
-                  dat === "datakril" ? translateText("O'chirish") : "O'chirish"
-                }}</span>
-                <span class="text-xs text-start text-slate-500 dark:text-slate-400">{{
-                  dat === "datakril"
-                    ? translateText("Butunlay o'chirish")
-                    : "Butunlay o'chirish"
-                }}</span>
-              </div>
-            </button>
-
-            <!-- Work Status Toggle -->
-            <div
-              class="flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-xl transition-all duration-200"
-            >
-              <div class="flex items-center">
-                <div class="p-2 bg-blue-100 dark:bg-blue-900/50 rounded-lg mr-4">
-                  <svg
-                    class="w-5 h-5 text-blue-600 dark:text-blue-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M13 10V3L4 14h7v7l9-11h-7z"
-                    ></path>
-                  </svg>
-                </div>
-                <div>
-                  <span
-                    class="font-semibold text-start text-sm text-slate-700 dark:text-slate-300 block"
-                    >{{
-                      dat === "datakril"
-                        ? translateText("Ishga tushirish")
-                        : "Ishga tushirish"
-                    }}</span
-                  >
-                  <span class="text-xs text-start text-slate-500 dark:text-slate-400">{{
-                    dat === "datakril"
-                      ? translateText("Faol/nofaol holat")
-                      : "Faol/nofaol holat"
-                  }}</span>
-                </div>
-              </div>
-              <label class="switch">
-                <input
-                  type="checkbox"
-                  v-model="selectedCourtWorkStatus"
-                  @change="updateWorkStatus"
-                />
-                <span class="slider round"></span>
-              </label>
-            </div>
-
-            <!-- Settings Button -->
-            <button
-              @click="push"
-              class="w-full flex items-center p-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-slate-700 dark:text-slate-300 hover:text-slate-800 dark:hover:text-white rounded-xl transition-all duration-200 group"
-            >
-              <div
-                class="p-2 bg-slate-100 dark:bg-slate-700 rounded-lg mr-4 group-hover:bg-slate-200 dark:group-hover:bg-slate-600 transition-colors"
-              >
-                <svg
-                  class="w-5 h-5 text-slate-600 dark:text-slate-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                  ></path>
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  ></path>
-                </svg>
-              </div>
-              <div>
-                <span class="font-semibold text-start text-sm block">{{
-                  dat === "datakril" ? translateText("Sozlash") : "Sozlash"
-                }}</span>
-                <span class="text-xs text-start text-slate-500 dark:text-slate-400">{{
-                  dat === "datakril"
-                    ? translateText("Qoshimcha sozlamalar")
-                    : "Qoshimcha sozlamalar"
-                }}</span>
-              </div>
-            </button>
-          </div>
+<Transition name="dropdown" appear>
+  <div v-if="asd" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 backdrop-blur-sm" @click.self="func(null)">
+    <div class="relative bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 w-full max-w-lg mx-auto">
+      <!-- Header -->
+      <div class="px-6 py-5 border-b border-slate-200 dark:border-slate-700">
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-200">
+            {{ dat === "datakril" ? translateText("Amallar") : "Amallar" }}
+          </h3>
+          <button 
+            @click="func(null)"
+            class="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors duration-200"
+          >
+            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
         </div>
       </div>
-    </Transition>
+
+      <!-- Content -->
+      <div class="p-6 space-y-3">
+        <!-- Edit Button -->
+        <button
+          @click="Modal"
+          class="w-full flex items-center p-5 hover:bg-lime-50 dark:hover:bg-lime-900 dark:hover:bg-opacity-30 text-slate-700 dark:text-slate-300 hover:text-lime-700 dark:hover:text-lime-400 rounded-2xl transition-all duration-200 group border border-transparent hover:border-lime-200 dark:hover:border-lime-800"
+        >
+          <div class="flex items-center justify-center w-12 h-12 bg-lime-100 dark:bg-lime-900 dark:bg-opacity-50 rounded-xl mr-4 group-hover:scale-110 transition-transform duration-200">
+            <svg
+              class="w-6 h-6 text-lime-600 dark:text-lime-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+              ></path>
+            </svg>
+          </div>
+          <div class="flex-1 text-left">
+            <span class="font-semibold text-base block">{{
+              dat === "datakril" ? translateText("Tahrirlash") : "Tahrirlash"
+            }}</span>
+            <span class="text-sm text-slate-500 dark:text-slate-400 mt-1 block">{{
+              dat === "datakril"
+                ? translateText("Ma'lumotlarni o'zgartirish")
+                : "Ma'lumotlarni o'zgartirish"
+            }}</span>
+          </div>
+          <svg class="w-5 h-5 text-slate-400 group-hover:text-lime-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </button>
+
+        <!-- Delete Button -->
+        <button
+          @click="removeSelectedItems"
+          class="w-full flex items-center p-5 hover:bg-red-50 dark:hover:bg-red-900 dark:hover:bg-opacity-30 text-slate-700 dark:text-slate-300 hover:text-red-700 dark:hover:text-red-400 rounded-2xl transition-all duration-200 group border border-transparent hover:border-red-200 dark:hover:border-red-800"
+        >
+          <div class="flex items-center justify-center w-12 h-12 bg-red-100 dark:bg-red-900 dark:bg-opacity-50 rounded-xl mr-4 group-hover:scale-110 transition-transform duration-200">
+            <svg
+              class="w-6 h-6 text-red-600 dark:text-red-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+              ></path>
+            </svg>
+          </div>
+          <div class="flex-1 text-left">
+            <span class="font-semibold text-base block">{{
+              dat === "datakril" ? translateText("O'chirish") : "O'chirish"
+            }}</span>
+            <span class="text-sm text-slate-500 dark:text-slate-400 mt-1 block">{{
+              dat === "datakril"
+                ? translateText("Butunlay o'chirish")
+                : "Butunlay o'chirish"
+            }}</span>
+          </div>
+          <svg class="w-5 h-5 text-slate-400 group-hover:text-red-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </button>
+
+        <!-- Work Status Toggle -->
+        <div class="flex items-center justify-between p-5 hover:bg-blue-50 dark:hover:bg-blue-900 dark:hover:bg-opacity-30 rounded-2xl transition-all duration-200 border border-transparent hover:border-blue-200 dark:hover:border-blue-800">
+          <div class="flex items-center flex-1">
+            <div class="flex items-center justify-center w-12 h-12 bg-blue-100 dark:bg-blue-900 dark:bg-opacity-50 rounded-xl mr-4">
+              <svg
+                class="w-6 h-6 text-blue-600 dark:text-blue-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                ></path>
+              </svg>
+            </div>
+            <div class="flex-1">
+              <span class="font-semibold text-base text-slate-700 dark:text-slate-300 block">{{
+                dat === "datakril" ? translateText("Ishga tushirish") : "Ishga tushirish"
+              }}</span>
+              <span class="text-sm text-slate-500 dark:text-slate-400 mt-1 block">{{
+                dat === "datakril" ? translateText("Faol/nofaol holat") : "Faol/nofaol holat"
+              }}</span>
+            </div>
+          </div>
+          
+          <!-- Toggle Switch -->
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              v-model="selectedCourtWorkStatus"
+              @change="updateWorkStatus"
+              class="sr-only peer"
+            />
+            <div class="relative w-14 h-7 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-slate-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-slate-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-slate-600 peer-checked:bg-blue-600"></div>
+          </label>
+        </div>
+
+        <!-- Settings Button -->
+        <button
+          @click="push"
+          class="w-full flex items-center p-5 hover:bg-slate-50 dark:hover:bg-slate-700 dark:hover:bg-opacity-50 text-slate-700 dark:text-slate-300 hover:text-slate-800 dark:hover:text-white rounded-2xl transition-all duration-200 group border border-transparent hover:border-slate-200 dark:hover:border-slate-600"
+        >
+          <div class="flex items-center justify-center w-12 h-12 bg-slate-100 dark:bg-slate-700 rounded-xl mr-4 group-hover:scale-110 transition-transform duration-200">
+            <svg
+              class="w-6 h-6 text-slate-600 dark:text-slate-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+              ></path>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              ></path>
+            </svg>
+          </div>
+          <div class="flex-1 text-left">
+            <span class="font-semibold text-base block">{{
+              dat === "datakril" ? translateText("Sozlash") : "Sozlash"
+            }}</span>
+            <span class="text-sm text-slate-500 dark:text-slate-400 mt-1 block">{{
+              dat === "datakril" ? translateText("Qoshimcha sozlamalar") : "Qoshimcha sozlamalar"
+            }}</span>
+          </div>
+          <svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</Transition>
 
     <!-- Main Content -->
     <main class="container mx-auto px-4 py-8">
@@ -929,7 +939,7 @@
             v-for="item in data"
             :key="item.id"
             @click="goToPath(item.id)"
-            class="group relative bg-white/80 dark:bg-slate-700/80 backdrop-blur-sm border-2 border-slate-400/50 dark:border-slate-600/50 hover:border-lime-400/50 dark:hover:border-lime-500/50 rounded-2xl p-6 cursor-pointer transition-all hover:shadow-2xl duration-300 shadow-xl dark:hover:shadow-lime-500/10 hover:-translate-y-2 transform"
+            class="group relative h-[380px] bg-white/80 dark:bg-slate-700/80 backdrop-blur-sm border-2 border-slate-400/50 dark:border-slate-600/50 hover:border-lime-400/50 dark:hover:border-lime-500/50 rounded-2xl p-6 cursor-pointer transition-all hover:shadow-2xl duration-300 shadow-xl dark:hover:shadow-lime-500/10 hover:-translate-y-2 transform"
           >
             <div
               class="absolute inset-0 bg-gradient-to-br from-lime-400/10 to-emerald-500/10 dark:from-lime-400/5 dark:to-emerald-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -961,7 +971,7 @@
                   class="absolute inset-0 bg-gradient-to-br from-lime-400 to-emerald-500 rounded-2xl blur-md opacity-20 group-hover:opacity-40 transition-opacity"
                 ></div>
                 <div
-                  class="relative w-20 h-20 bg-gradient-to-br from-lime-100 to-emerald-100 dark:from-lime-900/30 dark:to-emerald-900/30 rounded-2xl flex items-center justify-center overflow-hidden border-2 border-white dark:border-slate-600 shadow-lg"
+                  class="relative h-[250px] w-[370px] bg-gradient-to-br from-lime-100 to-emerald-100 dark:from-lime-900/30 dark:to-emerald-900/30 rounded-2xl flex items-center justify-center overflow-hidden border-2 border-white dark:border-slate-600 shadow-lg"
                 >
                   <img
                     v-if="item.img"
@@ -988,11 +998,12 @@
 
               <!-- Name -->
               <div>
-                <h4
-                  class="font-bold text-lg text-slate-800 dark:text-white group-hover:text-lime-600 dark:group-hover:text-lime-400 transition-colors duration-200 mb-2"
-                >
-                  {{ dat === "datakril" ? translateText(item.name) : item.name }}
-                </h4>
+<h4
+  class="font-bold text-lg break-words w-[370px] text-slate-800 dark:text-white group-hover:text-lime-600 dark:group-hover:text-lime-400 transition-colors duration-200 mb-2 line-clamp-2"
+>
+  {{ dat === "datakril" ? translateText(item.name) : item.name }}
+</h4>
+
                 <div
                   class="w-8 h-0.5 bg-gradient-to-r from-lime-400 to-emerald-500 mx-auto rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                 ></div>
@@ -1178,7 +1189,6 @@ const func = async (id, event) => {
         : "Ma'lumotlarni yuklashda xatolik yuz berdi";
   }
 };
-
 const getData = async () => {
   loading.value = true;
   errorMessage.value = null;
@@ -1189,29 +1199,29 @@ const getData = async () => {
 
     const result = await response.json();
 
-    // Diagnostika: olingan ma'lumotlarni konsolda ko'rish
     console.log("API natijasi:", result);
 
-    // Filtratsiya:
-    const filteredData = result
-      .filter((item) => item.status === "active") // faqat active statusli
-      .filter((item) => {
-        // allowed massiv emas bo'lsa false qaytaramiz
+    const role = localStorage.getItem("role");
+
+    let filteredData = result
+      .filter((item) => item.status === "active"); // faqat active statusli
+
+    if (role !== "bigAdmin") {
+      const targetId = String(userId.value).trim();
+
+      filteredData = filteredData.filter((item) => {
         if (!Array.isArray(item.allowed)) return false;
 
-        const targetId = String(userId.value).trim(); // xavfsiz tekshirish uchun
-
         return item.allowed.some((u) => {
-          // agar userId maydoni bo'lmasa ham false
           if (typeof u.userId === "undefined") return false;
-
-          // stringga o'tkazib solishtiramiz
           return String(u.userId).trim() === targetId;
         });
-      })
-      .sort((a, b) => a.id - b.id); // id bo'yicha saralash
+      });
+    }
 
-    // Diagnostika: yakuniy filtrlangan ma'lumotlar
+    // id bo‘yicha saralash
+    filteredData.sort((a, b) => a.id - b.id);
+
     console.log("Filtrlangan ma'lumot:", filteredData);
 
     data.value = filteredData;
