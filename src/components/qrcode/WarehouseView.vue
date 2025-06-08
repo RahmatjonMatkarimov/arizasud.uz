@@ -1,39 +1,42 @@
 <template>
-  <div class="min-h-screen transition-all duration-700 ease-in-out" :class="themeClasses.background">
-    <!-- Glassmorphism Theme Toggle -->
-    <div class="fixed top-6 right-6 z-50">
-      <button 
-        @click="toggleTheme"
-        class="group relative p-4 rounded-2xl backdrop-blur-xl bg-white/20 dark:bg-gray-800/30 border border-white/30 dark:border-gray-700/50 shadow-2xl hover:shadow-3xl hover:scale-110 transition-all duration-500 ease-out"
-      >
-        <div class="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-400/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        <Icon :icon="isDark ? 'mdi:weather-sunny' : 'mdi:weather-night'" class="w-5 h-5 relative z-10 text-yellow-400 dark:text-blue-600 transition-all duration-300" />
-      </button>
-    </div>
-
+  <div
+    class="min-h-screen transition-all duration-700 ease-in-out dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-indigo-950"
+  >
     <div class="max-w-7xl mx-auto p-8">
       <!-- Enhanced Header with Gradient -->
-      <div class="relative overflow-hidden bg-gradient-to-br from-white/90 to-white/70 dark:from-gray-800/90 dark:to-gray-900/70 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700/30 p-8 mb-8 group hover:shadow-3xl transition-all duration-700">
-        <div class="absolute inset-0 bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+      <div
+        class="relative overflow-hidden bg-gradient-to-br from-white/90 to-white/70 dark:from-gray-800/90 dark:to-gray-900/70 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700/30 p-8 mb-8 group hover:shadow-3xl transition-all duration-700"
+      >
+        <div
+          class="absolute inset-0 bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+        ></div>
         <div class="relative z-10">
           <div class="flex items-center justify-between">
             <div class="flex items-center">
-              <div class="p-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl mr-4 shadow-lg">
+              <div
+                class="p-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl mr-4 shadow-lg"
+              >
                 <Icon icon="mdi:warehouse" class="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-500 bg-clip-text text-transparent mb-2">
+                <h1
+                  class="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-500 bg-clip-text text-transparent mb-2"
+                >
                   Ombor Boshqaruvi
                 </h1>
-                <p class="text-gray-600 dark:text-gray-300 text-lg">Yangi mahsulotlarni qo'shing va mavjud omborni boshqaring</p>
+                <p class="text-gray-600 dark:text-gray-300 text-lg">
+                  Yangi mahsulotlarni qo'shing va mavjud omborni boshqaring
+                </p>
               </div>
             </div>
             <!-- Create New Product Button -->
-            <button 
+            <button
               @click="openCreateModal"
               class="group relative px-8 py-4 bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-500 text-white font-bold rounded-2xl shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-500 overflow-hidden"
             >
-              <div class="absolute inset-0 bg-gradient-to-r from-blue-700 via-purple-700 to-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-blue-700 via-purple-700 to-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              ></div>
               <div class="relative z-10 flex items-center">
                 <Icon icon="mdi:plus-circle-outline" class="mr-3 w-5 h-5" />
                 Yangi Mahsulot Qo'shish
@@ -44,104 +47,184 @@
       </div>
 
       <!-- Enhanced Products List -->
-      <div class="relative overflow-hidden bg-gradient-to-br from-white/95 to-white/85 dark:from-gray-800/95 dark:to-gray-900/85 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/30 dark:border-gray-700/40 p-8 group hover:shadow-3xl transition-all duration-700">
-        <div class="absolute inset-0 bg-gradient-to-r from-green-500/5 via-teal-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+      <div
+        class="relative overflow-hidden bg-gradient-to-br from-white/95 to-white/85 dark:from-gray-800/95 dark:to-gray-900/85 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/30 dark:border-gray-700/40 p-8 group hover:shadow-3xl transition-all duration-700"
+      >
+        <div
+          class="absolute inset-0 bg-gradient-to-r from-green-500/5 via-teal-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+        ></div>
         <div class="relative z-10">
-          <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6 flex items-center">
-            <div class="p-2 bg-gradient-to-r from-green-500 to-teal-500 rounded-xl mr-3 shadow-lg">
+          <h2
+            class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6 flex items-center"
+          >
+            <div
+              class="p-2 bg-gradient-to-r from-green-500 to-teal-500 rounded-xl mr-3 shadow-lg"
+            >
               <Icon icon="mdi:view-list-outline" class="w-5 h-5 text-white" />
             </div>
             Mavjud Mahsulotlar
-            <span class="ml-4 px-3 py-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm rounded-full shadow-lg">
+            <span
+              class="ml-4 px-3 py-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm rounded-full shadow-lg"
+            >
               {{ warehouses.length }}
             </span>
           </h2>
 
           <div v-if="warehouses.length === 0" class="text-center py-16">
             <div class="relative mb-8">
-              <div class="w-32 h-32 mx-auto bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 rounded-3xl flex items-center justify-center shadow-2xl">
-                <Icon icon="mdi:package-variant-closed" class="w-16 h-16 text-gray-400 dark:text-gray-500" />
+              <div
+                class="w-32 h-32 mx-auto bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 rounded-3xl flex items-center justify-center shadow-2xl"
+              >
+                <Icon
+                  icon="mdi:package-variant-closed"
+                  class="w-16 h-16 text-gray-400 dark:text-gray-500"
+                />
               </div>
-              <div class="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-orange-400 to-pink-500 rounded-full animate-bounce"></div>
+              <div
+                class="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-orange-400 to-pink-500 rounded-full animate-bounce"
+              ></div>
             </div>
-            <h3 class="text-2xl font-bold text-gray-600 dark:text-gray-400 mb-4">Hozircha hech qanday mahsulot yo'q</h3>
-            <p class="text-gray-500 dark:text-gray-500 text-lg">Yuqoridagi tugma orqali yangi mahsulot qo'shing</p>
+            <h3 class="text-2xl font-bold text-gray-600 dark:text-gray-400 mb-4">
+              Hozircha hech qanday mahsulot yo'q
+            </h3>
+            <p class="text-gray-500 dark:text-gray-500 text-lg">
+              Yuqoridagi tugma orqali yangi mahsulot qo'shing
+            </p>
           </div>
 
-          <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            <div 
-              v-for="warehouse in warehouses" 
+          <div
+            v-else
+            class="grid grid-cols-1 md:grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-8"
+          >
+            <div
+              v-for="warehouse in warehouses"
               :key="warehouse.id"
-              class="group relative bg-gradient-to-br from-white/90 to-white/70 dark:from-gray-700/90 dark:to-gray-800/70 backdrop-blur-xl rounded-2xl p-6 border border-white/40 dark:border-gray-600/40 shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-500 overflow-hidden"
+              @click="viewDetails(warehouse.id)"
+              class="group z-30 relative bg-gradient-to-br from-white/90 to-white/70 dark:from-gray-700/90 dark:to-gray-800/70 backdrop-blur-xl rounded-2xl p-6 border border-white/40 dark:border-gray-600/40 shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-500 overflow-hidden cursor-pointer"
             >
-              <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              
+              <div
+                class="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              ></div>
+
               <div class="relative z-10">
                 <!-- Product Header -->
                 <div class="flex items-start justify-between mb-6">
-                  <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
+                  <h3
+                    class="text-lg font-bold text-gray-800 dark:text-gray-200 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300"
+                  >
                     {{ warehouse.name }}
                   </h3>
                   <div class="flex flex-col items-end gap-2">
-                    <span class="px-3 py-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm font-bold rounded-full shadow-lg">
+                    <span
+                      class="px-3 py-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm font-bold rounded-full shadow-lg"
+                    >
                       {{ warehouse.quantity }} dona
                     </span>
-                    <div v-if="warehouse.condition" class="px-2 py-1 text-xs font-semibold rounded-lg" :class="getConditionStyle(warehouse.condition)">
+                    <div
+                      v-if="warehouse.condition"
+                      class="px-2 py-1 text-xs font-semibold rounded-lg"
+                      :class="getConditionStyle(warehouse.condition)"
+                    >
                       {{ getConditionText(warehouse.condition) }}
                     </div>
                   </div>
                 </div>
 
                 <!-- Product Images -->
-                <div class="flex gap-4 mb-6">
+                <div class="flex justify-between gap-4 mb-6">
                   <div v-if="warehouse.imageUrl" class="relative group">
-                    <img :src="URL + '/' + warehouse.imageUrl" alt="Mahsulot rasmi" class="w-24 h-24 object-cover rounded-xl border-2 border-white dark:border-gray-600 shadow-lg group-hover:scale-110 transition-transform duration-300" />
-                    <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 rounded-xl transition-opacity duration-300"></div>
+                    <img
+                      :src="URL + '/' + warehouse.imageUrl"
+                      alt="Mahsulot rasmi"
+                      class="w-24 h-24 object-cover rounded-xl border-2 border-white dark:border-gray-600 shadow-lg group-hover:scale-110 transition-transform duration-300"
+                    />
+                    <div
+                      class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 rounded-xl transition-opacity duration-300"
+                    ></div>
                   </div>
                   <div v-if="warehouse.qrCodeUrl" class="relative group">
-                    <img :src="URL + '/' + warehouse.qrCodeUrl" alt="QR kod" class="w-24 h-24 object-cover rounded-xl border-2 border-white dark:border-gray-600 shadow-lg group-hover:scale-110 transition-transform duration-300" />
-                    <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 rounded-xl transition-opacity duration-300"></div>
+                    <img
+                      :src="URL + '/' + warehouse.qrCodeUrl"
+                      alt="QR kod"
+                      class="w-24 h-24 object-cover rounded-xl border-2 border-white dark:border-gray-600 shadow-lg group-hover:scale-110 transition-transform duration-300"
+                    />
+                    <div
+                      class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 rounded-xl transition-opacity duration-300"
+                    ></div>
                   </div>
                 </div>
 
                 <!-- Product Details -->
                 <div class="space-y-3 text-sm text-gray-600 dark:text-gray-400 mb-6">
-                  <div v-if="warehouse.serialNumber" class="flex items-center">
+                  <div v-if="warehouse.id" class="flex items-center">
                     <Icon icon="mdi:barcode" class="w-5 h-5 text-orange-500 mr-3" />
-                    <span class="font-medium w-16">S/N:</span>
-                    <span class="font-mono">{{ warehouse.serialNumber }}</span>
+                    <span class="font-medium w-[50%]">S/N:</span>
+                    <span class="font-mono">{{ warehouse.id }}</span>
                   </div>
                   <div v-if="warehouse.location" class="flex items-center">
-                    <Icon icon="mdi:map-marker-outline" class="w-5 h-5 text-red-500 mr-3" />
-                    <span class="font-medium w-16">Joy:</span>
+                    <Icon
+                      icon="mdi:map-marker-outline"
+                      class="w-5 h-5 text-red-500 mr-3"
+                    />
+                    <span class="font-medium w-[50%]">Joy:</span>
                     <span class="font-semibold">{{ warehouse.location }}</span>
                   </div>
                   <div v-if="warehouse.purchaseDate" class="flex items-center">
-                    <Icon icon="mdi:calendar-outline" class="w-5 h-5 text-cyan-500 mr-3" />
-                    <span class="font-medium w-16">Sana:</span>
+                    <Icon
+                      icon="mdi:calendar-outline"
+                      class="w-5 h-5 text-cyan-500 mr-3"
+                    />
+                    <span class="font-medium w-[50%]">Sana:</span>
                     <span>{{ formatDate(warehouse.purchaseDate) }}</span>
+                  </div>
+                  <!-- To‘liq to‘plam -->
+                  <div v-if="warehouse.collection" class="flex items-center">
+                    <Icon icon="mdi:archive-outline" class="w-5 h-5 text-teal-500 mr-3" />
+                    <span class="font-medium w-[50%]">To'liq to'plam:</span>
+                    <span>{{ warehouse.collection ? "Ha" : "Yo'q" }}</span>
+                  </div>
+
+                  <!-- Mas’ul shaxs -->
+                  <div v-if="warehouse.whomBelongs" class="flex items-center">
+                    <Icon
+                      icon="mdi:account-tie-outline"
+                      class="w-5 h-5 text-amber-400 mr-3"
+                    />
+                    <span class="font-medium w-[50%]">Mas'ul shaxs:</span>
+                    <span>{{ warehouse.whomBelongs }}</span>
                   </div>
                 </div>
 
                 <!-- Product Description -->
-                <div v-if="warehouse.description" class="mb-6 pt-4 border-t border-gray-200/50 dark:border-gray-600/50">
-                  <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-3 leading-relaxed">{{ warehouse.description }}</p>
+                <div
+                  v-if="warehouse.description"
+                  class="mb-6 pt-4 border-t border-gray-200/50 dark:border-gray-600/50"
+                >
+                  <p
+                    class="text-sm text-gray-600 dark:text-gray-400 line-clamp-3 leading-relaxed"
+                  >
+                    {{ warehouse.description }}
+                  </p>
                 </div>
 
                 <!-- Action Buttons -->
                 <div class="flex justify-end gap-3">
-                  <button 
-                    @click="openEditModal(warehouse)"
+                  <button
+                    @click.stop="openEditModal(warehouse)"
                     class="group relative p-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300 overflow-hidden"
                   >
-                    <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div
+                      class="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    ></div>
                     <Icon icon="mdi:pencil-outline" class="w-5 h-5 relative z-10" />
                   </button>
-                  <button 
-                    @click="openDeleteModal(warehouse)"
+                  <button
+                    @click.stop="openDeleteModal(warehouse)"
                     class="group relative p-3 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-xl shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300 overflow-hidden"
                   >
-                    <div class="absolute inset-0 bg-gradient-to-r from-red-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div
+                      class="absolute inset-0 bg-gradient-to-r from-red-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    ></div>
                     <Icon icon="mdi:delete-outline" class="w-5 h-5 relative z-10" />
                   </button>
                 </div>
@@ -155,65 +238,92 @@
     <!-- Create Modal -->
     <Teleport to="body">
       <Transition name="modal" appear>
-        <div v-if="showCreateModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md" @click="closeCreateModal">
-          <div class="relative bg-gradient-to-br from-white/95 to-white/85 dark:from-gray-800/95 dark:to-gray-900/85 backdrop-blur-xl rounded-3xl p-8 w-full max-w-2xl m-6 shadow-2xl border border-white/30 dark:border-gray-700/40 overflow-hidden" @click.stop>
-            <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-blue-500/5 to-purple-500/5"></div>
-            
+        <div
+          v-if="showCreateModal"
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md"
+          @click="closeCreateModal"
+        >
+          <div
+            class="relative bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-2xl p-6 w-full max-w-3xl m-4 shadow-2xl border border-white/30 dark:border-gray-700/40 overflow-hidden transition-all duration-300"
+            @click.stop
+          >
+            <div
+              class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-blue-500/5 to-purple-500/5"
+            ></div>
+
             <div class="relative z-10">
-              <!-- Modal Header -->
-              <div class="flex items-center justify-between mb-8">
-                <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-100 flex items-center">
-                  <div class="p-2 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl mr-3 shadow-lg">
+              <!-- Header -->
+              <div class="flex items-center justify-between mb-6">
+                <h3
+                  class="text-xl font-bold text-gray-800 dark:text-gray-100 flex items-center"
+                >
+                  <div
+                    class="p-2 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl mr-3 shadow-md"
+                  >
                     <Icon icon="mdi:plus-circle-outline" class="w-5 h-5 text-white" />
                   </div>
                   Yangi Mahsulot Qo'shish
                 </h3>
-                <button 
+                <button
                   @click="closeCreateModal"
-                  class="p-2 text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all duration-300"
+                  class="p-2 text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200"
                 >
                   <Icon icon="mdi:close" class="w-5 h-5" />
                 </button>
               </div>
 
-              <!-- Create Form -->
-              <form @submit.prevent="createWarehouse" enctype="multipart/form-data" class="space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Form -->
+              <form @submit.prevent="createWarehouse" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <!-- Mahsulot Nomi -->
                   <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
-                      <Icon icon="mdi:tag-outline" class="w-5 h-5 text-blue-500 mr-2" />
+                    <label
+                      class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    >
+                      <Icon icon="mdi:tag-outline" class="w-4 h-4 text-blue-500 mr-2" />
                       Mahsulot Nomi *
                     </label>
-                    <input 
-                      v-model="form.name" 
+                    <input
+                      v-model="form.name"
                       type="text"
-                      placeholder="Mahsulot nomini kiriting" 
-                      required 
-                      class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white/70 dark:bg-gray-700/70 backdrop-blur-sm text-gray-800 dark:text-gray-200 focus:ring-4 focus:ring-blue-500/30 focus:border-blue-500 transition-all duration-300"
+                      placeholder="Mahsulot nomini kiriting"
+                      required
+                      class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white/70 dark:bg-gray-700/70 text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all duration-200"
                     />
                   </div>
+
+                  <!-- Miqdori -->
                   <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
-                      <Icon icon="mdi:numeric" class="w-5 h-5 text-green-500 mr-2" />
+                    <label
+                      class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    >
+                      <Icon icon="mdi:numeric" class="w-4 h-4 text-green-500 mr-2" />
                       Miqdori *
                     </label>
-                    <input 
-                      v-model.number="form.quantity" 
-                      type="number" 
-                      min="1" 
-                      placeholder="Miqdorni kiriting" 
-                      required 
-                      class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white/70 dark:bg-gray-700/70 backdrop-blur-sm text-gray-800 dark:text-gray-200 focus:ring-4 focus:ring-green-500/30 focus:border-green-500 transition-all duration-300"
+                    <input
+                      v-model.number="form.quantity"
+                      type="number"
+                      min="1"
+                      placeholder="Miqdorni kiriting"
+                      required
+                      class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white/70 dark:bg-gray-700/70 text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-green-500/30 focus:border-green-500 transition-all duration-200"
                     />
                   </div>
+
+                  <!-- Holati -->
                   <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
-                      <Icon icon="mdi:check-circle-outline" class="w-5 h-5 text-purple-500 mr-2" />
+                    <label
+                      class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    >
+                      <Icon
+                        icon="mdi:check-circle-outline"
+                        class="w-4 h-4 text-purple-500 mr-2"
+                      />
                       Holati
                     </label>
-                    <select 
+                    <select
                       v-model="form.condition"
-                      class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white/70 dark:bg-gray-700/70 backdrop-blur-sm text-gray-800 dark:text-gray-200 focus:ring-4 focus:ring-purple-500/30 focus:border-purple-500 transition-all duration-300"
+                      class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white/70 dark:bg-gray-700/70 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500 transition-all duration-200"
                     >
                       <option value="">Holatni tanlang</option>
                       <option value="yangi">✨ Yangi</option>
@@ -222,90 +332,157 @@
                       <option value="tamirlash_kerak">🔧 Tamirlash kerak</option>
                     </select>
                   </div>
+
+                  <!-- Turgan joyi -->
                   <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
-                      <Icon icon="mdi:barcode" class="w-5 h-5 text-orange-500 mr-2" />
-                      Seriya Raqami
+                    <label
+                      class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    >
+                      <Icon
+                        icon="mdi:map-marker-outline"
+                        class="w-4 h-4 text-red-500 mr-2"
+                      />
+                      Turgan joyi
                     </label>
-                    <input 
-                      v-model="form.serialNumber" 
+                    <input
+                      v-model="form.location"
                       type="text"
-                      placeholder="Seriya raqamini kiriting" 
-                      class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white/70 dark:bg-gray-700/70 backdrop-blur-sm text-gray-800 dark:text-gray-200 focus:ring-4 focus:ring-orange-500/30 focus:border-orange-500 transition-all duration-300"
+                      placeholder="Joyni kiriting (A-1, B-5, ...)"
+                      class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white/70 dark:bg-gray-700/70 text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-red-500/30 focus:border-red-500 transition-all duration-200"
                     />
                   </div>
+
+                  <!-- Sotib Olingan Sana -->
                   <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
-                      <Icon icon="mdi:map-marker-outline" class="w-5 h-5 text-red-500 mr-2" />
-                      Joylashuvi
-                    </label>
-                    <input 
-                      v-model="form.location" 
-                      type="text"
-                      placeholder="Joyni kiriting (A-1, B-5, ...)" 
-                      class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white/70 dark:bg-gray-700/70 backdrop-blur-sm text-gray-800 dark:text-gray-200 focus:ring-4 focus:ring-red-500/30 focus:border-red-500 transition-all duration-300"
-                    />
-                  </div>
-                  <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
-                      <Icon icon="mdi:calendar-outline" class="w-5 h-5 text-cyan-500 mr-2" />
+                    <label
+                      class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    >
+                      <Icon
+                        icon="mdi:calendar-outline"
+                        class="w-4 h-4 text-cyan-500 mr-2"
+                      />
                       Sotib Olingan Sana
                     </label>
-                    <input 
-                      v-model="form.purchaseDate" 
+                    <input
+                      v-model="form.purchaseDate"
                       type="date"
-                      class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white/70 dark:bg-gray-700/70 backdrop-blur-sm text-gray-800 dark:text-gray-200 focus:ring-4 focus:ring-cyan-500/30 focus:border-cyan-500 transition-all duration-300"
+                      class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white/70 dark:bg-gray-700/70 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-cyan-500/30 focus:border-cyan-500 transition-all duration-200"
                     />
                   </div>
+
+                  <!-- Butun komplekt -->
                   <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
-                      <Icon icon="mdi:text-box-outline" class="w-5 h-5 text-indigo-500 mr-2" />
-                      Tavsif
+                    <label
+                      class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    >
+                      <Icon
+                        icon="mdi:package-variant"
+                        class="w-4 h-4 text-indigo-500 mr-2"
+                      />
+                      Butun komplekt keldimi?
                     </label>
-                    <textarea 
-                      v-model="form.description" 
-                      placeholder="Mahsulot haqida qo'shimcha ma'lumot..." 
-                      rows="4"
-                      class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white/70 dark:bg-gray-700/70 backdrop-blur-sm text-gray-800 dark:text-gray-200 focus:ring-4 focus:ring-indigo-500/30 focus:border-indigo-500 transition-all duration-300 resize-none"
-                    ></textarea>
+                    <div
+                      class="flex items-center p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white/70 dark:bg-gray-700/70"
+                    >
+                      <input
+                        v-model="form.collection"
+                        type="checkbox"
+                        id="collection"
+                        class="w-4 h-4 text-indigo-600 bg-gray-100 dark:bg-gray-600 border-gray-300 dark:border-gray-500 rounded focus:ring-indigo-500 focus:ring-2"
+                      />
+                      <label
+                        for="collection"
+                        class="ml-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer"
+                      >
+                        Ha, to'liq komplekt
+                      </label>
+                    </div>
                   </div>
+
+                  <!-- Mas'ul shaxs -->
                   <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
-                      <Icon icon="mdi:image-outline" class="w-5 h-5 text-pink-500 mr-2" />
+                    <label
+                      class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    >
+                      <Icon
+                        icon="mdi:account-outline"
+                        class="w-4 h-4 text-orange-500 mr-2"
+                      />
+                      Mas'ul shaxs
+                    </label>
+                    <input
+                      v-model="form.whomBelongs"
+                      type="text"
+                      placeholder="Mas'ul shaxs ismini kiriting"
+                      class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white/70 dark:bg-gray-700/70 text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-orange-500/30 focus:border-orange-500 transition-all duration-200"
+                    />
+                  </div>
+
+                  <!-- Mahsulot Rasmi -->
+                  <div>
+                    <label
+                      class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    >
+                      <Icon icon="mdi:image-outline" class="w-4 h-4 text-pink-500 mr-2" />
                       Mahsulot Rasmi
                     </label>
-                    <input 
-                      type="file" 
+                    <input
+                      type="file"
                       @change="handleFile"
                       accept="image/*"
-                      class="w-full px-4 py-3 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm text-gray-800 dark:text-gray-200 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-gradient-to-r file:from-pink-500 file:to-purple-600 file:text-white hover:file:from-pink-600 hover:file:to-purple-700 transition-all duration-300 hover:border-pink-400 dark:hover:border-pink-500"
+                      class="w-full px-3 py-2 border border-dashed border-gray-300 dark:border-gray-600 rounded-lg bg-white/50 dark:bg-gray-700/50 text-gray-800 dark:text-gray-200 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:font-medium file:bg-blue-50 dark:file:bg-blue-900/20 file:text-blue-700 dark:file:text-blue-300 hover:file:bg-blue-100 dark:hover:file:bg-blue-900/40 transition-all duration-200"
                     />
-                    <div v-if="imagePreview" class="mt-4 flex justify-center">
-                      <div class="relative group">
-                        <img :src="imagePreview" alt="Preview" class="w-32 h-32 object-cover rounded-2xl border-4 border-white dark:border-gray-600 shadow-xl group-hover:scale-105 transition-transform duration-300" />
-                        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity duration-300"></div>
-                      </div>
+                    <div v-if="imagePreview" class="mt-3 flex justify-center">
+                      <img
+                        :src="imagePreview"
+                        alt="Preview"
+                        class="w-20 h-20 object-cover rounded-lg border-2 border-white dark:border-gray-600 shadow-md"
+                      />
                     </div>
                   </div>
                 </div>
-                <div class="flex justify-end gap-2">
-                  <button 
+
+                <!-- Tavsif - Full width -->
+                <div>
+                  <label
+                    class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  >
+                    <Icon
+                      icon="mdi:text-box-outline"
+                      class="w-4 h-4 text-teal-500 mr-2"
+                    />
+                    Tavsif
+                  </label>
+                  <textarea
+                    v-model="form.description"
+                    placeholder="Mahsulot haqida qo'shimcha ma'lumot..."
+                    rows="3"
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white/70 dark:bg-gray-700/70 text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all duration-200 resize-none"
+                  ></textarea>
+                </div>
+
+                <!-- Buttons -->
+                <div
+                  class="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700"
+                >
+                  <button
                     type="button"
                     @click="closeCreateModal"
-                    class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-all duration-300"
+                    class="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200 font-medium"
                   >
                     Bekor Qilish
                   </button>
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     :disabled="loading"
-                    class="group relative px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-lg hover:shadow-xl focus:ring-4 focus:ring-blue-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center overflow-hidden"
+                    class="px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-lg hover:shadow-lg focus:ring-4 focus:ring-blue-500/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed font-medium flex items-center"
                   >
-                    <div class="absolute inset-0 bg-gradient-to-r from-blue-700 to-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <div class="relative z-10 flex items-center">
-                      <Icon v-if="loading" icon="mdi:loading" class="animate-spin mr-2 w-5 h-5" />
-                      {{ loading ? 'Qo\'shilmoqda...' : 'Qo\'shish' }}
-                    </div>
+                    <Icon
+                      v-if="loading"
+                      icon="mdi:loading"
+                      class="animate-spin mr-2 w-4 h-4"
+                    />
+                    {{ loading ? "Qo'shilmoqda..." : "Qo'shish" }}
                   </button>
                 </div>
               </form>
@@ -318,64 +495,92 @@
     <!-- Edit Modal -->
     <Teleport to="body">
       <Transition name="modal" appear>
-        <div v-if="showEditModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md" @click="closeEditModal">
-          <div class="relative bg-gradient-to-br from-white/95 to-white/85 dark:from-gray-800/95 dark:to-gray-900/85 backdrop-blur-xl rounded-3xl p-8 w-full max-w-2xl m-6 shadow-2xl border border-white/30 dark:border-gray-700/40 overflow-hidden" @click.stop>
-            <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-cyan-500/5"></div>
-            
+        <div
+          v-if="showEditModal"
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md"
+          @click="closeEditModal"
+        >
+          <div
+            class="relative bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl rounded-2xl p-6 w-full max-w-2xl m-4 shadow-xl border border-white/20 dark:border-gray-700/30 max-h-[90vh] overflow-y-auto"
+            @click.stop
+          >
+            <!-- Background gradient -->
+            <div
+              class="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-cyan-500/5 rounded-2xl"
+            ></div>
+
             <div class="relative z-10">
-              <!-- Modal Header -->
-              <div class="flex items-center justify-between mb-8">
-                <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-100 flex items-center">
-                  <div class="p-2 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl mr-3 shadow-lg">
+              <!-- Header -->
+              <div
+                class="flex items-center justify-between mb-6 pb-4 border-b border-gray-200/20 dark:border-gray-700/20"
+              >
+                <div class="flex items-center space-x-3">
+                  <div class="p-2 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl">
                     <Icon icon="mdi:pencil-outline" class="w-5 h-5 text-white" />
                   </div>
-                  Mahsulotni Tahrirlash
-                </h3>
-                <button 
+                  <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100">
+                    Mahsulotni Tahrirlash
+                  </h3>
+                </div>
+                <button
                   @click="closeEditModal"
-                  class="p-2 text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all duration-300"
+                  class="p-2 text-gray-500 dark:text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors"
                 >
                   <Icon icon="mdi:close" class="w-5 h-5" />
                 </button>
               </div>
 
-              <!-- Edit Form -->
-              <form @submit.prevent="updateWarehouse" enctype="multipart/form-data" class="space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Form -->
+              <form @submit.prevent="updateWarehouse" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <!-- Product Name -->
                   <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
-                      <Icon icon="mdi:tag-outline" class="w-5 h-5 text-blue-500 mr-2" />
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
+                    >
+                      <Icon icon="mdi:tag-outline" class="w-4 h-4 text-blue-500 mr-2" />
                       Mahsulot Nomi *
                     </label>
-                    <input 
-                      v-model="editForm.name" 
+                    <input
+                      v-model="editForm.name"
                       type="text"
-                      placeholder="Mahsulot nomini kiriting" 
-                      required 
-                      class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white/70 dark:bg-gray-700/70 backdrop-blur-sm text-gray-800 dark:text-gray-200 focus:ring-4 focus:ring-blue-500/30 focus:border-blue-500 transition-all duration-300"
+                      required
+                      class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white/80 dark:bg-gray-700/80 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                      placeholder="Mahsulot nomini kiriting"
                     />
                   </div>
+
+                  <!-- Quantity -->
                   <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
-                      <Icon icon="mdi:numeric" class="w-5 h-5 text-green-500 mr-2" />
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
+                    >
+                      <Icon icon="mdi:numeric" class="w-4 h-4 text-green-500 mr-2" />
                       Miqdori *
                     </label>
-                    <input 
-                      v-model.number="editForm.quantity" 
-                      type="number" 
-                      min="1" 
-                      required 
-                      class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white/70 dark:bg-gray-700/70 backdrop-blur-sm text-gray-800 dark:text-gray-200 focus:ring-4 focus:ring-green-500/30 focus:border-green-500 transition-all duration-300"
+                    <input
+                      v-model.number="editForm.quantity"
+                      type="number"
+                      min="1"
+                      required
+                      class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white/80 dark:bg-gray-700/80 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
                     />
                   </div>
+
+                  <!-- Condition -->
                   <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
-                      <Icon icon="mdi:check-circle-outline" class="w-5 h-5 text-purple-500 mr-2" />
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
+                    >
+                      <Icon
+                        icon="mdi:check-circle-outline"
+                        class="w-4 h-4 text-purple-500 mr-2"
+                      />
                       Holati
                     </label>
-                    <select 
+                    <select
                       v-model="editForm.condition"
-                      class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white/70 dark:bg-gray-700/70 backdrop-blur-sm text-gray-800 dark:text-gray-200 focus:ring-4 focus:ring-purple-500/30 focus:border-purple-500 transition-all duration-300"
+                      class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white/80 dark:bg-gray-700/80 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
                     >
                       <option value="">Holatni tanlang</option>
                       <option value="yangi">✨ Yangi</option>
@@ -384,90 +589,147 @@
                       <option value="tamirlash_kerak">🔧 Tamirlash kerak</option>
                     </select>
                   </div>
+
+                  <!-- Location -->
                   <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
-                      <Icon icon="mdi:barcode" class="w-5 h-5 text-orange-500 mr-2" />
-                      Seriya Raqami
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
+                    >
+                      <Icon
+                        icon="mdi:map-marker-outline"
+                        class="w-4 h-4 text-red-500 mr-2"
+                      />
+                      Turgan joyi
                     </label>
-                    <input 
-                      v-model="editForm.serialNumber" 
+                    <input
+                      v-model="editForm.location"
                       type="text"
-                      placeholder="Seriya raqamini kiriting" 
-                      class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white/70 dark:bg-gray-700/70 backdrop-blur-sm text-gray-800 dark:text-gray-200 focus:ring-4 focus:ring-orange-500/30 focus:border-orange-500 transition-all duration-300"
+                      class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white/80 dark:bg-gray-700/80 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+                      placeholder="A-1, B-5, ..."
                     />
                   </div>
+
+                  <!-- Collection -->
                   <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
-                      <Icon icon="mdi:map-marker-outline" class="w-5 h-5 text-red-500 mr-2" />
-                      Joylashuvi
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
+                    >
+                      <Icon
+                        icon="mdi:package-variant"
+                        class="w-4 h-4 text-orange-500 mr-2"
+                      />
+                      Butun komplekt keldimi?
                     </label>
-                    <input 
-                      v-model="editForm.location" 
-                      type="text"
-                      placeholder="Joyni kiriting (A-1, B-5, ...)" 
-                      class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white/70 dark:bg-gray-700/70 backdrop-blur-sm text-gray-800 dark:text-gray-200 focus:ring-4 focus:ring-red-500/30 focus:border-red-500 transition-all duration-300"
-                    />
-                  </div>
-                  <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
-                      <Icon icon="mdi:calendar-outline" class="w-5 h-5 text-cyan-500 mr-2" />
-                      Sotib Olingan Sana
-                    </label>
-                    <input 
-                      v-model="editForm.purchaseDate" 
-                      type="date"
-                      class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white/70 dark:bg-gray-700/70 backdrop-blur-sm text-gray-800 dark:text-gray-200 focus:ring-4 focus:ring-cyan-500/30 focus:border-cyan-500 transition-all duration-300"
-                    />
-                  </div>
-                  <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
-                      <Icon icon="mdi:text-box-outline" class="w-5 h-5 text-indigo-500 mr-2" />
-                      Tavsif
-                    </label>
-                    <textarea 
-                      v-model="editForm.description" 
-                      placeholder="Mahsulot haqida qo'shimcha ma'lumot..." 
-                      rows="4"
-                      class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white/70 dark:bg-gray-700/70 backdrop-blur-sm text-gray-800 dark:text-gray-200 focus:ring-4 focus:ring-indigo-500/30 focus:border-indigo-500 transition-all duration-300 resize-none"
-                    ></textarea>
-                  </div>
-                  <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
-                      <Icon icon="mdi:image-outline" class="w-5 h-5 text-pink-500 mr-2" />
-                      Mahsulot Rasmi
-                    </label>
-                    <input 
-                      type="file" 
-                      @change="handleEditFile"
-                      accept="image/*"
-                      class="w-full px-4 py-3 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm text-gray-800 dark:text-gray-200 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-gradient-to-r file:from-pink-500 file:to-purple-600 file:text-white hover:file:from-pink-600 hover:file:to-purple-700 transition-all duration-300 hover:border-pink-400 dark:hover:border-pink-500"
-                    />
-                    <div v-if="editImagePreview" class="mt-4 flex justify-center">
-                      <div class="relative group">
-                        <img :src="editImagePreview" alt="Preview" class="w-32 h-32 object-cover rounded-2xl border-4 border-white dark:border-gray-600 shadow-xl group-hover:scale-105 transition-transform duration-300" />
-                        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity duration-300"></div>
-                      </div>
+                    <div
+                      class="flex items-center p-3 bg-white/60 dark:bg-gray-700/60 rounded-lg border border-gray-300 dark:border-gray-600"
+                    >
+                      <input
+                        v-model="editForm.collection"
+                        type="checkbox"
+                        class="w-4 h-4 text-orange-500 bg-white border-gray-300 rounded focus:ring-orange-500"
+                      />
+                      <span class="ml-2 text-sm text-gray-700 dark:text-gray-300"
+                        >Barcha qismlar mavjud</span
+                      >
                     </div>
                   </div>
+
+                  <!-- Responsible Person -->
+                  <div>
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
+                    >
+                      <Icon
+                        icon="mdi:account-outline"
+                        class="w-4 h-4 text-teal-500 mr-2"
+                      />
+                      Mas'ul shaxs
+                    </label>
+                    <input
+                      v-model="editForm.whomBelongs"
+                      type="text"
+                      class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white/80 dark:bg-gray-700/80 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+                      placeholder="Mas'ul shaxs ismi"
+                    />
+                  </div>
+
+                  <!-- Purchase Date -->
+                  <div>
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
+                    >
+                      <Icon
+                        icon="mdi:calendar-outline"
+                        class="w-4 h-4 text-cyan-500 mr-2"
+                      />
+                      Sotib olingan sana
+                    </label>
+                    <input
+                      v-model="editForm.purchaseDate"
+                      type="date"
+                      class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white/80 dark:bg-gray-700/80 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-colors"
+                    />
+                  </div>
+
+                  <!-- Image Upload -->
+                  <div>
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
+                    >
+                      <Icon icon="mdi:image-outline" class="w-4 h-4 text-pink-500 mr-2" />
+                      Mahsulot rasmi
+                    </label>
+                    <input
+                      type="file"
+                      @change="handleEditFile"
+                      accept="image/*"
+                      class="w-full px-3 py-2 border border-dashed border-gray-300 dark:border-gray-600 rounded-lg bg-white/60 dark:bg-gray-700/60 text-gray-800 dark:text-gray-200 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:bg-gradient-to-r file:from-pink-500 file:to-purple-600 file:text-white hover:border-pink-400 transition-colors"
+                    />
+                  </div>
                 </div>
-                <div class="flex justify-end gap-2">
-                  <button 
+
+                <!-- Description -->
+                <div>
+                  <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
+                  >
+                    <Icon
+                      icon="mdi:text-box-outline"
+                      class="w-4 h-4 text-indigo-500 mr-2"
+                    />
+                    Tavsif
+                  </label>
+                  <textarea
+                    v-model="editForm.description"
+                    rows="3"
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white/80 dark:bg-gray-700/80 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors resize-none"
+                    placeholder="Mahsulot haqida qo'shimcha ma'lumot"
+                  ></textarea>
+                </div>
+
+                <!-- Action Buttons -->
+                <div
+                  class="flex justify-end gap-3 pt-4 border-t border-gray-200/20 dark:border-gray-700/20"
+                >
+                  <button
                     type="button"
                     @click="closeEditModal"
-                    class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-all duration-300"
+                    class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
                   >
                     Bekor Qilish
                   </button>
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     :disabled="loading"
-                    class="group relative px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-lg hover:shadow-xl focus:ring-4 focus:ring-blue-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center overflow-hidden"
+                    class="px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-lg hover:shadow-lg focus:ring-2 focus:ring-blue-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
                   >
-                    <div class="absolute inset-0 bg-gradient-to-r from-blue-700 to-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <div class="relative z-10 flex items-center">
-                      <Icon v-if="loading" icon="mdi:loading" class="animate-spin mr-2 w-5 h-5" />
-                      {{ loading ? 'Saqlanmoqda...' : 'Saqlash' }}
-                    </div>
+                    <Icon
+                      v-if="loading"
+                      icon="mdi:loading"
+                      class="animate-spin mr-2 w-4 h-4"
+                    />
+                    <Icon v-else icon="mdi:content-save-outline" class="mr-2 w-4 h-4" />
+                    {{ loading ? "Saqlanmoqda..." : "Saqlash" }}
                   </button>
                 </div>
               </form>
@@ -480,35 +742,55 @@
     <!-- Delete Modal -->
     <Teleport to="body">
       <Transition name="modal" appear>
-        <div v-if="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md" @click="closeDeleteModal">
-          <div class="relative bg-gradient-to-br from-white/95 to-white/85 dark:from-gray-800/95 dark:to-gray-900/85 backdrop-blur-xl rounded-3xl p-8 w-full max-w-md m-6 shadow-2xl border border-white/30 dark:border-gray-700/40 overflow-hidden" @click.stop>
-            <div class="absolute inset-0 bg-gradient-to-br from-red-500/5 via-pink-500/5 to-orange-500/5"></div>
+        <div
+          v-if="showDeleteModal"
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md"
+          @click="closeDeleteModal"
+        >
+          <div
+            class="relative bg-gradient-to-br from-white/95 to-white/85 dark:from-gray-800/95 dark:to-gray-900/85 backdrop-blur-xl rounded-3xl p-8 w-full max-w-md m-6 shadow-2xl border border-white/30 dark:border-gray-700/40 overflow-hidden"
+            @click.stop
+          >
+            <div
+              class="absolute inset-0 bg-gradient-to-br from-red-500/5 via-pink-500/5 to-orange-500/5"
+            ></div>
             <div class="relative z-10">
-              <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6 flex items-center">
-                <div class="p-2 bg-gradient-to-r from-red-500 to-pink-500 rounded-xl mr-3 shadow-lg">
+              <h3
+                class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6 flex items-center"
+              >
+                <div
+                  class="p-2 bg-gradient-to-r from-red-500 to-pink-500 rounded-xl mr-3 shadow-lg"
+                >
                   <Icon icon="mdi:delete-outline" class="w-5 h-5 text-white" />
                 </div>
                 Mahsulotni O'chirish
               </h3>
               <p class="text-gray-600 dark:text-gray-400 mb-6">
-                "{{ deleteWarehouse?.name }}" mahsulotini o'chirishni tasdiqlaysizmi? Bu amal qaytarib bo'lmaydi.
+                "{{ deleteWarehouse?.name }}" mahsulotini o'chirishni tasdiqlaysizmi? Bu
+                amal qaytarib bo'lmaydi.
               </p>
               <div class="flex justify-end gap-2">
-                <button 
+                <button
                   @click="closeDeleteModal"
                   class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-all duration-300"
                 >
                   Bekor Qilish
                 </button>
-                <button 
+                <button
                   @click="deleteWarehouseAction"
                   :disabled="loading"
                   class="group relative px-4 py-2 bg-gradient-to-r from-red-600 to-pink-500 text-white rounded-lg hover:shadow-xl focus:ring-4 focus:ring-red-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center overflow-hidden"
                 >
-                  <div class="absolute inset-0 bg-gradient-to-r from-red-700 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div
+                    class="absolute inset-0 bg-gradient-to-r from-red-700 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  ></div>
                   <div class="relative z-10 flex items-center">
-                    <Icon v-if="loading" icon="mdi:loading" class="animate-spin mr-2 w-5 h-5" />
-                    {{ loading ? 'O\'chirilmoqda...' : 'O\'chirish' }}
+                    <Icon
+                      v-if="loading"
+                      icon="mdi:loading"
+                      class="animate-spin mr-2 w-5 h-5"
+                    />
+                    {{ loading ? "O'chirilmoqda..." : "O'chirish" }}
                   </div>
                 </button>
               </div>
@@ -521,13 +803,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import axios from 'axios';
-import { useRoute } from 'vue-router';
-import { Icon } from '@iconify/vue';
-import { URL } from '@/auth/url.js';
+import { ref, onMounted, computed } from "vue";
+import axios from "axios";
+import { useRoute, useRouter } from "vue-router";
+import { Icon } from "@iconify/vue";
+import { URL } from "@/auth/url.js";
 
 const route = useRoute();
+const router = useRouter();
 const warehouses = ref([]);
 const loading = ref(false);
 const image = ref(null);
@@ -539,29 +822,33 @@ const deleteWarehouse = ref(null);
 const editImage = ref(null);
 
 const form = ref({
-  name: '',
+  name: "",
   quantity: 1,
-  description: '',
-  condition: '',
-  serialNumber: '',
-  location: '',
-  purchaseDate: ''
+  collection: false,
+  whomBelongs: "",
+  description: "",
+  condition: "",
+  serialNumber: "",
+  location: "",
+  purchaseDate: "",
 });
 
 const editForm = ref({
   id: null,
-  name: '',
+  name: "",
   quantity: 1,
-  description: '',
-  condition: '',
-  serialNumber: '',
-  location: '',
-  purchaseDate: '',
-  imageUrl: ''
+  description: "",
+  condition: "",
+  collection: false,
+  whomBelongs: "",
+  serialNumber: "",
+  location: "",
+  purchaseDate: "",
+  imageUrl: "",
 });
 
 const themeClasses = computed(() => ({
-  background: isDark.value ? 'bg-gray-900' : 'bg-gradient-to-br from-gray-50 to-gray-100'
+  background: isDark.value ? "bg-gray-900" : "bg-gradient-to-br from-gray-50 to-gray-100",
 }));
 
 const imagePreview = computed(() => {
@@ -576,30 +863,42 @@ const editImagePreview = computed(() => {
 
 const getConditionStyle = (condition) => {
   switch (condition) {
-    case 'yangi': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
-    case 'yaxshi': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
-    case 'qoniqarli': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
-    case 'tamirlash_kerak': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
-    default: return '';
+    case "yangi":
+      return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300";
+    case "yaxshi":
+      return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300";
+    case "qoniqarli":
+      return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300";
+    case "tamirlash_kerak":
+      return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300";
+    default:
+      return "";
   }
 };
 
 const getConditionText = (condition) => {
   switch (condition) {
-    case 'yangi': return '✨ Yangi';
-    case 'yaxshi': return '👍 Yaxshi';
-    case 'qoniqarli': return '👌 Qoniqarli';
-    case 'tamirlash_kerak': return '🔧 Tamirlash kerak';
-    default: return condition;
+    case "yangi":
+      return "✨ Yangi";
+    case "yaxshi":
+      return "👍 Yaxshi";
+    case "qoniqarli":
+      return "👌 Qoniqarli";
+    case "tamirlash_kerak":
+      return "🔧 Tamirlash kerak";
+    default:
+      return condition;
   }
 };
 
 const fetchWarehouses = async () => {
   try {
     const { data } = await axios.get(`${URL}/warehouse`);
-    warehouses.value = data.filter(w => w.categoryId === parseInt(route.query.categoryId));
+    warehouses.value = data.filter(
+      (w) => w.categoryId === parseInt(route.query.categoryId)
+    );
   } catch (error) {
-    console.error('Omborlarni yuklashda xatolik:', error);
+    console.error("Omborlarni yuklashda xatolik:", error);
   }
 };
 
@@ -615,28 +914,33 @@ const createWarehouse = async () => {
   loading.value = true;
   try {
     const formData = new FormData();
-    formData.append('name', form.value.name);
-    formData.append('quantity', form.value.quantity);
-    formData.append('categoryId', route.query.categoryId);
-    if (form.value.description) formData.append('description', form.value.description);
-    if (form.value.condition) formData.append('condition', form.value.condition);
-    if (form.value.serialNumber) formData.append('serialNumber', form.value.serialNumber);
-    if (form.value.location) formData.append('location', form.value.location);
-    if (form.value.purchaseDate) formData.append('purchaseDate', form.value.purchaseDate);
-    if (image.value) formData.append('image', image.value);
+    formData.append("name", form.value.name);
+    formData.append("quantity", form.value.quantity);
+    formData.append("categoryId", route.query.categoryId);
+    formData.append("collection", form.value.collection);
+    formData.append("whomBelongs", form.value.whomBelongs);
+    if (form.value.description) formData.append("description", form.value.description);
+    if (form.value.condition) formData.append("condition", form.value.condition);
+    if (form.value.location) formData.append("location", form.value.location);
+    if (form.value.purchaseDate) formData.append("purchaseDate", form.value.purchaseDate);
+    if (image.value) formData.append("image", image.value);
 
     await axios.post(`${URL}/warehouse`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
+      headers: { "Content-Type": "multipart/form-data" },
     });
 
     resetForm();
     closeCreateModal();
     await fetchWarehouses();
   } catch (error) {
-    console.error('Mahsulot qo\'shishda xatolik:', error);
+    console.error("Mahsulot qo'shishda xatolik:", error);
   } finally {
     loading.value = false;
   }
+};
+
+const viewDetails = (id) => {
+  router.push(`/warehouseHouse/${id}`);
 };
 
 const openCreateModal = () => {
@@ -654,12 +958,16 @@ const openEditModal = (warehouse) => {
     id: warehouse.id,
     name: warehouse.name,
     quantity: warehouse.quantity,
-    description: warehouse.description || '',
-    condition: warehouse.condition || '',
-    serialNumber: warehouse.serialNumber || '',
-    location: warehouse.location || '',
-    purchaseDate: warehouse.purchaseDate || '',
-    imageUrl: warehouse.imageUrl || ''
+    collection: warehouse.collection,
+    whomBelongs: warehouse.whomBelongs,
+    description: warehouse.description || "",
+    condition: warehouse.condition || "",
+    serialNumber: warehouse.id || "",
+    location: warehouse.location || "",
+    purchaseDate: warehouse.purchaseDate
+      ? new Date(warehouse.purchaseDate).toISOString().split("T")[0]
+      : "",
+    imageUrl: warehouse.imageUrl || "",
   };
   editImage.value = null;
   showEditModal.value = true;
@@ -667,7 +975,17 @@ const openEditModal = (warehouse) => {
 
 const closeEditModal = () => {
   showEditModal.value = false;
-  editForm.value = { id: null, name: '', quantity: 1, description: '', condition: '', serialNumber: '', location: '', purchaseDate: '', imageUrl: '' };
+  editForm.value = {
+    id: null,
+    name: "",
+    quantity: 1,
+    description: "",
+    condition: "",
+    serialNumber: "",
+    location: "",
+    purchaseDate: "",
+    imageUrl: "",
+  };
   editImage.value = null;
 };
 
@@ -675,26 +993,29 @@ const updateWarehouse = async () => {
   loading.value = true;
   try {
     const formData = new FormData();
-    formData.append('name', editForm.value.name);
-    formData.append('quantity', editForm.value.quantity);
-    formData.append('categoryId', route.query.categoryId);
-    if (editForm.value.description) formData.append('description', editForm.value.description);
-    if (editForm.value.condition) formData.append('condition', editForm.value.condition);
-    if (editForm.value.serialNumber) formData.append('serialNumber', editForm.value.serialNumber);
-    if (editForm.value.location) formData.append('location', editForm.value.location);
-    if (editForm.value.purchaseDate) formData.append('purchaseDate', editForm.value.purchaseDate);
-    if (editImage.value) formData.append('image', editImage.value);
+    formData.append("name", editForm.value.name);
+    formData.append("quantity", editForm.value.quantity);
+    formData.append("categoryId", route.query.categoryId);
+    formData.append("whomBelongs", editForm.value.whomBelongs);
+    formData.append("collection", editForm.value.collection);
+    if (editForm.value.description)
+      formData.append("description", editForm.value.description);
+    if (editForm.value.condition) formData.append("condition", editForm.value.condition);
+    if (editForm.value.location) formData.append("location", editForm.value.location);
+    if (editForm.value.purchaseDate)
+      formData.append("purchaseDate", editForm.value.purchaseDate);
+    if (editImage.value) formData.append("image", editImage.value);
 
-    await axios.put(`${URL}/warehouse/${editForm.value.id}`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
+    await axios.patch(`${URL}/warehouse/${editForm.value.id}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
     });
+
     resetForm();
     editImage.value = null;
-
     closeEditModal();
     await fetchWarehouses();
   } catch (error) {
-    console.error('Mahsulotni yangilashda xatolik:', error);
+    console.error("Mahsulotni yangilashda xatolik:", error);
   } finally {
     loading.value = false;
   }
@@ -717,7 +1038,7 @@ const deleteWarehouseAction = async () => {
     closeDeleteModal();
     await fetchWarehouses();
   } catch (error) {
-    console.error('Mahsulotni o\'chirishda xatolik:', error);
+    console.error("Mahsulotni o'chirishda xatolik:", error);
   } finally {
     loading.value = false;
   }
@@ -725,37 +1046,37 @@ const deleteWarehouseAction = async () => {
 
 const resetForm = () => {
   form.value = {
-    name: '',
+    name: "",
     quantity: 1,
-    description: '',
-    condition: '',
-    serialNumber: '',
-    location: '',
-    purchaseDate: ''
+    description: "",
+    condition: "",
+    serialNumber: "",
+    location: "",
+    purchaseDate: "",
   };
   image.value = null;
   const fileInput = document.querySelector('input[type="file"]');
-  if (fileInput) fileInput.value = '';
+  if (fileInput) fileInput.value = "";
 };
 
 const formatDate = (dateString) => {
-  if (!dateString) return '';
+  if (!dateString) return "";
   const date = new Date(dateString);
-  return date.toLocaleDateString('uz-UZ');
+  return date.toLocaleDateString("uz-UZ");
 };
 
 const toggleTheme = () => {
   isDark.value = !isDark.value;
-  localStorage.setItem('theme', isDark.value ? 'dark' : 'light');
+  localStorage.setItem("theme", isDark.value ? "dark" : "light");
 };
 
 onMounted(() => {
   fetchWarehouses();
-  const savedTheme = localStorage.getItem('theme');
+  const savedTheme = localStorage.getItem("theme");
   if (savedTheme) {
-    isDark.value = savedTheme === 'dark';
+    isDark.value = savedTheme === "dark";
   } else {
-    isDark.value = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    isDark.value = window.matchMedia("(prefers-color-scheme: dark)").matches;
   }
 });
 </script>

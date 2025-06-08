@@ -1,7 +1,6 @@
 <template>
-  <div class="min-h-screen transition-all duration-700" :class="themeClasses.background">
-    
-    <!-- Animated Background Elements -->
+  <div class="min-h-screen transition-all duration-700 dark:bg-gray-900 light:bg-gray-100">
+
     <div class="fixed inset-0 overflow-hidden pointer-events-none">
       <div class="absolute -top-40 -right-40 w-80 h-80 rounded-full opacity-10 animate-float-slow"
            :class="isDark ? 'bg-gray-600' : 'bg-gray-300'"></div>
@@ -11,27 +10,8 @@
            :class="isDark ? 'bg-gray-600' : 'bg-gray-300'"></div>
     </div>
 
-    <!-- Floating Theme Toggle -->
-    <div class="fixed top-6 right-6 z-50">
-      <button 
-        @click="toggleTheme"
-        class="group relative p-4 rounded-2xl transition-all duration-500 shadow-md hover:scale-110 backdrop-blur-sm border"
-        :class="themeClasses.themeButton"
-      >
-        <Icon :icon="isDark ? 'mdi:weather-sunny' : 'mdi:weather-night'" 
-              class="w-6 h-6 transition-all duration-500 group-hover:rotate-180" />
-        
-        <!-- Tooltip -->
-        <div class="absolute -bottom-12 right-0 px-3 py-1 rounded-lg text-xs font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap"
-             :class="themeClasses.tooltip">
-          {{ isDark ? 'Light Mode' : 'Dark Mode' }}
-        </div>
-      </button>
-    </div>
-
     <div class="container mx-auto px-6 py-16 max-w-6xl relative z-10">
-      
-      <!-- Animated Header Section -->
+
       <div class="text-center mb-16">
         <div class="relative inline-block">
           <div class="absolute inset-0 rounded-3xl blur-xl opacity-20 animate-pulse-glow"
@@ -43,27 +23,25 @@
               <div class="absolute -top-1 -right-1 w-3 h-3 rounded-full animate-ping"
                    :class="isDark ? 'bg-gray-600' : 'bg-gray-300'"></div>
             </div>
-            <h1 class="text-3xl font-bold" :class="themeClasses.text">
+            <h1 class="text-3xl font-bold dark:text-white light:text-gray-800">
               Kategoriya Boshqaruvi
             </h1>
           </div>
         </div>
         
-        <p class="text-xl mt-6 opacity-80 animate-fade-in-up delay-200" :class="themeClasses.subtitle">
+        <p class="text-xl mt-6 opacity-80 animate-fade-in-up delay-200 dark:text-white light:text-gray-800" >
           Mahsulot kategoriyalarini professional tarzda boshqaring
         </p>
         
         <!-- Stats Cards -->
         <div class="flex justify-center gap-6 mt-8">
-          <div class="px-6 py-3 rounded-2xl backdrop-blur-sm border transition-all duration-300 hover:scale-105 animate-fade-in-up delay-300"
-               :class="themeClasses.statCard">
-            <div class="text-2xl font-bold" :class="themeClasses.text">{{ categories.length }}</div>
-            <div class="text-sm opacity-70" :class="themeClasses.text">Kategoriya</div>
+          <div class="px-6 py-3 rounded-2xl backdrop-blur-sm border transition-all duration-300 hover:scale-105 animate-fade-in-up delay-300 dark:bg-gray-800/50 light:bg-white/50">
+            <div class="text-2xl font-bold dark:text-white">{{ categories.length }}</div>
+            <div class="text-sm opacity-70 dark:text-white">Kategoriya</div>
           </div>
-          <div class="px-6 py-3 rounded-2xl backdrop-blur-sm border transition-all duration-300 hover:scale-105 animate-fade-in-up delay-500"
-               :class="themeClasses.statCard">
-            <div class="text-2xl font-bold" :class="themeClasses.accentText">{{ totalItems }}</div>
-            <div class="text-sm opacity-70" :class="themeClasses.text">Mahsulot</div>
+          <div class="px-6 py-3 rounded-2xl backdrop-blur-sm border transition-all duration-300 hover:scale-105 animate-fade-in-up delay-500 dark:bg-gray-800/50 light:bg-white/50">
+            <div class="text-2xl font-bold dark:text-white">{{ totalItems }}</div>
+            <div class="text-sm opacity-70 dark:text-white">Mahsulot</div>
           </div>
         </div>
       </div>
@@ -72,60 +50,56 @@
       <div class="text-center mb-12">
         <button 
           @click="openModal"
-          class="group relative inline-flex items-center gap-3 px-10 py-5 rounded-3xl font-bold text-lg transition-all duration-500 hover:scale-110 shadow-md hover:shadow-lg backdrop-blur-sm border"
-          :class="themeClasses.addButton"
+          class="group relative inline-flex items-center gap-3 px-10 py-5 rounded-3xl font-bold text-lg transition-all duration-500 hover:scale-110 shadow-md hover:shadow-lg backdrop-blur-sm border dark:bg-gray-800/50 light:bg-white/50"
         >
           <div class="relative flex items-center gap-3">
-            <div class="p-2 rounded-xl group-hover:rotate-90 transition-all duration-300"
-                 :class="isDark ? 'bg-gray-600' : 'bg-gray-200'">
+            <div class="p-2 rounded-xl group-hover:rotate-90 transition-all dark:text-white duration-300 dark:bg-gray-600 light:bg-gray-200">
               <Icon icon="mdi:plus-circle" class="w-6 h-6" />
             </div>
-            <span>Yangi Kategoriya Yaratish</span>
+            <span class="dark:text-white text-black">Yangi Kategoriya Yaratish</span>
             <Icon icon="mdi:sparkles" class="w-5 h-5 animate-pulse" />
           </div>
         </button>
       </div>
 
       <!-- Categories Grid -->
-      <div class="backdrop-blur-sm rounded-3xl p-8 border transition-all duration-500 hover:shadow-lg"
-           :class="themeClasses.card">
+      <div class="backdrop-blur-sm rounded-3xl p-8 border transition-all duration-500 hover:shadow-lg dark:bg-gray-800/50 light:bg-white/50">
         
         <div class="flex items-center justify-between mb-10">
           <div class="flex items-center gap-4">
-            <div class="p-3 rounded-2xl" :class="isDark ? 'bg-gray-600' : 'bg-gray-200'">
-              <Icon icon="mdi:layers" class="w-7 h-7" :class="themeClasses.text" />
+            <div class="p-3 rounded-2xl dark:bg-gray-600 light:bg-gray-200">
+              <Icon icon="mdi:layers" class="w-7 h-7 dark:text-white" />
             </div>
             <div>
-              <h2 class="text-2xl font-bold" :class="themeClasses.text">
+              <h2 class="text-2xl font-bold dark:text-white">
                 Kategoriyalar
               </h2>
-              <p class="text-sm opacity-60 mt-1" :class="themeClasses.text">
+              <p class="text-sm opacity-60 mt-1 dark:text-white">
                 Barcha kategoriyalar ro'yxati
               </p>
             </div>
           </div>
           
           <div class="flex items-center gap-3">
-            <div class="px-4 py-2 rounded-full text-sm font-bold border" :class="themeClasses.badge">
+            <div class="px-4 py-2 rounded-full text-sm font-bold border dark:bg-gray-600 light:bg-gray-200 dark:text-white light:text-gray-800">
+              <Icon icon="mdi:format-list-bulleted" class="w-5 h-5 inline-block mr-1" />
               {{ categories.length }} ta kategoriya
             </div>
-            <button class="p-2 rounded-xl transition-all duration-300 hover:scale-110" :class="themeClasses.actionButton">
+            <button class="p-2 rounded-xl transition-all duration-300 hover:scale-110 dark:bg-gray-600 light:bg-gray-200"
+                    @click="fetchCategories">
               <Icon icon="mdi:refresh" class="w-5 h-5" />
             </button>
           </div>
         </div>
-
-        <!-- Empty State -->
         <div v-if="categories.length === 0" class="text-center py-20 animate-fade-in">
           <div class="relative mb-8">
-            <div class="absolute inset-0 rounded-full blur-xl opacity-20 animate-pulse"
-                 :class="isDark ? 'bg-gray-600' : 'bg-gray-300'"></div>
-            <Icon icon="mdi:package-variant-closed" class="relative w-24 h-24 mx-auto opacity-40 animate-float" :class="themeClasses.text" />
+            <div class="absolute inset-0 rounded-full blur-xl opacity-20 animate-pulse dark:bg-gray-600"></div>
+            <Icon icon="mdi:package-variant-closed" class="relative w-24 h-24 mx-auto opacity-40 animate-float dark:text-white" />
           </div>
-          <h3 class="text-2xl font-bold mb-4" :class="themeClasses.text">
+          <h3 class="text-2xl font-bold mb-4 dark:text-white">
             Kategoriyalar yo'q
           </h3>
-          <p class="text-lg opacity-60 mb-8" :class="themeClasses.text">
+          <p class="text-lg opacity-60 mb-8 dark:text-white">
             Birinchi kategoriyangizni yarating va boshqarishni boshlang
           </p>
           <button 
@@ -159,11 +133,11 @@
                   </div>
                 </div>
                 <div>
-                  <h3 class="font-bold text-lg transition-all duration-300"
-                      :class="themeClasses.text">
+                  <h3 class="font-bold text-lg transition-all dark:text-white duration-300"
+                     >
                     {{ cat.name }}
                   </h3>
-                  <p class="text-sm opacity-60 mt-1 flex items-center gap-2" :class="themeClasses.text">
+                  <p class="text-sm opacity-60 mt-1 flex items-center gap-2 dark:text-white">
                     <Icon icon="mdi:cube-outline" class="w-4 h-4" />
                     {{ cat.warehouses.length || 0 }} ta mahsulot
                   </p>
@@ -189,7 +163,7 @@
 
       <!-- Footer -->
       <div class="text-center mt-16 opacity-60 animate-fade-in delay-1000">
-        <p class="text-sm flex items-center justify-center gap-2" :class="themeClasses.text">
+        <p class="text-sm flex items-center justify-center gap-2 dark:text-white">
           <Icon icon="mdi:heart" class="w-4 h-4 animate-pulse" :class="themeClasses.accentText" />
           © 2024 Kategoriya Boshqaruv Tizimi
           <Icon icon="mdi:heart" class="w-4 h-4 animate-pulse" :class="themeClasses.accentText" />
@@ -220,13 +194,13 @@
                 <div class="flex items-center gap-4">
                   <div class="relative w-12 h-12 rounded-2xl flex items-center justify-center"
                        :class="isDark ? 'bg-gray-600' : 'bg-gray-200'">
-                    <Icon icon="mdi:plus" class="w-6 h-6" :class="themeClasses.text" />
+                    <Icon icon="mdi:plus" class="w-6 h-6 dark:text-white" />
                   </div>
                   <div>
-                    <h3 class="text-2xl font-bold" :class="themeClasses.text">
+                    <h3 class="text-2xl font-bold dark:text-white">
                       Yangi Kategoriya
                     </h3>
-                    <p class="text-sm opacity-60 mt-1" :class="themeClasses.text">
+                    <p class="text-sm opacity-60 mt-1 dark:text-white">
                       Kategoriya ma'lumotlarini kiriting
                     </p>
                   </div>
@@ -265,7 +239,7 @@
                     </div>
                     
                     <!-- Character Counter -->
-                    <div class="flex justify-between items-center text-xs opacity-60" :class="themeClasses.text">
+                    <div class="flex justify-between items-center text-xs opacity-60 dark:text-white">
                       <span>Minimum 2 ta harf</span>
                       <span>{{ name.length }}/50</span>
                     </div>

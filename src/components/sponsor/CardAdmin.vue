@@ -1,125 +1,221 @@
 <template>
-  <div class="flex justify-center mt-8 items-center">
-    <h1
-      class="text-black text-[40px] font-bold text-center bg-lime-500 border-[3px] border-black rounded-lg py-2 px-[100px]">
-      {{ dat === 'datakril' ? translateText('Hamkorlar ro\'yxati') : 'Hamkorlar ro\'yxati' }}
-    </h1>
-  </div>
-  <div>
-    <!-- Upload Form -->
-    <div v-if="showModal"
-      class="fixed z-30 top-0 inset-0 w-full h-full flex items-center bg-black bg-opacity-50 justify-center">
-      <img @click="toggleModal" class="w-10 -mt-[220px] -mr-[325px] absolute z-10" src="../../../public/reject.png"
-        alt="" />
-      <div class="absolute w-96 bg-slate-500 flex flex-col opacity-90 items-center justify-center p-10 rounded-lg">
-        <form @submit.prevent="uploadCourt" class="flex flex-col gap-4 max-w-sm mx-auto">
-          <div>
-            <input v-model="courtName" class="text-black w-full mt-5 outline-none p-3 rounded-lg" type="text" id="name"
-              placeholder="Bo'lim nomini kiriting" required />
-          </div>
-          <div>
-            <input @change="onFileChange" type="file" id="file" accept="image/*" required
-              class="block w-full border border-gray-300 rounded-lg p-2.5" />
-          </div>
-          <button class="w-full rounded-full bg-lime-600 hover:bg-lime-900 text-lg text-white py-2" type="submit">
-            Yuklash
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <div class="flex justify-center pt-8 items-center">
+      <h1
+        class="text-gray-900 dark:text-white text-[40px] font-bold text-center bg-gradient-to-r from-lime-500 to-green-500 dark:from-lime-400 dark:to-green-400 border-[3px] border-gray-300 dark:border-gray-600 rounded-xl py-3 px-[100px] shadow-lg hover:shadow-xl transition-all duration-300">
+        {{ dat === 'datakril' ? translateText('Hamkorlar ro\'yxati') : 'Hamkorlar ro\'yxati' }}
+      </h1>
+    </div>
+    
+    <div>
+      <!-- Upload Modal -->
+      <div v-if="showModal"
+        class="fixed z-50 top-0 inset-0 w-full h-full flex items-center bg-black/60 dark:bg-black/80 backdrop-blur-sm justify-center">
+        <div class="relative">
+          <button @click="toggleModal" 
+            class="absolute -top-4 -right-4 z-10 bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700 text-white rounded-full p-2 shadow-lg transition-colors duration-200">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
           </button>
-        </form>
-        <p v-if="successMessage" class="text-green-500 mt-4">{{ successMessage }}</p>
-        <p v-if="errorMessage" class="text-red-500 mt-4">{{ errorMessage }}</p>
-      </div>
-    </div>
-    <div class="w-full flex justify-end mt-2 px-6">
-      <button @click="toggleModal" class="text-lg font-medium py-2 px-4 bg-lime-500 hover:bg-lime-600 rounded-lg">
-        Bo'lim yuklash
-      </button>
-    </div>
-    <!-- Display Uploaded Items -->
-    <div class="w-full flex flex-col justify-center items-center mt-10">
-      <div class="rounded-2xl w-full max-w-[110rem] p-10 mb-16 bg-gray-200">
-        <div class="flex justify-center">
-          <b class="mb-10 block text-center text-[30px] sm:[35px] md:text-[40px] uppercase text-[#223B9E]">{{
-            $t('hamkor') }}</b>
-        </div>
-        <div class="my-16 flex justify-center flex-wrap gap-4 max-w-[1600px] mx-auto">
-          <div v-if="dat === 'datakril'" v-for="item in datakril" :key="item.id"
-            class="bg-white border-[#223B9E] flex flex-col justify-start items-center gap-2 border-[5px] break-words w-72 min-h-full rounded-xl relative hover:-translate-y-3 duration-500 hover:shadow-[0px_0px_50px_5px_rgba(255,255,255,1)] p-2">
-            <span @click.stop="func(item.id)" class="cursor-pointer w-6 h-6 z-40 absolute top-2 right-2">
-              <img width="20px" src="../../../public/ellipsis.png" alt="" />
-            </span>
-            <div class="flex justify-center items-center p-2 h-[160px]">
-              <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="size-fit w-[150px]" />
-            </div>
-            <h3 class="text-lg font-medium text-center text-black">{{ item.translatedName }}</h3>
-            <div v-if="item.isActive"
-              class="bg-blue-200 flex justify-center items-end animate-pulse rounded-[5px] inset-0 w-full absolute h-full">
-              <b class="text-black font-bold text-[20px]">{{ $t('tez_kunda') }}</b>
-            </div>
-          </div>
-          <div v-if="dat === 'datalotin'" v-for="item in data" :key="item.id"
-            class="bg-white border-[#223B9E] flex flex-col justify-start items-center gap-2 border-[5px] break-words w-72 min-h-full rounded-xl relative hover:-translate-y-3 duration-500 hover:shadow-[0px_0px_50px_5px_rgba(255,255,255,1)] p-2">
-            <span @click.stop="func(item.id)" class="cursor-pointer w-6 h-6 z-40 absolute top-2 right-2">
-              <img width="20px" src="../../../public/ellipsis.png" alt="" />
-            </span>
-            <div class="flex justify-center items-center p-2 h-[160px]">
-              <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="size-fit w-[150px]" />
-            </div>
-            <h3 class="text-lg font-medium text-center text-black">{{ item.name }}</h3>
-            <div v-if="item.isActive"
-              class="bg-blue-200 flex justify-center items-end animate-pulse rounded-[5px] inset-0 w-full absolute h-full">
-              <b class="text-black font-bold text-[20px]">{{ $t('tez_kunda') }}</b>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Edit Modal -->
-      <div v-if="PutModal"
-        class="fixed inset-0 z-50 w-full h-full flex items-center bg-black bg-opacity-50 justify-center">
-        <div
-          class="absolute h-64 w-96 bg-slate-800 flex flex-col opacity-[90%] items-center justify-center p-10 rounded-[15px]">
-          <img @click="Modal" class="w-14 -mr-[290px] absolute -mt-44" src="../../../public/reject.png" alt="" />
-          <div>
-            <form @submit.prevent="updateCourt">
+          
+          <div class="w-96 bg-white dark:bg-gray-800 flex flex-col items-center justify-center p-8 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700">
+            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Bo'lim qo'shish</h3>
+            
+            <form @submit.prevent="uploadCourt" class="flex flex-col gap-5 w-full">
               <div>
-                <input v-model="courtName" class="text-black w-full outline-none p-3 mt-9 rounded-[15px]" type="text"
-                  id="name" required />
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Bo'lim nomi</label>
+                <input v-model="courtName" 
+                  class="w-full p-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-lime-500 dark:focus:ring-lime-400 focus:border-transparent outline-none transition-all duration-200" 
+                  type="text" 
+                  placeholder="Bo'lim nomini kiriting" 
+                  required />
               </div>
+              
               <div>
-                <input @change="onFileChange" type="file" id="file" accept="image/*" required />
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Rasm yuklash</label>
+                <input @change="onFileChange" 
+                  type="file" 
+                  accept="image/*" 
+                  required
+                  class="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-3 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-lime-50 file:text-lime-700 hover:file:bg-lime-100 dark:file:bg-gray-700 dark:file:text-gray-300 dark:hover:file:bg-gray-600 file:transition-colors file:duration-200 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700" />
               </div>
-              <button class="w-full rounded-[30px] bg-lime-600 hover:bg-lime-900 text-[20px] py-2" type="submit">
+              
+              <button class="w-full rounded-xl bg-gradient-to-r from-lime-500 to-green-500 hover:from-lime-600 hover:to-green-600 dark:from-lime-400 dark:to-green-400 dark:hover:from-lime-500 dark:hover:to-green-500 text-white font-semibold py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105" 
+                type="submit">
                 Yuklash
               </button>
             </form>
-            <p v-if="successMessage" style="color: green">{{ successMessage }}</p>
-            <p v-if="errorMessage" style="color: red">{{ errorMessage }}</p>
+            
+            <p v-if="successMessage" class="text-green-600 dark:text-green-400 mt-4 font-medium">{{ successMessage }}</p>
+            <p v-if="errorMessage" class="text-red-600 dark:text-red-400 mt-4 font-medium">{{ errorMessage }}</p>
           </div>
         </div>
       </div>
 
-      <!-- Action Modal (Edit/Delete/Toggle) -->
-      <div v-if="asd" class="fixed inset-0 z-50 w-full h-full flex items-center bg-black bg-opacity-50 justify-center">
-        <div class="relative w-[500px] bg-[#D9D9D9] flex flex-col items-center justify-center p-10 rounded-[15px]">
-          <img @click="func(null)" class="w-10 absolute top-2 right-2" src="../../../public/reject.png" alt="" />
-          <div class="mt-4 flex flex-col justify-center w-full items-center">
-            <div class="flex flex-col gap-2 w-full justify-between items-center">
-              <button @click="Modal"
-                class="py-4 rounded-[15px] h-[70px] items-center text-black w-full min-w-[250px] flex duration-500 text-[20px] px-10 bg-[#15FF09] hover:bg-lime-600">
-                <img class="w-8 mr-5" src="../../../public/pen.png" alt="">
-                O’zgartirish
+      <!-- Add Button -->
+      <div class="w-full flex justify-end mt-6 px-6">
+        <button @click="toggleModal" 
+          class="flex items-center gap-2 text-lg font-semibold py-3 px-6 bg-gradient-to-r from-lime-500 to-green-500 hover:from-lime-600 hover:to-green-600 dark:from-lime-400 dark:to-green-400 dark:hover:from-lime-500 dark:hover:to-green-500 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+          Bo'lim yuklash
+        </button>
+      </div>
+
+      <!-- Display Uploaded Items -->
+      <div class="w-full flex flex-col justify-center items-center mt-10 px-4">
+        <div class="rounded-3xl w-full max-w-[110rem] p-10 mb-16 bg-white dark:bg-gray-800 shadow-2xl border border-gray-200 dark:border-gray-700">
+          <div class="flex justify-center mb-12">
+            <h2 class="text-center text-[30px] sm:text-[35px] md:text-[40px] font-bold uppercase bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+              {{ $t('hamkor') }}
+            </h2>
+          </div>
+          
+          <div class="flex justify-center flex-wrap gap-6 max-w-[1600px] mx-auto">
+            <!-- Datakril Items -->
+            <div v-if="dat === 'datakril'" v-for="item in datakril" :key="item.id"
+              class="group bg-white dark:bg-gray-800 border-2 border-blue-200 dark:border-blue-700 hover:border-blue-400 dark:hover:border-blue-500 flex flex-col justify-start items-center gap-4 break-words w-80 min-h-full rounded-2xl relative hover:-translate-y-2 duration-500 hover:shadow-[0px_20px_40px_rgba(59,130,246,0.3)] dark:hover:shadow-[0px_20px_40px_rgba(59,130,246,0.2)] p-6 transition-all">
+              
+              <button @click.stop="func(item.id)" 
+                class="opacity-0 group-hover:opacity-100 cursor-pointer absolute top-4 right-4 p-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full transition-all duration-200">
+                <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path>
+                </svg>
               </button>
+              
+              <div class="flex justify-center items-center p-4 h-[180px] w-full bg-gray-50 dark:bg-gray-700 rounded-xl">
+                <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" 
+                  class="max-w-full max-h-full object-contain rounded-lg shadow-md" />
+              </div>
+              
+              <h3 class="text-xl font-semibold text-center text-gray-900 dark:text-white leading-tight">
+                {{ item.translatedName }}
+              </h3>
+              
+              <div v-if="item.isActive"
+                class="bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/50 dark:to-purple-900/50 flex justify-center items-end animate-pulse rounded-xl inset-0 w-full absolute h-full backdrop-blur-sm">
+                <div class="bg-white dark:bg-gray-800 px-4 py-2 rounded-t-xl mb-4 shadow-lg">
+                  <b class="text-blue-600 dark:text-blue-400 font-bold text-lg">{{ $t('tez_kunda') }}</b>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Datalotin Items -->
+            <div v-if="dat === 'datalotin'" v-for="item in data" :key="item.id"
+              class="group bg-white dark:bg-gray-800 border-2 border-blue-200 dark:border-blue-700 hover:border-blue-400 dark:hover:border-blue-500 flex flex-col justify-start items-center gap-4 break-words w-80 min-h-full rounded-2xl relative hover:-translate-y-2 duration-500 hover:shadow-[0px_20px_40px_rgba(59,130,246,0.3)] dark:hover:shadow-[0px_20px_40px_rgba(59,130,246,0.2)] p-6 transition-all">
+              
+              <button @click.stop="func(item.id)" 
+                class="opacity-0 group-hover:opacity-100 cursor-pointer absolute top-4 right-4 p-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full transition-all duration-200">
+                <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path>
+                </svg>
+              </button>
+              
+              <div class="flex justify-center items-center p-4 h-[180px] w-full bg-gray-50 dark:bg-gray-700 rounded-xl">
+                <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" 
+                  class="max-w-full max-h-full object-contain rounded-lg shadow-md" />
+              </div>
+              
+              <h3 class="text-xl font-semibold text-center text-gray-900 dark:text-white leading-tight">
+                {{ item.name }}
+              </h3>
+              
+              <div v-if="item.isActive"
+                class="bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/50 dark:to-purple-900/50 flex justify-center items-end animate-pulse rounded-xl inset-0 w-full absolute h-full backdrop-blur-sm">
+                <div class="bg-white dark:bg-gray-800 px-4 py-2 rounded-t-xl mb-4 shadow-lg">
+                  <b class="text-blue-600 dark:text-blue-400 font-bold text-lg">{{ $t('tez_kunda') }}</b>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Edit Modal -->
+        <div v-if="PutModal"
+          class="fixed inset-0 z-50 w-full h-full flex items-center bg-black/60 dark:bg-black/80 backdrop-blur-sm justify-center">
+          <div class="relative">
+            <button @click="Modal" 
+              class="absolute -top-4 -right-4 z-10 bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700 text-white rounded-full p-2 shadow-lg transition-colors duration-200">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+            
+            <div class="w-96 bg-white dark:bg-gray-800 flex flex-col items-center justify-center p-8 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700">
+              <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Ma'lumotni o'zgartirish</h3>
+              
+              <form @submit.prevent="updateCourt" class="flex flex-col gap-5 w-full">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Bo'lim nomi</label>
+                  <input v-model="courtName" 
+                    class="w-full p-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-lime-500 dark:focus:ring-lime-400 focus:border-transparent outline-none transition-all duration-200" 
+                    type="text" 
+                    required />
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Yangi rasm</label>
+                  <input @change="onFileChange" 
+                    type="file" 
+                    accept="image/*" 
+                    required
+                    class="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-3 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-lime-50 file:text-lime-700 hover:file:bg-lime-100 dark:file:bg-gray-700 dark:file:text-gray-300 dark:hover:file:bg-gray-600 file:transition-colors file:duration-200 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700" />
+                </div>
+                
+                <button class="w-full rounded-xl bg-gradient-to-r from-lime-500 to-green-500 hover:from-lime-600 hover:to-green-600 dark:from-lime-400 dark:to-green-400 dark:hover:from-lime-500 dark:hover:to-green-500 text-white font-semibold py-3 shadow-lg hover:shadow-xl transition-all duration-300" 
+                  type="submit">
+                  Yangilash
+                </button>
+              </form>
+              
+              <p v-if="successMessage" class="text-green-600 dark:text-green-400 mt-4 font-medium">{{ successMessage }}</p>
+              <p v-if="errorMessage" class="text-red-600 dark:text-red-400 mt-4 font-medium">{{ errorMessage }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Modal (Edit/Delete/Toggle) -->
+        <div v-if="asd" class="fixed inset-0 z-50 w-full h-full flex items-center bg-black/60 dark:bg-black/80 backdrop-blur-sm justify-center">
+          <div class="relative w-[500px] bg-white dark:bg-gray-800 flex flex-col items-center justify-center p-8 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700">
+            <button @click="func(null)" 
+              class="absolute top-4 right-4 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-400 rounded-full p-2 transition-colors duration-200">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+            
+            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-8">Amallar</h3>
+            
+            <div class="flex flex-col gap-4 w-full">
+              <button @click="Modal"
+                class="flex items-center justify-start gap-4 py-4 px-6 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 dark:from-green-400 dark:to-emerald-400 dark:hover:from-green-500 dark:hover:to-emerald-500 text-white font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+                O'zgartirish
+              </button>
+              
               <button @click="removeSelectedItems"
-                class="py-4 rounded-[15px] h-[70px] items-center text-black flex w-full min-w-[250px] duration-500 text-[20px] px-10 bg-[#FF0C0C] hover:bg-red-700">
-                <img class="w-10 mr-5" src="../../../public/remove.png" alt="">
+                class="flex items-center justify-start gap-4 py-4 px-6 rounded-xl bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 dark:from-red-400 dark:to-pink-400 dark:hover:from-red-500 dark:hover:to-pink-500 text-white font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
                 O'chirish
               </button>
-              <div
-                class="py-4 rounded-[15px] h-[70px] items-center text-black w-full min-w-[250px] flex duration-500 text-[20px] px-10 bg-gray-400 hover:bg-gray-500">
-                <h1 class="text-black mr-2">Ishga tushirish</h1>
-                <label class="switch">
-                  <input type="checkbox" v-model="selectedItem.isActive" @change="updateWorkStatus(selectedItem)">
-                  <span class="slider round"></span>
+              
+              <div class="flex items-center justify-between py-4 px-6 rounded-xl bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600">
+                <div class="flex items-center gap-4">
+                  <svg class="w-6 h-6 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                  </svg>
+                  <span class="text-gray-900 dark:text-white font-semibold text-lg">Ishga tushirish</span>
+                </div>
+                
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" v-model="selectedItem.isActive" @change="updateWorkStatus(selectedItem)" class="sr-only peer">
+                  <div class="w-14 h-7 bg-gray-300 dark:bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-lime-300 dark:peer-focus:ring-lime-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-lime-500 peer-checked:to-green-500"></div>
                 </label>
               </div>
             </div>
@@ -322,48 +418,30 @@ getData();
 </script>
 
 <style scoped>
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 50px;
-  height: 25px;
+/* Custom styles for better dark mode support */
+.group:hover .opacity-0 {
+  opacity: 1;
 }
 
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
+/* Smooth transitions for all elements */
+* {
+  transition: all 0.3s ease;
 }
 
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  transition: .4s;
-  border-radius: 20px;
+/* Custom scrollbar for dark mode */
+::-webkit-scrollbar {
+  width: 8px;
 }
 
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 19px;
-  width: 19px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  transition: .4s;
-  border-radius: 50%;
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-gray-800;
 }
 
-input:checked+.slider {
-  background-color: #09FF52;
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-400 dark:bg-gray-600 rounded-full;
 }
 
-input:checked+.slider:before {
-  transform: translateX(24px);
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-500 dark:bg-gray-500;
 }
 </style>
