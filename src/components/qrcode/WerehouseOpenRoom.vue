@@ -16,7 +16,7 @@
       </button>
     </div>
 
-    <div class="container mx-auto px-4 py-8 max-w-7xl">
+    <div class="container mx-auto lg:px-4 lg:py-8 max-w-7xl">
       <!-- Loading State -->
       <div v-if="loading" class="flex justify-center items-center min-h-[60vh]">
         <div class="relative">
@@ -52,8 +52,8 @@
           <div class="absolute -top-4 -right-4 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
           <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-white/5 rounded-full blur-2xl"></div>
           
-          <div class="relative p-8">
-            <div class="flex items-start justify-between gap-6">
+          <div class="relative lg:p-8">
+            <div class="flex items-start justify-between gap-2 lg:gap-6">
               <div class="flex items-center space-x-4 min-w-0 flex-1">
                 <div class="icon-container bg-white/20">
                   <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -61,7 +61,7 @@
                   </svg>
                 </div>
                 <div class="min-w-0 flex-1">
-                  <h1 class="text-4xl font-bold mb-2 text-white break-words">{{ warehouse.name }}</h1>
+                  <h1 class="text-4xl text-[25px] font-bold mb-2 text-white break-words">{{ warehouse.name }}</h1>
                   <p class="text-blue-100 dark:text-blue-200 text-lg font-medium">
                     {{ warehouse.category?.name || 'Kategoriya mavjud emas' }}
                   </p>
