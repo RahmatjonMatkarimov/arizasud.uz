@@ -51,7 +51,7 @@
             class="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full min-w-[18px] text-center shadow-lg">
             {{ messageCount }}
           </span>
-          <div class="absolute w-32 -left-12 top-14 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
+          <div class="absolute w-32 -left-12 top-14 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-30">
             <div :class="[
               'text-center py-2 px-3 rounded-lg shadow-xl border',
               // Dark mode
@@ -92,7 +92,7 @@
             class="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full min-w-[18px] text-center shadow-lg">
             {{ unreadCount }}
           </span>
-          <div class="absolute w-36 -left-14 top-14 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
+          <div class="absolute w-36 -left-14 top-14 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-30">
             <div :class="[
               'text-center py-2 px-3 rounded-lg shadow-xl border',
               // Dark mode
@@ -101,6 +101,42 @@
               'bg-white border-gray-200 text-gray-700 shadow-2xl'
             ]">
               {{ dat === 'datakril' ? translateText('Bildirishnomalar') : 'Bildirishnomalar' }}
+            </div>
+            <div :class="[
+              'w-0 h-0 border-l-4 border-r-4 border-b-4 border-l-transparent border-r-transparent mx-auto -mt-4',
+              // Dark mode
+              'dark:border-b-slate-800',
+              // Light mode
+              'border-b-white'
+            ]"></div>
+          </div>
+        </div>
+        
+        <div @click="router.push('reminders')" class="relative cursor-pointer group">
+          <div :class="[
+            'p-2 rounded-xl transition-all duration-300 hover:scale-110',
+            // Dark mode
+            'dark:bg-slate-700/50 dark:hover:bg-emerald-500/20',
+            // Light mode
+            'bg-gray-100/80 hover:bg-blue-100/80 shadow-md hover:shadow-lg'
+          ]">
+            <Icon icon="line-md:check-list-3" width="28" height="28" :class="[
+              'transition-colors duration-300',
+              // Dark mode
+              'dark:text-slate-300 dark:hover:text-emerald-400',
+              // Light mode
+              'text-gray-600 hover:text-blue-600'
+            ]" />
+          </div>
+          <div class="absolute w-64 -left-24 top-14 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-30">
+            <div :class="[
+              'text-center py-2 px-3 rounded-lg shadow-xl border',
+              // Dark mode
+              'dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200',
+              // Light mode
+              'bg-white border-gray-200 text-gray-700 shadow-2xl'
+            ]">
+              {{ dat === 'datakril' ? translateText('Kundalik bajarilgan ishlar') : 'Kundalik bajarilgan ishlar' }}
             </div>
             <div :class="[
               'w-0 h-0 border-l-4 border-r-4 border-b-4 border-l-transparent border-r-transparent mx-auto -mt-4',
@@ -138,7 +174,7 @@
           </div>
           <!-- Dropdown Menu -->
           <div v-if="isLanguageDropdownOpen" :class="[
-            'absolute right-0 mt-2 w-36 rounded-xl shadow-2xl z-50 overflow-hidden transform transition-all duration-300 origin-top border',
+            'absolute right-0 mt-2 w-36 rounded-xl shadow-2xl z-30 overflow-hidden transform transition-all duration-300 origin-top border',
             // Dark mode
             'dark:bg-slate-800 dark:border-slate-600',
             // Light mode
@@ -158,7 +194,6 @@
           </div>
         </div>
         
-
         <router-link to="/profile" class="hover:scale-105 border-l-2 border-gray-600 pl-5 flex justify-end items-center gap-4 transition-transform duration-200">
           <div class="flex flex-col items-end">
             <h1 class="dark:text-gray-200 text-gray-800">{{ dat === 'datakril' ? translateText(`${userInfoLotin.name} ${userInfoLotin.surname} ${userInfoLotin.dadname}`):`${userInfoLotin.name} ${userInfoLotin.surname} ${userInfoLotin.dadname}` }}</h1>
@@ -183,7 +218,7 @@
     <!-- Main Layout -->
     <div class="flex min-h-screen">
       <aside :class="[
-        'fixed top-0 left-0 h-screen shadow-2xl transition-all duration-500 z-50 border-r',
+        'fixed top-0 left-0 h-screen shadow-2xl transition-all duration-500 z-30 border-r',
         isCollapsed ? 'w-20' : 'w-80',
         // Dark mode
         'dark:bg-gradient-to-b dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 dark:border-slate-700/50',
@@ -207,7 +242,14 @@
           />
         </button>
 
-        <div class="mt-4 px-3 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-transparent">
+        <!-- Custom Scrollbar Container -->
+        <div :class="[
+          'mt-4 px-3 h-full overflow-y-auto scrollbar-custom',
+          // Dark mode scrollbar
+          'dark:scrollbar-thumb-slate-600 dark:scrollbar-track-slate-800/30',
+          // Light mode scrollbar
+          'scrollbar-thumb-gray-300 scrollbar-track-gray-100/50'
+        ]">
           <!-- Loading -->
           <div v-if="isLoading" class="flex flex-col items-center justify-center h-32 gap-4">
             <div :class="[
@@ -227,7 +269,7 @@
           </div>
 
           <!-- Menu Items -->
-          <nav v-else class="space-y-3">
+          <nav v-else class="space-y-3 pb-6">
             <router-link 
               v-for="(item, i) in filteredMenu" 
               :key="i"
@@ -395,6 +437,80 @@
   </div>
 </template>
 
+<style scoped>
+/* Custom Scrollbar Styles */
+.scrollbar-custom {
+  scrollbar-width: thin;
+  scrollbar-gutter: stable;
+}
+
+.scrollbar-custom::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar-custom::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+  margin: 8px 0;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, rgba(148, 163, 184, 0.3), rgba(148, 163, 184, 0.6));
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, rgba(148, 163, 184, 0.6), rgba(148, 163, 184, 0.8));
+  transform: scaleY(1.1);
+}
+
+/* Dark mode scrollbar */
+.dark .scrollbar-custom::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, rgba(71, 85, 105, 0.4), rgba(71, 85, 105, 0.7));
+}
+
+.dark .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.4), rgba(16, 185, 129, 0.7));
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+}
+
+/* Light mode scrollbar */
+.scrollbar-custom::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, rgba(156, 163, 175, 0.3), rgba(156, 163, 175, 0.6));
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(59, 130, 246, 0.7));
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+}
+
+/* Firefox scrollbar */
+.scrollbar-custom {
+  scrollbar-color: rgba(148, 163, 184, 0.5) transparent;
+}
+
+.dark .scrollbar-custom {
+  scrollbar-color: rgba(71, 85, 105, 0.5) transparent;
+}
+
+/* Additional smooth scrolling */
+.scrollbar-custom {
+  scroll-behavior: smooth;
+}
+
+/* Hide scrollbar on mobile */
+@media (max-width: 768px) {
+  .scrollbar-custom {
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-custom::-webkit-scrollbar {
+    display: none;
+  }
+}
+</style>
+
 <script setup>
 import { ref, onMounted, computed, onUnmounted, inject, watch, provide } from 'vue'
 import { useRouter } from 'vue-router'
@@ -441,8 +557,8 @@ const menuItems = [
   { to: "/deliverer-task", label: "Yangi shartnomalar", icon: "mdi:clipboard-text-outline", condition: localStorage.getItem('role')==='deliverer' },
   { to: "/remindersAdmin", label: "Ishchilarni bajargan ishlari", icon: "mdi:check-circle-outline", condition: () => data.value?.workDone },
   { to: "/Requirefiles", label: "Imzolanishi kerak boʻlgan fayllar", icon: "mdi:file-sign", condition: () => data.value?.userFiles },
-  { to: "/Dashboard", label: "Bugalteriya", icon: "mdi:chart-line", condition: true },
-  { to: "/payment", label: "Tizim toʻlovlari", icon: "mdi:credit-card-outline", condition: true },
+  { to: "/Dashboard", label: "Bugalteriya", icon: "mdi:chart-line", condition: localStorage.getItem('role') ==='bigAdmin' || localStorage.getItem('role') === 'accauntant' },
+  // { to: "/payment", label: "Tizim toʻlovlari", icon: "mdi:credit-card-outline", condition: true },
   { to: "/smile", label: "Stikker qoʻshish", icon: "mdi:emoticon-happy-outline", condition: true },
   { to: "/companyFile", label: "Kampaniya fayllari", icon: "mdi:office-building", condition: () => data.value?.companyDocs },
   { to: "/commaners", label: "Tizimdagi foydalanuvchilar roʻyxati", icon: "mdi:account-multiple", condition: true },

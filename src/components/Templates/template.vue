@@ -7,6 +7,31 @@
         </div>
       </router-link>
       <div class="flex items-center space-x-4">
+                      <div @click="router.push('reminders')" class="relative cursor-pointer group">
+          <div :class="[
+            'p-2 rounded-xl transition-all duration-300 hover:scale-110',
+          ]">
+            <Icon icon="line-md:check-list-3" width="35" height="35" :class="[
+              'transition-colors duration-300',
+              // Dark mode
+              'dark:text-slate-300 dark:hover:text-emerald-400',
+              // Light mode
+              'text-gray-600 hover:text-blue-600'
+            ]" />
+          </div>
+          <div class="absolute w-64 -left-24 top-14 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
+            <div class="bg-white text-gray-800 text-center py-1 px-2 rounded-md shadow-md">
+              {{ dat === 'datakril' ? translateText('Kundalik bajarilgan ishlar') : 'Kundalik bajarilgan ishlar' }}
+            </div>
+            <div :class="[
+              'w-0 h-0 border-l-4 border-r-4 border-b-4 border-l-transparent border-r-transparent mx-auto -mt-4',
+              // Dark mode
+              'dark:border-b-slate-800',
+              // Light mode
+              'border-b-white'
+            ]"></div>
+          </div>
+        </div>
         <!-- Chat Icon -->
         <div @click="navigateToChat" class="relative cursor-pointer group">
           <Icon icon="token:chat" width="50" height="50" class="text-white" />
@@ -40,6 +65,7 @@
             </div>
           </div>
         </div>
+
         <!-- Language Selector -->
         <div class="relative group">
           <div class="flex items-center cursor-pointer" @click="toggleLanguageDropdown">

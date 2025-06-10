@@ -1,195 +1,190 @@
 <template>
-  <div>
-    <div class="max-w-[95%] mx-auto p-6 bg-white rounded-xl shadow-lg mt-10">
-      <div class="flex justify-end">
-        <input v-model="searchQuery" type="text" :placeholder="$t('qidiruv')"
-          class="mb-4 border-2 p-2 rounded-lg text-black " />
-      </div>
-      <button v-if="data === 'yurist'" @click="toggleDeleteMode"
-        class="bg-blue-500 text-white mb-4 mr-2 px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition">
-        {{ deleteMode ? $t('cancel_delete') : $t('enable_delete') }}
-      </button>
-      <button v-if="deleteMode && selectedFiles.length > 0" @click="deleteSelectedFiles"
-        class="bg-red-500 text-white mb-4 px-4 py-2 rounded-lg shadow-md hover:bg-red-600 transition">
-        {{ $t('remove') }}
-      </button>
-      <ul class="divide-y divide-gray-300">
-        <li v-if="dat === 'datakril'" v-for="(file, index) in filteredFiles" :key="index"
-          :class="[index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200', 'flex items-center group border justify-between duration-500 p-2 mb-2 hover:bg-lime-600 transition']">
-          <h1 class="text-black w-[870px]">
-            {{ translateText(file.User.surname) }} {{ translateText(file.User.name) }} <span
-              class="text-[13px] text-black">{{ translateText(file.User.lavozimi)
-              }}</span>
-            <p @click="openFile(file)" class="text-blue-600  cursor-pointer font-semibold hover:underline">
-              {{ translateText(file.name) }}
-            </p>
-          </h1>
-          <span :class="file.status === 'signed' ? 'text-green-600' : 'text-red-600'">
-            {{ $t('holat') }}: {{ translateText(getStatusText(file.status)) }}
-          </span>
-          <button v-if="file.statusReason" @click="qwenn(file.statusReason)"
-            class="hidden group-hover:block py-2 px-4 bg-red-500">{{ $t('sababni') }}</button>
-          <label v-if="deleteMode" class="flex items-center cursor-pointer space-x-2">
-            <input type="checkbox" v-model="selectedFiles" :value="file.id" class="peer hidden">
-            <div
-              class="w-5 h-5 rounded-md border-2 border-gray-400 flex items-center justify-center peer-checked:bg-green-500 peer-checked:border-green-500 transition">
-              <svg v-if="selectedFiles.includes(file.id)" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white"
-                viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd"
-                  d="M16.707 5.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-3-3a1 1 0 011.414-1.414L9 11.586l6.293-6.293a1 1 0 011.414 0z"
-                  clip-rule="evenodd" />
-              </svg>
-            </div>
-          </label>
-        </li>
-        <li v-if="dat === 'datalotin'"  v-for="(file, index) in filteredFiles" @click="router.push('/Require-signing/'+file.id)" :key="index"
-          :class="[index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200', 'flex group items-center border justify-between p-2 mb-2 hover:bg-lime-600 transition']">
-          <h1 class="text-black w-[870px]">
-            {{ file.User.surname }} {{ file.User.name }} <span class="text-[13px] text-black">{{ file.User.lavozimi
-            }}</span>
-            <p class="text-blue-600  cursor-pointer font-semibold hover:underline">
-              {{ file.name }}
-            </p>
-          </h1>
-          <span :class="file.status === 'signed' ? 'text-green-600' : 'text-red-600'">
-            {{ $t('holat') }}: {{ getStatusText(file.status) }}
-          </span>
-          <button v-if="file.statusReason" @click.stop="qwenn(file.statusReason)"
-            class="hidden group-hover:block py-2 px-4 bg-red-500">{{ $t('sababni') }}</button>
-          <label v-if="deleteMode" class="flex items-center cursor-pointer space-x-2">
-            <input type="checkbox" v-model="selectedFiles" :value="file.id" class="peer hidden">
-            <div
-              class="w-5 h-5 rounded-md border-2 border-gray-400 flex items-center justify-center peer-checked:bg-green-500 peer-checked:border-green-500 transition">
-              <svg v-if="selectedFiles.includes(file?.id)" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white"
-                viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd"
-                  d="M16.707 5.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-3-3a1 1 0 011.414-1.414L9 11.586l6.293-6.293a1 1 0 011.414 0z"
-                  clip-rule="evenodd" />
-              </svg>
-            </div>
-          </label>
-        </li>
-      </ul>
-      <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-        <div class="bg-white p-6 rounded-lg shadow-lg w-96">
-          <h3 class="text-lg font-semibold mb-4">Yangi fayl yuklash</h3>
-          <input type="text" v-model="fileName" :placeholder="$t('filename')"
-            class="w-full border-2 p-2 text-black rounded-lg mb-3" />
-          <input type="file" @change="e => newFile = e.target.files[0]" class="w-full mb-3" />
-          <div class="flex justify-between">
-            <button @click="showModal = false"
-              class="bg-gray-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-600 transition">
-              {{ $t('Bekor_qilish') }}
-            </button>
-            <button @click="uploadFile"
-              class="bg-green-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-700 transition">
-              {{ $t('yuklash') }}
-            </button>
-          </div>
-        </div>
-      </div>
-      <div v-if="asd" class="bg-gray-100 p-6 z-50 absolute rounded-lg w-[500px] shadow-lg cursor-move" :style="{
-        position: 'fixed',
-        top: modalPositionAsd.y + 'px',
-        left: modalPositionAsd.x + 'px'
-      }" @mousedown="startDrag('asd', $event)">
-        <h1 class="text-black text-[20px] mb-2">{{ $t('korib_chiqish') }}</h1>
-        <input v-model="massage" type="text"
-          class="px-4 py-2 border-2 rounded-xl w-full text-black my-2 text-[20px] outline-none"
-          :placeholder="$t('sabab')" />
-        <div class="flex justify-between px-5">
-          <button class="px-4 py-2 bg-red-500 text-[20px] hover:bg-red-600 duration-500 w-[200px] rounded-xl mt-2"
-            @click="asd = false">
-            {{ $t('Bekor_qilish') }}
-          </button>
-          <button class="px-4 py-2 bg-lime-500 text-[20px] hover:bg-lime-600 duration-500 w-[200px] rounded-xl mt-2"
-            @click="updateeFile('revision')">
-            {{ $t('jonatish') }}
-          </button>
-        </div>
-      </div>
-      <div v-if="asds" class="bg-gray-100 p-6 z-50 absolute rounded-lg w-[500px] shadow-lg cursor-move" :style="{
-        position: 'fixed',
-        top: modalPositionAsds.y + 'px',
-        left: modalPositionAsds.x + 'px'
-      }" @mousedown="startDrag('asds', $event)">
-        <h1 class="text-black text-[20px] mb-2">{{ $t('rad_etish') }}</h1>
-        <input v-model="massages" type="text"
-          class="px-4 py-2 border-2 rounded-xl w-full text-black my-2 text-[20px] outline-none"
-          :placeholder="$t('sabab')" />
-        <div class="flex justify-between px-5">
-          <button class="px-4 py-2 bg-red-500 text-[20px] hover:bg-red-600 duration-500 w-[200px] rounded-xl mt-2"
-            @click="asds = false">
-            {{ $t('Bekor_qilish') }}
-          </button>
-          <button class="px-4 py-2 bg-lime-500 text-[20px] hover:bg-lime-600 duration-500 w-[200px] rounded-xl mt-2"
-            @click="updateeFile('rejected')">
-            {{ $t('jonatish') }}
-          </button>
-        </div>
-      </div>
-      <div v-if="showPdfModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-30">
-        <div
-          class="bg-white p-4 rounded-lg shadow-lg w-full max-w-4xl flex flex-col items-end transition-all duration-300"
-          :class="{ 'w-screen h-screen max-w-none rounded-none': isFullScreen }">
-          <div class="flex space-x-2 mb-4">
-            <button v-if="data === 'yurist'" @click="updateeFile('signaturePending')"
-              class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition">
-              {{ $t('Imzolash_uchun_yuborish') }}
-            </button>
-            <button v-if="data === 'bigAdmin'" @click="updateFile()"
-              class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition">
-              {{ $t('Imzolash') }}
-            </button>
-            <button v-if="data === 'bigAdmin' || data === 'yurist'" @click="toggleModal"
-              class="px-4 py-2 bg-yellow-400 text-black rounded-lg shadow-md hover:bg-yellow-500 transition">
-              {{ $t('Qayta') }}
-            </button>
-            <button v-if="data === 'bigAdmin' || data === 'yurist'" @click="toggleModas"
-              class="px-4 py-2 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700 transition">
-              {{ $t('Rad') }}
-            </button>
-            <img src="/interface.png" @click="isFullScreen = !isFullScreen"
-              class="w-[50px] p-2 bg-gray-500 rounded-lg shadow-md hover:bg-gray-600 transition cursor-pointer" />
-            <img src="/reject.png" @click="showPdfModal = !showPdfModal"
-              class="w-[50px] p-2 bg-gray-500 rounded-lg shadow-md hover:bg-gray-600 transition cursor-pointer" />
-          </div>
-          <iframe :src="pdfUrl" class="w-full border-none transition-all duration-300"
-            :class="isFullScreen ? 'h-full' : 'h-[600px]'"></iframe>
-        </div>
+  <div
+    class="min-h-screen bg-gray-200 dark:bg-gradient-to-br from-gray-900 via-slate-900 pt-10 to-gray-800"
+  >
+    <div
+      class="max-w-[95%] mx-auto p-6 dark:bg-gray-800/50 dark:backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-700/50"
+    >
+      <!-- Action Buttons -->
+      <div class="flex gap-3 mb-6">
+        <button
+          v-if="data === 'yurist' || data === 'bigAdmin'"
+          @click="toggleDeleteMode"
+          class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center gap-2"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+            ></path>
+          </svg>
+          {{ deleteMode ? $t("cancel_delete") : $t("enable_delete") }}
+        </button>
+
+        <button
+          v-if="deleteMode && selectedFiles.length > 0"
+          @click="deleteSelectedFiles"
+          class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center gap-2"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+          {{ $t("remove") }}
+        </button>
       </div>
 
-      <div v-if="qwen" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-30">
-        <div class="bg-white p-10 relative rounded-lg shadow-lg flex justify-center">
-          <img src="/reject.png" class="w-[30px] absolute top-2 right-2" @click="qwen = false" alt="">
-          <h1 class=" text-black text-[20px] w-[500px] break-words">
-            {{ statusReason }}
-          </h1>
+      <!-- Files List -->
+      <div class="space-y-3">
+        <div
+          v-for="(file, index) in filteredFiles"
+          @click="router.push('/Require-signing/' + file.id)"
+          :key="index"
+          class="group dark:bg-gradient-to-r from-gray-800/60 to-gray-700/40 hover:from-blue-900/30 hover:to-purple-900/30 border border-gray-600/50 hover:border-blue-500/50 rounded-xl p-4 transition-all duration-300 cursor-pointer backdrop-blur-sm hover:shadow-xl hover:shadow-blue-500/10 transform hover:-translate-y-1"
+        >
+          <div class="flex items-center justify-between">
+            <!-- User Info and File Name -->
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-3">
+                <!-- User Avatar -->
+                <div
+                  class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold"
+                >
+                  {{ dat === 'datakril' ? translateText(file.User.name.charAt(0)) : file.User.name.charAt(0) }}{{ dat === 'datakril' ? translateText(file.User.surname.charAt(0)) : file.User.surname.charAt(0) }}
+                </div>
+
+                <!-- User Details -->
+                <div class="flex-1 min-w-0">
+                  <h3 class="dark:text-gray-100 font-medium text-lg">
+                   {{ dat === 'datakril' ? translateText(`${file.User.surname} ${file.User.name}`):`${file.User.surname} ${file.User.name}` }}
+                    <span class="text-sm text-gray-500 dark:text-gray-400 ml-2">{{
+                      dat === 'datakril' ? translateText(file.User.lavozimi):file.User.lavozimi
+                    }}</span>
+                  </h3>
+                  <p
+                    class="dark:text-blue-400 text-blue-500 font-semibold dark:hover:text-blue-300 transition-colors cursor-pointer text-sm mt-1"
+                  >
+                    {{ dat === 'datakril'? translateText(file.name):file.name }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Status and Actions -->
+            <div class="flex items-center gap-4">
+              <!-- Status Badge -->
+              <span
+                :class="getStatusClass(file.status)"
+                class="px-3 py-1 rounded-full text-sm font-medium"
+              >
+                {{ $t("holat") }}: {{ dat === 'datakril' ? translateText(getStatusText(file.status)) : getStatusText(file.status) }}
+              </span>
+
+              <!-- Reason Button -->
+              <button
+                v-if="file.statusReason"
+                @click.stop="qwenn(file.statusReason)"
+                class="hidden group-hover:flex transition-opacity duration-300 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg text-sm"
+              >
+                {{ $t("sababni") }}
+              </button>
+
+              <!-- Checkbox for Delete Mode -->
+              <label
+                @click.stop
+                v-if="deleteMode"
+                class="flex items-center cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  v-model="selectedFiles"
+                  :value="file.id"
+                  class="sr-only"
+                />
+                <div
+                  class="relative w-6 h-6 rounded-md border-2 bg-gray-200 border-gray-500 dark:bg-gray-700 transition-all duration-300 hover:border-blue-500"
+                >
+                  <div
+                    v-if="selectedFiles.includes(file?.id)"
+                    class="absolute inset-0 bg-gradient-to-br from-green-500 to-green-600 rounded-md flex items-center justify-center"
+                  >
+                    <svg
+                      class="w-4 h-4 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      ></path>
+                    </svg>
+                  </div>
+                </div>
+              </label>
+            </div>
+          </div>
         </div>
       </div>
+    </div>
+  </div>
+  <div
+    v-if="qwen"
+    class="fixed inset-0 dark:bg-black/70 backdrop-blur-sm flex justify-center items-center z-40"
+  >
+    <div
+      class="dark:bg-gray-800 border border-gray-600 p-8 relative rounded-2xl bg-white shadow-2xl w-full max-w-lg mx-4"
+    >
+      <button
+        @click="qwen = false"
+        class="absolute top-4 right-4 p-2 hover:bg-gray-700 rounded-lg transition-colors duration-300"
+      >
+        <svg
+          class="w-5 h-5 text-gray-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          ></path>
+        </svg>
+      </button>
+
+      <h1 class="dark:text-gray-100 text-xl font-semibold mb-4 pr-8">Sababi</h1>
+      <p class="dark:text-gray-300 text-base leading-relaxed break-words">
+        {{ dat === 'datakril' ? translateText(statusReason) : statusReason }}
+      </p>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, inject, watch, computed, onUnmounted } from 'vue'
-import axios from 'axios'
-import { URL } from '../../auth/url.js'
-import { useRoute, useRouter } from 'vue-router'
-import translateText from '@/auth/Translate.js'
-
-
-const router = useRouter()
-const API_URL = `${URL}/signingFiles`
-const qwen = ref(false)
+import { ref, onMounted, inject, watch, computed, onUnmounted } from "vue";
+import axios from "axios";
+import { URL } from "../../auth/url.js";
+import { useRouter } from "vue-router";
+import translateText from "@/auth/Translate.js";
+import { useSearchStore } from "@/components/Templates/searchQuary";
+const searchStore = useSearchStore();
+const router = useRouter();
+const API_URL = `${URL}/signingFiles`;
+const qwen = ref(false);
 const selectedFiles = ref([]);
 const files = ref([]);
-const newFile = ref(null);
-const fileName = ref('');
 const showModal = ref(false);
 const showPdfModal = ref(false);
-const pdfUrl = ref('');
-const selectedFileId = ref(null);
 const dat = ref(localStorage.getItem("til") || "datalotin");
 
 let intervalId = null;
@@ -207,223 +202,106 @@ onMounted(() => {
 onUnmounted(() => {
   if (intervalId) clearInterval(intervalId);
 });
+
 const asd = ref(false);
 const asds = ref(false);
-const massage = ref('');
-const isFullScreen = ref(null);
-const massages = ref('');
 const deleteMode = ref(false);
-const route = useRoute();
-const id = ref(parseInt(route.params.id));
-const data = ref('');
-const userID = ref(parseInt(localStorage.getItem('id')));
-const role = ref(localStorage.getItem('role'));
-const statusReason = ref('')
-const searchQuery = ref('')
-const modalPositionAsds = ref('')
-const modalPositionAsd = ref('')
+const data = ref("");
+const userID = ref(parseInt(localStorage.getItem("id")));
+const role = ref(localStorage.getItem("role"));
+const statusReason = ref("");
+
 const filteredFiles = computed(() => {
-  if (!searchQuery.value) {
+  if (!searchStore.query) {
     return files.value;
   }
-  const query = searchQuery.value.toLowerCase();
-  return files.value.filter(file =>
-    file.name.toLowerCase().includes(query) ||
-    file.User.name.toLowerCase().includes(query) ||
-    file.User.surname.toLowerCase().includes(query)
+  const query = searchStore.query.toLowerCase();
+  return files.value.filter(
+    (file) =>
+      file.name.toLowerCase().includes(query) ||
+      file.User.name.toLowerCase().includes(query) ||
+      file.User.surname.toLowerCase().includes(query)
   );
 });
 
-const isLoading = inject('isLoading');
+const isLoading = inject("isLoading");
 
 function qwenn(file) {
-  statusReason.value = file
-  qwen.value = !qwen.value
+  statusReason.value = file;
+  qwen.value = !qwen.value;
 }
 
-
 const getStatusText = (status) => {
-  if (status === 'waiting') return 'Kutish';
-  if (status === 'signaturePending') return 'Imzo kutulmoqda';
-  if (status === 'signed') return 'imzolangan';
-  if (status === 'rejected') return 'Rad etilgan';
-  if (status === 'revision') return 'Qayta korib chiqish talab etiladi';
+  if (status === "waiting") return "Kutish";
+  if (status === "signaturePending") return "Imzo kutulmoqda";
+  if (status === "signed") return "imzolangan";
+  if (status === "rejected") return "Rad etilgan";
+  if (status === "revision") return "Qayta korib chiqish talab etiladi";
   return status;
 };
+
+const getStatusClass = (status) => {
+  if (status === "waiting")
+    return "dark:bg-yellow-900/50 bg-yellow-900/80 text-yellow-300 border border-yellow-600/50";
+  if (status === "signaturePending")
+    return "dark:bg-blue-900/50 bg-blue-900/80 text-blue-300 border border-blue-600/50";
+  if (status === "signed")
+    return "dark:bg-green-900/50 bg-green-900/80 text-green-300 border border-green-600/50";
+  if (status === "rejected") return "dark:bg-red-900/50 bg-red-900/80 text-red-300 border border-red-600/50";
+  if (status === "revision")
+    return "dark:bg-orange-900/50 bg-orange-900/80 text-orange-300 border border-orange-600/50";
+  return "dark:bg-gray-900/50 bg-gray-900/80 text-gray-300 border border-gray-600/50";
+};
+
 const getdata = async () => {
   isLoading.value = true;
-
-  try {  
+  try {
     const response = await axios.get(`${URL}/${role.value}/${userID.value}`);
     data.value = response.data.role;
   } catch (error) {
-    console.error('Fayllarni olishda xatolik:', error);
-  }finally {
-    isLoading.value = false; // 🔹 Yuklanish tugaganini belgilash
+    console.error("Fayllarni olishda xatolik:", error);
+  } finally {
+    isLoading.value = false;
   }
 };
 
 const fetchFiles = async () => {
   isLoading.value = true;
-
   try {
     const response = await axios.get(`${API_URL}`);
-    if (data.value === 'bigAdmin') {
-      files.value = response.data.filter(item => item.status == 'signaturePending');
+    if (data.value === "bigAdmin") {
+      files.value = response.data
+        .filter((item) => item.status == "signaturePending")
+        .filter((item) => item.status !== "archive");
     } else {
-      files.value = response.data.filter(item => item.status !== 'signed');
+      files.value = response.data
+        .filter((item) => item.status !== "signed")
+        .filter((item) => item.status !== "archive");
     }
   } catch (error) {
-    console.error('Fayllarni olishda xatolik:', error);
-  }finally {
-    isLoading.value = false; // 🔹 Yuklanish tugaganini belgilash
-  } 
-};
-fetchFiles();
-const uploadFile = async () => {
-  isLoading.value = true;
-  if (!newFile.value || !fileName.value) return;
-  const formData = new FormData();
-  formData.append('file', newFile.value);
-  formData.append('name', fileName.value);
-  formData.append('userId', id.value);
-
-  try {
-    await axios.post(API_URL, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
-    });
-    fileName.value = '';
-    newFile.value = null;
-    showModal.value = false;
-    fetchFiles();
-  } catch (error) {
-    console.error('Fayl yuklashda xatolik:', error);
-  }finally {
-    isLoading.value = false; // 🔹 Yuklanish tugaganini belgilash
-  } 
-};
-
-const updateFile = async () => {
-  const id = selectedFileId.value;
-  isLoading.value = true;
-
-  if (!id) return;
-  try {
-    await axios.put(`${URL}/signingFiles/${id}`);
-    const baseUrl = pdfUrl.value.split('?')[0];
-    pdfUrl.value = `${baseUrl}?t=${new Date().getTime()}`;
-  } catch (error) {
-    console.error("Xatolik:", error);
-  }finally {
-    isLoading.value = false; // 🔹 Yuklanish tugaganini belgilash
-  } 
-};
-
-
-const updateeFile = async (status) => {
-  isLoading.value = true;
-
-  try {
-    await axios.put(`${API_URL}/${selectedFileId.value}/status`, {
-      status: status,
-      statusReason: massage.value || massages.value
-    });
-    fileName.value = '';
-    newFile.value = null;
-    asd.value = false;
-    asds.value = false;
-    showPdfModal.value = false
-
-    fetchFiles();
-  } catch (error) {
-    console.error('Faylni yangilashda xatolik:', error);
-  }finally {
-    isLoading.value = false; // 🔹 Yuklanish tugaganini belgilash
-  } 
+    console.error("Fayllarni olishda xatolik:", error);
+  } finally {
+    isLoading.value = false;
+  }
 };
 
 const deleteSelectedFiles = async () => {
   if (selectedFiles.value.length === 0) return;
   isLoading.value = true;
-
   try {
     await axios.delete(`${API_URL}/delete`, { data: { ids: selectedFiles.value } });
     selectedFiles.value = [];
     deleteMode.value = false;
     fetchFiles();
   } catch (error) {
-    console.error('Fayllarni o‘chirishda xatolik:', error);
-  }finally {
-    isLoading.value = false; // 🔹 Yuklanish tugaganini belgilash
-  } 
-};
-
-const openFile = (file) => {
-  pdfUrl.value = '';
-  setTimeout(() => {
-    pdfUrl.value = `${URL}${file.filePath}`;
-    selectedFileId.value = file.id;
-    showPdfModal.value = true;
-  }, 100);
+    console.error("Fayllarni o'chirishda xatolik:", error);
+  } finally {
+    isLoading.value = false;
+  }
 };
 
 onMounted(getdata);
 onMounted(fetchFiles);
-const isDragging = ref(false);
-const currentModal = ref(null);
-const dragOffset = ref({ x: 0, y: 0 });
-
-const startDrag = (modalType, event) => {
-  isDragging.value = true;
-  currentModal.value = modalType;
-  if (modalType === 'asd') {
-    dragOffset.value.x = event.clientX - modalPositionAsd.value.x;
-    dragOffset.value.y = event.clientY - modalPositionAsd.value.y;
-  } else if (modalType === 'asds') {
-    dragOffset.value.x = event.clientX - modalPositionAsds.value.x;
-    dragOffset.value.y = event.clientY - modalPositionAsds.value.y;
-  }
-  document.addEventListener('mousemove', drag);
-  document.addEventListener('mouseup', stopDrag);
-};
-
-const drag = (event) => {
-  if (!isDragging.value) return;
-  if (currentModal.value === 'asd') {
-    modalPositionAsd.value.x = event.clientX - dragOffset.value.x;
-    modalPositionAsd.value.y = event.clientY - dragOffset.value.y;
-  } else if (currentModal.value === 'asds') {
-    modalPositionAsds.value.x = event.clientX - dragOffset.value.x;
-    modalPositionAsds.value.y = event.clientY - dragOffset.value.y;
-  }
-};
-
-const stopDrag = () => {
-  isDragging.value = false;
-  currentModal.value = null;
-  document.removeEventListener('mousemove', drag);
-  document.removeEventListener('mouseup', stopDrag);
-};
-
-
-function toggleModal() {
-  modalPositionAsd.value = {
-    x: window.innerWidth / 2 - 250,
-    y: window.innerHeight / 2 - 150
-  };
-  asds.value = false;
-  asd.value = true;
-}
-
-function toggleModas() {
-  modalPositionAsds.value = {
-    x: window.innerWidth / 2 - 250,
-    y: window.innerHeight / 2 - 150
-  };
-  asds.value = true;
-  asd.value = false;
-}
-
 function toggleDeleteMode() {
   if (deleteMode.value) {
     selectedFiles.value = [];
@@ -433,11 +311,14 @@ function toggleDeleteMode() {
   }
 }
 
-watch([qwen, asd, asds, showModal, showPdfModal], ([qwen, asd, asds, showModal, showPdfModal]) => {
-  if (qwen || asd || asds || showModal || showPdfModal) {
-    document.body.style.overflow = 'hidden';
-  } else {
-    document.body.style.overflow = '';
+watch(
+  [qwen, asd, asds, showModal, showPdfModal],
+  ([qwen, asd, asds, showModal, showPdfModal]) => {
+    if (qwen || asd || asds || showModal || showPdfModal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
   }
-});
+);
 </script>

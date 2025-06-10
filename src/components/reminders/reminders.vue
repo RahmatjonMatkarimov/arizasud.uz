@@ -1,68 +1,233 @@
 <!-- DailyWorkLog.vue -->
 <template>
-    <div class="container">
-        <div class="worklog-manager">
-            <div class="worklog-form-container">
-                <div class="worklog-form-header">
-                    <h2 v-if="dat === 'datalotin'">Kunlik Bajarilgan Ishlarni Kiritish</h2>
-                    <h2 v-if="dat === 'datakril'">{{ translateText("Кунлик Бажарилган Ишларни Киритиш") }}</h2>
-                    <span v-if="dat === 'datalotin'" class="subtitle">Bugun qilgan ishlaringizni qayd eting</span>
-                    <span v-if="dat === 'datakril'" class="subtitle">{{ translateText("Бугун қилган ишларингизни қайд этинг") }}</span>
-                </div>
-                <form @submit.prevent="createWorkLog" class="worklog-form">
-                    <div class="form-group">
-                        <label v-if="dat === 'datalotin'" for="comment">Bajarilgan Ish Tavsifi</label>
-                        <label v-if="dat === 'datakril'" for="comment">{{ translateText("Бажарилган Иш Тавсифи") }}</label>
-                        <textarea class="w-[725px] text-black" v-model="state.newWorkLog.comment" id="comment"
-                            :placeholder="dat === 'datakril' ? translateText('Бугун қилган ишларингизни ёзинг...') : 'Bugun qilgan ishlaringizni yozing...'"
-                            required></textarea>
+    <div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 p-6 transition-colors duration-300">
+        <div class="max-w-4xl mx-auto space-y-8">
+            <!-- Form Container -->
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden transition-colors duration-300">
+                <!-- Header -->
+                <div class="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700 px-8 py-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h1 class="text-2xl font-bold text-white mb-2">
+                                {{ dat === 'datalotin' ? 'Kunlik Bajarilgan Ishlarni Kiritish' : translateText("Kunlik Bajarilgan Ishlarni Kiritish") }}
+                            </h1>
+                            <p class="text-blue-100 text-sm">
+                                {{ dat === 'datalotin' ? 'Bugun qilgan ishlaringizni qayd eting' : translateText("Bugun qilgan ishlaringizni qayd eting") }}
+                            </p>
+                        </div>
                     </div>
-                    <button type="submit" :disabled="state.isSubmitting" class="submit-btn">
-                        <span v-if="state.isSubmitting && dat === 'datalotin'">Saqlanmoqda...</span>
-                        <span v-if="state.isSubmitting && dat === 'datakril'">{{ translateText("Сақланмоқда...") }}</span>
-                        <span v-if="!state.isSubmitting && dat === 'datalotin'">Ishni Saqlash</span>
-                        <span v-if="!state.isSubmitting && dat === 'datakril'">{{ translateText("Ишни Сақлаш") }}</span>
-                    </button>
+                </div>
+
+                <!-- Form -->
+                <form @submit.prevent="createWorkLog" class="p-8">
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">
+                                {{ dat === 'datalotin' ? 'Bajarilgan Ish Tavsifi' : translateText("Bajarilgan Ish Tavsifi") }}
+                            </label>
+                            <div class="relative">
+                                <textarea 
+                                    v-model="state.newWorkLog.comment" 
+                                    id="comment"
+                                    :placeholder="dat === 'datakril' ? translateText('Bugun qilgan ishlaringizni yozing...') : 'Bugun qilgan ishlaringizni yozing...'"
+                                    required
+                                    class="w-full h-32 px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-600 
+                                           bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100
+                                           focus:border-blue-500 dark:focus:border-blue-400 focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900
+                                           resize-none transition-all duration-200 placeholder-slate-400 dark:placeholder-slate-500"
+                                ></textarea>
+                                <div class="absolute bottom-3 right-3 text-xs text-slate-400 dark:text-slate-500">
+                                    {{ state.newWorkLog.comment.length }}/500
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-end">
+                            <button 
+                                type="submit" 
+                                :disabled="state.isSubmitting || !state.newWorkLog.comment.trim()"
+                                class="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700
+                                       disabled:from-slate-400 disabled:to-slate-500 disabled:cursor-not-allowed
+                                       text-white font-semibold rounded-xl shadow-lg hover:shadow-xl
+                                       transform transition-all duration-200 hover:scale-105 disabled:hover:scale-100
+                                       focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900"
+                            >
+                                <div class="flex items-center space-x-2">
+                                    <svg v-if="state.isSubmitting" class="animate-spin w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 0 1 8-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                                    </svg>
+                                    <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                    </svg>
+                                    <span>
+                                        <span v-if="state.isSubmitting">
+                                            {{ dat === 'datalotin' ? 'Saqlanmoqda...' : translateText("Saqlanmoqda...") }}
+                                        </span>
+                                        <span v-else>
+                                            {{ dat === 'datalotin' ? 'Ishni Saqlash' : translateText("Ishni Saqlash") }}
+                                        </span>
+                                    </span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
                 </form>
             </div>
 
-            <div class="worklog-list-container">
-                <div class="worklog-list-header">
-                    <h2>{{ dat === 'datakril' ? translateText("Кунлик Ишлар Рўйхати") : 'Kunlik Ishlar Ro\'yxati' }}</h2>
-                    <span class="log-count">{{ state.workLogs.length }} {{ dat === 'datakril' ? translateText('та иш қайд этилган') : 'ta ish qayd etilgan' }}</span>
-                </div>
-                <div v-if="state.workLogs.length === 0" class="worklog-card">
-                    <p>{{ dat === 'datakril' ? translateText('Ҳали бажарилган ишлар қайд этилмаган') : 'Hali bajarilgan ishlar qayd etilmagan' }}</p>
-                </div>
-                <div v-else class="worklog-grid">
-                    <div v-for="workLog in state.workLogs" :key="workLog.id" class="worklog-card">
-                        <div v-if="state.editingWorkLogId !== workLog.id" class="worklog-view">
-                            <div class="worklog-content flex items-center gap-5">
-                                <img v-if="workLog.user && workLog.user.img" class="w-[60px] border" :src="'https://backend.arizasud.uz/upload/' + workLog.user.img" alt="User image">
-                                <div class="worklog-meta">
-                                    <p class="worklog-text">{{ dat === 'datakril' ? translateText(workLog.comment) : workLog.comment }}</p>
-                                    <span class="text-[#172029]">{{ dat === 'datakril' ? translateText('Қайд этилган:') : 'Qayd etilgan:' }} {{ formatDate(workLog.createdAt) }}</span>
-                                </div>
+            <!-- Work Logs List -->
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden transition-colors duration-300">
+                <!-- List Header -->
+                <div class="px-8 py-6 border-b border-slate-200 dark:border-slate-700">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2"></path>
+                                </svg>
                             </div>
-                            <div v-if="!workLog.isActive" class="worklog-actions">
-                                <button @click="startEditing(workLog)" class="edit-btn">
-                                    {{ dat === 'datakril' ? translateText('Таҳрирлаш') : 'Tahrirlash' }}
-                                </button>
-                                <button @click="deleteWorkLog(workLog.id)" class="delete-btn">
-                                    {{ dat === 'datakril' ? translateText('Ўчириш') : 'O\'chirish' }}
-                                </button>
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100">
+                                    {{ dat === 'datakril' ? translateText("Kunlik Ishlar Ro\'yxati") : 'Kunlik Ishlar Ro\'yxati' }}
+                                </h2>
+                                <p class="text-sm text-slate-600 dark:text-slate-400">
+                                    {{ dat === 'datakril' ? translateText(`Barcha bajarilgan ishlar ro'yxati`) : `Barcha bajarilgan ishlar ro'yxati` }}
+                                </p>
                             </div>
                         </div>
-                        <div v-else class="edit-form">
-                            <textarea class="text-black w-[725px]" v-model="state.editedComment" required
-                                :placeholder="dat === 'datakril' ? translateText('Иш тавсифини янгилаг...') : 'Ish tavsifini yangilang...'"></textarea>
-                            <div class="edit-actions">
-                                <button @click="updateWorkLog(workLog.id)" class="save-btn">
-                                    {{ dat === 'datakril' ? translateText('Сақлаш') : 'Saqlash' }}
-                                </button>
-                                <button @click="cancelEditing" class="cancel-btn">
-                                    {{ dat === 'datakril' ? translateText('Бекор Қилиш') : 'Bekor Qilish' }}
-                                </button>
+                        <div class="flex items-center space-x-2">
+                            <div class="px-4 py-2 bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-900 dark:to-indigo-900 rounded-full">
+                                <span class="text-blue-700 dark:text-blue-300 font-semibold text-sm">
+                                    {{ state.workLogs.length }} {{ dat === 'datakril' ? translateText('ta ish qayd etilgan') : 'ta ish qayd etilgan' }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Empty State -->
+                <div v-if="state.workLogs.length === 0" class="p-12 text-center">
+                    <div class="max-w-md mx-auto">
+                        <div class="w-20 h-20 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-10 h-10 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l5.414 5.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">
+                            {{ dat === 'datakril' ? translateText('Hech qanday ish qayd etilmagan') : 'Hech qanday ish qayd etilmagan' }}
+                        </h3>
+                        <p class="text-slate-600 dark:text-slate-400">
+                            {{ dat === 'datakril' ? translateText('Hali bajarilgan ishlar qayd etilmagan') : 'Hali bajarilgan ishlar qayd etilmagan' }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Work Logs Grid -->
+                <div v-else class="p-6">
+                    <div class="space-y-4">
+                        <div v-for="workLog in state.workLogs" :key="workLog.id" 
+                             class="group bg-slate-50 dark:bg-slate-700 rounded-xl p-6 border border-slate-200 dark:border-slate-600
+                                    hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-200
+                                    hover:bg-white dark:hover:bg-slate-600">
+                            
+                            <!-- View Mode -->
+                            <div v-if="state.editingWorkLogId !== workLog.id" class="space-y-4">
+                                <div class="flex items-start space-x-4">
+                                    <!-- User Avatar -->
+                                    <div class="flex-shrink-0">
+                                        <div v-if="workLog.user && workLog.user.img" 
+                                             class="relative group/avatar">
+                                            <img :src="'https://backend.arizasud.uz/upload/' + workLog.user.img" 
+                                                 alt="User avatar"
+                                                 class="w-12 h-12 rounded-full object-cover border-2 border-blue-200 dark:border-blue-700
+                                                        group-hover/avatar:border-blue-400 dark:group-hover/avatar:border-blue-500
+                                                        transition-all duration-200 group-hover/avatar:scale-110">
+                                        </div>
+                                        <div v-else class="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center">
+                                            <span class="text-white font-semibold text-lg">U</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Content -->
+                                    <div class="flex-1 min-w-0">
+                                        <div class="bg-white dark:bg-slate-600 rounded-lg p-4 border border-slate-200 dark:border-slate-500">
+                                            <p class="text-slate-900 dark:text-slate-100 leading-relaxed">
+                                                {{ dat === 'datakril' ? translateText(workLog.comment) : workLog.comment }}
+                                            </p>
+                                        </div>
+                                        
+                                        <div class="mt-3 flex items-center justify-between">
+                                            <div class="flex items-center space-x-2 text-sm text-slate-500 dark:text-slate-400">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"></path>
+                                                </svg>
+                                                <span>
+                                                    {{ dat === 'datakril' ? translateText('Qayd etilgan:') : 'Qayd etilgan:' }} 
+                                                    {{ formatDate(workLog.createdAt) }}
+                                                </span>
+                                            </div>
+
+                                            <!-- Actions -->
+                                            <div v-if="!workLog.isActive" class="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                                <button @click="startEditing(workLog)" 
+                                                        class="px-3 py-1.5 bg-amber-100 hover:bg-amber-200 dark:bg-amber-900 dark:hover:bg-amber-800
+                                                               text-amber-700 dark:text-amber-300 rounded-lg text-sm font-medium
+                                                               transition-colors duration-200 flex items-center space-x-1">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5m-1.414-9.414a2 2 0 1 1 2.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                                    </svg>
+                                                    <span>{{ dat === 'datakril' ? translateText('Tahrirlash') : 'Tahrirlash' }}</span>
+                                                </button>
+                                                
+                                                <button @click="deleteWorkLog(workLog.id)" 
+                                                        class="px-3 py-1.5 bg-red-100 hover:bg-red-200 dark:bg-red-900 dark:hover:bg-red-800
+                                                               text-red-700 dark:text-red-300 rounded-lg text-sm font-medium
+                                                               transition-colors duration-200 flex items-center space-x-1">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0 1 16.138 21H7.862a2 2 0 0 1-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v3M4 7h16"></path>
+                                                    </svg>
+                                                    <span>{{ dat === 'datakril' ? translateText('O\'chirish') : 'O\'chirish' }}</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Edit Mode -->
+                            <div v-else class="space-y-4">
+                                <textarea 
+                                    v-model="state.editedComment" 
+                                    required
+                                    :placeholder="dat === 'datakril' ? translateText('Иш тавсифини янгилаг...') : 'Ish tavsifini yangilang...'"
+                                    class="w-full h-32 px-4 py-3 rounded-xl border-2 border-blue-300 dark:border-blue-600 
+                                           bg-white dark:bg-slate-600 text-slate-900 dark:text-slate-100
+                                           focus:border-blue-500 dark:focus:border-blue-400 focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900
+                                           resize-none transition-all duration-200 placeholder-slate-400 dark:placeholder-slate-500"
+                                ></textarea>
+                                
+                                <div class="flex items-center justify-end space-x-3">
+                                    <button @click="cancelEditing" 
+                                            class="px-4 py-2 bg-slate-200 hover:bg-slate-300 dark:bg-slate-600 dark:hover:bg-slate-500
+                                                   text-slate-700 dark:text-slate-300 rounded-lg font-medium
+                                                   transition-colors duration-200 flex items-center space-x-2">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                        <span>{{ dat === 'datakril' ? translateText('Bekor Qilish') : 'Bekor Qilish' }}</span>
+                                    </button>
+                                    
+                                    <button @click="updateWorkLog(workLog.id)" 
+                                            class="px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700
+                                                   text-white rounded-lg font-medium shadow-lg hover:shadow-xl
+                                                   transform transition-all duration-200 hover:scale-105
+                                                   flex items-center space-x-2">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        <span>{{ dat === 'datakril' ? translateText('Saqlash') : 'Saqlash' }}</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -84,21 +249,21 @@ export default {
         const userId = parseInt(localStorage.getItem('id')) || null;
         const dat = ref(localStorage.getItem("til") || "datalotin");
 
-let intervalId = null;
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem("til") || "datalotin";
-  if (currentLang !== dat.value) {
-    dat.value = currentLang;
-  }
-};
+        let intervalId = null;
+        const checkLanguageChange = () => {
+            const currentLang = localStorage.getItem("til") || "datalotin";
+            if (currentLang !== dat.value) {
+                dat.value = currentLang;
+            }
+        };
 
-onMounted(() => {
-  intervalId = setInterval(checkLanguageChange, 0);
-});
+        onMounted(() => {
+            intervalId = setInterval(checkLanguageChange, 0);
+        });
 
-onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
-});
+        onUnmounted(() => {
+            if (intervalId) clearInterval(intervalId);
+        });
 
         const state = reactive({
             workLogs: [],
@@ -211,300 +376,3 @@ onUnmounted(() => {
     }
 }
 </script>
-
-<style scoped>
-.container {
-    min-height: 100vh;
-    min-width: 100%;
-    background: #1a2a44;
-    padding: 30px 0px;
-}
-
-.worklog-manager {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background: #f5f7fa;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.worklog-form-container {
-    background: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
-
-.worklog-form-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #dfe6e9;
-}
-
-.worklog-form-header h2 {
-    font-size: 20px;
-    font-weight: 600;
-    color: #34495e;
-    margin: 0;
-}
-
-.subtitle {
-    font-size: 15px;
-    color: #6366f1;
-    background: #e0e7ff;
-    padding: 4px 12px;
-    border-radius: 12px;
-}
-
-.worklog-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.form-group label {
-    color: #34495e;
-    font-weight: 500;
-}
-
-.worklog-form textarea {
-    min-width: 100%;
-    min-height: 120px;
-    padding: 12px;
-    border: 1px solid #dfe6e9;
-    border-radius: 6px;
-    resize: vertical;
-    font-size: 14px;
-    transition: border-color 0.3s;
-    background: white;
-}
-
-.worklog-form textarea:focus {
-    border-color: #3498db;
-    outline: none;
-}
-
-.submit-btn {
-    align-self: flex-start;
-    background: #d3d3d3;
-    color: #34495e;
-    padding: 10px 24px;
-    border-radius: 6px;
-    font-weight: 500;
-    transition: background 0.3s;
-    border: none;
-}
-
-.submit-btn:hover:not(:disabled) {
-    background: #c0c0c0;
-}
-
-.submit-btn:disabled {
-    background: #bdc3c7;
-    cursor: not-allowed;
-}
-
-.worklog-list-container {
-    background: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-}
-
-.worklog-list-header {
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #dfe6e9;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.worklog-list-header h2 {
-    font-size: 20px;
-    font-weight: 600;
-    color: #34495e;
-    margin: 0;
-}
-
-.log-count {
-    font-size: 14px;
-    color: #6366f1;
-    background: #e0e7ff;
-    padding: 4px 12px;
-    border-radius: 12px;
-}
-
-.worklog-grid {
-    display: grid;
-    gap: 15px;
-}
-
-.worklog-card {
-    padding: 15px;
-    border-radius: 8px;
-    background-color: #2c3e50;
-    transition: all 0.2s ease;
-}
-
-.worklog-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    background-color: #34495e;
-}
-
-.worklog-view {
-    display: flex;
-    justify-content: space-between;
-    gap: 15px;
-}
-
-.worklog-content {
-    flex: 1;
-}
-
-.worklog-text {
-    color: #ffffff;
-    margin-bottom: 10px;
-    line-height: 1.5;
-    font-size: 14px;
-}
-
-.worklog-meta span {
-    display: inline-block;
-    font-size: 13px;
-    color: #ffffff;
-    background: rgba(241, 245, 249, 0.7);
-    padding: 4px 8px;
-    border-radius: 6px;
-}
-
-.worklog-actions,
-.edit-actions {
-    display: flex;
-    gap: 10px;
-}
-
-.worklog-content img {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #3498db;
-    padding: 2px;
-    background: #fff;
-}
-
-.worklog-content img:hover {
-    width: 100px;
-    height: 100px;
-    transition: 500ms ease all;
-}
-
-.edit-btn {
-    background: #95a5a6;
-    color: #ffffff;
-    padding: 6px 12px;
-    border-radius: 6px;
-    transition: all 0.3s ease;
-    border: none;
-}
-
-.edit-btn:hover {
-    background: #7f8c8d;
-    transform: translateY(-1px);
-}
-
-.delete-btn {
-    background: #e74c3c;
-    color: #ffffff;
-    padding: 6px 12px;
-    border-radius: 6px;
-    transition: all 0.3s ease;
-    border: none;
-}
-
-.delete-btn:hover {
-    background: #c0392b;
-    transform: translateY(-1px);
-}
-
-.edit-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.edit-form textarea {
-    width: 100%;
-    min-height: 120px;
-    padding: 12px;
-    border: 1px solid #dfe6e9;
-    border-radius: 6px;
-    resize: vertical;
-    font-size: 14px;
-    transition: border-color 0.3s;
-    background: white;
-}
-
-.edit-form textarea:focus {
-    border-color: #3498db;
-    outline: none;
-}
-
-.save-btn {
-    background: #2ecc71;
-    color: #ffffff;
-    padding: 8px 16px;
-    border-radius: 6px;
-    transition: all 0.3s ease;
-    border: none;
-}
-
-.save-btn:hover {
-    background: #27ae60;
-    transform: translateY(-1px);
-}
-
-.cancel-btn {
-    background: #95a5a6;
-    color: #ffffff;
-    padding: 8px 16px;
-    border-radius: 6px;
-    transition: all 0.3s ease;
-    border: none;
-}
-
-.cancel-btn:hover {
-    background: #7f8c8d;
-    transform: translateY(-1px);
-}
-
-button {
-    border: none;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-}
-
-button:hover:not(:disabled) {
-    opacity: 0.9;
-}
-
-button:disabled {
-    cursor: not-allowed;
-}
-</style>

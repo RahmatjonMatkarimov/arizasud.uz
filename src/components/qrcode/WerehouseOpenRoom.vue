@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-slate-900 dark:to-indigo-950 transition-all duration-700 ease-in-out">
+  <div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-slate-900 dark:to-indigo-950 transition-all duration-700">
     <!-- Theme Toggle Button -->
-    <div class="fixed top-4 right-4 z-50">
+    <div class="fixed top-6 right-6 z-50">
       <button 
         @click="toggleTheme"
         class="p-3 rounded-full bg-white/90 dark:bg-gray-800/90 shadow-lg hover:shadow-xl backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -16,7 +16,7 @@
       </button>
     </div>
 
-    <div class="container mx-auto lg:px-4 lg:py-8 max-w-7xl">
+    <div class="container mx-auto px-4 py-8 max-w-7xl">
       <!-- Loading State -->
       <div v-if="loading" class="flex justify-center items-center min-h-[60vh]">
         <div class="relative">
@@ -45,25 +45,25 @@
       </div>
 
       <!-- Warehouse Details -->
-      <div v-else-if="warehouse" class="glass-card overflow-hidden">
-        <!-- Header -->
-        <div class="gradient-header text-white relative overflow-hidden">
-          <div class="absolute inset-0 bg-black/10 dark:bg-black/20"></div>
-          <div class="absolute -top-4 -right-4 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
-          <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-white/5 rounded-full blur-2xl"></div>
-          
-          <div class="relative lg:p-8">
-            <div class="flex items-start justify-between gap-2 lg:gap-6">
-              <div class="flex items-center space-x-4 min-w-0 flex-1">
+      <div v-else-if="warehouse" class="space-y-8">
+        <!-- Header Card -->
+        <div class="glass-card overflow-hidden">
+          <div class="gradient-header text-white relative overflow-hidden">
+            <div class="absolute inset-0 bg-black/10 dark:bg-black/20"></div>
+            <div class="absolute -top-4 -right-4 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
+            <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-white/5 rounded-full blur-2xl"></div>
+            
+            <div class="relative p-8">
+              <div class="flex items-center space-x-4">
                 <div class="icon-container bg-white/20">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                   </svg>
                 </div>
-                <div class="min-w-0 flex-1">
-                  <h1 class="text-4xl text-[25px] font-bold mb-2 text-white break-words">{{ warehouse.name }}</h1>
+                <div>
+                  <h1 class="text-4xl font-bold mb-2 text-white">{{ warehouse.name }}</h1>
                   <p class="text-blue-100 dark:text-blue-200 text-lg font-medium">
-                    {{ warehouse.category?.name || 'Kategoriya mavjud emas' }}
+                    Ombor elementi tafsilotlari
                   </p>
                 </div>
               </div>
@@ -71,181 +71,221 @@
           </div>
         </div>
 
-        <!-- Content -->
-        <div class="p-8">
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Left Column - Image and QR Code -->
-            <div class="lg:col-span-1 space-y-6">
-              <!-- Main Image -->
-              <div class="group">
-                <div class="image-container">
-                  <img 
-                    v-if="warehouse.imageUrl" 
-                    :src="getImageUrl(warehouse.imageUrl)" 
-                    :alt="warehouse.name"
-                    class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div v-else class="w-full h-80 flex items-center justify-center">
-                    <div class="text-gray-400 dark:text-gray-500 text-center">
-                      <svg class="w-20 h-20 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                      </svg>
-                      <div class="text-xl font-medium">Rasm mavjud emas</div>
-                    </div>
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <!-- Left Column - Images -->
+          <div class="lg:col-span-1 space-y-6">
+            <!-- Main Image -->
+            <div class="glass-card p-6">
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                Asosiy rasm
+              </h3>
+              <div class="image-container group">
+                <img 
+                  v-if="warehouse.images && warehouse.images.length > 0" 
+                  :src="getImageUrl(warehouse.images[0].imageUrl)" 
+                  :alt="warehouse.name"
+                  class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div v-else class="w-full h-64 flex items-center justify-center bg-gray-100 dark:bg-gray-700">
+                  <div class="text-gray-400 dark:text-gray-500 text-center">
+                    <svg class="w-16 h-16 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <p class="text-sm">Rasm mavjud emas</p>
                   </div>
                 </div>
               </div>
+            </div>
 
-              <!-- QR Code -->
-              <div v-if="warehouse.qrCodeUrl" class="qr-card">
-                <div class="flex items-center justify-center space-x-2 mb-4">
-                  <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 16h4.01M12 8h4.01M12 16h.01"></path>
-                  </svg>
-                  <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300">QR Kod</h3>
-                </div>
-                <div class="qr-code-wrapper">
+            <!-- Additional Images -->
+            <div v-if="warehouse.images && warehouse.images.length > 1" class="glass-card p-6">
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                </svg>
+                Qo'shimcha rasmlar
+              </h3>
+              <div class="grid grid-cols-2 gap-3">
+                <div 
+                  v-for="(image, index) in warehouse.images.slice(1, 5)" 
+                  :key="index"
+                  class="image-container group"
+                >
                   <img 
-                    :src="getImageUrl(warehouse.qrCodeUrl)" 
-                    alt="QR Code"
-                    class="w-32 h-32 mx-auto"
+                    :src="getImageUrl(image.imageUrl)" 
+                    :alt="`${warehouse.name} - ${index + 2}`"
+                    class="w-full h-20 object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 </div>
               </div>
             </div>
 
-            <!-- Right Column - Details -->
-            <div class="lg:col-span-2 space-y-6">
-              <!-- Main Information -->
-              <div class="info-card">
-                <div class="card-header">
-                  <div class="icon-container bg-blue-500 dark:bg-blue-600">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                  </div>
-                  <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200">Asosiy ma'lumotlar</h3>
-                </div>
-                
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div class="detail-item">
-                    <div class="flex items-center justify-between">
-                      <span class="detail-label">Miqdori</span>
-                      <div class="flex items-center space-x-2">
-                        <span class="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{{ warehouse.quantity }}</span>
-                        <span class="text-gray-500 dark:text-gray-400">dona</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div v-if="warehouse.condition" class="detail-item">
-                    <div class="flex items-center justify-between">
-                      <span class="detail-label">Holati</span>
-                      <span class="status-badge" :class="getConditionStyle(warehouse.condition)">
-                        {{ warehouse.condition }}
-                      </span>
-                    </div>
-                  </div>
-                  
-                  <div v-if="warehouse.location" class="detail-item">
-                    <div class="flex items-center justify-between">
-                      <span class="detail-label">Turgan joyi</span>
-                      <div class="flex items-center space-x-2">
-                        <svg class="w-4 h-4 text-blue-500 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        </svg>
-                        <span class="font-semibold text-blue-600 dark:text-blue-400">{{ warehouse.location }}</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div v-if="warehouse.id" class="detail-item sm:col-span-2">
-                    <div class="flex items-center justify-between">
-                      <span class="detail-label">Seriya raqami</span>
-                      <span class="code-badge">{{ warehouse.id }}</span>
-                    </div>
-                  </div>
-                  
-                  <div v-if="warehouse.whomBelongs" class="detail-item">
-                    <div class="flex items-center justify-between">
-                      <span class="detail-label">Mas'ul shaxs</span>
-                      <span class="code-badge">{{ warehouse.whomBelongs }}</span>
-                    </div>
-                  </div>
-                  
-                  <div v-if="warehouse.collection !== undefined" class="detail-item">
-                    <div class="flex items-center justify-between">
-                      <span class="detail-label">To'liq to'plam</span>
-                      <span class="code-badge" :class="warehouse.collection ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300' : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300'">
-                        {{ warehouse.collection ? 'Ha' : 'Yoq' }}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Description -->
-              <div v-if="warehouse.description" class="info-card">
-                <div class="card-header">
-                  <div class="icon-container bg-purple-500 dark:bg-purple-600">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path>
-                    </svg>
-                  </div>
-                  <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200">Tavsif</h3>
-                </div>
-                <div class="detail-item">
-                  <p class="text-gray-700 dark:text-gray-300 leading-relaxed">{{ warehouse.description }}</p>
-                </div>
-              </div>
-
-              <!-- Dates -->
-              <div class="info-card">
-                <div class="card-header">
-                  <div class="icon-container bg-indigo-500 dark:bg-indigo-600">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                    </svg>
-                  </div>
-                  <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200">Sanalar</h3>
-                </div>
-                
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div v-if="warehouse.purchaseDate" class="date-card">
-                    <div class="text-center">
-                      <div class="text-gray-600 dark:text-gray-400 text-sm font-medium mb-1">Sotib olingan</div>
-                      <div class="font-bold text-purple-600 dark:text-purple-400">{{ formatDate(warehouse.purchaseDate) }}</div>
-                    </div>
-                  </div>
-                  
-                  <div class="date-card">
-                    <div class="text-center">
-                      <div class="text-gray-600 dark:text-gray-400 text-sm font-medium mb-1">Yaratilgan</div>
-                      <div class="font-bold text-emerald-600 dark:text-emerald-400">{{ formatDate(warehouse.createdAt) }}</div>
-                    </div>
-                  </div>
-                  
-                  <div class="date-card">
-                    <div class="text-center">
-                      <div class="text-gray-600 dark:text-gray-400 text-sm font-medium mb-1">Yangilangan</div>
-                      <div class="font-bold text-blue-600 dark:text-blue-400">{{ formatDate(warehouse.updatedAt) }}</div>
-                    </div>
-                  </div>
-                </div>
+            <!-- QR Code -->
+            <div v-if="warehouse.qrCodeUrl" class="glass-card p-6 text-center">
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center justify-center">
+                <svg class="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 16h4.01M12 8h4.01M12 16h.01"></path>
+                </svg>
+                QR Kod
+              </h3>
+              <div class="qr-code-wrapper">
+                <img 
+                  :src="getImageUrl(warehouse.qrCodeUrl)" 
+                  alt="QR Code"
+                  class="w-32 h-32 mx-auto"
+                />
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- Footer -->
-        <div class="footer-section">
-          <div class="flex justify-end items-center">
-            <div class="text-sm text-gray-500 dark:text-gray-400 flex items-center space-x-2">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-              <span>So'nggi yangilanish: {{ formatDate(warehouse.updatedAt) }}</span>
+          <!-- Right Column - Details -->
+          <div class="lg:col-span-2 space-y-6">
+            <!-- Key Information -->
+            <div class="glass-card p-6">
+              <div class="card-header">
+                <div class="icon-container bg-blue-500 dark:bg-blue-600">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">Asosiy ma'lumotlar</h2>
+              </div>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Miqdori -->
+                <div class="detail-row">
+                  <span class="detail-label">Miqdori:</span>
+                  <span class="detail-value text-emerald-600 dark:text-emerald-400 font-bold text-xl">
+                    {{ warehouse.quantity }} dona
+                  </span>
+                </div>
+
+                <!-- Seriya Raqami -->
+                <div class="detail-row">
+                  <span class="detail-label">Seriya Raqami:</span>
+                  <span class="detail-value code-badge">{{ warehouse.id }}</span>
+                </div>
+
+                <!-- Holati -->
+                <div class="detail-row">
+                  <span class="detail-label">Holati:</span>
+                  <span class="detail-value">
+                    <span v-if="warehouse.condition" class="status-badge" :class="getConditionStyle(warehouse.condition)">
+                      {{ warehouse.condition }}
+                    </span>
+                    <span v-else class="status-badge bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                      Noma'lum
+                    </span>
+                  </span>
+                </div>
+
+                <!-- Turgan joyi -->
+                <div class="detail-row">
+                  <span class="detail-label">Turgan joyi:</span>
+                  <span class="detail-value">
+                    <span v-if="warehouse.location" class="flex items-center">
+                      <svg class="w-4 h-4 text-blue-500 dark:text-blue-400 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                      </svg>
+                      {{ warehouse.location }}
+                    </span>
+                    <span v-else class="text-gray-500 dark:text-gray-400">Belgilanmagan</span>
+                  </span>
+                </div>
+
+                <!-- To'liq to'plam -->
+                <div class="detail-row">
+                  <span class="detail-label">To'liq to'plam:</span>
+                  <span class="detail-value">
+                    <span class="status-badge" :class="warehouse.collection ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300' : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300'">
+                      {{ warehouse.collection ? 'Ha' : 'Yo\'q' }}
+                    </span>
+                  </span>
+                </div>
+
+                <!-- Mas'ul shaxs -->
+                <div class="detail-row">
+                  <span class="detail-label">Mas'ul shaxs:</span>
+                  <span class="detail-value">
+                    <span v-if="warehouse.whomBelongs" class="code-badge">{{ warehouse.whomBelongs }}</span>
+                    <span v-else class="text-gray-500 dark:text-gray-400">Belgilanmagan</span>
+                  </span>
+                </div>
+
+                <!-- Bo'lim nomi -->
+                <div class="detail-row md:col-span-2">
+                  <span class="detail-label">Bo'lim nomi:</span>
+                  <span class="detail-value">
+                    <span v-if="warehouse.category" class="category-badge">
+                      {{ warehouse.category.name }}
+                    </span>
+                    <span v-else class="text-gray-500 dark:text-gray-400">Kategoriya mavjud emas</span>
+                  </span>
+                </div>
+
+                <!-- Sotib Olingan Sana -->
+                <div class="detail-row md:col-span-2">
+                  <span class="detail-label">Sotib Olingan Sana:</span>
+                  <span class="detail-value">
+                    <span v-if="warehouse.purchaseDate" class="date-badge">
+                      {{ formatDate(warehouse.purchaseDate) }}
+                    </span>
+                    <span v-else class="text-gray-500 dark:text-gray-400">Belgilanmagan</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Description -->
+            <div v-if="warehouse.description" class="glass-card p-6">
+              <div class="card-header">
+                <div class="icon-container bg-purple-500 dark:bg-purple-600">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path>
+                  </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">Tavsif</h2>
+              </div>
+              <div class="description-box">
+                <p class="text-gray-700 dark:text-gray-300 leading-relaxed">{{ warehouse.description }}</p>
+              </div>
+            </div>
+
+            <!-- System Information -->
+            <div class="glass-card p-6">
+              <div class="card-header">
+                <div class="icon-container bg-indigo-500 dark:bg-indigo-600">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">Tizim ma'lumotlari</h2>
+              </div>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="date-card">
+                  <div class="text-center">
+                    <div class="text-gray-600 dark:text-gray-400 text-sm font-medium mb-2">Yaratilgan</div>
+                    <div class="font-bold text-emerald-600 dark:text-emerald-400 text-lg">
+                      {{ formatDateTime(warehouse.createdAt) }}
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="date-card">
+                  <div class="text-center">
+                    <div class="text-gray-600 dark:text-gray-400 text-sm font-medium mb-2">So'nggi yangilanish</div>
+                    <div class="font-bold text-blue-600 dark:text-blue-400 text-lg">
+                      {{ formatDateTime(warehouse.updatedAt) }}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -284,8 +324,6 @@ const updateTheme = () => {
 
 const initializeTheme = () => {
   const savedTheme = localStorage.getItem('theme')
-  
-  // Default to dark mode if no saved theme
   isDark.value = savedTheme !== 'light'
   updateTheme()
 }
@@ -320,6 +358,16 @@ const formatDate = (dateString) => {
   const date = new Date(dateString)
   return date.toLocaleDateString('uz-UZ', {
     year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  })
+}
+
+const formatDateTime = (dateString) => {
+  if (!dateString) return 'N/A'
+  const date = new Date(dateString)
+  return date.toLocaleDateString('uz-UZ', {
+    year: 'numeric',
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
@@ -347,23 +395,7 @@ onMounted(() => {
 <style scoped>
 /* Glass morphism cards */
 .glass-card {
-  @apply bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl shadow-2xl shadow-black/5 dark:shadow-black/20 border border-white/20 dark:border-gray-700/50;
-}
-
-.info-card {
-  @apply bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700/50 dark:to-gray-800/50 rounded-2xl p-6 shadow-lg dark:shadow-black/20 backdrop-blur-sm;
-}
-
-.qr-card {
-  @apply bg-gray-50 dark:bg-gray-700/50 rounded-2xl p-6 text-center shadow-lg dark:shadow-black/20 backdrop-blur-sm;
-}
-
-.image-container {
-  @apply bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 rounded-2xl overflow-hidden shadow-lg dark:shadow-black/20 transition-all duration-300 hover:shadow-xl;
-}
-
-.qr-code-wrapper {
-  @apply inline-block p-3 bg-white dark:bg-gray-800 rounded-xl shadow-md;
+  @apply bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-2xl shadow-xl shadow-black/5 dark:shadow-black/20 border border-white/20 dark:border-gray-700/50;
 }
 
 .gradient-header {
@@ -375,31 +407,51 @@ onMounted(() => {
 }
 
 .card-header {
-  @apply flex items-center space-x-3 mb-6;
+  @apply flex items-center space-x-4 mb-6 pb-4 border-b border-gray-200/50 dark:border-gray-700/50;
 }
 
-.detail-item {
-  @apply bg-white/70 dark:bg-gray-800/70 rounded-xl p-4 backdrop-blur-sm transition-all duration-200 hover:bg-white/90 dark:hover:bg-gray-800/90;
+.detail-row {
+  @apply flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 bg-gray-50/80 dark:bg-gray-700/50 rounded-xl backdrop-blur-sm hover:bg-gray-100/80 dark:hover:bg-gray-700/70 transition-all duration-200;
 }
 
 .detail-label {
-  @apply text-gray-600 dark:text-gray-400 font-medium;
+  @apply text-gray-600 dark:text-gray-400 font-semibold text-sm uppercase tracking-wide mb-1 sm:mb-0;
+}
+
+.detail-value {
+  @apply text-gray-800 dark:text-gray-200 font-medium;
 }
 
 .code-badge {
-  @apply font-mono text-sm bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-3 py-1 rounded-lg break-all;
+  @apply font-mono text-sm bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-3 py-1 rounded-lg;
 }
 
 .status-badge {
-  @apply font-bold px-3 py-1 rounded-full text-sm;
+  @apply font-semibold px-3 py-1 rounded-full text-sm;
+}
+
+.category-badge {
+  @apply bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 px-3 py-1 rounded-full text-sm font-semibold;
+}
+
+.date-badge {
+  @apply bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-lg font-mono text-sm;
 }
 
 .date-card {
-  @apply bg-white/70 dark:bg-gray-800/70 rounded-xl p-4 backdrop-blur-sm transition-all duration-200 hover:bg-white/90 dark:hover:bg-gray-800/90;
+  @apply bg-gray-50/80 dark:bg-gray-700/50 rounded-xl p-6 backdrop-blur-sm hover:bg-gray-100/80 dark:hover:bg-gray-700/70 transition-all duration-200;
 }
 
-.footer-section {
-  @apply bg-gray-100/50 dark:bg-gray-800/50 px-8 py-6 border-t border-gray-200/50 dark:border-gray-700/50 backdrop-blur-sm;
+.image-container {
+  @apply bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 rounded-xl overflow-hidden shadow-lg dark:shadow-black/20 transition-all duration-300 hover:shadow-xl;
+}
+
+.qr-code-wrapper {
+  @apply inline-block p-4 bg-white dark:bg-gray-800 rounded-xl shadow-md;
+}
+
+.description-box {
+  @apply bg-gray-50/80 dark:bg-gray-700/50 rounded-xl p-6 backdrop-blur-sm;
 }
 
 /* Animations */
@@ -444,24 +496,16 @@ button:focus {
 
 /* Mobile optimizations */
 @media (max-width: 640px) {
-  .container {
-    @apply px-2;
+  .detail-row {
+    @apply flex-col items-start space-y-2;
   }
   
-  .glass-card {
-    @apply rounded-2xl;
-  }
-  
-  .info-card {
-    @apply p-4;
+  .card-header {
+    @apply flex-col items-start space-x-0 space-y-3;
   }
   
   .icon-container {
     @apply w-10 h-10;
-  }
-  
-  .gradient-header {
-    @apply p-6;
   }
 }
 

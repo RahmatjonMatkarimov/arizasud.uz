@@ -111,7 +111,6 @@ export const routes = [
       { path: '/category', component: () => import('@/components/qrcode/CategoryView.vue') },
       { path: '/warehouse', component: () => import('@/components/qrcode/WarehouseView.vue') },
       { path: '/warehouseHouse/:id', component: () => import('@/components/qrcode/WarehouseDetail.vue') },
-      { path: '/print', component: ()=> import('@/components/qrcode/print.vue') }
     ],
     meta: { requiresAuth: true, allowedRoles: ['admin', 'manager', 'yuristAssistant', 'accauntant', 'deliverer', 'yurist', 'bigAdmin'] },
   },

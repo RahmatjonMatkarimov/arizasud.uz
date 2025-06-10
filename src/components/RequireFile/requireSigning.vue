@@ -1,72 +1,61 @@
 <template>
-    <div class="bg-gray-200">
-        <div class="flex justify-center p-6">
-            <div v-if="errorMessage" class="text-red-600 text-center mb-4">
-                {{ errorMessage }}
+  <div class="bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
+    <div class="flex justify-center p-6">
+      <div class="p-4 rounded-lg w-full flex flex-col items-end transition-all duration-300"
+        :class="{ 'w-screen h-screen max-w-none rounded-none': isFullScreen }">
+        <!-- PDF Pages as Images -->
+        <div v-if="pdfPages.length" class="flex">
+          <div class="mr-[400px]">
+            <div v-for="(page, index) in pdfPages" :key="index" class="mb-4 pdf-page-container">
+              <img :src="page" class="rounded-lg w-full shadow-md object-cover" alt="PDF Page" />
+            </div>
+          </div>
+
+          <!-- Action Panel -->
+          <div class="flex fixed right-6 bg-white w-[400px] rounded-md shadow-lg ml-2 flex-col p-4 space-y-2 mb-4">
+            <h1 class="uppercase text-black">
+              <b class="text-black uppercase">{{ dat === 'datakril' ? translateText('F.I.O.:') : 'F.I.O.:' }}</b> 
+              {{ dat === 'datakril' ? translateText('Maxmud Salayev Narimanovich') : 'Maxmud Salayev Narimanovich' }}
+            </h1>
+            <h1 class="uppercase text-black">
+              <b class="text-black">{{ dat === 'datakril' ? translateText('Yaratilgan sana:') : 'Yaratilgan sana:' }}</b> 
+              {{ formattedCreatedAt }}
+            </h1>
+
+            <!-- Status Select -->
+            <div v-if="data === 'yurist' || data === 'bigAdmin'" class="flex space-x-2">
+              <select  v-model="selectedAction"
+                class=" w-full h-[50px] border-2 border-gray-400 rounded-lg text-black text-lg outline-none transition"
+              >
+                <option v-if="data === 'yurist'" value="signaturePending">{{ $t('Imzolash_uchun_yuborish') }}</option>
+                <option v-if="data === 'bigAdmin'" value="sign">{{ $t('Imzolash') }}</option>
+                <option value="revision">{{ $t('Qayta') }}</option>
+                <option value="rejected">{{ $t('Rad') }}</option>
+              </select>
             </div>
 
-            <div class="p-4 rounded-lg w-full max-w-4xl overflow- flex flex-col items-end transition-all duration-300"
-                :class="{ 'w-screen h-screen max-w-none rounded-none': isFullScreen }">
+            <!-- Reason Input -->
+            <input v-if="selectedAction === 'revision' || selectedAction === 'rejected'"
+                   v-model="reason" type="text"
+                   class="px-4 py-2 border-2 border-gray-400 rounded-lg w-full text-black text-lg outline-none"
+                   :placeholder="$t('sabab')" />
 
-                <div v-if="isLoading" class="text-gray-600 text-lg md:text-xl animate-pulse tracking-wide">
-                    Yuklanmoqda...
-                </div>
-                <!-- PDF Pages as Images -->
-                <div v-else-if="pdfPages.length" class="flex 2xl:w-[1100px]">
-                    <div>
-                        <div v-for="(page, index) in pdfPages" :key="index" class="mb-4 pdf-page-container">
-                            <img :src="page" class="rounded-lg w-full shadow-md object-cover transition-transform duration-300"
-                                alt="PDF Page" />
-                        </div>
-                    </div>
-                    <div>
-                        <div class="flex bg-white w-[400px] shadow-lg ml-2 flex-col p-4 space-y-2 mb-4">
-                            <h1 class="uppercase text-black"><b class="text-black">{{ dat === 'datakril' ? translateText('F.I.O.:') : 'F.I.O.:' }}</b> {{ dat === 'datakril' ? translateText('Maxmud Salayev Narimanovich') : 'Maxmud Salayev Narimanovich' }}</h1>
-                            <h1 class="uppercase text-black"><b class="text-black">{{ dat === 'datakril' ? translateText('Yaratilgan sana:') : 'Yaratilgan sana:' }}</b> {{ formattedCreatedAt }}</h1>
-                            <div class="flex space-x-2">
-                                <select v-if="data === 'yurist' || data === 'bigAdmin'" v-model="selectedAction"
-                                    class="px-4 py-3 bg-blue-600 text-white w-full rounded-lg shadow-md hover:bg-blue-700 transition">
-                                    <option v-if="data === 'yurist'" value="signaturePending">{{
-                                        $t('Imzolash_uchun_yuborish') }}</option>
-                                    <option v-if="data === 'bigAdmin'" value="sign">{{ $t('Imzolash') }}</option>
-                                    <option value="revision">{{ $t('Qayta') }}</option>
-                                    <option value="rejected">{{ $t('Rad') }}</option>
-                                </select>
-                            </div>
-                            <input v-if="selectedAction === 'revision' || selectedAction === 'rejected'"
-                                v-model="reason" type="text"
-                                class="px-4 py-2 border-2 rounded-xl w-full text-black text-[20px] outline-none"
-                                :placeholder="$t('sabab')" />
-                            <button v-if="selectedAction" @click="handleAction"
-                                class="px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition">
-                                {{ dat === 'datakril' ? translateText('Yuborish') : 'Yuborish' }}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <!-- Fallback Message -->
-                <div v-else class="text-red-600 text-center">
-                    PDF faylni yuklashda xatolik: {{ errorMessage || 'Fayl topilmadi yoki yo‘l noto‘g‘ri.' }}
-                </div>
-            </div>
-
-            <!-- Status Reason Modal -->
-            <div v-if="qwen" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-30">
-                <div class="bg-white p-10 relative rounded-lg shadow-lg flex justify-center">
-                    <img src="/reject.png" class="w-[30px] absolute top-2 right-2" @click="qwen = false" alt="">
-                    <h1 class="text-black text-[20px] w-[500px] break-words">
-                        {{ statusReason }}
-                    </h1>
-                </div>
-            </div>
+            <!-- Submit Button -->
+            <button v-if="selectedAction" @click="handleAction"
+                    class="px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition">
+              {{ dat === 'datakril' ? translateText('Yuborish') : 'Yuborish' }}
+            </button>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script setup>
 import { ref, onMounted, inject, watch, computed, onUnmounted } from 'vue';
 import axios from 'axios';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { URL } from '@/auth/url';
 import * as pdfjsLib from 'pdfjs-dist';
 import translateText from '@/auth/Translate';
@@ -111,7 +100,7 @@ const errorMessage = ref('');
 const selectedAction = ref('');
 const reason = ref(''); // New ref for input reason
 const isLoading = inject('isLoading');
-
+const router = useRouter()
 // Format createdAt to DD.MM.YYYY
 const formattedCreatedAt = computed(() => {
     if (!createdAt.value) return '';
@@ -171,8 +160,7 @@ const fetchFileById = async () => {
         pdfUrl.value = constructedPdfUrl;
         selectedFileId.value = file.id;
         statusReason.value = file.statusReason || '';
-        if (file.statusReason) qwen.value = true;
-
+        if (file.statusReason) qwen.value = true;        
         await renderPdf(constructedPdfUrl);
     } catch (error) {
         console.error('Error fetching file:', error);
@@ -188,6 +176,7 @@ const fetchFileById = async () => {
 };
 
 const renderPdf = async (url) => {
+    isLoading.value = true
     try {
         const loadingTask = pdfjsLib.getDocument(url);
         const pdf = await loadingTask.promise;
@@ -211,17 +200,8 @@ const renderPdf = async (url) => {
         console.error('PDF yuklashda xatolik:', error);
         errorMessage.value = 'PDF-ni render qilishda xatolik: ' + error.message;
         pdfPages.value = [];
-    }
-};
-
-const downloadPdf = () => {
-    if (pdfUrl.value) {
-        const link = document.createElement('a');
-        link.href = pdfUrl.value;
-        link.download = `document_${id.value}.pdf`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+    }finally{
+        isLoading.value = false
     }
 };
 
@@ -230,6 +210,8 @@ const updateFile = async () => {
     try {
         await axios.put(`${BASE_URL}/signingFiles/${selectedFileId.value}`);
         await fetchFileById();
+        router.push('/Requirefiles')
+
     } catch (error) {
         console.error('Error signing file:', error);
         if (error.message.includes('Network Error')) {
@@ -251,6 +233,7 @@ const updateeFile = async (status) => {
         });
         reason.value = '';
         showPdfModal.value = false;
+        router.push('/Requirefiles')
         fetchFileById();
     } catch (error) {
         console.error('Error updating file status:', error);
@@ -289,3 +272,15 @@ onMounted(() => {
     fetchFileById();
 });
 </script>
+<style scoped>
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #4a5568;
+}
+</style>

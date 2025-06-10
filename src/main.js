@@ -6,7 +6,7 @@ import { createI18n } from 'vue-i18n';
 import ўзб from "@/kril.json";
 import uzb from "@/lotin.json";
 import axios from "axios"; 
-
+import { Icon } from '@iconify/vue';
 // ✅ Pinia import va yaratish
 import { createPinia } from 'pinia';
 
@@ -80,7 +80,7 @@ app.config.errorHandler = (err) => {
     console.error("Xatolik:", err);
     app.provide("globalError", 500); 
 };
-
+app.component('IconifyIcon', Icon);
 // Joylashuvni tekshirib bo‘lgandan keyin mount qilish
 checkLocation().then(() => {
     app.mount('#app'); 

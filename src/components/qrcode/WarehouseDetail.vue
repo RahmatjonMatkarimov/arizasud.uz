@@ -14,12 +14,12 @@
           ></div>
           <div class="relative z-10 flex items-center">
             <Icon icon="mdi:arrow-left" class="mr-2 w-5 h-5" />
-            Orqaga
+            {{ dat === 'datakril' ? translateText(`Orqaga`):`Orqaga` }}
           </div>
         </button>
-        <!-- Print Receipt Button -->
+        <!-- Print Receipt Buttons -->
         <button
-          @click="printContent"
+          @click="printContent1"
           class="group relative px-6 py-3 bg-gradient-to-r from-green-600 to-teal-500 text-white font-bold rounded-2xl shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-500 overflow-hidden"
           :disabled="loading"
         >
@@ -28,7 +28,33 @@
           ></div>
           <div class="relative z-10 flex items-center">
             <Icon icon="mdi:printer" class="mr-2 w-5 h-5" />
-            Chek Chiqarish
+            {{ dat === 'datakril' ? translateText(`Chek Chiqarish`):`Chek Chiqarish` }} <br> {{ dat === 'datakril' ? translateText(`(ENG kattasi)`):`(ENG kattasi)` }}
+          </div>
+        </button>
+        <button
+          @click="printContent2"
+          class="group relative px-6 py-3 bg-gradient-to-r from-green-600 to-teal-500 text-white font-bold rounded-2xl shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-500 overflow-hidden"
+          :disabled="loading"
+        >
+          <div
+            class="absolute inset-0 bg-gradient-to-r from-green-700 to-teal-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          ></div>
+          <div class="relative z-10 flex items-center">
+            <Icon icon="mdi:printer" class="mr-2 w-5 h-5" />
+            {{ dat === 'datakril' ? translateText(`Chek Chiqarish`):`Chek Chiqarish` }} <br> {{ dat === 'datakril' ? translateText(`(Ortacha)`) :`(Ortacha)` }}
+          </div>
+        </button>
+        <button
+          @click="printContent3"
+          class="group relative px-6 py-3 bg-gradient-to-r from-green-600 to-teal-500 text-white font-bold rounded-2xl shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-500 overflow-hidden"
+          :disabled="loading"
+        >
+          <div
+            class="absolute inset-0 bg-gradient-to-r from-green-700 to-teal-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          ></div>
+          <div class="relative z-10 flex items-center">
+            <Icon icon="mdi:printer" class="mr-2 w-5 h-5" />
+            {{ dat === 'datakril' ? translateText(`Chek Chiqarish`):`Chek Chiqarish` }} <br> {{ dat === 'datakril' ? translateText(`(ENG kichik)`):`(ENG kichik)` }}
           </div>
         </button>
       </div>
@@ -36,10 +62,8 @@
       <!-- Loading State -->
       <div v-if="loading" class="text-center py-16">
         <Icon icon="mdi:loading" class="w-16 h-16 text-blue-500 animate-spin mx-auto" />
-        <p class="text-gray-600 dark:text-gray-300 text-lg mt-4">Yuklanmoqda...</p>
+        <p class="text-gray-600 dark:text-gray-300 text-lg mt-4">{{ dat === 'datakril' ? translateText(`Yuklanmoqda`):`Yuklanmoqda` }}...</p>
       </div>
-
-      <!-- Error State -->
       <div v-else-if="error" class="text-center py-16">
         <div
           class="w-32 h-32 mx-auto bg-gradient-to-br from-red-100 to-red-200 dark:from-red-900 dark:to-red-800 rounded-3xl flex items-center justify-center shadow-2xl"
@@ -47,12 +71,10 @@
           <Icon icon="mdi:alert-circle-outline" class="w-16 h-16 text-red-500" />
         </div>
         <h3 class="text-2xl font-bold text-red-600 dark:text-red-400 mt-4 mb-2">
-          Xatolik yuz berdi
+          {{ dat === 'datakril' ? translateText(`Xatolik yuz berdi`):`Xatolik yuz berdi` }}
         </h3>
-        <p class="text-gray-600 dark:text-gray-400">{{ error }}</p>
+        <p class="text-gray-600 dark:text-gray-400">{{ dat === 'datakril' ? translateText(error) : error }}</p>
       </div>
-
-      <!-- Warehouse Details -->
       <div
         v-else
         class="relative overflow-hidden bg-gradient-to-br from-white/95 to-white/85 dark:from-gray-800/95 dark:to-gray-900/85 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/30 dark:border-gray-700/40 p-8 group hover:shadow-3xl transition-all duration-700"
@@ -73,10 +95,10 @@
                 <h1
                   class="text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-500 bg-clip-text text-transparent"
                 >
-                  {{ warehouse.name }}
+                  {{ dat === 'datakril' ? translateText(warehouse.name):warehouse.name }}
                 </h1>
                 <p class="text-gray-600 dark:text-gray-300 text-lg mt-1">
-                  {{ warehouse.category?.name || "Kategoriya topilmadi" }}
+                  {{ dat === 'datakril' ? translateText(warehouse.category?.name):warehouse.category?.name || "Kategoriya topilmadi" }}
                 </p>
               </div>
             </div>
@@ -103,16 +125,37 @@
           </div>
 
           <!-- Images -->
-          <div class="flex gap-6 mb-8">
-            <div v-if="warehouse.qrCodeUrl" class="relative group">
-              <img
-                :src="URL + '/' + warehouse.qrCodeUrl"
-                alt="QR kod"
-                class="w-48 h-48 object-cover rounded-2xl border-4 border-white dark:border-gray-600 shadow-xl group-hover:scale-105 transition-transform duration-300"
-              />
+          <div class="mb-8">
+            <div
+              class="image-container"
+              :class="{ expanded: isExpanded }"
+              @click="toggleExpand"
+            >
               <div
-                class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity duration-300"
-              ></div>
+                v-if="warehouse.qrCodeUrl"
+                class="image-wrapper"
+                :style="{ '--index': 0 }"
+              >
+                <img
+                  :src="URL + '/' + warehouse.qrCodeUrl"
+                  alt="QR kod"
+                  class="image-item"
+                />
+                <div class="image-overlay"></div>
+              </div>
+              <div
+                v-for="(image, index) in warehouse.images"
+                :key="image.id"
+                class="image-wrapper"
+                :style="{ '--index': index + 1 }"
+              >
+                <img
+                  :src="URL + '/' + image.imageUrl"
+                  alt="Mahsulot rasmi"
+                  class="image-item"
+                />
+                <div class="image-overlay"></div>
+              </div>
             </div>
           </div>
 
@@ -122,11 +165,20 @@
               <div class="flex items-center">
                 <Icon icon="mdi:numeric" class="w-6 h-6 text-green-500 mr-3" />
                 <span class="font-semibold text-gray-700 dark:text-gray-300"
-                  >Miqdori:</span
+                  >{{ dat === 'datakril' ? translateText(`Miqdori`):`Miqdori` }}:</span
                 >
                 <span class="ml-2 text-gray-800 dark:text-gray-200"
-                  >{{ warehouse.quantity }} dona</span
+                  >{{ warehouse.quantity }} {{ dat === 'datakril' ?translateText(`dona`):`dona` }}</span
                 >
+              </div>
+              <div v-if="warehouse.id" class="flex items-center">
+                <Icon icon="mdi:barcode" class="w-6 h-6 text-orange-500 mr-3" />
+                <span class="font-semibold text-gray-700 dark:text-gray-300"
+                  >{{ dat === 'datakril' ? translateText(`Seriya Raqami`):`Seriya Raqami` }}:</span
+                >
+                <span class="ml-2 font-mono text-gray-800 dark:text-gray-200">{{
+                  warehouse.id
+                }}</span>
               </div>
               <div class="flex items-center">
                 <Icon
@@ -134,32 +186,12 @@
                   class="w-6 h-6 text-purple-500 mr-3"
                 />
                 <span class="font-semibold text-gray-700 dark:text-gray-300"
-                  >Holati:</span
+                  >{{ dat ==='datakril' ? translateText(`Holati`):`Holati` }}:</span
                 >
                 <span class="ml-2" :class="getConditionStyle(warehouse.condition)">{{
                   getConditionText(warehouse.condition)
                 }}</span>
               </div>
-              <div v-if="warehouse.id" class="flex items-center">
-                <Icon icon="mdi:barcode" class="w-6 h-6 text-orange-500 mr-3" />
-                <span class="font-semibold text-gray-700 dark:text-gray-300"
-                  >Seriya Raqami:</span
-                >
-                <span class="ml-2 font-mono text-gray-800 dark:text-gray-200">{{
-                  warehouse.id
-                }}</span>
-              </div>
-              <div v-if="warehouse.collection" class="flex items-center">
-                <Icon icon="mdi:archive-outline" class="w-6 h-6 text-violet-300 mr-3" />
-                <span class="font-semibold text-gray-700 dark:text-gray-300"
-                  >To'liq to'plam:</span
-                >
-                <span class="ml-2 text-gray-800 dark:text-gray-200">
-                  {{ warehouse.collection ? "Ha" : "Yo'q" }}
-                </span>
-              </div>
-            </div>
-            <div class="space-y-4">
               <div v-if="warehouse.location" class="flex items-center">
                 <Icon icon="mdi:map-marker-outline" class="w-6 h-6 text-red-500 mr-3" />
                 <span class="font-semibold text-gray-700 dark:text-gray-300"
@@ -169,27 +201,17 @@
                   warehouse.location
                 }}</span>
               </div>
-              <div v-if="warehouse.purchaseDate" class="flex items-center">
-                <Icon icon="mdi:calendar-outline" class="w-6 h-6 text-cyan-500 mr-3" />
+            </div>
+            <div class="space-y-4">
+              <div v-if="warehouse.collection" class="flex items-center">
+                <Icon icon="mdi:archive-outline" class="w-6 h-6 text-violet-300 mr-3" />
                 <span class="font-semibold text-gray-700 dark:text-gray-300"
-                  >Sotib Olingan Sana:</span
-                >
-                <span class="ml-2 text-gray-800 dark:text-gray-200">{{
-                  formatDate(warehouse.purchaseDate)
-                }}</span>
-              </div>
-              <!-- Bo‘lim nomi -->
-              <div v-if="warehouse.category.name" class="flex items-center">
-                <Icon icon="mdi:folder-outline" class="w-6 h-6 text-blue-500 mr-3" />
-                <span class="font-semibold text-gray-700 dark:text-gray-300"
-                  >Bo'lim nomi:</span
+                  >To'liq to'plam:</span
                 >
                 <span class="ml-2 text-gray-800 dark:text-gray-200">
-                  {{ warehouse.category.name }}
+                  {{ warehouse.collection ? "Ha" : "Yo'q" }}
                 </span>
               </div>
-
-              <!-- Mas'ul shaxs -->
               <div v-if="warehouse.whomBelongs" class="flex items-center">
                 <Icon
                   icon="mdi:account-tie-outline"
@@ -201,6 +223,24 @@
                 <span class="ml-2 text-gray-800 dark:text-gray-200">
                   {{ warehouse.whomBelongs }}
                 </span>
+              </div>
+              <div v-if="warehouse.category.name" class="flex items-center">
+                <Icon icon="mdi:folder-outline" class="w-6 h-6 text-blue-500 mr-3" />
+                <span class="font-semibold text-gray-700 dark:text-gray-300"
+                  >Bo'lim nomi:</span
+                >
+                <span class="ml-2 text-gray-800 dark:text-gray-200">
+                  {{ warehouse.category.name }}
+                </span>
+              </div>
+              <div v-if="warehouse.purchaseDate" class="flex items-center">
+                <Icon icon="mdi:calendar-outline" class="w-6 h-6 text-cyan-500 mr-3" />
+                <span class="font-semibold text-gray-700 dark:text-gray-300"
+                  >Sotib Olingan Sana:</span
+                >
+                <span class="ml-2 text-gray-800 dark:text-gray-200">{{
+                  formatDate(warehouse.purchaseDate)
+                }}</span>
               </div>
             </div>
           </div>
@@ -222,8 +262,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Hidden Printable Receipt -->
     </div>
 
     <!-- Edit Modal -->
@@ -238,11 +276,9 @@
             class="relative bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl rounded-2xl p-6 w-full max-w-2xl m-4 shadow-xl border border-white/20 dark:border-gray-700/30 max-h-[90vh] overflow-y-auto"
             @click.stop
           >
-            <!-- Background gradient -->
             <div
               class="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-cyan-500/5 rounded-2xl"
             ></div>
-
             <div class="relative z-10">
               <!-- Header -->
               <div
@@ -411,14 +447,57 @@
                       class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
                     >
                       <Icon icon="mdi:image-outline" class="w-4 h-4 text-pink-500 mr-2" />
-                      Mahsulot rasmi
+                      Mahsulot rasmlari
                     </label>
                     <input
                       type="file"
                       @change="handleEditFile"
                       accept="image/*"
+                      multiple
+                      name="images"
                       class="w-full px-3 py-2 border border-dashed border-gray-300 dark:border-gray-600 rounded-lg bg-white/60 dark:bg-gray-700/60 text-gray-800 dark:text-gray-200 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:bg-gradient-to-r file:from-pink-500 file:to-purple-600 file:text-white hover:border-pink-400 transition-colors"
                     />
+                    <div
+                      v-if="editImagePreviews.length || editForm.images.length"
+                      class="mt-3 flex gap-3 flex-wrap"
+                    >
+                      <!-- Existing Images -->
+                      <div
+                        v-for="image in editForm.images"
+                        :key="image.id"
+                        class="relative"
+                      >
+                        <img
+                          :src="URL + '/' + image.imageUrl"
+                          alt="Existing Image"
+                          class="w-20 h-20 object-cover rounded-lg border-2 border-white dark:border-gray-600 shadow-md"
+                        />
+                        <button
+                          @click="removeExistingImage(image.id)"
+                          class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
+                        >
+                          <Icon icon="mdi:close" class="w-4 h-4" />
+                        </button>
+                      </div>
+                      <!-- New Image Previews -->
+                      <div
+                        v-for="(preview, index) in editImagePreviews"
+                        :key="'new-' + index"
+                        class="relative"
+                      >
+                        <img
+                          :src="preview"
+                          alt="Preview"
+                          class="w-20 h-20 object-cover rounded-lg border-2 border-white dark:border-gray-600 shadow-md"
+                        />
+                        <button
+                          @click="removeEditImage(index)"
+                          class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
+                        >
+                          <Icon icon="mdi:close" class="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -542,7 +621,8 @@ import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
 import { Icon } from "@iconify/vue";
 import { URL } from "@/auth/url.js";
-import { f } from "html2pdf.js";
+import { printContent } from "./print";
+import translateText from "@/auth/Translate";
 
 const route = useRoute();
 const router = useRouter();
@@ -552,7 +632,8 @@ const error = ref(null);
 const isDark = ref(false);
 const showEditModal = ref(false);
 const showDeleteModal = ref(false);
-const editImage = ref(null);
+const editImages = ref([]);
+const isExpanded = ref(false);
 
 const editForm = ref({
   id: null,
@@ -562,20 +643,17 @@ const editForm = ref({
   whomBelongs: "",
   description: "",
   condition: "",
-  id: "",
   location: "",
   purchaseDate: "",
-  imageUrl: "",
+  images: [],
 });
 
 const themeClasses = computed(() => ({
   background: isDark.value ? "bg-gray-900" : "bg-gradient-to-br from-gray-50 to-gray-100",
 }));
 
-const editImagePreview = computed(() => {
-  if (editImage.value) return URL.createObjectURL(editImage.value);
-  if (editForm.value.imageUrl) return `${URL}/${editForm.value.imageUrl}`;
-  return null;
+const editImagePreviews = computed(() => {
+  return editImages.value.map((file) => URL.createObjectURL(file));
 });
 
 const getConditionStyle = (condition) => {
@@ -613,8 +691,10 @@ const fetchWarehouse = async () => {
   error.value = null;
   try {
     const { data } = await axios.get(`${URL}/warehouse/${route.params.id}`);
-
-    warehouse.value = data;
+    warehouse.value = {
+      ...data,
+      images: data.images || [],
+    };
     editForm.value = {
       id: data.id,
       name: data.name || "",
@@ -622,14 +702,12 @@ const fetchWarehouse = async () => {
       description: data.description || "",
       condition: data.condition || "",
       whomBelongs: data.whomBelongs || "",
-      collection: data.collection || "",
-      category: data.category || "",
-      id: data.id || "",
+      collection: data.collection || false,
       location: data.location || "",
       purchaseDate: data.purchaseDate
         ? new Date(data.purchaseDate).toISOString().split("T")[0]
         : "",
-      imageUrl: data.imageUrl || "",
+      images: data.images || [],
     };
   } catch (err) {
     error.value =
@@ -642,7 +720,22 @@ const fetchWarehouse = async () => {
 };
 
 const handleEditFile = (event) => {
-  editImage.value = event.target.files[0];
+  editImages.value = Array.from(event.target.files);
+};
+
+const removeEditImage = (index) => {
+  editImages.value.splice(index, 1);
+};
+
+const removeExistingImage = async (imageId) => {
+  try {
+    await axios.delete(`${URL}/warehouse/image/${imageId}`);
+    editForm.value.images = editForm.value.images.filter((img) => img.id !== imageId);
+    await fetchWarehouse();
+  } catch (error) {
+    error.value = error.response?.data?.message || "Rasmni o'chirishda xatolik";
+    console.error("Remove image error:", error);
+  }
 };
 
 const updateWarehouse = async () => {
@@ -650,23 +743,25 @@ const updateWarehouse = async () => {
   try {
     const formData = new FormData();
     formData.append("name", editForm.value.name);
-    formData.append("quantity", editForm.value.quantity);
+    formData.append("quantity", editForm.value.quantity.toString());
     formData.append("categoryId", warehouse.value.categoryId || "");
-    formData.append("whomBelongs", editForm.value.whomBelongs);
-    formData.append("collection", editForm.value.collection);
+    formData.append("whomBelongs", editForm.value.whomBelongs || "");
+    formData.append("collection", editForm.value.collection.toString());
     if (editForm.value.description)
       formData.append("description", editForm.value.description);
     if (editForm.value.condition) formData.append("condition", editForm.value.condition);
     if (editForm.value.location) formData.append("location", editForm.value.location);
     if (editForm.value.purchaseDate)
       formData.append("purchaseDate", editForm.value.purchaseDate);
-    if (editImage.value) formData.append("image", editImage.value);
+    editImages.value.forEach((file, index) => {
+      formData.append("images", file);
+    });
 
     await axios.put(`${URL}/warehouse/${editForm.value.id}`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
-    editImage.value = null;
+    editImages.value = [];
     closeEditModal();
     await fetchWarehouse();
   } catch (err) {
@@ -693,9 +788,164 @@ const deleteWarehouseAction = async () => {
   }
 };
 
-function printContent() {
-  const printWindow = window.open("", "_blank");
+function printContent2() {
+  const printHTML = `
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <title>Print Receipt</title>
+    <style>
+      @page {
+        size: 30mm 40mm;
+        margin: 0;
+        padding: 0;
+      }
+       
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+       
+      html, body {
+        font-family: Arial, sans-serif;
+        font-size: 7px;
+        line-height: 1.1;
+        color: #000;
+        width: 30mm;
+        height: 40mm;
+        margin: 0;
+        padding: 1mm;
+        overflow: hidden;
+      }
+       
+      .container {
+        width: 28mm;
+        height: 38mm;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        box-sizing: border-box;
+      }
+       
+      .header-info {
+        text-align: center;
+        margin-bottom: 2mm;
+      }
+       
+      .name-line, .serial-line {
+        font-size: 6px;
+        word-break: break-word;
+        text-align: center;
+        line-height: 1.2;
+      }
+       
+      .name-line {
+        margin-bottom: 0.5mm;
+      }
+       
+      .serial-line {
+        margin-bottom: 2mm;
+      }
+       
+      .name-line strong, .serial-line strong {
+        font-weight: bold;
+      }
+       
+      .qr-section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        flex: 1;
+      }
+       
+      .qr-code {
+        width: 16mm;
+        height: 16mm;
+        border: none;
+        display: block;
+        margin-bottom: 1mm;
+      }
+       
+      .date-text {
+        font-size: 5px;
+        text-align: center;
+        font-weight: normal;
+      }
+       
+      @media print {
+        @page {
+          size: 30mm 40mm;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+        
+        * {
+          margin: 0 !important;
+          padding: 0 !important;
+          box-sizing: border-box !important;
+        }
+         
+        html, body {
+          width: 30mm !important;
+          height: 40mm !important;
+          margin: 0 !important;
+          padding: 1mm !important;
+          overflow: hidden !important;
+          page-break-after: avoid !important;
+        }
+         
+        body {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+         
+        .container {
+          height: 38mm !important;
+          width: 28mm !important;
+          display: flex !important;
+          flex-direction: column !important;
+          justify-content: flex-start !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          box-sizing: border-box !important;
+          page-break-inside: avoid !important;
+          page-break-after: avoid !important;
+        }
+        
+        .qr-code {
+          width: 16mm !important;
+          height: 16mm !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header-info">
+        <div class="name-line">
+          <strong>Nomi:</strong> ${warehouse.value.name || "Noma'lum"}
+        </div>
+        <div class="serial-line">
+          <strong>Seriya:</strong> №${warehouse.value.id || "N/A"}
+        </div>
+      </div>
+       
+      <div class="qr-section">
+        <img src="https://backend.arizasud.uz/${
+          warehouse.value.qrCodeUrl
+        }" alt="QR" class="qr-code" />
+        <div class="date-text">${new Date().toLocaleDateString("uz-UZ")}</div>
+      </div>
+    </div>
+  </body>
+  </html>
+  `;
 
+  printContent(printHTML);
+}
+function printContent1() {
   const printHTML = `
 <!DOCTYPE html>
 <html>
@@ -874,34 +1124,59 @@ function printContent() {
 </body>
 </html>
 `;
-
-  // Kontentni yozish va print qilish
-  printWindow.document.write(printHTML);
-  printWindow.document.close();
-
-  // Print dialog ochish
-
-  // Print bekor qilingan yoki tugagandan keyin window ni yopish
-  setTimeout(() => {
-    printWindow.focus();
-    printWindow.print();
-  }, 100);
-  setTimeout(() => {
-    printWindow.close();
-  }, 100);
-
-  // Yoki print tugagandan keyin window ni yopish
-  printWindow.addEventListener("afterprint", () => {
-    printWindow.close();
-  });
+  printContent(printHTML);
 }
+
+async function printContent3() {
+  try {
+    // QZ Tray yuklanganini kutish
+    await waitForQZ();
+
+    // QZ Tray bilan ulanish
+    await qz.websocket.connect();
+
+    // Printerni topish
+    const printer = await qz.printers.find("Xprinter XP-T361U"); // printer nomini o‘zgartiring
+
+    // Konfiguratsiya
+    const config = qz.configs.create(printer, {
+      copies: 1,
+      scaling: "fit"
+    });
+
+    // QR code URL va sana
+    const qrCodeUrl = `https://backend.arizasud.uz/${warehouse.value.qrCodeUrl}`;
+    const today = new Date().toLocaleDateString("uz-UZ");
+
+    // QR rasmni base64 formatga aylantirish
+    const image = await qz.tools.convert({ url: qrCodeUrl, format: 'image' });
+
+    // Chop etiladigan data
+    const data = [
+      { type: 'image', data: image },
+      '\n',
+      today
+    ];
+
+    // Print
+    await qz.print(config, data);
+
+    console.log("Chop etildi!");
+
+  } catch (err) {
+    console.error("Chop etishda xatolik:", err);
+  } finally {
+    qz.websocket.disconnect();
+  }
+}
+
 const openEditModal = () => {
   showEditModal.value = true;
 };
 
 const closeEditModal = () => {
   showEditModal.value = false;
-  editImage.value = null;
+  editImages.value = [];
 };
 
 const openDeleteModal = () => {
@@ -910,6 +1185,10 @@ const openDeleteModal = () => {
 
 const closeDeleteModal = () => {
   showDeleteModal.value = false;
+};
+
+const toggleExpand = () => {
+  isExpanded.value = !isExpanded.value;
 };
 
 const goBack = () => {
@@ -946,28 +1225,64 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.receipt {
-  display: none;
+.image-container {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  cursor: pointer;
+  margin-bottom: 20px;
 }
 
-.modal-enter-active,
-.modal-leave-active {
+.image-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 200px;
+  transition: all 0.4s ease;
+}
+
+.image-item {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 4px solid white;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.4s ease;
+}
+
+.image-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  border-radius: 12px;
   transition: opacity 0.3s ease;
 }
 
-.modal-enter-from,
-.modal-leave-to {
-  opacity: 0;
+.image-wrapper:hover .image-overlay {
+  opacity: 1;
 }
 
-.modal-enter-active > div,
-.modal-leave-active > div {
-  transition: transform 0.3s ease, opacity 0.3s ease;
+.image-container:not(.expanded) .image-wrapper {
+  transform: translate(calc(10px * var(--index)), calc(5px * var(--index)));
+  z-index: calc(100 - var(--index));
 }
 
-.modal-enter-from > div,
-.modal-leave-to > div {
-  transform: translateY(-20px);
-  opacity: 0;
+.image-container.expanded {
+  display: flex;
+  flex-wrap: wrap;
+  width: auto;
+  height: auto;
+  gap: 20px;
+}
+
+.image-container.expanded .image-wrapper {
+  position: relative;
+  top: auto;
+  left: auto;
+  transform: none;
+  z-index: 0;
 }
 </style>

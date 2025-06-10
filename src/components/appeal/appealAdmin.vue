@@ -6,32 +6,13 @@
       <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-purple-400/10 to-pink-400/10 rounded-full blur-3xl animate-pulse delay-500"></div>
     </div>
 
-    <header class="relative pt-12 pb-8 overflow-hidden">
-      <div class="absolute inset-0 opacity-5 dark:opacity-10">
-        <div
-          class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,theme(colors.lime.500),transparent_70%)]"
-        ></div>
-      </div>
-
-      <div class="container mx-auto px-4 relative">
-        <div class="text-center">
-          <h1
-            class="text-5xl md:text-7xl font-black text-transparent bg-gradient-to-r from-emerald-500 via-emerald-400 to-emerald-500 bg-clip-text mb-4 tracking-tight"
-          >
-            {{ dat === "datakril" ? translateText("Interaktiv xizmatilar ro'yxati") : "Interaktiv xizmatilar ro'yxati" }}
-          </h1>
-          <div class="flex justify-center items-center space-x-4 mt-6">
-            <div
-              class="h-px bg-gradient-to-r from-transparent via-emerald-400 to-transparent w-24"
-            ></div>
-            <div class="w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></div>
-            <div
-              class="h-px bg-gradient-to-r from-transparent via-emerald-400 to-transparent w-24"
-            ></div>
-          </div>
-        </div>
-      </div>
-    </header>
+    <div class="flex justify-center pt-8 items-center">
+      <h1
+        class="text-[40px] font-bold text-center bg-gradient-to-r from-blue-800/50 to-purple-500/50 text-white border-2 mb-4 border-white rounded-lg py-2 px-[100px]"
+      >
+        {{ dat === "datakril" ? translateText("Interaktiv xizmatlar ro'yxati") : "Interaktiv xizmatlar ro'yxati" }}
+      </h1>
+    </div>
 
     <!-- Enhanced Modal for Uploading -->
     <Transition
