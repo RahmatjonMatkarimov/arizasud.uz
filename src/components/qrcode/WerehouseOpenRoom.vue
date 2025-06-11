@@ -152,6 +152,7 @@
                   v-if="warehouse.images && warehouse.images.length > 0"
                   :src="getImageUrl(warehouse.images[0].imageUrl)"
                   :alt="warehouse.name"
+                  @click="toggleExpand1(getImageUrl(warehouse.images[0].imageUrl))"
                   class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div
@@ -218,6 +219,7 @@
                   class="image-container group"
                 >
                   <img
+                  @click="toggleExpand1(getImageUrl(image.imageUrl))"
                     :src="getImageUrl(image.imageUrl)"
                     :alt="`${warehouse.name} - ${index + 2}`"
                     class="w-full h-20 object-cover transition-transform duration-300 group-hover:scale-105"
@@ -250,6 +252,7 @@
                 <img
                   :src="getImageUrl(warehouse.qrCodeUrl)"
                   alt="QR Code"
+                  @click="toggleExpand1(getImageUrl(warehouse.qrCodeUrl))"
                   class="w-32 h-32 mx-auto"
                 />
               </div>
@@ -518,11 +521,30 @@
       </div>
     </div>
   </div>
+<div
+  v-if="isExpanded2"
+  @click="isExpanded2 = null"
+  class="bg-black/60 fixed flex justify-center items-center z-50 inset-0 px-4"
+>
+  <Icon
+    icon="mdi:close"
+    class="absolute text-white top-4 right-4 z-50 w-10 h-10 cursor-pointer"
+  />
+  <img
+    @click.stop
+    :src="isExpanded2"
+    class="max-w-full max-h-screen w-auto h-auto rounded-lg shadow-lg"
+    alt=""
+  />
+</div>
+
+
 </template>
 
 <script setup>
 import translateText from "@/auth/Translate";
 import { URL } from "@/auth/url";
+import { Icon } from "@iconify/vue";
 import { onUnmounted } from "vue";
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
@@ -534,13 +556,19 @@ const error = ref(null);
 const warehouseId = route.params.id;
 const isDark = ref(true); // Default dark mode
 let intervalId = null;
+const dat = ref(localStorage.getItem('til'))
 const checkLanguageChange = () => {
   const currentLang = localStorage.getItem("til") || "datalotin";
   if (currentLang !== dat.value) {
     dat.value = currentLang;
   }
 };
-
+const isExpanded1 = ref(false)
+const isExpanded2 = ref('')
+const toggleExpand1 = (img) => {
+  isExpanded1.value = !isExpanded1.value;
+  isExpanded2.value = img
+};
 onMounted(() => {
   intervalId = setInterval(checkLanguageChange, 0);
 });
@@ -548,7 +576,7 @@ onMounted(() => {
 onUnmounted(() => {
   if (intervalId) clearInterval(intervalId);
 });
-vv;
+
 // Theme management
 const toggleTheme = () => {
   isDark.value = !isDark.value;

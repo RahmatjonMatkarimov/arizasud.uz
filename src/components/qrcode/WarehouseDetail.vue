@@ -34,21 +34,6 @@
           </div>
         </button>
         <button
-          @click="printContent2"
-          class="group relative px-6 py-3 bg-gradient-to-r from-green-600 to-teal-500 text-white font-bold rounded-2xl shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-500 overflow-hidden"
-          :disabled="loading"
-        >
-          <div
-            class="absolute inset-0 bg-gradient-to-r from-green-700 to-teal-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          ></div>
-          <div class="relative z-10 flex items-center">
-            <Icon icon="mdi:printer" class="mr-2 w-5 h-5" />
-            {{ dat === "datakril" ? translateText(`Chek Chiqarish`) : `Chek Chiqarish` }}
-            <br />
-            {{ dat === "datakril" ? translateText(`(Ortacha)`) : `(Ortacha)` }}
-          </div>
-        </button>
-        <button
           @click="printContent3"
           class="group relative px-6 py-3 bg-gradient-to-r from-green-600 to-teal-500 text-white font-bold rounded-2xl shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-500 overflow-hidden"
           :disabled="loading"
@@ -144,14 +129,11 @@
 
           <!-- Images -->
           <div class="mb-8">
-            <div
-              class="image-container"
-              :class="{ expanded: isExpanded }"
-              @click="toggleExpand"
-            >
+            <div class="image-container" :class="{ expanded: isExpanded }">
               <div
                 v-if="warehouse.qrCodeUrl"
                 class="image-wrapper"
+                @click="toggleExpand"
                 :style="{ '--index': 0 }"
               >
                 <img
@@ -164,6 +146,7 @@
               <div
                 v-for="(image, index) in warehouse.images"
                 :key="image.id"
+                @click="toggleExpand1(URL + '/' + image.imageUrl)"
                 class="image-wrapper"
                 :style="{ '--index': index + 1 }"
               >
@@ -763,6 +746,11 @@
       </Transition>
     </Teleport>
   </div>
+  <div v-if="isExpanded2" @click="isExpanded2 = null" class="bg-black/60 fixed flex justify-center items-center z-50 inset-0">
+  <Icon icon="mdi:close" class="absolute text-white top-4 z-50 right-4 w-10 h-10 cursor-pointer" />
+  
+  <img @click.stop :src="isExpanded2" class="w-[400px]"  alt="">
+  </div>
 </template>
 
 <script setup>
@@ -776,6 +764,8 @@ import translateText from "@/auth/Translate";
 import { Trash } from "lucide-vue-next";
 import { onUnmounted } from "vue";
 
+const isExpanded1 = ref(false)
+const isExpanded2 = ref('')
 const route = useRoute();
 const router = useRouter();
 const warehouse = ref({});
@@ -957,164 +947,6 @@ const deleteWarehouseAction = async () => {
     loading.value = false;
   }
 };
-
-function printContent2() {
-  const printHTML = `
-  <!DOCTYPE html>
-  <html>
-  <head>
-    <title>Print Receipt</title>
-    <style>
-      @page {
-        size: 30mm 40mm;
-        margin: 0;
-        padding: 0;
-      }
-       
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-       
-      html, body {
-        font-family: Arial, sans-serif;
-        font-size: 7px;
-        line-height: 1.1;
-        color: #000;
-        width: 30mm;
-        height: 40mm;
-        margin: 0;
-        padding: 1mm;
-        overflow: hidden;
-      }
-       
-      .container {
-        width: 28mm;
-        height: 38mm;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        box-sizing: border-box;
-      }
-       
-      .header-info {
-        text-align: center;
-        margin-bottom: 2mm;
-      }
-       
-      .name-line, .serial-line {
-        font-size: 6px;
-        word-break: break-word;
-        text-align: center;
-        line-height: 1.2;
-      }
-       
-      .name-line {
-        margin-bottom: 0.5mm;
-      }
-       
-      .serial-line {
-        margin-bottom: 2mm;
-      }
-       
-      .name-line strong, .serial-line strong {
-        font-weight: bold;
-      }
-       
-      .qr-section {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        flex: 1;
-      }
-       
-      .qr-code {
-        width: 16mm;
-        height: 16mm;
-        border: none;
-        display: block;
-        margin-bottom: 1mm;
-      }
-       
-      .date-text {
-        font-size: 5px;
-        text-align: center;
-        font-weight: normal;
-      }
-       
-      @media print {
-        @page {
-          size: 30mm 40mm;
-          margin: 0 !important;
-          padding: 0 !important;
-        }
-        
-        * {
-          margin: 0 !important;
-          padding: 0 !important;
-          box-sizing: border-box !important;
-        }
-         
-        html, body {
-          width: 30mm !important;
-          height: 40mm !important;
-          margin: 0 !important;
-          padding: 1mm !important;
-          overflow: hidden !important;
-          page-break-after: avoid !important;
-        }
-         
-        body {
-          -webkit-print-color-adjust: exact;
-          print-color-adjust: exact;
-        }
-         
-        .container {
-          height: 38mm !important;
-          width: 28mm !important;
-          display: flex !important;
-          flex-direction: column !important;
-          justify-content: flex-start !important;
-          margin: 0 !important;
-          padding: 0 !important;
-          box-sizing: border-box !important;
-          page-break-inside: avoid !important;
-          page-break-after: avoid !important;
-        }
-        
-        .qr-code {
-          width: 16mm !important;
-          height: 16mm !important;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="header-info">
-        <div class="name-line">
-          <strong>Nomi:</strong> ${warehouse.value.name || "Noma'lum"}
-        </div>
-        <div class="serial-line">
-          <strong>Seriya:</strong> №${warehouse.value.id || "N/A"}
-        </div>
-      </div>
-       
-      <div class="qr-section">
-        <img src="https://backend.arizasud.uz/${
-          warehouse.value.qrCodeUrl
-        }" alt="QR" class="qr-code" />
-        <div class="date-text">${new Date().toLocaleDateString("uz-UZ")}</div>
-      </div>
-    </div>
-  </body>
-  </html>
-  `;
-
-  printContent(printHTML);
-}
 function printContent1() {
   const printHTML = `
 <!DOCTYPE html>
@@ -1363,7 +1195,7 @@ function printContent3() {
   </div>
 </body>
 </html>`;
-printContent(printHTML);
+  printContent(printHTML);
 }
 
 const openEditModal = () => {
@@ -1385,6 +1217,10 @@ const closeDeleteModal = () => {
 
 const toggleExpand = () => {
   isExpanded.value = !isExpanded.value;
+};
+const toggleExpand1 = (img) => {
+  isExpanded1.value = !isExpanded1.value;
+  isExpanded2.value = img
 };
 
 const goBack = () => {
