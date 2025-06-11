@@ -1305,8 +1305,9 @@ function printContent3() {
   <title>Print Receipt</title>
   <style>
     @page {
-      size: 20mm 30mm;
+      size: 140% 100%;
       margin: 0mm;
+      text-align: center;
     }
     
     * {
@@ -1315,58 +1316,34 @@ function printContent3() {
       box-sizing: border-box;
     }
     
-    body {
-      font-family: Arial, sans-serif;
-      font-size: 9px;
-      line-height: 1.2;
-      color: #000;
-      width: 30mm;
-      height: 20mm;
-      overflow: hidden;
-    }
+
     
     .container {
       width: 100%;
       height: 100%;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-    }
-    
-    .decorative-line {
-      border-top: 0.5px solid #000;
-      margin: 1mm 0;
-    }
-    
-    .content-wrapper {
-      display: flex;
-      flex-direction: column;
-    }
-    
-    .info-section {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      flex-direction: column;
-      gap: 1mm;
-    }
-    .info-right {
-
-      display: flex;
-      justify-content: space-between;
+      justify-content: end;
       align-items: center;
+
     }
     .qr-code {
-      width: 15mm;
-      height: 15mm;
-      border: 0.5px solid #ccc;
+      width: 14mm;
+      height: 14mm;
     }
     .par {
-      font-size: 5px;
+      font-size: 6px;
+      font-weight: bold;
     }
     
     @media print {
       body {
+        width: 100%;
+        height: auto;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;text-align: center;
+        font-family: Arial, sans-serif;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
       }
@@ -1379,23 +1356,14 @@ function printContent3() {
 </head>
 <body>
   <div class="container">    
-    <div class="content-wrapper">
-      <div class="info-section">
-        <div class="info-right">
-          <p class="par">Chop etilgan ${new Date().toLocaleDateString("uz-UZ")}</p>
-          <div class="qr-section">
-            <img src="https://backend.arizasud.uz/${
-              warehouse.value.qrCodeUrl
-            }" alt="QR Code" class="qr-code" />
-          </div>
-        </div>
-      </div>
+    <p class="par">"Yurist Konsul Konsalting" ga tegishli</p>
+    <div>
+      <img src="https://backend.arizasud.uz/${warehouse.value.qrCodeUrl}" alt="QR Code" class="qr-code" />
     </div>
   </div>
 </body>
-</html>
-`;
-  printContent(printHTML);
+</html>`;
+printContent(printHTML);
 }
 
 const openEditModal = () => {

@@ -1128,7 +1128,7 @@ const fetchWarehouses = async () => {
   try {
     const { data } = await axios.get(`${URL}/warehouse`);
     warehouses.value = data.filter(
-      (w) => w.categoryId === parseInt(route.query.categoryId)
+      (w) => w.categoryId === parseInt(route.query.id)
     );
   } catch (error) {
     console.error("Omborlarni yuklashda xatolik:", error);
