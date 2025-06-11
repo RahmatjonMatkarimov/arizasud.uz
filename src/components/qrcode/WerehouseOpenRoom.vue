@@ -1,14 +1,25 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-slate-900 dark:to-indigo-950 transition-all duration-700">
+  <div
+    class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-slate-900 dark:to-indigo-950 transition-all duration-700"
+  >
     <!-- Theme Toggle Button -->
     <div class="fixed top-6 right-6 z-50">
-      <button 
+      <button
         @click="toggleTheme"
         class="p-3 rounded-full bg-white/90 dark:bg-gray-800/90 shadow-lg hover:shadow-xl backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500"
         :aria-label="isDark ? 'Light rejimga o\'tish' : 'Dark rejimga o\'tish'"
       >
-        <svg v-if="isDark" class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd" />
+        <svg
+          v-if="isDark"
+          class="w-5 h-5 text-yellow-500"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+            clip-rule="evenodd"
+          />
         </svg>
         <svg v-else class="w-5 h-5 text-gray-700" fill="currentColor" viewBox="0 0 20 20">
           <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
@@ -20,26 +31,45 @@
       <!-- Loading State -->
       <div v-if="loading" class="flex justify-center items-center min-h-[60vh]">
         <div class="relative">
-          <div class="animate-spin rounded-full h-16 w-16 border-4 border-blue-500/30 dark:border-blue-400/30 border-t-blue-500 dark:border-t-blue-400"></div>
-          <div class="absolute inset-0 animate-pulse rounded-full h-16 w-16 bg-blue-500/10 dark:bg-blue-400/10"></div>
+          <div
+            class="animate-spin rounded-full h-16 w-16 border-4 border-blue-500/30 dark:border-blue-400/30 border-t-blue-500 dark:border-t-blue-400"
+          ></div>
+          <div
+            class="absolute inset-0 animate-pulse rounded-full h-16 w-16 bg-blue-500/10 dark:bg-blue-400/10"
+          ></div>
         </div>
       </div>
 
       <!-- Error State -->
       <div v-else-if="error" class="max-w-2xl mx-auto">
-        <div class="glass-card border-red-200 dark:border-red-800 bg-red-50/80 dark:bg-red-900/20 text-center p-8">
+        <div
+          class="glass-card border-red-200 dark:border-red-800 bg-red-50/80 dark:bg-red-900/20 text-center p-8"
+        >
           <div class="text-red-600 dark:text-red-400 text-2xl mb-4 flex justify-center">
             <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
             </svg>
           </div>
-          <h3 class="text-xl font-semibold text-red-800 dark:text-red-300 mb-2">Xatolik yuz berdi</h3>
-          <p class="text-red-700 dark:text-red-400">{{ error }}</p>
-          <button 
+          <h3 class="text-xl font-semibold text-red-800 dark:text-red-300 mb-2">
+            {{
+              dat === "datakril"
+                ? translateText(`Xatolik yuz berdi`)
+                : `Xatolik yuz berdi`
+            }}
+          </h3>
+          <p class="text-red-700 dark:text-red-400">
+            {{ dat === "datakril" ? translateText(error) : error }}
+          </p>
+          <button
             @click="fetchWarehouse"
             class="mt-4 px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200"
           >
-            Qayta urinish
+            {{ dat === "datakril" ? translateText(`Qayta urinish`) : `Qayta urinish` }}
           </button>
         </div>
       </div>
@@ -50,20 +80,42 @@
         <div class="glass-card overflow-hidden">
           <div class="gradient-header text-white relative overflow-hidden">
             <div class="absolute inset-0 bg-black/10 dark:bg-black/20"></div>
-            <div class="absolute -top-4 -right-4 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
-            <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-white/5 rounded-full blur-2xl"></div>
-            
+            <div
+              class="absolute -top-4 -right-4 w-24 h-24 bg-white/10 rounded-full blur-xl"
+            ></div>
+            <div
+              class="absolute -bottom-4 -left-4 w-32 h-32 bg-white/5 rounded-full blur-2xl"
+            ></div>
+
             <div class="relative p-8">
               <div class="flex items-center space-x-4">
                 <div class="icon-container bg-white/20">
-                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                  <svg
+                    class="w-8 h-8"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                    ></path>
                   </svg>
                 </div>
                 <div>
-                  <h1 class="text-4xl font-bold mb-2 text-white">{{ warehouse.name }}</h1>
+                  <h1 class="text-4xl font-bold mb-2 text-white">
+                    {{
+                      dat === "datakril" ? translateText(warehouse.name) : warehouse.name
+                    }}
+                  </h1>
                   <p class="text-blue-100 dark:text-blue-200 text-lg font-medium">
-                    Ombor elementi tafsilotlari
+                    {{
+                      dat === "datakril"
+                        ? translateText(`Ombor elementi tafsilotlari`)
+                        : `Ombor elementi tafsilotlari`
+                    }}
                   </p>
                 </div>
               </div>
@@ -77,46 +129,96 @@
           <div class="lg:col-span-1 space-y-6">
             <!-- Main Image -->
             <div class="glass-card p-6">
-              <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
-                <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              <h3
+                class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center"
+              >
+                <svg
+                  class="w-5 h-5 mr-2 text-blue-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  ></path>
                 </svg>
-                Asosiy rasm
+                {{ dat === "datakril" ? translateText(`Asosiy rasm`) : `Asosiy rasm` }}
               </h3>
               <div class="image-container group">
-                <img 
-                  v-if="warehouse.images && warehouse.images.length > 0" 
-                  :src="getImageUrl(warehouse.images[0].imageUrl)" 
+                <img
+                  v-if="warehouse.images && warehouse.images.length > 0"
+                  :src="getImageUrl(warehouse.images[0].imageUrl)"
                   :alt="warehouse.name"
                   class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                <div v-else class="w-full h-64 flex items-center justify-center bg-gray-100 dark:bg-gray-700">
+                <div
+                  v-else
+                  class="w-full h-64 flex items-center justify-center bg-gray-100 dark:bg-gray-700"
+                >
                   <div class="text-gray-400 dark:text-gray-500 text-center">
-                    <svg class="w-16 h-16 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    <svg
+                      class="w-16 h-16 mx-auto mb-3"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.5"
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      ></path>
                     </svg>
-                    <p class="text-sm">Rasm mavjud emas</p>
+                    <p class="text-sm">
+                      {{
+                        dat === "datakril"
+                          ? translateText(`Rasm mavjud emas`)
+                          : `Rasm mavjud emas`
+                      }}
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
 
             <!-- Additional Images -->
-            <div v-if="warehouse.images && warehouse.images.length > 1" class="glass-card p-6">
-              <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
-                <svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+            <div
+              v-if="warehouse.images && warehouse.images.length > 1"
+              class="glass-card p-6"
+            >
+              <h3
+                class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center"
+              >
+                <svg
+                  class="w-5 h-5 mr-2 text-green-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                  ></path>
                 </svg>
-                Qo'shimcha rasmlar
+                {{
+                  dat === "datakril"
+                    ? translateText(`Qo'shimcha rasmlar`)
+                    : `Qo'shimcha rasmlar`
+                }}
               </h3>
               <div class="grid grid-cols-2 gap-3">
-                <div 
-                  v-for="(image, index) in warehouse.images.slice(1, 5)" 
+                <div
+                  v-for="(image, index) in warehouse.images.slice(1, 5)"
                   :key="index"
                   class="image-container group"
                 >
-                  <img 
-                    :src="getImageUrl(image.imageUrl)" 
+                  <img
+                    :src="getImageUrl(image.imageUrl)"
                     :alt="`${warehouse.name} - ${index + 2}`"
                     class="w-full h-20 object-cover transition-transform duration-300 group-hover:scale-105"
                   />
@@ -126,15 +228,27 @@
 
             <!-- QR Code -->
             <div v-if="warehouse.qrCodeUrl" class="glass-card p-6 text-center">
-              <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center justify-center">
-                <svg class="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 16h4.01M12 8h4.01M12 16h.01"></path>
+              <h3
+                class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center justify-center"
+              >
+                <svg
+                  class="w-5 h-5 mr-2 text-purple-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 16h4.01M12 8h4.01M12 16h.01"
+                  ></path>
                 </svg>
-                QR Kod
+                {{ dat === "datakril" ? translateText(`QR Kod`) : `QR Kod` }}
               </h3>
               <div class="qr-code-wrapper">
-                <img 
-                  :src="getImageUrl(warehouse.qrCodeUrl)" 
+                <img
+                  :src="getImageUrl(warehouse.qrCodeUrl)"
                   alt="QR Code"
                   class="w-32 h-32 mx-auto"
                 />
@@ -148,94 +262,172 @@
             <div class="glass-card p-6">
               <div class="card-header">
                 <div class="icon-container bg-blue-500 dark:bg-blue-600">
-                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  <svg
+                    class="w-6 h-6 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    ></path>
                   </svg>
                 </div>
-                <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">Asosiy ma'lumotlar</h2>
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">
+                  {{
+                    dat === "datakril"
+                      ? translateText(`Asosiy ma'lumotlar`)
+                      : `Asosiy ma'lumotlar`
+                  }}
+                </h2>
               </div>
-              
+
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Miqdori -->
                 <div class="detail-row">
-                  <span class="detail-label">Miqdori:</span>
-                  <span class="detail-value text-emerald-600 dark:text-emerald-400 font-bold text-xl">
-                    {{ warehouse.quantity }} dona
+                  <span class="detail-label"
+                    >{{
+                      dat === "datakril" ? translateText(`Miqdori`) : `Miqdori`
+                    }}:</span
+                  >
+                  <span
+                    class="detail-value text-emerald-600 dark:text-emerald-400 font-bold text-xl"
+                  >
+                    {{ warehouse.quantity }}
+                    {{ dat === "datakril" ? translateText(`dona`) : `dona` }}
                   </span>
                 </div>
 
                 <!-- Seriya Raqami -->
                 <div class="detail-row">
-                  <span class="detail-label">Seriya Raqami:</span>
+                  <span class="detail-label">{{
+                    dat === "datakril"
+                      ? translateText(`Seriya Raqami:`)
+                      : `Seriya Raqami:`
+                  }}</span>
                   <span class="detail-value code-badge">{{ warehouse.id }}</span>
                 </div>
 
                 <!-- Holati -->
                 <div class="detail-row">
-                  <span class="detail-label">Holati:</span>
+                  <span class="detail-label"
+                    >{{ dat === "datakril" ? translateText(`Holati`) : `Holati` }}:</span
+                  >
                   <span class="detail-value">
-                    <span v-if="warehouse.condition" class="status-badge" :class="getConditionStyle(warehouse.condition)">
-                      {{ warehouse.condition }}
+                    <span
+                      v-if="warehouse.condition"
+                      class="status-badge"
+                      :class="getConditionStyle(warehouse.condition)"
+                    >
+                      {{
+                        dat === "datakril"
+                          ? translateText(warehouse.condition)
+                          : warehouse.condition
+                      }}
                     </span>
-                    <span v-else class="status-badge bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                      Noma'lum
+                    <span
+                      v-else
+                      class="status-badge bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300"
+                    >
+                      {{ dat === "datakril" ? translateText(`Noma'lum`) : `Noma'lum` }}
                     </span>
                   </span>
                 </div>
 
                 <!-- Turgan joyi -->
                 <div class="detail-row">
-                  <span class="detail-label">Turgan joyi:</span>
+                  <span class="detail-label"
+                    >{{
+                      dat === "datakril" ? translateText(`Turgan joyi`) : `Turgan joyi`
+                    }}:</span
+                  >
                   <span class="detail-value">
                     <span v-if="warehouse.location" class="flex items-center">
-                      <svg class="w-4 h-4 text-blue-500 dark:text-blue-400 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                      <svg
+                        class="w-4 h-4 text-blue-500 dark:text-blue-400 mr-1"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                        ></path>
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                        ></path>
                       </svg>
                       {{ warehouse.location }}
                     </span>
-                    <span v-else class="text-gray-500 dark:text-gray-400">Belgilanmagan</span>
+                    <span v-else class="text-gray-500 dark:text-gray-400">{{
+                      dat === "datakril"
+                        ? translateText(`Belgilanmagan`)
+                        : `Belgilanmagan`
+                    }}</span>
                   </span>
                 </div>
 
                 <!-- To'liq to'plam -->
                 <div class="detail-row">
-                  <span class="detail-label">To'liq to'plam:</span>
+                  <span class="detail-label">{{ dat === 'datakril' ? translateText(`To'liq to'plam:`):`To'liq to'plam:` }}</span>
                   <span class="detail-value">
-                    <span class="status-badge" :class="warehouse.collection ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300' : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300'">
-                      {{ warehouse.collection ? 'Ha' : 'Yo\'q' }}
+                    <span
+                      class="status-badge"
+                      :class="
+                        warehouse.collection
+                          ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
+                          : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300'
+                      "
+                    >
+                      {{ warehouse.collection ? dat === 'datakril' ? translateText(`Ha`):`Ha` : dat === 'datakril' ? translateText("Yo'q"):"Yo'q" }}
                     </span>
                   </span>
                 </div>
 
                 <!-- Mas'ul shaxs -->
                 <div class="detail-row">
-                  <span class="detail-label">Mas'ul shaxs:</span>
+                  <span class="detail-label">{{ dat === 'datakril' ? translateText(`Mas'ul shaxs`):`Mas'ul shaxs` }}:</span>
                   <span class="detail-value">
-                    <span v-if="warehouse.whomBelongs" class="code-badge">{{ warehouse.whomBelongs }}</span>
-                    <span v-else class="text-gray-500 dark:text-gray-400">Belgilanmagan</span>
+                    <span v-if="warehouse.whomBelongs" class="code-badge">{{
+                      warehouse.whomBelongs
+                    }}</span>
+                    <span v-else class="text-gray-500 dark:text-gray-400"
+                      >{{ dat === 'datakril' ? translateText(`Belgilanmagan`):`Belgilanmagan` }}</span
+                    >
                   </span>
                 </div>
 
                 <!-- Bo'lim nomi -->
                 <div class="detail-row md:col-span-2">
-                  <span class="detail-label">Bo'lim nomi:</span>
+                  <span class="detail-label">{{ dat === 'datakril' ? translateText(`Bo'lim nomi`) : `Bo'lim nomi` }}:</span>
                   <span class="detail-value">
                     <span v-if="warehouse.category" class="category-badge">
-                      {{ warehouse.category.name }}
+                      {{ dat === 'datakril' ? translateText(warehouse.category.name) : warehouse.category.name }}
                     </span>
-                    <span v-else class="text-gray-500 dark:text-gray-400">Kategoriya mavjud emas</span>
+                    <span v-else class="text-gray-500 dark:text-gray-400"
+                      >{{ dat === 'datakril' ? translateText(`Kategoriya mavjud emas`):`Kategoriya mavjud emasvv` }}</span
+                    >
                   </span>
                 </div>
 
                 <!-- Sotib Olingan Sana -->
                 <div class="detail-row md:col-span-2">
-                  <span class="detail-label">Sotib Olingan Sana:</span>
+                  <span class="detail-label">{{ dat === 'datakril' ? translateText(`Sotib Olingan Sana`) : `Sotib Olingan Sana` }}:</span>
                   <span class="detail-value">
                     <span v-if="warehouse.purchaseDate" class="date-badge">
                       {{ formatDate(warehouse.purchaseDate) }}
                     </span>
-                    <span v-else class="text-gray-500 dark:text-gray-400">Belgilanmagan</span>
+                    <span v-else class="text-gray-500 dark:text-gray-400"
+                      >{{ dat === 'datakril' ? translateText(`Belgilanmagan`) :`Belgilanmagan` }}</span
+                    >
                   </span>
                 </div>
               </div>
@@ -245,14 +437,28 @@
             <div v-if="warehouse.description" class="glass-card p-6">
               <div class="card-header">
                 <div class="icon-container bg-purple-500 dark:bg-purple-600">
-                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path>
+                  <svg
+                    class="w-6 h-6 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 6h16M4 12h16M4 18h7"
+                    ></path>
                   </svg>
                 </div>
-                <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">Tavsif</h2>
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">
+                  {{ dat === 'datakril' ? translateText(`Tavsif`) :`Tavsif` }}
+                </h2>
               </div>
               <div class="description-box">
-                <p class="text-gray-700 dark:text-gray-300 leading-relaxed">{{ warehouse.description }}</p>
+                <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  {{ dat === 'datakril' ? translateText(warehouse.description) : warehouse.description }}
+                </p>
               </div>
             </div>
 
@@ -260,26 +466,46 @@
             <div class="glass-card p-6">
               <div class="card-header">
                 <div class="icon-container bg-indigo-500 dark:bg-indigo-600">
-                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  <svg
+                    class="w-6 h-6 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    ></path>
                   </svg>
                 </div>
-                <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">Tizim ma'lumotlari</h2>
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">
+                  {{ dat === 'datakril' ? translateText(`Tizim ma'lumotlari`):`Tizim ma'lumotlari` }}
+                </h2>
               </div>
-              
+
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="date-card">
                   <div class="text-center">
-                    <div class="text-gray-600 dark:text-gray-400 text-sm font-medium mb-2">Yaratilgan</div>
+                    <div
+                      class="text-gray-600 dark:text-gray-400 text-sm font-medium mb-2"
+                    >
+                      {{ dat === 'datakril' ? translateText(`Yaratilgan`):`Yaratilgan` }}
+                    </div>
                     <div class="font-bold text-emerald-600 dark:text-emerald-400 text-lg">
                       {{ formatDateTime(warehouse.createdAt) }}
                     </div>
                   </div>
                 </div>
-                
+
                 <div class="date-card">
                   <div class="text-center">
-                    <div class="text-gray-600 dark:text-gray-400 text-sm font-medium mb-2">So'nggi yangilanish</div>
+                    <div
+                      class="text-gray-600 dark:text-gray-400 text-sm font-medium mb-2"
+                    >
+                      {{ dat === 'datakril' ? translateText(`So'nggi yangilanish`):`So'nggi yangilanish` }}
+                    </div>
                     <div class="font-bold text-blue-600 dark:text-blue-400 text-lg">
                       {{ formatDateTime(warehouse.updatedAt) }}
                     </div>
@@ -295,101 +521,121 @@
 </template>
 
 <script setup>
-import { URL } from '@/auth/url'
-import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import translateText from "@/auth/Translate";
+import { URL } from "@/auth/url";
+import { onUnmounted } from "vue";
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
 
-const route = useRoute()
-const warehouse = ref(null)
-const loading = ref(true)
-const error = ref(null)
-const warehouseId = route.params.id
-const isDark = ref(true) // Default dark mode
+const route = useRoute();
+const warehouse = ref(null);
+const loading = ref(true);
+const error = ref(null);
+const warehouseId = route.params.id;
+const isDark = ref(true); // Default dark mode
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem("til") || "datalotin";
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
 
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
+vv;
 // Theme management
 const toggleTheme = () => {
-  isDark.value = !isDark.value
-  updateTheme()
-}
+  isDark.value = !isDark.value;
+  updateTheme();
+};
 
 const updateTheme = () => {
   if (isDark.value) {
-    document.documentElement.classList.add('dark')
-    localStorage.setItem('theme', 'dark')
+    document.documentElement.classList.add("dark");
+    localStorage.setItem("theme", "dark");
   } else {
-    document.documentElement.classList.remove('dark')
-    localStorage.setItem('theme', 'light')
+    document.documentElement.classList.remove("dark");
+    localStorage.setItem("theme", "light");
   }
-}
+};
 
 const initializeTheme = () => {
-  const savedTheme = localStorage.getItem('theme')
-  isDark.value = savedTheme !== 'light'
-  updateTheme()
-}
+  const savedTheme = localStorage.getItem("theme");
+  isDark.value = savedTheme !== "light";
+  updateTheme();
+};
 
 const fetchWarehouse = async () => {
   try {
-    loading.value = true
-    error.value = null
-    const response = await fetch(`${URL}/warehouse/${warehouseId}`)
-    
+    loading.value = true;
+    error.value = null;
+    const response = await fetch(`${URL}/warehouse/${warehouseId}`);
+
     if (!response.ok) {
-      throw new Error(`Warehouse topilmadi (ID: ${warehouseId})`)
+      throw new Error(`Warehouse topilmadi (ID: ${warehouseId})`);
     }
-    
-    warehouse.value = await response.json()
+
+    warehouse.value = await response.json();
   } catch (err) {
-    error.value = err.message
-    console.error('Warehouse ma\'lumotlarini olishda xatolik:', err)
+    error.value = err.message;
+    console.error("Warehouse ma'lumotlarini olishda xatolik:", err);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 const getImageUrl = (path) => {
-  if (!path) return ''
-  if (path.startsWith('http')) return path
-  return `${URL}${path}`
-}
+  if (!path) return "";
+  if (path.startsWith("http")) return path;
+  return `${URL}${path}`;
+};
 
 const formatDate = (dateString) => {
-  if (!dateString) return 'N/A'
-  const date = new Date(dateString)
-  return date.toLocaleDateString('uz-UZ', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit'
-  })
-}
+  if (!dateString) return "N/A";
+  const date = new Date(dateString);
+  return date.toLocaleDateString("uz-UZ", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+};
 
 const formatDateTime = (dateString) => {
-  if (!dateString) return 'N/A'
-  const date = new Date(dateString)
-  return date.toLocaleDateString('uz-UZ', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  })
-}
+  if (!dateString) return "N/A";
+  const date = new Date(dateString);
+  return date.toLocaleDateString("uz-UZ", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
 
 const getConditionStyle = (condition) => {
   const styles = {
-    'Yangi': 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300',
-    'Yaxshi': 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
-    'Qoniqarli': 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300',
-    'Yomon': 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300',
-    'Ishlamaydi': 'bg-gray-100 text-gray-700 dark:bg-gray-800/30 dark:text-gray-300'
-  }
-  return styles[condition] || 'bg-gray-100 text-gray-700 dark:bg-gray-800/30 dark:text-gray-300'
-}
+    Yangi: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
+    Yaxshi: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
+    Qoniqarli: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+    Yomon: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300",
+    Ishlamaydi: "bg-gray-100 text-gray-700 dark:bg-gray-800/30 dark:text-gray-300",
+  };
+  return (
+    styles[condition] ||
+    "bg-gray-100 text-gray-700 dark:bg-gray-800/30 dark:text-gray-300"
+  );
+};
 
 onMounted(() => {
-  initializeTheme()
-  fetchWarehouse()
-})
+  initializeTheme();
+  fetchWarehouse();
+});
 </script>
 
 <style scoped>
@@ -460,8 +706,12 @@ onMounted(() => {
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Smooth transitions */
@@ -499,11 +749,11 @@ button:focus {
   .detail-row {
     @apply flex-col items-start space-y-2;
   }
-  
+
   .card-header {
     @apply flex-col items-start space-x-0 space-y-3;
   }
-  
+
   .icon-container {
     @apply w-10 h-10;
   }
@@ -514,7 +764,7 @@ button:focus {
   .fixed {
     @apply hidden;
   }
-  
+
   .glass-card {
     @apply shadow-none border border-gray-300;
   }

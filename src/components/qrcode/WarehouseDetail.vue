@@ -14,7 +14,7 @@
           ></div>
           <div class="relative z-10 flex items-center">
             <Icon icon="mdi:arrow-left" class="mr-2 w-5 h-5" />
-            {{ dat === 'datakril' ? translateText(`Orqaga`):`Orqaga` }}
+            {{ dat === "datakril" ? translateText(`Orqaga`) : `Orqaga` }}
           </div>
         </button>
         <!-- Print Receipt Buttons -->
@@ -28,7 +28,9 @@
           ></div>
           <div class="relative z-10 flex items-center">
             <Icon icon="mdi:printer" class="mr-2 w-5 h-5" />
-            {{ dat === 'datakril' ? translateText(`Chek Chiqarish`):`Chek Chiqarish` }} <br> {{ dat === 'datakril' ? translateText(`(ENG kattasi)`):`(ENG kattasi)` }}
+            {{ dat === "datakril" ? translateText(`Chek Chiqarish`) : `Chek Chiqarish` }}
+            <br />
+            {{ dat === "datakril" ? translateText(`(ENG kattasi)`) : `(ENG kattasi)` }}
           </div>
         </button>
         <button
@@ -41,7 +43,9 @@
           ></div>
           <div class="relative z-10 flex items-center">
             <Icon icon="mdi:printer" class="mr-2 w-5 h-5" />
-            {{ dat === 'datakril' ? translateText(`Chek Chiqarish`):`Chek Chiqarish` }} <br> {{ dat === 'datakril' ? translateText(`(Ortacha)`) :`(Ortacha)` }}
+            {{ dat === "datakril" ? translateText(`Chek Chiqarish`) : `Chek Chiqarish` }}
+            <br />
+            {{ dat === "datakril" ? translateText(`(Ortacha)`) : `(Ortacha)` }}
           </div>
         </button>
         <button
@@ -54,7 +58,9 @@
           ></div>
           <div class="relative z-10 flex items-center">
             <Icon icon="mdi:printer" class="mr-2 w-5 h-5" />
-            {{ dat === 'datakril' ? translateText(`Chek Chiqarish`):`Chek Chiqarish` }} <br> {{ dat === 'datakril' ? translateText(`(ENG kichik)`):`(ENG kichik)` }}
+            {{ dat === "datakril" ? translateText(`Chek Chiqarish`) : `Chek Chiqarish` }}
+            <br />
+            {{ dat === "datakril" ? translateText(`(ENG kichik)`) : `(ENG kichik)` }}
           </div>
         </button>
       </div>
@@ -62,7 +68,9 @@
       <!-- Loading State -->
       <div v-if="loading" class="text-center py-16">
         <Icon icon="mdi:loading" class="w-16 h-16 text-blue-500 animate-spin mx-auto" />
-        <p class="text-gray-600 dark:text-gray-300 text-lg mt-4">{{ dat === 'datakril' ? translateText(`Yuklanmoqda`):`Yuklanmoqda` }}...</p>
+        <p class="text-gray-600 dark:text-gray-300 text-lg mt-4">
+          {{ dat === "datakril" ? translateText(`Yuklanmoqda`) : `Yuklanmoqda` }}...
+        </p>
       </div>
       <div v-else-if="error" class="text-center py-16">
         <div
@@ -71,9 +79,13 @@
           <Icon icon="mdi:alert-circle-outline" class="w-16 h-16 text-red-500" />
         </div>
         <h3 class="text-2xl font-bold text-red-600 dark:text-red-400 mt-4 mb-2">
-          {{ dat === 'datakril' ? translateText(`Xatolik yuz berdi`):`Xatolik yuz berdi` }}
+          {{
+            dat === "datakril" ? translateText(`Xatolik yuz berdi`) : `Xatolik yuz berdi`
+          }}
         </h3>
-        <p class="text-gray-600 dark:text-gray-400">{{ dat === 'datakril' ? translateText(error) : error }}</p>
+        <p class="text-gray-600 dark:text-gray-400">
+          {{ dat === "datakril" ? translateText(error) : error }}
+        </p>
       </div>
       <div
         v-else
@@ -95,10 +107,16 @@
                 <h1
                   class="text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-500 bg-clip-text text-transparent"
                 >
-                  {{ dat === 'datakril' ? translateText(warehouse.name):warehouse.name }}
+                  {{
+                    dat === "datakril" ? translateText(warehouse.name) : warehouse.name
+                  }}
                 </h1>
                 <p class="text-gray-600 dark:text-gray-300 text-lg mt-1">
-                  {{ dat === 'datakril' ? translateText(warehouse.category?.name):warehouse.category?.name || "Kategoriya topilmadi" }}
+                  {{
+                    dat === "datakril"
+                      ? translateText(warehouse.category?.name)
+                      : warehouse.category?.name || "Kategoriya topilmadi"
+                  }}
                 </p>
               </div>
             </div>
@@ -165,16 +183,19 @@
               <div class="flex items-center">
                 <Icon icon="mdi:numeric" class="w-6 h-6 text-green-500 mr-3" />
                 <span class="font-semibold text-gray-700 dark:text-gray-300"
-                  >{{ dat === 'datakril' ? translateText(`Miqdori`):`Miqdori` }}:</span
+                  >{{ dat === "datakril" ? translateText(`Miqdori`) : `Miqdori` }}:</span
                 >
                 <span class="ml-2 text-gray-800 dark:text-gray-200"
-                  >{{ warehouse.quantity }} {{ dat === 'datakril' ?translateText(`dona`):`dona` }}</span
+                  >{{ warehouse.quantity }}
+                  {{ dat === "datakril" ? translateText(`dona`) : `dona` }}</span
                 >
               </div>
               <div v-if="warehouse.id" class="flex items-center">
                 <Icon icon="mdi:barcode" class="w-6 h-6 text-orange-500 mr-3" />
                 <span class="font-semibold text-gray-700 dark:text-gray-300"
-                  >{{ dat === 'datakril' ? translateText(`Seriya Raqami`):`Seriya Raqami` }}:</span
+                  >{{
+                    dat === "datakril" ? translateText(`Seriya Raqami`) : `Seriya Raqami`
+                  }}:</span
                 >
                 <span class="ml-2 font-mono text-gray-800 dark:text-gray-200">{{
                   warehouse.id
@@ -186,7 +207,7 @@
                   class="w-6 h-6 text-purple-500 mr-3"
                 />
                 <span class="font-semibold text-gray-700 dark:text-gray-300"
-                  >{{ dat ==='datakril' ? translateText(`Holati`):`Holati` }}:</span
+                  >{{ dat === "datakril" ? translateText(`Holati`) : `Holati` }}:</span
                 >
                 <span class="ml-2" :class="getConditionStyle(warehouse.condition)">{{
                   getConditionText(warehouse.condition)
@@ -195,7 +216,9 @@
               <div v-if="warehouse.location" class="flex items-center">
                 <Icon icon="mdi:map-marker-outline" class="w-6 h-6 text-red-500 mr-3" />
                 <span class="font-semibold text-gray-700 dark:text-gray-300"
-                  >Turgan joyi:</span
+                  >{{
+                    dat === "datakril" ? translateText(`Turgan joyi`) : `Turgan joyi`
+                  }}:</span
                 >
                 <span class="ml-2 text-gray-800 dark:text-gray-200">{{
                   warehouse.location
@@ -206,10 +229,22 @@
               <div v-if="warehouse.collection" class="flex items-center">
                 <Icon icon="mdi:archive-outline" class="w-6 h-6 text-violet-300 mr-3" />
                 <span class="font-semibold text-gray-700 dark:text-gray-300"
-                  >To'liq to'plam:</span
+                  >{{
+                    dat === "datakril"
+                      ? translateText(`To'liq to'plam`)
+                      : `To'liq to'plam`
+                  }}:</span
                 >
                 <span class="ml-2 text-gray-800 dark:text-gray-200">
-                  {{ warehouse.collection ? "Ha" : "Yo'q" }}
+                  {{
+                    warehouse.collection
+                      ? dat === "datakril"
+                        ? translateText(`Ha`)
+                        : `Ha`
+                      : dat === "datakril"
+                      ? translateText("Yo'q")
+                      : "Yo'q"
+                  }}
                 </span>
               </div>
               <div v-if="warehouse.whomBelongs" class="flex items-center">
@@ -218,25 +253,41 @@
                   class="w-6 h-6 text-emerald-500 mr-3"
                 />
                 <span class="font-semibold text-gray-700 dark:text-gray-300"
-                  >Mas'ul shaxs:</span
+                  >{{
+                    dat === "datakril" ? translateText(`Mas'ul shaxs`) : `Mas'ul shaxs`
+                  }}:</span
                 >
                 <span class="ml-2 text-gray-800 dark:text-gray-200">
-                  {{ warehouse.whomBelongs }}
+                  {{
+                    dat === "datakril"
+                      ? translateText(warehouse.whomBelongs)
+                      : warehouse.whomBelongs
+                  }}
                 </span>
               </div>
               <div v-if="warehouse.category.name" class="flex items-center">
                 <Icon icon="mdi:folder-outline" class="w-6 h-6 text-blue-500 mr-3" />
                 <span class="font-semibold text-gray-700 dark:text-gray-300"
-                  >Bo'lim nomi:</span
+                  >{{
+                    dat === "datakril" ? translateText(`Bo'lim nomi`) : `Bo'lim nomi`
+                  }}:</span
                 >
                 <span class="ml-2 text-gray-800 dark:text-gray-200">
-                  {{ warehouse.category.name }}
+                  {{
+                    dat === "datakril"
+                      ? translateText(warehouse.category.name)
+                      : warehouse.category.name
+                  }}
                 </span>
               </div>
               <div v-if="warehouse.purchaseDate" class="flex items-center">
                 <Icon icon="mdi:calendar-outline" class="w-6 h-6 text-cyan-500 mr-3" />
                 <span class="font-semibold text-gray-700 dark:text-gray-300"
-                  >Sotib Olingan Sana:</span
+                  >{{
+                    dat === "datakril"
+                      ? translateText(`Sotib Olingan Sana`)
+                      : `Sotib Olingan Sana`
+                  }}:</span
                 >
                 <span class="ml-2 text-gray-800 dark:text-gray-200">{{
                   formatDate(warehouse.purchaseDate)
@@ -254,10 +305,14 @@
               class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4 flex items-center"
             >
               <Icon icon="mdi:text-box-outline" class="w-6 h-6 text-indigo-500 mr-3" />
-              Tavsif
+              {{ dat === "datakril" ? translateText(`Tavsif`) : `Tavsif` }}
             </h3>
             <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-              {{ warehouse.description }}
+              {{
+                dat === "datakril"
+                  ? translateText(warehouse.description)
+                  : warehouse.description
+              }}
             </p>
           </div>
         </div>
@@ -289,7 +344,11 @@
                     <Icon icon="mdi:pencil-outline" class="w-5 h-5 text-white" />
                   </div>
                   <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100">
-                    Mahsulotni Tahrirlash
+                    {{
+                      dat === "datakril"
+                        ? translateText(`Mahsulotni Tahrirlash`)
+                        : `Mahsulotni Tahrirlash`
+                    }}
                   </h3>
                 </div>
                 <button
@@ -306,27 +365,36 @@
                   <!-- Product Name -->
                   <div>
                     <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
+                      class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
                     >
                       <Icon icon="mdi:tag-outline" class="w-4 h-4 text-blue-500 mr-2" />
-                      Mahsulot Nomi *
+                      {{
+                        dat === "datakril"
+                          ? translateText(`Mahsulot Nomi`)
+                          : `Mahsulot Nomi`
+                      }}
+                      *
                     </label>
                     <input
                       v-model="editForm.name"
                       type="text"
                       required
                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white/80 dark:bg-gray-700/80 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                      placeholder="Mahsulot nomini kiriting"
+                      :placeholder="
+                        dat === 'datakril'
+                          ? translateText(`Mahsulot nomini kiriting`)
+                          : `Mahsulot nomini kiriting`
+                      "
                     />
                   </div>
 
                   <!-- Quantity -->
                   <div>
                     <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
+                      class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
                     >
                       <Icon icon="mdi:numeric" class="w-4 h-4 text-green-500 mr-2" />
-                      Miqdori *
+                      {{ dat === "datakril" ? translateText(`Miqdori`) : `Miqdori` }} *
                     </label>
                     <input
                       v-model.number="editForm.quantity"
@@ -340,36 +408,60 @@
                   <!-- Condition -->
                   <div>
                     <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
+                      class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
                     >
                       <Icon
                         icon="mdi:check-circle-outline"
                         class="w-4 h-4 text-purple-500 mr-2"
                       />
-                      Holati
+                      {{ dat === "datakril" ? translateText(`Holati`) : `Holati` }}
                     </label>
                     <select
                       v-model="editForm.condition"
                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white/80 dark:bg-gray-700/80 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
                     >
-                      <option value="">Holatni tanlang</option>
-                      <option value="yangi">✨ Yangi</option>
-                      <option value="yaxshi">👍 Yaxshi</option>
-                      <option value="qoniqarli">👌 Qoniqarli</option>
-                      <option value="tamirlash_kerak">🔧 Tamirlash kerak</option>
+                      <option value="">
+                        {{
+                          dat === "datakril"
+                            ? translateText(`Holatni tanlang`)
+                            : `Holatni tanlang`
+                        }}
+                      </option>
+                      <option value="yangi">
+                        ✨ {{ dat === "datakril" ? translateText(`Yangi`) : `Yangi` }}
+                      </option>
+                      <option value="yaxshi">
+                        👍 {{ dat === "datakril" ? translateText(`Yaxshi`) : `Yaxshi` }}
+                      </option>
+                      <option value="qoniqarli">
+                        👌
+                        {{
+                          dat === "datakril" ? translateText(`Qoniqarli`) : `Qoniqarli`
+                        }}
+                      </option>
+                      <option value="tamirlash_kerak">
+                        🔧
+                        {{
+                          dat === "datakril"
+                            ? translateText(`Tamirlash kerak`)
+                            : `Tamirlash kerak`
+                        }}
+                      </option>
                     </select>
                   </div>
 
                   <!-- Location -->
                   <div>
                     <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
+                      class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
                     >
                       <Icon
                         icon="mdi:map-marker-outline"
                         class="w-4 h-4 text-red-500 mr-2"
                       />
-                      Turgan joyi
+                      {{
+                        dat === "datakril" ? translateText(`Turgan joyi`) : `Turgan joyi`
+                      }}
                     </label>
                     <input
                       v-model="editForm.location"
@@ -382,13 +474,17 @@
                   <!-- Collection -->
                   <div>
                     <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
+                      class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
                     >
                       <Icon
                         icon="mdi:package-variant"
                         class="w-4 h-4 text-orange-500 mr-2"
                       />
-                      Butun komplekt keldimi?
+                      {{
+                        dat === "datakril"
+                          ? translateText(`Butun komplekt keldimi?`)
+                          : `Butun komplekt keldimi?`
+                      }}
                     </label>
                     <div
                       class="flex items-center p-3 bg-white/60 dark:bg-gray-700/60 rounded-lg border border-gray-300 dark:border-gray-600"
@@ -398,41 +494,55 @@
                         type="checkbox"
                         class="w-4 h-4 text-orange-500 bg-white border-gray-300 rounded focus:ring-orange-500"
                       />
-                      <span class="ml-2 text-sm text-gray-700 dark:text-gray-300"
-                        >Barcha qismlar mavjud</span
-                      >
+                      <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">{{
+                        dat === "datakril"
+                          ? translateText(`Barcha qismlar mavjud`)
+                          : `Barcha qismlar mavjud`
+                      }}</span>
                     </div>
                   </div>
 
                   <!-- Responsible Person -->
                   <div>
                     <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
+                      class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
                     >
                       <Icon
                         icon="mdi:account-outline"
                         class="w-4 h-4 text-teal-500 mr-2"
                       />
-                      Mas'ul shaxs
+                      {{
+                        dat === `datakril`
+                          ? translateText(`Mas'ul shaxs`)
+                          : `Mas'ul shaxs`
+                      }}
                     </label>
                     <input
                       v-model="editForm.whomBelongs"
                       type="text"
                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white/80 dark:bg-gray-700/80 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
-                      placeholder="Mas'ul shaxs ismi"
+                      :placeholder="
+                        dat === 'datakril'
+                          ? translateText(`Mas'ul shaxs ismi`)
+                          : `Mas'ul shaxs ismi`
+                      "
                     />
                   </div>
 
                   <!-- Purchase Date -->
                   <div>
                     <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
+                      class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
                     >
                       <Icon
                         icon="mdi:calendar-outline"
                         class="w-4 h-4 text-cyan-500 mr-2"
                       />
-                      Sotib olingan sana
+                      {{
+                        dat === "datakril"
+                          ? translateText(`Sotib olingan sana`)
+                          : `Sotib olingan sana`
+                      }}
                     </label>
                     <input
                       v-model="editForm.purchaseDate"
@@ -444,10 +554,14 @@
                   <!-- Image Upload -->
                   <div>
                     <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
+                      class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
                     >
                       <Icon icon="mdi:image-outline" class="w-4 h-4 text-pink-500 mr-2" />
-                      Mahsulot rasmlari
+                      {{
+                        dat === "datakril"
+                          ? translateText(`Mahsulot rasmlari`)
+                          : `Mahsulot rasmlari`
+                      }}
                     </label>
                     <input
                       type="file"
@@ -504,19 +618,23 @@
                 <!-- Description -->
                 <div>
                   <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
+                    class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
                   >
                     <Icon
                       icon="mdi:text-box-outline"
                       class="w-4 h-4 text-indigo-500 mr-2"
                     />
-                    Tavsif
+                    {{ dat === "datakril" ? translateText(`Tavsif`) : `Tavsif` }}
                   </label>
                   <textarea
                     v-model="editForm.description"
                     rows="3"
                     class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white/80 dark:bg-gray-700/80 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors resize-none"
-                    placeholder="Mahsulot haqida qo'shimcha ma'lumot"
+                    :placeholder="
+                      dat === 'datakril'
+                        ? translateText(`Mahsulot haqida qo'shimcha ma'lumot`)
+                        : `Mahsulot haqida qo'shimcha ma'lumot`
+                    "
                   ></textarea>
                 </div>
 
@@ -529,7 +647,9 @@
                     @click="closeEditModal"
                     class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
                   >
-                    Bekor Qilish
+                    {{
+                      dat === "datakril" ? translateText(`Bekor Qilish`) : `Bekor Qilish`
+                    }}
                   </button>
                   <button
                     type="submit"
@@ -542,7 +662,15 @@
                       class="animate-spin mr-2 w-4 h-4"
                     />
                     <Icon v-else icon="mdi:content-save-outline" class="mr-2 w-4 h-4" />
-                    {{ loading ? "Saqlanmoqda..." : "Saqlash" }}
+                    {{
+                      loading
+                        ? dat === "datakril"
+                          ? translateText(`Saqlanmoqda...`)
+                          : `Saqlanmoqda...`
+                        : dat === "datakril"
+                        ? translateText(`Saqlash`)
+                        : `Saqlash`
+                    }}
                   </button>
                 </div>
               </form>
@@ -576,18 +704,32 @@
                 >
                   <Icon icon="mdi:delete-outline" class="w-5 h-5 text-white" />
                 </div>
-                Mahsulotni O'chirish
+                {{
+                  dat === "datakril"
+                    ? translateText(`Mahsulotni O'chirish`)
+                    : `Mahsulotni O'chirish`
+                }}
               </h3>
               <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
-                "{{ warehouse.name }}" mahsulotini o'chirishni tasdiqlaysizmi? Bu amal
-                qaytarib bo'lmaydi.
+                "{{
+                  dat === "datakril" ? translateText(warehouse.name) : warehouse.name
+                }}"
+                {{
+                  dat === "datakril"
+                    ? translateText(`mahsulotini o'chirishni tasdiqlaysizmi? Bu amal
+                qaytarib bo'lmaydi.`)
+                    : `mahsulotini o'chirishni tasdiqlaysizmi? Bu amal
+                qaytarib bo'lmaydi.`
+                }}
               </p>
               <div class="flex justify-end gap-3">
                 <button
                   @click="closeDeleteModal"
                   class="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-300 dark:hover:bg-gray-600 transition-all duration-300 font-semibold"
                 >
-                  Bekor Qilish
+                  {{
+                    dat === "datakril" ? translateText(`Bekor Qilish`) : `Bekor Qilish`
+                  }}
                 </button>
                 <button
                   @click="deleteWarehouseAction"
@@ -603,7 +745,15 @@
                       icon="mdi:loading"
                       class="animate-spin mr-2 w-5 h-5"
                     />
-                    {{ loading ? "O'chirilmoqda..." : "O'chirish" }}
+                    {{
+                      loading
+                        ? dat === "datakril"
+                          ? translateText(`"O'chirilmoqda..."`)
+                          : "O'chirilmoqda..."
+                        : dat === "datakril"
+                        ? translateText("O'chirish")
+                        : "O'chirish"
+                    }}
                   </div>
                 </button>
               </div>
@@ -623,6 +773,8 @@ import { Icon } from "@iconify/vue";
 import { URL } from "@/auth/url.js";
 import { printContent } from "./print";
 import translateText from "@/auth/Translate";
+import { Trash } from "lucide-vue-next";
+import { onUnmounted } from "vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -634,6 +786,24 @@ const showEditModal = ref(false);
 const showDeleteModal = ref(false);
 const editImages = ref([]);
 const isExpanded = ref(false);
+
+const dat = ref(localStorage.getItem("til") || "datalotin");
+
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem("til") || "datalotin";
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
 
 const editForm = ref({
   id: null,
@@ -1127,47 +1297,105 @@ function printContent1() {
   printContent(printHTML);
 }
 
-async function printContent3() {
-  try {
-    // QZ Tray yuklanganini kutish
-    await waitForQZ();
+function printContent3() {
+  const printHTML = `
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Print Receipt</title>
+  <style>
+    @page {
+      size: 20mm 30mm;
+      margin: 0mm;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 9px;
+      line-height: 1.2;
+      color: #000;
+      width: 30mm;
+      height: 20mm;
+      overflow: hidden;
+    }
+    
+    .container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    
+    .decorative-line {
+      border-top: 0.5px solid #000;
+      margin: 1mm 0;
+    }
+    
+    .content-wrapper {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .info-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 1mm;
+    }
+    .info-right {
 
-    // QZ Tray bilan ulanish
-    await qz.websocket.connect();
-
-    // Printerni topish
-    const printer = await qz.printers.find("Xprinter XP-T361U"); // printer nomini o‘zgartiring
-
-    // Konfiguratsiya
-    const config = qz.configs.create(printer, {
-      copies: 1,
-      scaling: "fit"
-    });
-
-    // QR code URL va sana
-    const qrCodeUrl = `https://backend.arizasud.uz/${warehouse.value.qrCodeUrl}`;
-    const today = new Date().toLocaleDateString("uz-UZ");
-
-    // QR rasmni base64 formatga aylantirish
-    const image = await qz.tools.convert({ url: qrCodeUrl, format: 'image' });
-
-    // Chop etiladigan data
-    const data = [
-      { type: 'image', data: image },
-      '\n',
-      today
-    ];
-
-    // Print
-    await qz.print(config, data);
-
-    console.log("Chop etildi!");
-
-  } catch (err) {
-    console.error("Chop etishda xatolik:", err);
-  } finally {
-    qz.websocket.disconnect();
-  }
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .qr-code {
+      width: 15mm;
+      height: 15mm;
+      border: 0.5px solid #ccc;
+    }
+    .par {
+      font-size: 5px;
+    }
+    
+    @media print {
+      body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      
+      .container {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">    
+    <div class="content-wrapper">
+      <div class="info-section">
+        <div class="info-right">
+          <p class="par">Chop etilgan ${new Date().toLocaleDateString("uz-UZ")}</p>
+          <div class="qr-section">
+            <img src="https://backend.arizasud.uz/${
+              warehouse.value.qrCodeUrl
+            }" alt="QR Code" class="qr-code" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+`;
+  printContent(printHTML);
 }
 
 const openEditModal = () => {

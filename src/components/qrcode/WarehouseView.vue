@@ -22,10 +22,20 @@
                 <h1
                   class="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-500 bg-clip-text text-transparent mb-2"
                 >
-                  Ombor Boshqaruvi
+                  {{
+                    dat === "datakril"
+                      ? translateText(`Ombor Boshqaruvi`)
+                      : `Ombor Boshqaruvi`
+                  }}
                 </h1>
                 <p class="text-gray-600 dark:text-gray-300 text-lg">
-                  Yangi mahsulotlarni qo'shing va mavjud omborni boshqaring
+                  {{
+                    dat === "datakril"
+                      ? translateText(
+                          `Yangi mahsulotlarni qo'shing va mavjud omborni boshqaring`
+                        )
+                      : `Yangi mahsulotlarni qo'shing va mavjud omborni boshqaring`
+                  }}
                 </p>
               </div>
             </div>
@@ -39,7 +49,11 @@
               ></div>
               <div class="relative z-10 flex items-center">
                 <Icon icon="mdi:plus-circle-outline" class="mr-3 w-5 h-5" />
-                Yangi Mahsulot Qo'shish
+                {{
+                  dat === "datakril"
+                    ? translateText(`Yangi Mahsulot Qo'shish`)
+                    : `Yangi Mahsulot Qo'shish`
+                }}
               </div>
             </button>
           </div>
@@ -62,7 +76,11 @@
             >
               <Icon icon="mdi:view-list-outline" class="w-5 h-5 text-white" />
             </div>
-            Mavjud Mahsulotlar
+            {{
+              dat === "datakril"
+                ? translateText(`Mavjud Mahsulotlar`)
+                : `Mavjud Mahsulotlar`
+            }}
             <span
               class="ml-4 px-3 py-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm rounded-full shadow-lg"
             >
@@ -85,10 +103,18 @@
               ></div>
             </div>
             <h3 class="text-2xl font-bold text-gray-600 dark:text-gray-400 mb-4">
-              Hozircha hech qanday mahsulot yo'q
+              {{
+                dat === "datakril"
+                  ? translateText(`Hozircha hech qanday mahsulot yo'q`)
+                  : `Hozircha hech qanday mahsulot yo'q`
+              }}
             </h3>
             <p class="text-gray-500 dark:text-gray-500 text-lg">
-              Yuqoridagi tugma orqali yangi mahsulot qo'shing
+              {{
+                dat === "datakril"
+                  ? translateText(`Yuqoridagi tugma orqali yangi mahsulot qo'shing`)
+                  : `Yuqoridagi tugma orqali yangi mahsulot qo'shing`
+              }}
             </p>
           </div>
 
@@ -112,20 +138,27 @@
                   <h3
                     class="text-lg font-bold text-gray-800 dark:text-gray-200 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300"
                   >
-                    {{ warehouse.name }}
+                    {{
+                      dat === "datakril" ? translateText(warehouse.name) : warehouse.name
+                    }}
                   </h3>
                   <div class="flex flex-col items-end gap-2">
                     <span
                       class="px-3 py-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm font-bold rounded-full shadow-lg"
                     >
-                      {{ warehouse.quantity }} dona
+                      {{ warehouse.quantity }}
+                      {{ dat === "datakril" ? translateText(`dona`) : `dona` }}
                     </span>
                     <div
                       v-if="warehouse.condition"
                       class="px-2 py-1 text-xs font-semibold rounded-lg"
                       :class="getConditionStyle(warehouse.condition)"
                     >
-                      {{ getConditionText(warehouse.condition) }}
+                      {{
+                        dat === "datakril"
+                          ? translateText(getConditionText(warehouse.condition))
+                          : getConditionText(warehouse.condition)
+                      }}
                     </div>
                   </div>
                 </div>
@@ -166,22 +199,44 @@
                       icon="mdi:map-marker-outline"
                       class="w-5 h-5 text-red-500 mr-3"
                     />
-                    <span class="font-medium w-[50%]">Joy:</span>
-                    <span class="font-semibold">{{ warehouse.location }}</span>
+                    <span class="font-medium w-[50%]"
+                      >{{ dat === "datakril" ? translateText(`Joy`) : `Joy` }}:</span
+                    >
+                    <span class="font-semibold">{{
+                      dat === "datakril"
+                        ? translateText(warehouse.location)
+                        : warehouse.location
+                    }}</span>
                   </div>
                   <div v-if="warehouse.purchaseDate" class="flex items-center">
                     <Icon
                       icon="mdi:calendar-outline"
                       class="w-5 h-5 text-cyan-500 mr-3"
                     />
-                    <span class="font-medium w-[50%]">Sana:</span>
+                    <span class="font-medium w-[50%]"
+                      >{{ dat === `datakril` ? translateText(`Sana`) : `Sana` }}:</span
+                    >
                     <span>{{ formatDate(warehouse.purchaseDate) }}</span>
                   </div>
                   <!-- To‘liq to‘plam -->
                   <div v-if="warehouse.collection" class="flex items-center">
                     <Icon icon="mdi:archive-outline" class="w-5 h-5 text-teal-500 mr-3" />
-                    <span class="font-medium w-[50%]">To'liq to'plam:</span>
-                    <span>{{ warehouse.collection ? "Ha" : "Yo'q" }}</span>
+                    <span class="font-medium w-[50%]"
+                      >{{
+                        dat === "datakril"
+                          ? translateText(`To'liq to'plam`)
+                          : `To'liq to'plam`
+                      }}:</span
+                    >
+                    <span>{{
+                      warehouse.collection
+                        ? dat === "datakril"
+                          ? translateText(`Ha`)
+                          : `Ha`
+                        : dat === "datakril"
+                        ? translateText(`Yo'q`)
+                        : `Yo'q`
+                    }}</span>
                   </div>
 
                   <!-- Mas’ul shaxs -->
@@ -190,8 +245,18 @@
                       icon="mdi:account-tie-outline"
                       class="w-5 h-5 text-amber-400 mr-3"
                     />
-                    <span class="font-medium w-[50%]">Mas'ul shaxs:</span>
-                    <span>{{ warehouse.whomBelongs }}</span>
+                    <span class="font-medium w-[50%]"
+                      >{{
+                        dat === "datakril"
+                          ? translateText(`Mas'ul shaxs`)
+                          : `Mas'ul shaxs`
+                      }}:</span
+                    >
+                    <span>{{
+                      dat === "datakril"
+                        ? translateText(warehouse.whomBelongs)
+                        : warehouse.whomBelongs
+                    }}</span>
                   </div>
                 </div>
 
@@ -203,7 +268,11 @@
                   <p
                     class="text-sm text-gray-600 dark:text-gray-400 line-clamp-3 leading-relaxed"
                   >
-                    {{ warehouse.description }}
+                    {{
+                      dat === "datakril"
+                        ? translateText(warehouse.description)
+                        : warehouse.description
+                    }}
                   </p>
                 </div>
 
@@ -262,7 +331,11 @@
                   >
                     <Icon icon="mdi:plus-circle-outline" class="w-5 h-5 text-white" />
                   </div>
-                  Yangi Mahsulot Qo'shish
+                  {{
+                    dat === "datakril"
+                      ? translateText(`Yangi Mahsulot Qo'shish`)
+                      : `Yangi Mahsulot Qo'shish`
+                  }}
                 </h3>
                 <button
                   @click="closeCreateModal"
@@ -281,12 +354,21 @@
                       class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                     >
                       <Icon icon="mdi:tag-outline" class="w-4 h-4 text-blue-500 mr-2" />
-                      Mahsulot Nomi *
+                      {{
+                        dat === "datakril"
+                          ? translateText(`Mahsulot Nomi`)
+                          : `Mahsulot Nomi`
+                      }}
+                      *
                     </label>
                     <input
                       v-model="form.name"
                       type="text"
-                      placeholder="Mahsulot nomini kiriting"
+                      :placeholder="
+                        dat === 'datakril'
+                          ? translateText(`Mahsulot nomini kiriting`)
+                          : `Mahsulot nomini kiriting`
+                      "
                       required
                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white/70 dark:bg-gray-700/70 text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all duration-200"
                     />
@@ -298,13 +380,17 @@
                       class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                     >
                       <Icon icon="mdi:numeric" class="w-4 h-4 text-green-500 mr-2" />
-                      Miqdori *
+                      {{ dat === "datakril" ? translateText(`Miqdori`) : `Miqdori` }} *
                     </label>
                     <input
                       v-model.number="form.quantity"
                       type="number"
                       min="1"
-                      placeholder="Miqdorni kiriting"
+                      :placeholder="
+                        dat === 'datakril'
+                          ? translateText(`Miqdorni kiriting`)
+                          : `Miqdorni kiriting`
+                      "
                       required
                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white/70 dark:bg-gray-700/70 text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-green-500/30 focus:border-green-500 transition-all duration-200"
                     />
@@ -319,17 +405,39 @@
                         icon="mdi:check-circle-outline"
                         class="w-4 h-4 text-purple-500 mr-2"
                       />
-                      Holati
+                      {{ dat === "datakril" ? translateText(`Holati`) : `Holati` }}
                     </label>
                     <select
                       v-model="form.condition"
                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white/70 dark:bg-gray-700/70 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500 transition-all duration-200"
                     >
-                      <option value="">Holatni tanlang</option>
-                      <option value="yangi">✨ Yangi</option>
-                      <option value="yaxshi">👍 Yaxshi</option>
-                      <option value="qoniqarli">👌 Qoniqarli</option>
-                      <option value="tamirlash_kerak">🔧 Tamirlash kerak</option>
+                      <option value="">
+                        {{
+                          dat === "datakril"
+                            ? translateText(`Holatni tanlang`)
+                            : `Holatni tanlang`
+                        }}
+                      </option>
+                      <option value="yangi">
+                        ✨ {{ dat === "datakril" ? translateText(`Yangi`) : `Yangi` }}
+                      </option>
+                      <option value="yaxshi">
+                        👍 {{ dat === "datakril" ? translateText(`Yaxshi`) : `Yaxshi` }}
+                      </option>
+                      <option value="qoniqarli">
+                        👌
+                        {{
+                          dat === "datakril" ? translateText("Qoniqarli") : "Qoniqarli"
+                        }}
+                      </option>
+                      <option value="tamirlash_kerak">
+                        🔧
+                        {{
+                          dat === "datakril"
+                            ? translateText("Tamirlash kerak")
+                            : "Tamirlash kerak"
+                        }}
+                      </option>
                     </select>
                   </div>
 
@@ -342,12 +450,18 @@
                         icon="mdi:map-marker-outline"
                         class="w-4 h-4 text-red-500 mr-2"
                       />
-                      Turgan joyi
+                      {{
+                        dat === "datakril" ? translateText(`Turgan joyi`) : `Turgan joyi`
+                      }}
                     </label>
                     <input
                       v-model="form.location"
                       type="text"
-                      placeholder="Joyni kiriting (A-1, B-5, ...)"
+                      :placeholder="
+                        dat === 'datakril'
+                          ? translateText(`Joyni kiriting (A-1, B-5, ...)`)
+                          : `Joyni kiriting (A-1, B-5, ...)`
+                      "
                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white/70 dark:bg-gray-700/70 text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-red-500/30 focus:border-red-500 transition-all duration-200"
                     />
                   </div>
@@ -361,7 +475,11 @@
                         icon="mdi:calendar-outline"
                         class="w-4 h-4 text-cyan-500 mr-2"
                       />
-                      Sotib Olingan Sana
+                      {{
+                        dat === "datakril"
+                          ? translateText(`Sotib Olingan Sana`)
+                          : `Sotib Olingan Sana`
+                      }}
                     </label>
                     <input
                       v-model="form.purchaseDate"
@@ -379,7 +497,11 @@
                         icon="mdi:package-variant"
                         class="w-4 h-4 text-indigo-500 mr-2"
                       />
-                      Butun komplekt keldimi?
+                      {{
+                        dat === "datakril"
+                          ? translateText(`Butun komplekt keldimi?`)
+                          : `Butun komplekt keldimi?`
+                      }}
                     </label>
                     <div
                       class="flex items-center p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white/70 dark:bg-gray-700/70"
@@ -394,7 +516,11 @@
                         for="collection"
                         class="ml-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer"
                       >
-                        Ha, to'liq komplekt
+                        {{
+                          dat === "datakril"
+                            ? translateText(`Ha, to'liq komplekt`)
+                            : `Ha, to'liq komplekt`
+                        }}
                       </label>
                     </div>
                   </div>
@@ -408,12 +534,20 @@
                         icon="mdi:account-outline"
                         class="w-4 h-4 text-orange-500 mr-2"
                       />
-                      Mas'ul shaxs
+                      {{
+                        dat === "datakril"
+                          ? translateText(`Mas'ul shaxs`)
+                          : `Mas'ul shaxsvvv`
+                      }}
                     </label>
                     <input
                       v-model="form.whomBelongs"
                       type="text"
-                      placeholder="Mas'ul shaxs ismini kiriting"
+                      :placeholder="
+                        dat === 'datakril'
+                          ? translateText(`Mas'ul shaxs ismini kiriting`)
+                          : `Mas'ul shaxs ismini kiriting`
+                      "
                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white/70 dark:bg-gray-700/70 text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-orange-500/30 focus:border-orange-500 transition-all duration-200"
                     />
                   </div>
@@ -424,7 +558,11 @@
                       class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                     >
                       <Icon icon="mdi:image-outline" class="w-4 h-4 text-pink-500 mr-2" />
-                      Mahsulot Rasmi
+                      {{
+                        dat === "datakril"
+                          ? translateText(`Mahsulot Rasmi`)
+                          : `Mahsulot Rasmi`
+                      }}
                     </label>
                     <input
                       type="file"
@@ -451,11 +589,15 @@
                       icon="mdi:text-box-outline"
                       class="w-4 h-4 text-teal-500 mr-2"
                     />
-                    Tavsif
+                    {{ dat === "datakril" ? translateText(`Tavsif`) : `Tavsif` }}
                   </label>
                   <textarea
                     v-model="form.description"
-                    placeholder="Mahsulot haqida qo'shimcha ma'lumot..."
+                    :placeholder="
+                      dat === 'datakril'
+                        ? translateText(`Mahsulot haqida qo'shimcha ma'lumot...`)
+                        : `Mahsulot haqida qo'shimcha ma'lumot...`
+                    "
                     rows="3"
                     class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white/70 dark:bg-gray-700/70 text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all duration-200 resize-none"
                   ></textarea>
@@ -470,7 +612,9 @@
                     @click="closeCreateModal"
                     class="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200 font-medium"
                   >
-                    Bekor Qilish
+                    {{
+                      dat === "datakril" ? translateText(`Bekor Qilish`) : `Bekor Qilish`
+                    }}
                   </button>
                   <button
                     type="submit"
@@ -482,7 +626,15 @@
                       icon="mdi:loading"
                       class="animate-spin mr-2 w-4 h-4"
                     />
-                    {{ loading ? "Qo'shilmoqda..." : "Qo'shish" }}
+                    {{
+                      loading
+                        ? dat === "datakril"
+                          ? translateText(`Qo'shilmoqda...`)
+                          : `Qo'shilmoqda...`
+                        : dat === "datakril"
+                        ? translateText(`Qo'shish`)
+                        : `Qo'shish`
+                    }}
                   </button>
                 </div>
               </form>
@@ -519,7 +671,11 @@
                     <Icon icon="mdi:pencil-outline" class="w-5 h-5 text-white" />
                   </div>
                   <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100">
-                    Mahsulotni Tahrirlash
+                    {{
+                      dat === "datakril"
+                        ? translateText(`Mahsulotni Tahrirlash`)
+                        : `Mahsulotni Tahrirlash`
+                    }}
                   </h3>
                 </div>
                 <button
@@ -536,10 +692,15 @@
                   <!-- Product Name -->
                   <div>
                     <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
+                      class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
                     >
                       <Icon icon="mdi:tag-outline" class="w-4 h-4 text-blue-500 mr-2" />
-                      Mahsulot Nomi *
+                      {{
+                        dat === "datakril"
+                          ? translateText(`Mahsulot Nomi`)
+                          : "Mahsulot Nomi"
+                      }}
+                      *
                     </label>
                     <input
                       v-model="editForm.name"
@@ -553,10 +714,10 @@
                   <!-- Quantity -->
                   <div>
                     <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
+                      class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
                     >
                       <Icon icon="mdi:numeric" class="w-4 h-4 text-green-500 mr-2" />
-                      Miqdori *
+                      {{ dat === "datakril" ? translateText(`Miqdori`) : `Miqdori` }} *
                     </label>
                     <input
                       v-model.number="editForm.quantity"
@@ -570,36 +731,60 @@
                   <!-- Condition -->
                   <div>
                     <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
+                      class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
                     >
                       <Icon
                         icon="mdi:check-circle-outline"
                         class="w-4 h-4 text-purple-500 mr-2"
                       />
-                      Holati
+                      {{ dat === "datakril" ? translateText(`Holati`) : `Holati` }}
                     </label>
                     <select
                       v-model="editForm.condition"
                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white/80 dark:bg-gray-700/80 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
                     >
-                      <option value="">Holatni tanlang</option>
-                      <option value="yangi">✨ Yangi</option>
-                      <option value="yaxshi">👍 Yaxshi</option>
-                      <option value="qoniqarli">👌 Qoniqarli</option>
-                      <option value="tamirlash_kerak">🔧 Tamirlash kerak</option>
+                      <option value="">
+                        {{
+                          dat === "datakril"
+                            ? translateText(`Holatni tanlang`)
+                            : `Holatni tanlang`
+                        }}
+                      </option>
+                      <option value="yangi">
+                        ✨ {{ dat === "datakril" ? translateText(`Yangi`) : `Yangi` }}
+                      </option>
+                      <option value="yaxshi">
+                        👍 {{ dat === "datakril" ? translateText(`Yaxshi`) : `Yaxshi` }}
+                      </option>
+                      <option value="qoniqarli">
+                        👌
+                        {{
+                          dat === "datakril" ? translateText(`Qoniqarli`) : `Qoniqarli`
+                        }}
+                      </option>
+                      <option value="tamirlash_kerak">
+                        🔧
+                        {{
+                          dat === "datakril"
+                            ? translateText(`Tamirlash kerak`)
+                            : `Tamirlash kerak`
+                        }}
+                      </option>
                     </select>
                   </div>
 
                   <!-- Location -->
                   <div>
                     <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
+                      class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
                     >
                       <Icon
                         icon="mdi:map-marker-outline"
                         class="w-4 h-4 text-red-500 mr-2"
                       />
-                      Turgan joyi
+                      {{
+                        dat === "datakril" ? translateText(`Turgan joyi`) : `Turgan joyi`
+                      }}
                     </label>
                     <input
                       v-model="editForm.location"
@@ -612,13 +797,17 @@
                   <!-- Collection -->
                   <div>
                     <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
+                      class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
                     >
                       <Icon
                         icon="mdi:package-variant"
                         class="w-4 h-4 text-orange-500 mr-2"
                       />
-                      Butun komplekt keldimi?
+                      {{
+                        dat === "datakril"
+                          ? translateText(`Butun komplekt keldimi?`)
+                          : `Butun komplekt keldimi?`
+                      }}
                     </label>
                     <div
                       class="flex items-center p-3 bg-white/60 dark:bg-gray-700/60 rounded-lg border border-gray-300 dark:border-gray-600"
@@ -628,41 +817,55 @@
                         type="checkbox"
                         class="w-4 h-4 text-orange-500 bg-white border-gray-300 rounded focus:ring-orange-500"
                       />
-                      <span class="ml-2 text-sm text-gray-700 dark:text-gray-300"
-                        >Barcha qismlar mavjud</span
-                      >
+                      <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">{{
+                        dat === "datakril"
+                          ? translateText(`Barcha qismlar mavjud`)
+                          : `Barcha qismlar mavjud`
+                      }}</span>
                     </div>
                   </div>
 
                   <!-- Responsible Person -->
                   <div>
                     <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
+                      class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
                     >
                       <Icon
                         icon="mdi:account-outline"
                         class="w-4 h-4 text-teal-500 mr-2"
                       />
-                      Mas'ul shaxs
+                      {{
+                        dat === "datakril"
+                          ? translateText(`Mas'ul shaxs`)
+                          : translateText(`Mas'ul shaxs`)
+                      }}
                     </label>
                     <input
                       v-model="editForm.whomBelongs"
                       type="text"
                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white/80 dark:bg-gray-700/80 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
-                      placeholder="Mas'ul shaxs ismi"
+                      :placeholder="
+                        dat === 'datakril'
+                          ? translateText(`Mas'ul shaxs ismi`)
+                          : `Mas'ul shaxs ismi`
+                      "
                     />
                   </div>
 
                   <!-- Purchase Date -->
                   <div>
                     <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
+                      class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
                     >
                       <Icon
                         icon="mdi:calendar-outline"
                         class="w-4 h-4 text-cyan-500 mr-2"
                       />
-                      Sotib olingan sana
+                      {{
+                        dat === "datakril"
+                          ? translateText(`Sotib olingan sana`)
+                          : `Sotib olingan sana`
+                      }}
                     </label>
                     <input
                       v-model="editForm.purchaseDate"
@@ -674,10 +877,14 @@
                   <!-- Image Upload -->
                   <div>
                     <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
+                      class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
                     >
                       <Icon icon="mdi:image-outline" class="w-4 h-4 text-pink-500 mr-2" />
-                      Mahsulot rasmi
+                      {{
+                        dat === "datakril"
+                          ? translateText(`Mahsulot rasmi`)
+                          : `Mahsulot rasmi`
+                      }}
                     </label>
                     <input
                       type="file"
@@ -691,19 +898,23 @@
                 <!-- Description -->
                 <div>
                   <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
+                    class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center"
                   >
                     <Icon
                       icon="mdi:text-box-outline"
                       class="w-4 h-4 text-indigo-500 mr-2"
                     />
-                    Tavsif
+                    {{ dat === "datakril" ? translateText(`Tavsif`) : `Tavsif` }}
                   </label>
                   <textarea
                     v-model="editForm.description"
                     rows="3"
                     class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white/80 dark:bg-gray-700/80 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors resize-none"
-                    placeholder="Mahsulot haqida qo'shimcha ma'lumot"
+                    :placeholder="
+                      dat === 'datakril'
+                        ? translateText(`Mahsulot haqida qo'shimcha ma'lumot`)
+                        : `Mahsulot haqida qo'shimcha ma'lumot`
+                    "
                   ></textarea>
                 </div>
 
@@ -716,7 +927,9 @@
                     @click="closeEditModal"
                     class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
                   >
-                    Bekor Qilish
+                    {{
+                      dat === "datakril" ? translateText(`Bekor Qilish`) : `Bekor Qilish`
+                    }}
                   </button>
                   <button
                     type="submit"
@@ -729,7 +942,7 @@
                       class="animate-spin mr-2 w-4 h-4"
                     />
                     <Icon v-else icon="mdi:content-save-outline" class="mr-2 w-4 h-4" />
-                    {{ loading ? "Saqlanmoqda..." : "Saqlash" }}
+                    {{ loading ? dat === 'datakril' ? translateText(`Saqlanmoqda...`) : `Saqlanmoqda...` : dat === 'datakril' ? translateText(`Saqlash`) :`Saqlash` }}
                   </button>
                 </div>
               </form>
@@ -763,18 +976,19 @@
                 >
                   <Icon icon="mdi:delete-outline" class="w-5 h-5 text-white" />
                 </div>
-                Mahsulotni O'chirish
+                {{dat === 'datakril' ? translateText(`Mahsulotni O'chirish`) : `Mahsulotni O'chirish`}}
               </h3>
               <p class="text-gray-600 dark:text-gray-400 mb-6">
-                "{{ deleteWarehouse?.name }}" mahsulotini o'chirishni tasdiqlaysizmi? Bu
-                amal qaytarib bo'lmaydi.
+                "{{ deleteWarehouse?.name }}" {{ dat === 'datakril' ? translateText(`mahsulotini o'chirishni tasdiqlaysizmi? Bu
+                amal qaytarib bo'lmaydi.`):`mahsulotini o'chirishni tasdiqlaysizmi? Bu
+                amal qaytarib bo'lmaydi.` }}
               </p>
               <div class="flex justify-end gap-2">
                 <button
                   @click="closeDeleteModal"
                   class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-all duration-300"
                 >
-                  Bekor Qilish
+                  {{ dat === 'datakril' ? translateText(`Bekor Qilish`):`Bekor Qilish` }}
                 </button>
                 <button
                   @click="deleteWarehouseAction"
@@ -790,7 +1004,7 @@
                       icon="mdi:loading"
                       class="animate-spin mr-2 w-5 h-5"
                     />
-                    {{ loading ? "O'chirilmoqda..." : "O'chirish" }}
+                    {{ loading ? dat === 'datakril' ?  translateText(`O'chirilmoqda...`):`O'chirilmoqda...` : dat === 'datakril' ? translateText(`"O'chirish"`):`"O'chirish"` }}
                   </div>
                 </button>
               </div>
@@ -808,6 +1022,8 @@ import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
 import { Icon } from "@iconify/vue";
 import { URL } from "@/auth/url.js";
+import translateText from "@/auth/Translate";
+import { onUnmounted } from "vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -820,6 +1036,23 @@ const showEditModal = ref(false);
 const showDeleteModal = ref(false);
 const deleteWarehouse = ref(null);
 const editImage = ref(null);
+const dat = ref(localStorage.getItem("til") || "datalotin");
+
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem("til") || "datalotin";
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
 
 const form = ref({
   name: "",
