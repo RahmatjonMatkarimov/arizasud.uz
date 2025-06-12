@@ -74,6 +74,7 @@ const deleteSelectedItems = async () => {
     items.value = items.value.filter(item => !selectedItems.value.includes(item.id));
     selectedItems.value = [];
     showCheckboxes.value = false;
+    fetchItems()
   } catch (error) {
     console.error('Xatolik:', error);
   }
@@ -89,6 +90,7 @@ const updateItem = async (id) => {
     if (index !== -1) {
       items.value[index] = res.data;
     }
+    fetchItems()
   } catch (error) {
     console.error('Xatolik:', error);
   }

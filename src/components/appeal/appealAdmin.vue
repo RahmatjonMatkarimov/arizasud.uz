@@ -356,9 +356,9 @@
                 >
                   <button 
                     @click.stop="func(item)" 
-                    class="absolute top-2 right-1 p-3 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 z-40 hover:scale-110 hover:rotate-90"
+                    class="absolute -top-1 -right-2 p-3 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 z-40 hover:scale-110 hover:rotate-90"
                   >
-                    <svg class="w-5 h-5 text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-200" fill="currentColor" viewBox="0 0 20 20">
+                    <svg class="w-6 h-6 text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-200" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path>
                     </svg>
                   </button>

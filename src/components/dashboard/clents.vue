@@ -18,19 +18,22 @@
               )
             "
             :key="file.id"
-            class="my-2 bg-[#8a8a8a36] w-full flex justify-between items-center relative z-10 px-6 py-5 rounded-lg"
+            class="my-2 bg-[#8a8a8a36] w-full flex justify-between items-center relative z-10 px-6 py-4 rounded-lg"
           >
             <a target="_blank" class="text-[17px]">
               {{ dat === "datakril" ? translateText(file.name) : file.name }}
             </a>
-            <div class="flex items-center relative z-50 gap-4">
-              <div v-if="file.ClientPayment && file.ClientPayment.length" class="text-sm">
+            <div class="flex items-center relative z-50 gap-2">
+              <div
+                v-if="file.ClientPayment && file.ClientPayment.length"
+                @click.stop="openPaymentDetailsModal(file, $event)"
+                class="text-sm bg-green-500 flex justify-center items-center cursor-pointer gap-2 px-4 py-[7px] hover:bg-green-600 rounded-lg"
+              >
                 <div
                   class="text-black cursor-pointer"
                   @click.stop="file.showDetails = !file.showDetails"
                 >
                   <span
-                    @click.stop="openPaymentDetailsModal(file, $event)"
                     class="text-green-600"
                     v-if="
                       file.ClientPayment[file.ClientPayment.length - 1]?.remainingSum <= 0
@@ -53,6 +56,12 @@
                     {{ dat === "datakril" ? translateText("so'm") : "so'm" }}
                   </span>
                 </div>
+                <Icon
+                  icon="prime:arrow-down"
+                  width="20"
+                  height="20"
+                  style="color: #fff"
+                />
               </div>
               <div
                 v-if="
@@ -63,7 +72,7 @@
               >
                 <button
                   @click.stop="openPaymentModal(file)"
-                  class="ml-4 px-2 py-1 bg-green-500 text-white rounded-md hover:bg-green-600"
+                  class="ml-1 px-2 py-1 bg-green-500 text-white rounded-md hover:bg-green-600"
                 >
                   {{ dat === "datakril" ? translateText("To'lash") : "To'lash" }}
                 </button>
@@ -77,10 +86,12 @@
       </div>
       <!-- File Upload Modal -->
       <div
-        v-if="showModal" @click="showModal = false"
+        v-if="showModal"
+        @click="showModal = false"
         class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-40"
       >
-        <div @click.stop
+        <div
+          @click.stop
           class="bg-gray-200 dark:bg-gray-600 p-6 rounded-lg w-full max-w-lg shadow-lg relative"
         >
           <button
@@ -138,10 +149,12 @@
       </div>
       <!-- Region and District Selection Modal -->
       <div
-        v-if="showRegionModal" @click="closeRegionModal"
+        v-if="showRegionModal"
+        @click="closeRegionModal"
         class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
       >
-        <div @click.stop
+        <div
+          @click.stop
           class="bg-gray-200 dark:bg-gray-600 p-6 rounded-lg w-full max-w-md shadow-lg relative"
         >
           <button
@@ -222,10 +235,12 @@
       </div>
       <!-- Payment Modal -->
       <div
-        v-if="modal" @click="modal = false"
+        v-if="modal"
+        @click="modal = false"
         class="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50"
       >
-        <div @click.stop
+        <div
+          @click.stop
           class="bg-gray-200 dark:bg-gray-600 p-[15px] flex flex-col gap-3 rounded shadow-lg w-[450px]"
         >
           <input
@@ -319,6 +334,7 @@ import html2pdf from "html2pdf.js";
 import { URL } from "@/auth/url.js";
 import translateText from "@/auth/Translate";
 import { useSearchStore } from "@/components/Templates/searchQuary";
+import { Icon } from "@iconify/vue";
 const dat = ref(localStorage.getItem("til") || "datalotin");
 
 let intervalId = null;

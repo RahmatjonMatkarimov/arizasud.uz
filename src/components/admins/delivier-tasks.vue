@@ -656,8 +656,8 @@ onMounted(() => {
     </main>
   </div>
   <!-- Existing Rejection Modal -->
-  <div v-if="isModalOpen" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-    <div class="bg-white p-6 rounded-lg w-[400px]">
+  <div v-if="isModalOpen" @click="isModalOpen = false" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div @click.stop class="bg-white p-6 rounded-lg w-[400px]">
       <h2 class="text-xl text-black font-bold mb-4">
         {{ dat === 'datakril' ? translateText('Rad qilish sababi') : 'Rad qilish sababi' }}
       </h2>
@@ -675,8 +675,8 @@ onMounted(() => {
     </div>
   </div>
   <!-- Existing Reason Modal -->
-  <div v-if="isReasonModalOpen" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-    <div class="bg-white p-6 rounded-lg w-[400px]">
+  <div v-if="isReasonModalOpen" @click="isReasonModalOpen = false" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div @click.stop class="bg-white p-6 rounded-lg w-[400px]">
       <h2 class="text-xl text-black font-bold mb-4">
         {{ dat === 'datakril' ? translateText('Rad etish sababi') : 'Rad etish sababi' }}
       </h2>
@@ -689,8 +689,8 @@ onMounted(() => {
     </div>
   </div>
   <!-- New Admin Selection Modal -->
-  <div v-if="isAdminModalOpen" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-    <div class="bg-gray-200 p-2 rounded-lg w-[400px] max-h-[500px] border border-gray-300 shadow-lg">
+  <div v-if="isAdminModalOpen" @click="isAdminModalOpen = false" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div @click.stop class="bg-gray-200 p-2 rounded-lg w-[400px] max-h-[500px] border border-gray-300 shadow-lg">
       <h2 class="text-xl text-black font-bold mb-4 px-3">
         {{ dat === 'datakril' ? translateText('Ma\'sul shaxsni tanlang') : 'Ma\'sul shaxsni tanlang' }}
       </h2>

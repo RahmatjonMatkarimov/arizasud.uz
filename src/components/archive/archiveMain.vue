@@ -149,12 +149,7 @@ const observeCards = () => {
 };
 
 onMounted(() => {
-  window.addEventListener("storage", handleStorageChange);
   observeCards();
-});
-
-onUnmounted(() => {
-  window.removeEventListener("storage", handleStorageChange);
 });
 
 const sections = [
@@ -164,6 +159,9 @@ const sections = [
   { path: 'admin', title: 'Adminlar' },
   { path: 'yurist', title: 'Yuristlar' },
   { path: 'manager', title: 'Devonxona Mudirlari' },
+  { path: 'yuristAssistant', title: 'Yurist yordamchilari' },
+  { path: 'deliverer', title: 'Kuryerlar' },
+  { path: 'accauntant', title: 'Bugalterlar' },
   { path: 'partners', title: 'Hamkorlar' },
   { path: 'appeal', title: 'Interaktiv xizmatlar' },
   { path: 'files', title: 'Filelar' },
@@ -187,7 +185,6 @@ function goToPath(path) {
 
 /* Optimized card animation */
 .card-animate {
-  opacity: 0;
   transform: translateY(30px);
   transition: opacity 0.5s ease-out, transform 0.5s ease-out;
   will-change: opacity, transform;

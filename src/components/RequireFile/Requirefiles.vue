@@ -137,10 +137,10 @@
     </div>
   </div>
   <div
-    v-if="qwen"
+    v-if="qwen" @click="qwen = false"
     class="fixed inset-0 dark:bg-black/70 backdrop-blur-sm flex justify-center items-center z-40"
   >
-    <div
+    <div @click.stop
       class="dark:bg-gray-800 border border-gray-600 p-8 relative rounded-2xl bg-white shadow-2xl w-full max-w-lg mx-4"
     >
       <button

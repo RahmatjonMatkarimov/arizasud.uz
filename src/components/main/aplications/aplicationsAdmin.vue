@@ -1237,7 +1237,7 @@
     @click.self="func(null)"
   >
     <!-- Modal Container -->
-    <div class="relative w-full max-w-md mx-4 transition-all duration-500 ease-out">
+    <div @click.stop class="relative w-full max-w-md mx-4 transition-all duration-500 ease-out">
       <!-- Modal Content -->
       <div
         class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden"

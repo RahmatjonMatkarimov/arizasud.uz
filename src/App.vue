@@ -2,6 +2,7 @@
   <div v-if="isLoading" class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-80 z-50">
     <span class="loader"></span>
   </div>
+    <!-- <video src="../public/loader_video.mp4" autoplay ></video> -->
   <ticketModal v-if="hidden" />
   <ErrorComponent v-if="errorCode" :errorCode="errorCode" />
   <RouterView v-else />

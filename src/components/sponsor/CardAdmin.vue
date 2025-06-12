@@ -13,10 +13,10 @@
 
     <!-- Upload Modal -->
     <div
-      v-if="showModal"
+      v-if="showModal" @click="showModal = false"
       class="fixed z-50 inset-0 w-full h-full flex items-center bg-black bg-opacity-50 justify-center"
     >
-      <div class="relative bg-slate-800 border border-gray-700 rounded-2xl p-8 w-96">
+      <div class="relative bg-slate-800 border border-gray-700 rounded-2xl p-8 w-96" @click.stop>
         <button
           @click="toggleModal"
           class="absolute -top-3 -right-3 w-8 h-8 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center transition-colors duration-200"
@@ -313,10 +313,10 @@
 
     <!-- Edit Modal -->
     <div
-      v-if="PutModal"
+      v-if="PutModal" @click="PutModal = false"
       class="fixed z-50 inset-0 w-full h-full flex items-center bg-black bg-opacity-50 justify-center"
     >
-      <div class="relative bg-slate-800 border border-gray-700 rounded-2xl p-8 w-96">
+      <div @click.stop class="relative bg-slate-800 border border-gray-700 rounded-2xl p-8 w-96">
         <button
           @click="Modal"
           class="absolute -top-3 -right-3 w-8 h-8 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center transition-colors duration-200"
@@ -445,10 +445,10 @@
 
     <!-- Action Modal -->
     <div
-      v-if="asd"
+      v-if="asd" @click="asd = false"
       class="fixed z-50 inset-0 w-full h-full flex items-center bg-black bg-opacity-50 justify-center"
     >
-      <div class="relative bg-slate-800 border border-gray-700 rounded-2xl p-8 w-[500px]">
+      <div @click.stop class="relative bg-slate-800 border border-gray-700 rounded-2xl p-8 w-[500px]">
         <button
           @click="func(null)"
           class="absolute -top-3 -right-3 w-8 h-8 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center transition-colors duration-200"

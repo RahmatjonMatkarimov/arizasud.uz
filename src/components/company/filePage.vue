@@ -81,11 +81,11 @@
     <!-- Upload Modal -->
     <Teleport to="body">
       <div
-        v-if="showModal"
+        v-if="showModal" @click="showModal = false"
         class="fixed inset-0 bg-gray-300/70 dark:bg-black/70 flex items-center justify-center z-50"
         data-testid="upload-modal-container"
       >
-        <div
+        <div @click.stop
           class="relative bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-2xl p-8 w-full max-w-md shadow-2xl border border-gray-200/20 dark:border-[rgba(34,211,238,0.2)] dark:shadow-[0_0_12px_rgba(34,211,238,0.3)] overflow-visible"
           data-testid="upload-modal"
         >
@@ -135,11 +135,11 @@
     <!-- Edit Modal -->
     <Teleport to="body">
       <div
-        v-if="showModalfile"
+        v-if="showModalfile" @click="showModalfile = false"
         class="fixed inset-0 bg-gray-300/70 dark:bg-black/70 flex items-center justify-center z-50"
         data-testid="edit-modal-container"
       >
-        <div
+        <div @click.stop
           class="relative bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-2xl p-8 w-full max-w-md shadow-2xl border border-gray-200/20 dark:border-[rgba(34,211,238,0.2)] dark:shadow-[0_0_12px_rgba(34,211,238,0.3)] overflow-visible"
           data-testid="edit-modal"
         >
@@ -189,11 +189,11 @@
     <!-- Delete Confirmation Modal -->
     <Teleport to="body">
       <div
-        v-if="showDeleteModal"
+        v-if="showDeleteModal" @click="showDeleteModal = false"
         class="fixed inset-0 bg-gray-300/70 dark:bg-black/70 flex items-center justify-center z-50"
         data-testid="delete-modal-container"
       >
-        <div
+        <div @click.stop
           class="relative bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-2xl p-8 w-full max-w-md shadow-2xl border border-gray-200/20 dark:border-[rgba(34,211,238,0.2)] dark:shadow-[0_0_12px_rgba(34,211,238,0.3)] overflow-visible"
           data-testid="delete-modal"
         >

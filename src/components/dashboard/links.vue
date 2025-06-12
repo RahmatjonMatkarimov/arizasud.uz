@@ -15,10 +15,10 @@
       </button>
     </div>
     <div
-      v-if="togle"
+      v-if="togle" @click="togle = false"
       class="fixed inset-0 z-40 flex justify-center items-center bg-black/50"
     >
-      <div
+      <div @click.stop
         class="bg-gray-100 relative border-2 border-gray-600 w-[600px] dark:bg-gray-800 p-6 rounded-xl shadow-md mb-6"
       >
         <h1

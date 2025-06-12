@@ -167,10 +167,10 @@
       leave-to-class="opacity-0 translate-y-4"
     >
       <div
-        v-if="showModal"
+        v-if="showModal" @click="showModal = false"
         class="fixed inset-0 bg-gray-200/80 dark:bg-black/80 flex justify-center items-center z-40"
       >
-        <div
+        <div @click.stop
           class="bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg p-8 rounded-3xl shadow-2xl w-full max-w-md border border-gray-300/30 dark:border-gray-700/30 transform transition-all duration-300"
         >
           <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-50 mb-6">Yangi fayl yuklash</h3>
@@ -213,11 +213,11 @@
       leave-to-class="opacity-0 scale-95"
     >
       <div
-        v-if="asd"
+        v-if="asd" @click="asd = false"
         class="fixed inset-0 bg-gray-200/80 dark:bg-black/80 flex justify-center items-center z-40"
         @mousedown="startDrag('asd', $event)"
       >
-        <div
+        <div @click.stop
           class="bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg p-8 rounded-3xl w-full max-w-md shadow-2xl border border-gray-300/30 dark:border-gray-700/30"
         >
           <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-50 mb-4">{{ $t('korib_chiqish') }}</h1>
@@ -255,11 +255,11 @@
       leave-to-class="opacity-0 scale-95"
     >
       <div
-        v-if="asds"
+        v-if="asds" @click="asds = false"
         class="fixed inset-0 bg-gray-200/80 dark:bg-black/80 flex justify-center items-center z-40"
         @mousedown="startDrag('asds', $event)"
       >
-        <div
+        <div @click.stop
           class="bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg p-8 rounded-3xl w-full max-w-md shadow-2xl border border-gray-300/30 dark:border-gray-700/30"
         >
           <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-50 mb-4">{{ $t('rad_etish') }}</h1>
@@ -297,10 +297,10 @@
       leave-to-class="opacity-0 translate-y-4"
     >
       <div
-        v-if="showPdfModal"
+        v-if="showPdfModal" @click="showPdfModal = false"
         class="fixed inset-0 flex items-center justify-center bg-gray-200/80 dark:bg-black/80 z-40"
       >
-        <div
+        <div @click.stop
           class="bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg p-6 rounded-3xl shadow-2xl w-full max-w-5xl flex flex-col items-end border border-gray-300/30 dark:border-gray-700/30 transition-all duration-300"
           :class="{ 'w-screen h-screen max-w-none rounded-none': isFullScreen }"
         >
@@ -365,10 +365,10 @@
       leave-to-class="opacity-0 scale-95"
     >
       <div
-        v-if="qwen"
+        v-if="qwen" @click="qwen = false"
         class="fixed inset-0 bg-gray-200/80 dark:bg-black/80 flex justify-center items-center z-40"
       >
-        <div
+        <div @click.stop
           class="bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg p-8 rounded-3xl shadow-2xl relative max-w-lg w-full border border-gray-300/30 dark:border-gray-700/30"
         >
           <button

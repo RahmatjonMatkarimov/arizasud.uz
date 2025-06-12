@@ -1,7 +1,7 @@
 <template>
     <!-- File Upload Modal -->
-    <div v-if="togle" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 w-full max-w-md mx-4 transform transition-all duration-300 scale-100">
+    <div v-if="togle" @click="togle = false" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div @click.stop class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 w-full max-w-md mx-4 transform transition-all duration-300 scale-100">
             <div class="flex items-center justify-between mb-6">
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                     {{ isEditing ? $t('Edit File') : $t('Upload File') }}
@@ -62,8 +62,8 @@
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div v-if="asd" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 w-full max-w-md mx-4">
+    <div v-if="asd" @click="asd = false" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div @click.stop class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 w-full max-w-md mx-4">
             <div class="text-center">
                 <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 dark:bg-red-900/30 mb-4">
                     <iconify-icon icon="mdi:delete-alert" class="text-red-600 dark:text-red-400 text-2xl"></iconify-icon>
@@ -95,8 +95,8 @@
     </div>
 
     <!-- PDF Preview Modal -->
-    <div v-if="showPdfModal" class="fixed inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm z-30">
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-6xl mx-4 flex flex-col transition-all duration-300"
+    <div v-if="showPdfModal" @click="showPdfModal = false" class="fixed inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm z-30">
+        <div @click.stop class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-6xl mx-4 flex flex-col transition-all duration-300"
             :class="{ 'w-screen h-screen max-w-none rounded-none mx-0': isFullScreen }">
             
             <!-- Header -->

@@ -2,10 +2,10 @@
   <div class="dark:bg-gray-800 bg-gray-200 min-h-screen">
     <!-- Add Modal -->
     <div
-      v-if="showModal"
+      v-if="showModal" @click="showModal = false"
       class="fixed inset-0 z-50 w-full h-full flex items-center justify-center modal-backdrop bg-black bg-opacity-60"
     >
-      <div
+      <div @click.stop
         class="relative w-full max-w-md mx-4 modal-content bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl p-8"
       >
         <!-- Close Button -->
@@ -185,10 +185,10 @@
 
     <!-- Add File Modal -->
     <div
-      v-if="showModalfiles"
+      v-if="showModalfiles" @click="showModalfiles = false"
       class="fixed inset-0 z-50 w-full h-full flex items-center justify-center bg-black/60 backdrop-blur-sm"
     >
-      <div
+      <div @click.stop
         class="relative w-full max-w-lg mx-4 bg-gradient-to-br from-slate-800/95 to-slate-900/95 backdrop-blur-xl border border-slate-600/30 rounded-3xl shadow-2xl p-8 transform transition-all duration-300"
       >
         <!-- Decorative Background Elements -->
@@ -375,10 +375,10 @@
 
     <!-- Update File Modal -->
     <div
-      v-if="fileModal"
+      v-if="fileModal" @click="fileModal = false"
       class="fixed inset-0 z-50 w-full h-full flex items-center justify-center bg-black/70 backdrop-blur-md"
     >
-      <div
+      <div @click.stop
         class="relative w-full max-w-lg mx-4 bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-2xl border border-slate-500/40 rounded-3xl shadow-2xl p-8 transform transition-all duration-300 animate-in"
       >
         <!-- Animated Background Elements -->
@@ -613,10 +613,10 @@
 
     <!-- Update Modal -->
     <div
-      v-if="PutModal"
+      v-if="PutModal" @click="PutModal = false"
       class="fixed inset-0 z-50 w-full h-full flex items-center justify-center bg-black/75 backdrop-blur-lg"
     >
-      <div
+      <div @click.stop
         class="relative w-full max-w-md mx-4 bg-gradient-to-br from-slate-800/95 to-slate-900/95 backdrop-blur-3xl border border-slate-500/30 rounded-3xl shadow-2xl p-8 transform transition-all duration-300"
       >
         <!-- Floating Geometric Elements -->

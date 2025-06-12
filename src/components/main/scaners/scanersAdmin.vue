@@ -690,7 +690,7 @@
       v-if="showDeleteModal" @click="showDeleteModal = false"
       class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
     >
-      <div
+      <div @click.stop
         class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-sm border border-slate-200 dark:border-slate-700"
       >
         <div class="p-6 text-center">

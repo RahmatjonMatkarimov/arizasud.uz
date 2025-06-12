@@ -255,8 +255,8 @@
     </div>
   </div>
 
-  <div v-if="showModal" class="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
-    <div class="bg-gray-800/90 p-5 rounded-xl shadow-2xl w-72 backdrop-blur-md border border-teal-500/50">
+  <div v-if="showModal" @click="showModal  = false" class="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
+    <div @click.stop class="bg-gray-800/90 p-5 rounded-xl shadow-2xl w-72 backdrop-blur-md border border-teal-500/50">
       <h2 class="text-base text-teal-300 font-bold mb-3">{{ dat === 'datakril' ? translateText('Xabarni tahrirlash') :
         'Xabarni tahrirlash' }}</h2>
       <input v-model="editedContent"
@@ -274,8 +274,8 @@
     </div>
   </div>
 
-  <div v-if="showDeleteConfirm" class="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
-    <div class="bg-gray-800/90 p-5 rounded-xl shadow-2xl w-72 backdrop-blur-md border border-teal-500/50">
+  <div v-if="showDeleteConfirm" @click="showDeleteConfirm = false" class="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
+    <div @click.stop class="bg-gray-800/90 p-5 rounded-xl shadow-2xl w-72 backdrop-blur-md border border-teal-500/50">
       <h2 class="text-base text-teal-300 font-bold mb-3">{{ dat === 'datakril' ? translateText('Xabarni o‘chirish') :
         'Xabarni o‘chirish' }}</h2>
       <p class="text-gray-300 text-sm mb-3">{{ dat === 'datakril' ? 

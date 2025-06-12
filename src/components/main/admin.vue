@@ -990,7 +990,7 @@
             v-for="item in data"
             :key="item.id"
             @click="goToPath(item.id)"
-            class="group relative h-[380px] bg-white/80 dark:bg-slate-700/80 backdrop-blur-sm border-2 border-slate-400/50 dark:border-slate-600/50 hover:border-lime-400/50 dark:hover:border-lime-500/50 rounded-2xl p-6 cursor-pointer transition-all hover:shadow-2xl duration-300 shadow-xl dark:hover:shadow-lime-500/10 hover:-translate-y-2 transform"
+            class="group relative h-[380px] overflow-hidden bg-white/80 dark:bg-slate-700/80 backdrop-blur-sm border-2 border-slate-400/50 dark:border-slate-600/50 hover:border-lime-400/50 dark:hover:border-lime-500/50 rounded-2xl p-6 cursor-pointer transition-all hover:shadow-2xl duration-300 shadow-xl dark:hover:shadow-lime-500/10 hover:-translate-y-2 transform"
           >
             <div
               class="absolute inset-0 bg-gradient-to-br from-lime-400/10 to-emerald-500/10 dark:from-lime-400/5 dark:to-emerald-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"

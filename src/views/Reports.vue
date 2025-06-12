@@ -473,7 +473,7 @@ select:focus {
       <div class="">
         <table class="w-full border-collapse">
           <thead>
-            <tr class="text-white  mb-1 w-full grid grid-cols-8 gap-2 items-center">
+            <tr class="dark:text-white  mb-1 w-full grid grid-cols-8 gap-2 items-center">
               <th class="p-3 text-center font-semibold">{{ dat === 'datakril' ? translateText('Hisob-faktura #') : 'Hisob-faktura #' }}</th>
               <th class="p-3 text-center font-semibold">{{ dat === 'datakril' ? translateText('Korxona') : 'Korxona' }}</th>
               <th class="p-3 text-center font-semibold">{{ dat === 'datakril' ? translateText('To\'langan sana') : 'To\'langan sana' }}</th>

@@ -4,10 +4,10 @@
   >
     <!-- Selection Modal: Choose Folder or File -->
     <div
-      v-if="showSelectionModal"
+      v-if="showSelectionModal" @click="showSelectionModal = false"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
     >
-      <div
+      <div @click.stop
         class="relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 p-8 w-full max-w-md mx-4 transform transition-all duration-300 scale-100"
       >
         <!-- Header -->
@@ -69,10 +69,10 @@
 
     <!-- Folder/File Creation Modal -->
     <div
-      v-if="togle"
+      v-if="togle" @click="togle =false"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
     >
-      <div
+      <div @click.stop
         class="relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 p-8 w-full max-w-lg mx-4"
       >
         <!-- Header -->
@@ -191,10 +191,10 @@
 
     <!-- Delete Confirmation Modal -->
     <div
-      v-if="asd"
+      v-if="asd" @click="asd = false"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
     >
-      <div
+      <div @click.stop
         class="relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 p-8 w-full max-w-md mx-4"
       >
         <!-- Warning Icon -->

@@ -414,6 +414,13 @@ export default {
               class: "bg-red-50 dark:bg-red-900/50",
               valueClass: "text-red-600 dark:text-red-400 font-bold",
             },
+            {
+              label: t("Umumiy oylik:"),
+              value: this.formatNumberWithDots(this.oylik.totalAllSalaries+ this.oylik.totalAllBonuses - this.oylik.totalAllDeductions),
+              suffix: t("so'm"),
+              class: "bg-green-50 dark:bg-green-900/50",
+              valueClass: "text-green-600 dark:text-green-400 font-bold",
+            },
           ];
         case "debts":
           return [
