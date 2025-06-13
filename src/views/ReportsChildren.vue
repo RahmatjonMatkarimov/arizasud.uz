@@ -35,7 +35,6 @@ const handleViewInvoice = (history) => {
   if (history.pdfFile) {
     const fullPath = `${URL}${history.pdfFile}`
     selectedFilePath.value = fullPath
-    console.log('PDF yuklanmoqda:', fullPath)
   } else {
     console.warn(history)
   }
@@ -54,7 +53,6 @@ const getFiles = async () => {
   try {
     const res = await axios.get(`${URL}/accountant-files/${id.value}`)
     invoices.value.push(res.data)
-    console.log(invoices.value)
   } catch (err) {
     console.error('Fayl olishda xato:', err)
   }
@@ -173,14 +171,14 @@ onMounted(() => {
   </div>
 
   <!-- PDF Viewer Modal -->
-  <div v-if="selectedFilePath" class="fixed inset-0 z-40 flex min-h-[100vh]  justify-center dark:bg-[#1a2642] bg-white items-center">
+  <div v-if="selectedFilePath" @click=" selectedFilePath = null" class="fixed inset-0 z-40 flex min-h-[100vh]  justify-center dark:bg-[#1a2642] bg-white items-center">
     <div class="absolute top-4 right-4 cursor-pointer" @click="selectedFilePath = null">
       <button 
           class="text-2xl dark:text-gray-400 hover:text-gray-300 transition-all duration-300 hover:scale-110 hover:rotate-90 animate-fade-in">
           ×
       </button>
     </div>
-    <div class="w-full max-w-5xl p-5 max-h-[100vh] overflow-auto">
+    <div @click.stop class="w-full max-w-5xl p-5 max-h-[100vh] overflow-auto">
       <PDFViewer v-if="selectedFilePath" :file-path="selectedFilePath" />
     </div>
   </div>

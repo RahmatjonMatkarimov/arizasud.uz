@@ -625,7 +625,6 @@ const initializeSocket = () => {
     socket.value.off();
   }
 
-  console.log('Initializing Socket.IO with URL:', URL);
 
   socket.value = io(URL, {
     path: '/socket.io',
@@ -634,15 +633,12 @@ const initializeSocket = () => {
   });
 
   socket.value.on('connect', () => {
-    console.log('Socket connected');
     isSocketConnected.value = true;
     socket.value.emit('join', user.value.id, (response) => {
-      console.log('Join response:', response);
     });
   });
 
   socket.value.on('disconnect', () => {
-    console.log('Socket disconnected');
     isSocketConnected.value = false;
   });
 
@@ -653,7 +649,6 @@ const initializeSocket = () => {
   });
 
   socket.value.on('newMessage', (message) => {
-    console.log('Received new message:', message, 'Is file:', !!message.attachmentUrl);
     if (!messages.value.some((msg) => msg.id === message.id)) {
       messages.value.push(message);
       if (message.replyToMessageId) {
@@ -665,12 +660,10 @@ const initializeSocket = () => {
         unreadCount.value++;
       }
     } else {
-      console.log('Duplicate message ignored:', message.id);
     }
   });
 
   socket.value.on('messageUpdated', (updatedMessage) => {
-    console.log('Received updated message:', updatedMessage);
     const index = messages.value.findIndex((m) => m.id === updatedMessage.id);
     if (index !== -1) {
       messages.value[index] = updatedMessage;
@@ -679,7 +672,6 @@ const initializeSocket = () => {
   });
 
   socket.value.on('messageDeleted', ({ messageId }) => {
-    console.log('Received deleted message ID:', messageId);
     messages.value = messages.value.filter((m) => m.id !== messageId);
     scrollToBottom();
   });
@@ -707,7 +699,6 @@ const pollMessages = async () => {
       (msg) => !messages.value.some((m) => m.id === msg.id)
     );
     if (newMessages.length > 0) {
-      console.log('Polled new messages:', newMessages);
       messages.value.push(...newMessages);
       newMessages.forEach((msg) => {
         if (msg.replyToMessageId) {
@@ -726,7 +717,6 @@ const pollMessages = async () => {
 const fetchMessages = async () => {
   try {
     const response = await axios.get(`${URL}/messages`);
-    console.log('Fetched messages:', response.data);
     messages.value = response.data;
     messages.value.forEach((msg) => {
       if (msg.replyToMessageId) {
@@ -746,7 +736,6 @@ const fetchSmileys = async () => {
   try {
     const response = await axios.get(`${URL}/smileys`);
     smileys.value = response.data;
-    console.log('Fetched smileys:', smileys.value);
   } catch (error) {
     console.error('Failed to fetch smileys:', error);
   }
@@ -762,7 +751,6 @@ const getOneMessage = async (id) => {
         attachmentUrl: response.data.attachmentUrl || null,
         fileType: response.data.fileType || null,
       };
-      console.log(`Fetched reply message ${id}:`, replyMessages.value[id]);
     } catch (error) {
       console.error(`Failed to fetch reply message ${id}:`, error);
     }
@@ -806,7 +794,6 @@ const sendMessage = async (type, smileyId = null) => {
       // Immediately add the sent file message to the UI
       if (!messages.value.some((msg) => msg.id === response.data.id)) {
         messages.value.push(response.data);
-        console.log('Added file message to sender UI:', response.data);
         if (response.data.replyToMessageId) {
           getOneMessage(response.data.replyToMessageId);
         }
@@ -848,7 +835,6 @@ const updateMessage = async () => {
     userId: user.value.id,
   };
 
-  console.log('Updating message:', updateData);
   socket.value.emit('updateMessage', updateData, (response) => {
     if (!response || !response.success) {
       console.error('Error updating message:', response?.error || 'Unknown error');
@@ -869,7 +855,6 @@ const confirmDeleteMessage = (messageId) => {
 
 const confirmDelete = async () => {
   if (!messageToDelete.value) return;
-  console.log('Deleting message ID:', messageToDelete.value);
   socket.value.emit('deleteMessage', { messageId: messageToDelete.value, userId: user.value.id }, (response) => {
     if (!response || !response.success) {
       console.error('Error deleting message:', response?.error || 'Unknown error');
@@ -940,15 +925,12 @@ const startRecording = async () => {
     mediaRecorder.value.ondataavailable = (event) => {
       if (event.data.size > 0) {
         audioChunks.value.push(event.data);
-        console.log('Audio chunk recorded:', event.data.size);
       }
     };
 
     mediaRecorder.value.onstop = async () => {
-      console.log('Recording stopped, chunks:', audioChunks.value.length);
       if (audioChunks.value.length > 0) {
         const audioBlob = new Blob(audioChunks.value, { type: 'audio/mpeg' });
-        console.log('Audio Blob:', { size: audioBlob.size, type: audioBlob.type });
         selectedFile.value = new File([audioBlob], `audio-${Date.now()}.mp3`, { type: 'audio/mpeg' });
         await debouncedSendMessage('audio');
       }
@@ -964,7 +946,6 @@ const startRecording = async () => {
     recordingTime.value = 0;
     recordingInterval.value = setInterval(() => recordingTime.value++, 1000);
     mediaRecorder.value.start();
-    console.log('Recording started');
   } catch (error) {
     console.error('Failed to start recording:', error.name, error.message);
     let errorMessage = 'Ovoz yozib olishda xato: ' + error.message;
@@ -988,7 +969,6 @@ const stopRecording = () => {
   }
 
   mediaRecorder.value.stop();
-  console.log('Recording stop requested');
 };
 
 const cancelRecording = () => {
@@ -1003,7 +983,6 @@ const cancelRecording = () => {
   isClicked.value = false;
   clearInterval(recordingInterval.value);
   mediaRecorder.value.stream.getTracks().forEach((track) => track.stop());
-  console.log('Recording cancelled');
 };
 
 const showContextMenu = (event, message) => {
@@ -1016,7 +995,6 @@ const showContextMenu = (event, message) => {
 // Lifecycle hooks
 let pollingInterval = null;
 onMounted(() => {
-  console.log('Component mounted, initializing socket');
   initializeSocket();
   fetchMessages();
   fetchSmileys();
@@ -1035,7 +1013,6 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  console.log('Component unmounted, cleaning up');
   if (socket.value) {
     socket.value.disconnect();
     socket.value.off();

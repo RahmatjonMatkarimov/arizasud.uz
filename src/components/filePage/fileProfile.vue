@@ -1,227 +1,530 @@
 <template>
-    <div class="min-h-screen bg-gray-50 flex justify-center flex-col items-center p-6">
-        <!-- Fayllar uchun HTML matnlari -->
-        <div v-if="filesHtml.length < 2" v-for="(html, index) in filesHtml" :key="index" v-html="html"
-            class="custom-html max-w-none bg-white p-4 shadow-lg rounded-lg"></div>
+  <div
+    class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 transition-all duration-300"
+  >
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Error State -->
+      <div
+        v-if="error"
+        class="mb-8 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-6"
+      >
+        <div class="flex items-center">
+          <svg
+            class="w-6 h-6 text-red-500 mr-3"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            ></path>
+          </svg>
+          <div>
+            <h3 class="text-lg font-semibold text-red-800 dark:text-red-200">
+              {{
+                dat === "datakril"
+                  ? translateText(`Xatolik yuz berdi`)
+                  : `Xatolik yuz berdi`
+              }}
+            </h3>
+            <p class="text-red-600 dark:text-red-300">
+              {{ dat === 'datakril' ?translateText(error):error }}
+            </p>
+          </div>
+        </div>
+      </div>
 
-        <div v-if="filesHtml.length > 1">
-            <ul v-for="(item, index) in files" class="bg-gray-200 w-[1000px] py-4 px-8 rounded-lg">
-                <li>
-                    <a :href="URL1 + item" class="text-black block text-[20px] bg-white px-4 py-2 rounded-lg">
-                        <b class="text-black text-[22px] mr-2">{{ index + 1 }}</b>Fileni ko‘rish
+      <!-- Multiple Files List -->
+      <div v-if="files.length" class="mb-8">
+        <div
+          class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden"
+        >
+          <div class="bg-gradient-to-r from-green-500 to-teal-600 px-6 py-4">
+            <h2 class="text-xl font-semibold text-white flex items-center">
+              <svg
+                class="w-6 h-6 mr-3"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"
+                ></path>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 5a2 2 0 012-2h2a2 2 0 012 2v0H8v0z"
+                ></path>
+              </svg>
+              {{ dat === 'datakril' ? translateText(`Barcha hujjatlar`):`Barcha hujjatlar` }} ({{ files.length }})
+            </h2>
+          </div>
+
+          <div class="p-6">
+            <div class="space-y-4">
+              <div
+                v-for="(item, index) in files"
+                :key="index"
+                class="group bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 border border-gray-200 dark:border-gray-600"
+              >
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-4 flex-1">
+                    <div class="flex-shrink-0">
+                      <div
+                        class="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-500 rounded-lg flex items-center justify-center text-white font-bold"
+                      >
+                        {{ index + 1 }}
+                      </div>
+                    </div>
+                    <div class="flex-1">
+                      <a
+                        :href="URL1 + item"
+                        target="_blank"
+                        class="block text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 font-medium text-lg transition-colors duration-200"
+                      >
+                        {{ dat === 'datakril' ? translateText(`Hujjat`):`Hujjat` }} #{{ index + 1 }}
+                      </a>
+                      <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        {{ dat === 'datakril' ? translateText(`PDF fayli`):`PDF fayli` }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center space-x-3">
+                    <a
+                      :href="URL1 + item"
+                      target="_blank"
+                      class="inline-flex items-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg"
+                    >
+                      <svg
+                        class="w-4 h-4 mr-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        ></path>
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                        ></path>
+                      </svg>
+                      {{ dat === 'datakril' ? translateText(`Ko'rish`):`Ko'rish` }}
                     </a>
-                    <button @click="downloadAsPdf(index)" class="ml-2 mt-2 bg-blue-500 text-white px-4 py-2 rounded-lg">
-                        PDF sifatida yuklab olish
+
+                    <button
+                      @click="downloadAsPdf(index)"
+                      class="inline-flex items-center px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg"
+                    >
+                      <svg
+                        class="w-4 h-4 mr-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                        ></path>
+                      </svg>
+                      {{ dat === 'datakril' ?translateText(`Yuklab olish`):`Yuklab olish` }}
                     </button>
-                </li>
-            </ul>
-        </div>
-
-        <!-- Videolar ro'yxati -->
-        <div v-if="data && data.videos.length" class="flex justify-center flex-wrap gap-6 mt-6">
-            <div v-for="item in data.videos" :key="item.id"
-                class="bg-white shadow-lg rounded-lg overflow-hidden transform transition duration-500 hover:scale-105">
-                <video controls :src="URL1 + item.url" class="w-full h-64 object-cover" v-if="item.url"></video>
-                <div v-else class="p-4 text-center text-gray-500">Videolar mavjud emas.</div>
-                <div class="p-4 text-center">
-                    <p class="text-gray-700 font-bold text-lg">Video #{{ item.id }}</p>
+                  </div>
                 </div>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
 
-        <!-- Videolar yo'qligi haqida xabar -->
-        <div v-else class="text-center text-white mt-6 text-lg font-semibold">Hech qanday video mavjud emas.</div>
+      <!-- Videos Section -->
+      <div v-if="data?.videos?.length" class="mb-8">
+        <div
+          class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden"
+        >
+          <div class="bg-gradient-to-r from-purple-500 to-pink-600 px-6 py-4">
+            <h2 class="text-xl font-semibold text-white flex items-center">
+              <svg
+                class="w-6 h-6 mr-3"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                ></path>
+              </svg>
+              {{ dat === 'datakril' ? translateText(`Video galereya`):`Video galereya` }} ({{ data.videos.length }})
+            </h2>
+          </div>
+
+          <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div
+                v-for="item in data.videos"
+                :key="item.id"
+                class="group bg-white dark:bg-gray-700 rounded-xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 overflow-hidden border border-gray-200 dark:border-gray-600"
+              >
+                <div class="relative bg-black rounded-t-xl overflow-hidden">
+                  <video
+                    v-if="item.url"
+                    controls
+                    controlsList="nodownload"
+                    :src="URL1 + item.url"
+                    class="w-full h-48 object-contain bg-black"
+                    preload="metadata"
+                    @error="handleVideoError"
+                    @loadstart="handleVideoLoadStart"
+                    @canplay="handleVideoCanPlay"
+                  >
+                    <source :src="URL1 + item.url" type="video/mp4" />
+                    <source :src="URL1 + item.url" type="video/webm" />
+                    <source :src="URL1 + item.url" type="video/ogg" />
+                    {{ dat === 'datakril' ? translateText(`Brauzeringiz video formatini qo'llab-quvvatlamaydi.`):`Brauzeringiz video formatini qo'llab-quvvatlamaydi.` }}
+                  </video>
+                  <div
+                    v-else
+                    class="w-full h-48 bg-gray-100 dark:bg-gray-600 flex items-center justify-center"
+                  >
+                    <div class="text-center">
+                      <svg
+                        class="w-12 h-12 text-gray-400 mx-auto mb-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                        ></path>
+                      </svg>
+                      <p class="text-gray-500 dark:text-gray-400">{{ dat === 'datakril' ? translateText(`Video mavjud emas`):`Video mavjud emas` }}</p>
+                    </div>
+                  </div>
+
+                  <!-- Video error state -->
+                  <div
+                    v-if="videoErrors[item.id]"
+                    class="absolute inset-0 bg-red-50 dark:bg-red-900/20 flex items-center justify-center"
+                  >
+                    <div class="text-center p-4">
+                      <svg
+                        class="w-12 h-12 text-red-400 mx-auto mb-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        ></path>
+                      </svg>
+                      <p class="text-red-600 dark:text-red-400 text-sm">
+                        {{
+                          dat === "datakril"
+                            ? translateText(`Video yuklanmadi`)
+                            : `Video yuklanmadi`
+                        }}
+                      </p>
+                      <a
+                        :href="URL1 + item.url"
+                        target="_blank"
+                        class="text-blue-500 hover:text-blue-600 text-sm underline mt-1 block"
+                      >
+                        {{
+                          dat === "datakril"
+                            ? translateText(`Brauzerda ochish`)
+                            : `Brauzerda ochish`
+                        }}
+                      </a>
+                    </div>
+                  </div>
+
+                  <!-- Video loading state -->
+                  <div
+                    v-if="videoLoading[item.id]"
+                    class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+                  >
+                    <div class="text-center">
+                      <div
+                        class="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"
+                      ></div>
+                      <p class="text-white text-sm">
+                        {{
+                          dat === "datakril"
+                            ? translateText(`Yuklanmoqda`)
+                            : `Yuklanmoqda`
+                        }}...
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="p-4">
+                  <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                    {{ dat === "datakril" ? translateText(`Video`) : `Video` }} #{{
+                      item.id
+                    }}
+                  </h3>
+                  <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                    <svg
+                      class="w-4 h-4 mr-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      ></path>
+                    </svg>
+                    {{
+                      dat === "datakril" ? translateText(`Video fayli`) : `Video fayli`
+                    }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div
+        v-if="!files.length && !data?.videos?.length && !loading"
+        class="text-center py-16"
+      >
+        <div
+          class="inline-flex items-center justify-center w-20 h-20 bg-gray-100 dark:bg-gray-700 rounded-full mb-6"
+        >
+          <svg
+            class="w-10 h-10 text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+            ></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+          {{
+            dat === "datakril"
+              ? translateText(`Hech qanday fayl topilmadi`)
+              : `Hech qanday fayl topilmadi`
+          }}
+        </h3>
+        <p class="text-gray-500 dark:text-gray-400 max-w-md mx-auto">
+          {{
+            dat === "datakril"
+              ? translateText(
+                  `Hozircha PDF yoki video fayllar mavjud emas. Fayllar yuklanganidan so'ng bu yerda ko'rsatiladi.`
+                )
+              : `Hozircha PDF yoki video fayllar mavjud emas. Fayllar yuklanganidan so'ng bu yerda ko'rsatiladi.`
+          }}
+        </p>
+      </div>
     </div>
+  </div>
 </template>
 
 <script setup>
-import { URL1 } from '@/auth/url';
-import axios from 'axios';
-import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
-import { jsPDF } from 'jspdf';
+import { URL1 } from "@/auth/url";
+import axios from "axios";
+import { onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
+import * as pdfjsLib from "pdfjs-dist";
+import translateText from "@/auth/Translate";
+import { onUnmounted } from "vue";
+
+const dat = ref(localStorage.getItem("til") || "datalotin");
+
+let intervalId = null;
+const checkLanguageChange = () => {
+  const currentLang = localStorage.getItem("til") || "datalotin";
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
+
+onMounted(() => {
+  intervalId = setInterval(checkLanguageChange, 0);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+});
+
+// Set the worker source for pdfjs-dist
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
 
 const API_URL = URL1;
 const data = ref({ videos: [] });
 const files = ref([]);
-const filesHtml = ref([]);
+const pdfPages = ref([]);
+const loading = ref(false);
+const error = ref(null);
 const route = useRoute();
 const id = ref(route.params.id);
 const list = ref([]);
+const isDarkMode = ref(false);
+const videoErrors = ref({});
+const videoLoading = ref({});
 
-// HTML matnini olish funksiyasi
-async function gethtml(url) {
-    try {
-        const response = await axios.get(url);
-        return `<div class='p-4 bg-white shadow-md rounded-lg'>${response.data}</div>`;
-    } catch (error) {
-        console.error('HTML olishda xato:', error);
-        return '<div>HTML yuklashda xato yuz berdi</div>'; // Fallback content
-    }
-}
+// Initialize dark mode
+const initializeDarkMode = () => {
+  const savedMode = localStorage.getItem("darkMode");
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
-// Fayllarning HTML matnlarini yuklash
-async function loadFilesHtml() {
-    try {
-        const htmlPromises = files.value.map(async (file) => gethtml(URL1 + file));
-        filesHtml.value = await Promise.all(htmlPromises);
-    } catch (error) {
-        console.error('Fayllar HTML matnini yuklashda xato:', error);
-    }
-}
+  isDarkMode.value = savedMode ? savedMode === "true" : prefersDark;
+
+  if (isDarkMode.value) {
+    document.documentElement.classList.add("dark");
+  }
+};
 
 // Ma'lumotlarni olish
 async function getdata() {
-    try {
-        const response = await axios.get(`${API_URL}/commoners/${id.value}`);
-        data.value = response.data;
-        files.value = response.data.file || [];
-        list.value = [new Date(response.data.createdAt).toLocaleString()];
-    } catch (error) {
-        console.error('Ma\'lumot olishda xato:', error);
-    }
-}
+  try {
+    loading.value = true;
+    error.value = null;
 
-// HTMLdan matn va stilni ajratib olish funksiyasi
-function parseHtmlToTextWithStyles(html) {
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = html;
-
-    // <style> va <script> teglarini olib tashlaymiz
-    const styles = tempDiv.getElementsByTagName('style');
-    const scripts = tempDiv.getElementsByTagName('script');
-    while (styles.length > 0) styles[0].parentNode.removeChild(styles[0]);
-    while (scripts.length > 0) scripts[0].parentNode.removeChild(scripts[0]);
-
-    const result = [];
-
-    function processNode(node, isBold = false, isItalic = false) {
-        if (node.nodeType === Node.TEXT_NODE) {
-            const text = node.textContent.trim();
-            if (text) {
-                result.push({ text, bold: isBold, italic: isItalic });
-            }
-        } else if (node.nodeType === Node.ELEMENT_NODE) {
-            const newBold = isBold || node.tagName === 'B' || node.tagName === 'STRONG';
-            const newItalic = isItalic || node.tagName === 'I' || node.tagName === 'EM';
-            node.childNodes.forEach(child => processNode(child, newBold, newItalic));
-        }
-    }
-
-    tempDiv.childNodes.forEach(node => processNode(node));
-    return result.length > 0 ? result : [{ text: 'Matn topilmadi', bold: false, italic: false }];
-}
-
-// HTML contentni PDF sifatida yuklab olish funksiyasi
-function downloadAsPdf(index) {
-    const htmlContent = filesHtml.value[index];
-
-    if (!htmlContent || htmlContent.trim() === '') {
-        alert('Yuklab olish uchun matn mavjud emas!');
-        return;
-    }
-
-    // HTMLdan matn va stilni ajratib olamiz
-    const textWithStyles = parseHtmlToTextWithStyles(htmlContent);
-    // jsPDF obyektini yaratamiz
-    const doc = new jsPDF({
-        orientation: 'portrait',
-        unit: 'in',
-        format: 'letter'
+    const token = localStorage.getItem("token");
+    const response = await axios.get(`${API_URL}/commoners/${id.value}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
     });
 
-    // Matnni PDFga qo'shamiz
-    let yPosition = 0.5; // Boshlang‘ich Y pozitsiyasi
-    doc.setFontSize(12);
+    data.value = response.data;
+    console.log("API Response:", JSON.stringify(response.data, null, 2));
 
-    textWithStyles.forEach(({ text, bold, italic }) => {
-        // Font stilini sozlaymiz
-        doc.setFont('helvetica', italic ? 'italic' : 'normal', bold ? 'bold' : 'normal');
+    // Validate Common array
+    if (!response.data.Common || !Array.isArray(response.data.Common)) {
+      console.warn("Common array is missing or not an array:", response.data.Common);
+      files.value = [];
+      return;
+    }
 
-        // Matnni qo‘shamiz (satr bo‘yicha avtomatik ko‘chirish)
-        const lines = doc.splitTextToSize(text, 7.5); // Maksimal kenglik 7.5 dyuym
-        doc.text(lines, 0.5, yPosition);
-        yPosition += lines.length * 0.2; // Har bir satr uchun Y pozitsiyasini yangilaymiz (0.2 dyuym)
-
-        // Agar sahifa tugasa, yangi sahifa qo‘shamiz
-        if (yPosition > 10) {
-            doc.addPage();
-            yPosition = 0.5;
-        }
-    });
-
-    // PDFni saqlaymiz
-    doc.save(`file_${index + 1}.pdf`);
+    files.value = response.data.Common.map((item) => item?.PDFUrl).filter(
+      (url) => typeof url === "string" && url
+    );
+    list.value = [new Date(response.data.createdAt).toLocaleString()];
+  } catch (err) {
+    console.error("Ma'lumot olishda xato:", err);
+    error.value = `Ma'lumot olishda xato: ${err.response?.data?.message || err.message}`;
+  } finally {
+    loading.value = false;
+  }
 }
 
-// Komponent yuklanganda ma'lumotlarni va HTML matnlarni yuklash
-onMounted(() => {
-    getdata().then(() => loadFilesHtml());
+// PDF yuklab olish funksiyasi
+const downloadAsPdf = (index) => {
+  const url = URL1 + files.value[index];
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `document-${index + 1}.pdf`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+// Video event handlers
+const handleVideoError = (event) => {
+  const videoElement = event.target;
+  const videoSrc = videoElement.src;
+
+  // Video ID ni topish
+  const videoItem = data.value.videos?.find((v) => videoSrc.includes(v.url));
+  if (videoItem) {
+    videoErrors.value[videoItem.id] = true;
+    videoLoading.value[videoItem.id] = false;
+  }
+  console.error("Video yuklashda xatolik:", videoSrc, event);
+};
+
+const handleVideoLoadStart = (event) => {
+  const videoElement = event.target;
+  const videoSrc = videoElement.src;
+
+  const videoItem = data.value.videos?.find((v) => videoSrc.includes(v.url));
+  if (videoItem) {
+    videoLoading.value[videoItem.id] = true;
+    videoErrors.value[videoItem.id] = false;
+  }
+};
+
+const handleVideoCanPlay = (event) => {
+  const videoElement = event.target;
+  const videoSrc = videoElement.src;
+
+  const videoItem = data.value.videos?.find((v) => videoSrc.includes(v.url));
+  if (videoItem) {
+    videoLoading.value[videoItem.id] = false;
+    videoErrors.value[videoItem.id] = false;
+  }
+};
+
+// Komponent yuklanganda
+onMounted(async () => {
+  initializeDarkMode();
+  await getdata();
+
+  // Faqat bitta fayl bo'lsa, uni render qilishga urinish
+  if (files.value.length === 1) {
+    // PDF render funksiyasi bu yerda qo'shilishi mumkin
+  }
 });
 </script>
 
 <style scoped>
-.custom-html>>>* {
-    color: black !important;
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
 }
-</style>
-<style>
-@media print {
-    @page {
-        size: 58mm auto;
-        margin: 0;
-    }
 
-    html,
-    body {
-        margin: 0 !important;
-        padding: 0 !important;
-        width: 100% !important;
-        height: 100% !important;
-        overflow: hidden !important;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        justify-content: flex-start;
-    }
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-gray-800;
+}
 
-    body {
-        font-family: 'Courier New', Courier, monospace;
-        font-size: 10px !important;
-        text-align: left;
-        line-height: 1.2 !important;
-        white-space: pre-wrap !important;
-        box-sizing: border-box;
-    }
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-400 dark:bg-gray-600 rounded-full;
+}
 
-    h2 {
-        text-align: center;
-        font-size: 12px !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-500 dark:bg-gray-500;
+}
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    td {
-        padding: 0 !important;
-        vertical-align: top;
-    }
-
-    th {
-        text-align: center;
-    }
-
-    .hidden,
-    [hidden] {
-        display: none !important;
-    }
-
-    * {
-        box-sizing: border-box !important;
-    }
+/* Smooth transitions */
+* {
+  transition-property: background-color, border-color, color, fill, stroke, opacity,
+    box-shadow, transform;
 }
 </style>

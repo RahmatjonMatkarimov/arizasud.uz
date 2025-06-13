@@ -34,7 +34,6 @@ const gotToPath = (id) => {
 const fetchData = async () => {
   try {
     const response = await axios.get(URL1 + '/commoners');
-    console.log(response.data);
     data.value = response.data;
   } catch (err) {
     console.log(err);

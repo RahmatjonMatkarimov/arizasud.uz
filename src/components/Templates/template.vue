@@ -269,7 +269,6 @@ const setupSocketConnection = () => {
     auth: { userId },
   })
   socket.on('connect', () => {
-    console.log('Socket connected successfully')
     socket.emit('joinUser', userId)
     socket.emit('getMessageCount', userIdNum)
   })

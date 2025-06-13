@@ -68,7 +68,6 @@ onUnmounted(() => {
     try {
       const response = await axios.get(`${URL}/client-files/${id}`);
       clientData.value = response.data;
-console.log(response.data)
       // Directly set the file URL from the response
       if (clientData.value.filePath) {
         fileUrl.value = clientData.value.filePath.startsWith('http')

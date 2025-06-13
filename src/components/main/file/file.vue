@@ -236,7 +236,6 @@ const startRecording = async () => {
           const recorder = new MediaRecorder(stream);
           recorder.ondataavailable = (e) =>
             recordingState.value.cameraChunks[index].push(e.data);
-          recorder.onstop = () => console.log(`Camera ${index + 1} stopped`);
           recorder.start();
           recordingState.value.cameraRecorders[index] = recorder;
           recordingState.value.cameraChunks[index] = [];
@@ -251,7 +250,6 @@ const startRecording = async () => {
       const recorder = new MediaRecorder(screenStream);
       recorder.ondataavailable = (e) =>
         recordingState.value.screenChunks.push(e.data);
-      recorder.onstop = () => console.log('Screen recording stopped');
       recorder.start();
       recordingState.value.screenRecorder = recorder;
     } catch (err) {

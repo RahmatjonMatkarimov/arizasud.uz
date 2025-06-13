@@ -127,19 +127,13 @@ const confirmAdminSelection = async () => {
     return;
   }
 
-  // Log the selected task ID
-  console.log('Selected Task ID:', selectedDocId.value);
-
   const latestStatus = task.ClientFileStatusHistory?.[task.ClientFileStatusHistory.length - 1]?.status;
   const currentStatusNumber = parseInt(getLastChar(latestStatus)) || 1;
   const lawyerId = selectedAdminId.value; // Store locally to avoid reset
 
-  console.log('Confirming with lawyerId:', lawyerId); // Debug: Log lawyerId
 
   try {
-    // Update the status with the selected admin ID
     await updateType(selectedDocId.value, currentStatusNumber + 1, '', lawyerId);
-    // Create a new task with the document's title
     isAdminModalOpen.value = false;
     selectedAdminId.value = null;
     selectedDocId.value = null;
@@ -156,7 +150,6 @@ const getAdmin = async () => {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
     });
     adminData.value = response.data; // Store admin data
-    console.log('Admin data:', response.data); // Debug: Log admin data
   } catch (error) {
     console.error('Error fetching admin data:', error);
   }
@@ -167,7 +160,6 @@ const getAdminFromSubDomain = async () => {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
     });
     adminData.value = response.data; // Subdomen adminlarini saqlash
-    console.log('Admin data from subdomain:', response.data);
   } catch (error) {
     console.error('Error fetching admin data from subdomain:', error);
   }
@@ -184,7 +176,6 @@ const getData = async () => {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
     });
     const fetchedData = response.data;
-    console.log('Fetched data:', fetchedData);
 
     const filteredTasks = fetchedData.LawyerTask.filter((item) => {
       if (item.ClientFileStatusHistory && item.ClientFileStatusHistory.length > 0) {
@@ -197,7 +188,6 @@ const getData = async () => {
     });
 
     data.value = { ...fetchedData, LawyerTask: filteredTasks };
-    console.log('Filtered data:', data.value);
   } catch (error) {
     console.error('Error fetching data:', error);
   }
@@ -212,7 +202,6 @@ const openRejectModal = (id) => {
   isModalOpen.value = true;
   openDropdownId.value = null;
   selecteradminId.value = id.adminId
-  console.log(id)
 };
 // Update updateType to avoid resetting selectedAdminId
 const updateType = async (id, newStatus, commentText = '', adminId = null) => {
@@ -345,9 +334,6 @@ const moveToNextStage = (id) => {
 
 const selectAdmin = (admin) => {
   selectedAdminId.value = admin.id;
-  console.log('Selected admin:', admin); // Debug: Log selected admin
-  console.log('Selected admin ID:', selectedAdminId.value); // Debug: Log admin ID
-  console.log('Selected document:', selectedDoc.value); // Debug: Log selected document
   confirmAdminSelection(); // Call confirmAdminSelection to handle status update and task creation
 };
 const cancelAdminSelection = () => {

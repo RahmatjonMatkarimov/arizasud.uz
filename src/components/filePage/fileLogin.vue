@@ -48,7 +48,7 @@ const setData = async () => {
     });
     id.value = res.data.user.id;
     if (id.value) {
-      router.push('/fileProfile/' + id.value)
+      router.push('/fileProfiles/' + id.value)
     }
 
   } catch (err) {

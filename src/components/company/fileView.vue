@@ -429,7 +429,6 @@ const removeSelectedItems = async () => {
         if (response.ok) {
             asd.value = false;
             await getCourtsData();
-            alert("Fayl muvaffaqiyatli o'chirildi!");
         } else {
             const errorText = await response.text();
             console.error("O'chirishda xatolik:", errorText);

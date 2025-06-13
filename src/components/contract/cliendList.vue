@@ -116,7 +116,6 @@ const deleteSelectedClients = async () => {
         await axios.delete(`${URL}/client/deleteMany`, { data: { ids: selectedClientIds.value } });
         data.value = data.value.filter(item => !selectedClientIds.value.includes(item.id));
         selectedClientIds.value = [];
-        alert("Belgilangan mijozlar muvaffaqiyatli o'chirildi!");
     } catch (error) {
         console.error("Mijozlarni o'chirishda xatolik yuz berdi:", error);
         alert("Xatolik yuz berdi: " + error.message);

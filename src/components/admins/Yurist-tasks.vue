@@ -126,13 +126,11 @@ const confirmAdminSelection = async () => {
     throw new Error('Task not found');
   }
 
-  console.log('Selected Task ID:', selectedDocId.value);
 
   const latestStatus = task.ClientFileStatusHistory?.[task.ClientFileStatusHistory.length - 1]?.status;
   const currentStatusNumber = parseInt(getLastChar(latestStatus)) || 1;
   const lawyerId = selectedAdminId.value;
 
-  console.log('Confirming with lawyerId:', lawyerId);
 
   try {
     // Update the status with the selected admin ID
@@ -150,7 +148,6 @@ const getAdmin = async () => {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
     });
     adminData.value = response.data; // Store admin data
-    console.log('Admin data:', response.data); // Debug: Log admin data
   } catch (error) {
     console.error('Error fetching admin data:', error);
   }
@@ -167,7 +164,6 @@ const getData = async () => {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
     });
     const fetchedData = response.data;
-    console.log('Fetched data:', fetchedData);
 
     const filteredTasks = fetchedData.LawyerTask.filter((item) => {
       if (item.ClientFileStatusHistory && item.ClientFileStatusHistory.length > 0) {
@@ -180,7 +176,6 @@ const getData = async () => {
     });
 
     data.value = { ...fetchedData, LawyerTask: filteredTasks };
-    console.log('Updated data.value.LawyerTask:', data.value.LawyerTask.map(t => ({ id: t.id, name: t.name, status: t.ClientFileStatusHistory?.[t.ClientFileStatusHistory.length - 1]?.status })));
   } catch (error) {
     console.error('Error fetching data:', error);
   }
@@ -214,7 +209,6 @@ const updateType = async (id, newStatus, commentText = '', adminId = null) => {
     comment.value = '';
     selectedRejectId.value = null;
     isAdminModalOpen.value = false;
-    console.log('Data updated successfully with changedById:', payload.changedById);
     getData();
   } catch (error) {
     console.error('Error updating data:', error);
@@ -263,8 +257,6 @@ const moveToNextStage = (id) => {
   if (activeSection.value === 'status3') {
     selectedDocId.value = id;
     selectedDoc.value = filteredDocuments.value.find((doc) => doc.id === id) || null;
-    console.log('Setting selectedDocId:', selectedDocId.value);
-    console.log('Setting selectedDoc:', selectedDoc.value);
     if (!selectedDoc.value) {
       alert('Hujjat ma’lumotlari topilmadi.');
       return;
@@ -277,9 +269,6 @@ const moveToNextStage = (id) => {
 
 const selectAdmin = async (admin) => {
   selectedAdminId.value = admin.id;
-  console.log('Selected admin:', admin);
-  console.log('Selected admin ID:', selectedAdminId.value);
-  console.log('Selected document:', selectedDoc.value);
 
   // Store selectedDocId locally to preserve it
   const taskId = selectedDocId.value;
@@ -314,8 +303,6 @@ const selectAdmin = async (admin) => {
         },
       }
     );
-    console.log('Lawyer task updated successfully for task ID:', taskId);
-    // Reset values after successful request
     selectedAdminId.value = null;
     selectedDocId.value = null;
     selectedDoc.value = null;

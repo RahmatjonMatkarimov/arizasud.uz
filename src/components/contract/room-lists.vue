@@ -204,7 +204,6 @@ const fetchClientFiles = async () => {
         clientFiles.value.forEach(file => {
             taskSectionOpen[file.id] = false;
         });
-        console.log("Client files:", response.data);
     } catch (error) {
         console.error("Error fetching client files:", error);
     } finally {
@@ -240,7 +239,6 @@ const toggleTaskSection = (fileId) => {
         taskSectionOpen[fileId] = true;
     }
     // Log state for debugging
-    console.log('taskSectionOpen:', { ...taskSectionOpen });
 };
 
 const formatDate = (dateString) => {

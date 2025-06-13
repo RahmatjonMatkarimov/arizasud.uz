@@ -197,7 +197,6 @@ const startRecording = async () => {
         const recorder = new MediaRecorder(stream);
         const chunks = [];
         recorder.ondataavailable = e => chunks.push(e.data);
-        recorder.onstop = () => console.log(`Kamera ${index + 1} yozuvi to‘xtadi`);
         recorder.start();
         recordingState.value.cameraRecorders.push(recorder);
         recordingState.value.cameraChunks.push(chunks);
@@ -210,7 +209,6 @@ const startRecording = async () => {
       const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
       recordingState.value.screenRecorder = new MediaRecorder(screenStream);
       recordingState.value.screenRecorder.ondataavailable = e => recordingState.value.screenChunks.push(e.data);
-      recordingState.value.screenRecorder.onstop = () => console.log('Ekran yozuvi to‘xtadi');
       recordingState.value.screenRecorder.start();
     } catch (err) {
       console.warn(`Ekran yozuvi boshlanmadi: ${err.message}`);
@@ -287,7 +285,6 @@ const saveWordFile = async () => {
     const writable = await fileHandle.createWritable();
     await writable.write(wordState.value.blob);
     await writable.close();
-    alert('Fayl saqlandi!');
   } catch (error) {
     console.error('Saqlashda xato:', error);
     alert('Faylni saqlashda xatolik: ' + error.message);
@@ -301,7 +298,6 @@ const submitForm = async () => {
     const htmlContent = generateHTMLContent();
     const htmlFile = new File([new Blob([htmlContent], { type: 'text/html' })], 'application.html', { type: 'text/html' });
     await uploadFiles(htmlFile);
-    alert('Ma’lumotlar muvaffaqiyatli yuborildi!');
   } catch (error) {
     console.error('Yuborishda xato:', error);
     alert('Xatolik yuz berdi: ' + error.message);

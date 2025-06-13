@@ -115,7 +115,6 @@ const getdata = async () => {
     isLoading.value = true;
     try {
         const response = await axios.get(`${BASE_URL}/${role.value}/${userID.value}`);
-        console.log('Fetched user data:', response.data);
         data.value = response.data.role;
     } catch (error) {
         console.error('Error fetching user data:', error);
@@ -135,7 +134,6 @@ const fetchFileById = async () => {
         const response = await axios.get(`${API_URL}/${id.value}`, {
             validateStatus: (status) => status < 500,
         });
-        console.log('Fetched file response:', response);
 
         if (response.status !== 200) {
             console.error(`HTTP Error: ${response.status} - ${response.statusText}`);

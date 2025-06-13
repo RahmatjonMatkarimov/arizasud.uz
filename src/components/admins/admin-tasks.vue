@@ -88,7 +88,6 @@ const tasks = async () => {
     });
     
     filteredTasks.value = result; // reactive sifatida saqlaymiz
-    console.log('filteredTasks:', filteredTasks.value);
   } catch (error) {
     console.error("Xatolik yuz berdi:", error);
   }

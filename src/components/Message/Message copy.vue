@@ -933,10 +933,8 @@ const startRecording = async () => {
     };
 
     mediaRecorder.value.onstop = async () => {
-      console.log('Recording stopped, chunks:', audioChunks.value.length);
       if (audioChunks.value.length > 0) {
         const audioBlob = new Blob(audioChunks.value, { type: 'audio/mpeg' });
-        console.log('Audio Blob:', { size: audioBlob.size, type: audioBlob.type });
         selectedFile.value = new File([audioBlob], `audio-${Date.now()}.mp3`, { type: 'audio/mpeg' });
         await debouncedSendMessage('audio');
       }

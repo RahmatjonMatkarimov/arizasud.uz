@@ -326,7 +326,6 @@ watch(socketConnected, (newValue) => {
 
 // Watch for online users changes for debugging
 watch(onlineUserIds, (newIds) => {
-  console.log('Online users changed:', newIds);
 }, { deep: true });
 </script>
 

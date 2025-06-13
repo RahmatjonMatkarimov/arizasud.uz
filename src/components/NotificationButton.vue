@@ -20,8 +20,6 @@ const subscribeToPush = async () => {
       })
       if (currentToken) {
         token.value = currentToken
-        alert("Token olingan: " + currentToken)
-        // TODO: tokenni serverga yuboring
       }
     } else {
       alert("Ruxsat berilmadi")
@@ -35,7 +33,6 @@ const subscribeToPush = async () => {
 onMounted(() => {
   onMessage(messaging, (payload) => {
     console.log("Yangi push:", payload)
-    alert("Push keldi: " + payload.notification.title)
   })
 })
 </script>

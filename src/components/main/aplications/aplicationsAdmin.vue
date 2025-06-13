@@ -1918,8 +1918,6 @@ const getData = async () => {
 
     const result = await response.json();
     courtsId.value = result.courtsId; // Set courtsId.value
-    console.log("courtsId set:", courtsId.value);
-
     if (Array.isArray(result)) {
       datakril.value = result.map((item) => ({
         ...item,
@@ -1959,13 +1957,11 @@ const getData = async () => {
 
 const getCourts = async () => {
   try {
-    console.log("Fetching courts with courtsId:", courtsId.value);
     const response = await axios.get(`${URL}/courts/${courtsId.value}`);
     const result = response.data;
     courts.value = (result.services || [])
       .filter((item) => item.status === "active")
       .sort((a, b) => a.id - b.id);
-    console.log("Courts data:", courts.value);
   } catch (error) {
     console.error("Error in getCourts:", error);
     errorMessage.value =
@@ -2103,7 +2099,6 @@ const updateCourt = async () => {
 };
 
 const updateWorkStatus = async () => {
-  console.log("Updating work status for ID:", Id.value);
   if (!Id.value) {
     errorMessage.value =
       dat === "datakril" ? translateText("ID topilmadi!") : "ID topilmadi!";

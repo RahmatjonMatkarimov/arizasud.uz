@@ -815,12 +815,10 @@ const fetchScanners = async () => {
 // File handling for create modal
 const onFileChange = (e) => {
   const file = e.target.files[0];
-  console.log("Selected file in onFileChange:", file);
   if (file && file.type.startsWith("image/") && file.size <= 5 * 1024 * 1024) {
     newScanner.img = file;
     if (previewCreateUrl.value) URL.revokeObjectURL(previewCreateUrl.value);
     previewCreateUrl.value = URL.createObjectURL(file);
-    console.log("newScanner.img set to:", newScanner.img);
   } else {
     toast.error(
       "Faqat JPG, PNG yoki JPEG formatdagi 5MB dan kichik rasmlar yuklanishi mumkin."
@@ -832,13 +830,11 @@ const onFileChange = (e) => {
 // File handling for edit modal
 const onEditFileChange = (e) => {
   const file = e.target.files[0];
-  console.log("Selected file in onEditFileChange:", file);
   if (file && file.type.startsWith("image/") && file.size <= 5 * 1024 * 1024) {
     editingScanner.img = file;
     if (previewEditUrl.value && !editingScanner.existingImg)
       URL.revokeObjectURL(previewEditUrl.value);
     previewEditUrl.value = URL.createObjectURL(file);
-    console.log("editingScanner.img set to:", editingScanner.img);
   } else {
     toast.error(
       "Faqat JPG, PNG yoki JPEG formatdagi 5MB dan kichik rasmlar yuklanishi mumkin."
@@ -851,12 +847,10 @@ const onEditFileChange = (e) => {
 const handleDropCreate = (e) => {
   isDraggingCreate.value = false;
   const file = e.dataTransfer.files[0];
-  console.log("Dropped file in handleDropCreate:", file);
   if (file && file.type.startsWith("image/") && file.size <= 5 * 1024 * 1024) {
     newScanner.img = file;
     if (previewCreateUrl.value) URL.revokeObjectURL(previewCreateUrl.value);
     previewCreateUrl.value = URL.createObjectURL(file);
-    console.log("newScanner.img after drop:", newScanner.img);
   } else {
     toast.error(
       "Faqat JPG, PNG yoki JPEG formatdagi 5MB dan kichik rasmlar yuklanishi mumkin."
@@ -868,13 +862,11 @@ const handleDropCreate = (e) => {
 const handleDropEdit = (e) => {
   isDraggingEdit.value = false;
   const file = e.dataTransfer.files[0];
-  console.log("Dropped file in handleDropEdit:", file);
   if (file && file.type.startsWith("image/") && file.size <= 5 * 1024 * 1024) {
     editingScanner.img = file;
     if (previewEditUrl.value && !editingScanner.existingImg)
       URL.revokeObjectURL(previewEditUrl.value);
     previewEditUrl.value = URL.createObjectURL(file);
-    console.log("editingScanner.img after drop:", editingScanner.img);
   } else {
     toast.error(
       "Faqat JPG, PNG yoki JPEG formatdagi 5MB dan kichik rasmlar yuklanishi mumkin."
@@ -888,7 +880,6 @@ const clearCreateFile = () => {
   if (previewCreateUrl.value) URL.revokeObjectURL(previewCreateUrl.value);
   previewCreateUrl.value = null;
   createFileInput.value.value = "";
-  console.log("Cleared create file, newScanner.img:", newScanner.img);
 };
 
 // Clear file for edit modal
@@ -898,7 +889,6 @@ const clearEditFile = () => {
     URL.revokeObjectURL(previewEditUrl.value);
   previewEditUrl.value = editingScanner.existingImg || null;
   editFileInput.value.value = "";
-  console.log("Cleared edit file, editingScanner.img:", editingScanner.img);
 };
 
 // Open modals
@@ -944,17 +934,12 @@ const createScanner = async () => {
     toast.error("Iltimos, rasm faylini tanlang!");
     return;
   }
-  console.log("newScanner before FormData:", newScanner);
   isUploadingCreate.value = true;
   uploadProgressCreate.value = 0;
   const formData = new FormData();
   formData.append("name", newScanner.name);
   formData.append("workStatus", false);
   formData.append("img", newScanner.img);
-  console.log("FormData contents for create:");
-  for (let pair of formData.entries()) {
-    console.log(`  ${pair[0]}: ${pair[1]}`);
-  }
   try {
     const response = await axios.post(API_URL, formData, {
       headers: { "Content-Type": "multipart/form-data" },
@@ -964,7 +949,6 @@ const createScanner = async () => {
         );
       },
     });
-    console.log("Create response:", response.data);
     showCreateModal.value = false;
     fetchScanners();
     toast.success("Skaner muvaffaqiyatli yaratildi!");
@@ -983,7 +967,6 @@ const updateWorkStatus = async (scanner) => {
       ? `${API_URL}/${scanner.id}/isActive`
       : `${API_URL}/${scanner.id}/isFalse`;
     const response = await axios.get(endpoint);
-    console.log("Update work status response:", response.data);
     fetchScanners();
     toast.success("Skaner holati muvaffaqiyatli yangilandi!");
   } catch (error) {
@@ -996,7 +979,6 @@ const updateScanner = async () => {
     toast.error("Iltimos, skaner nomini kiriting!");
     return;
   }
-  console.log("editingScanner before FormData:", editingScanner);
   isUploadingEdit.value = true;
   uploadProgressEdit.value = 0;
   const formData = new FormData();
@@ -1004,10 +986,6 @@ const updateScanner = async () => {
   formData.append("workStatus", editingScanner.isActive);
   if (editingScanner.img instanceof File) {
     formData.append("img", editingScanner.img);
-  }
-  console.log("FormData contents for update:");
-  for (let pair of formData.entries()) {
-    console.log(`  ${pair[0]}: ${pair[1]}`);
   }
   try {
     const response = await axios.put(`${API_URL}/${editingScanner.id}`, formData, {
@@ -1018,7 +996,6 @@ const updateScanner = async () => {
         );
       },
     });
-    console.log("Update response:", response.data);
     showEditModal.value = false;
     fetchScanners();
     toast.success("Skaner muvaffaqiyatli yangilandi!");
@@ -1034,7 +1011,6 @@ const updateScanner = async () => {
 const deleteScanner = async (id) => {
   try {
     const response = await axios.delete(`${API_URL}/${id}`);
-    console.log("Delete response:", response.data);
     showDeleteModal.value = false;
     fetchScanners();
     toast.success("Skaner muvaffaqiyatli o'chirildi!");
@@ -1053,7 +1029,6 @@ const handleSystemThemeChange = (e) => {
 
 // Lifecycle hooks
 onMounted(() => {
-  console.log("API_URL:", API_URL);
   const savedTheme = localStorage.getItem("theme");
   if (savedTheme) {
     isDark.value = savedTheme === "dark";

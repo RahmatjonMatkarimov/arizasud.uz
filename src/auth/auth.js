@@ -76,7 +76,6 @@ export default {
           localStorage.removeItem("tokenExpiration");
           updateTokenRefs();
           router.push('/login');
-          console.log("Token expired, redirecting to login");
         }
       }
     };

@@ -76,7 +76,7 @@ const getUsers = async () => {
   } catch (error) {
     console.error("Error fetching users:", error.message);
     if (error.response?.data) {
-      console.log("Server response:", error.response.data);
+      console.error("Server response:", error.response.data);
     }
   }
 };

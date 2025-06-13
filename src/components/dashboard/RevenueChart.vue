@@ -168,8 +168,6 @@ const getDATA = async () => {
     // Update chart data
     chartData.value.datasets[0].data = [...revenueSums]
     chartData.value.datasets[1].data = [...expenseSums]
-    console.log('Revenue Sums:', revenueSums)
-    console.log('Expense Sums:', expenseSums)
   } catch (error) {
     console.error('Error fetching data:', error)
   }

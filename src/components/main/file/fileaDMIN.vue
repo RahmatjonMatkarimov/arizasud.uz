@@ -787,7 +787,6 @@ const handleInput = (placeholder, event) => {
       value = value.replace(/\D/g, "");
     }
     inputValues.value[placeholder] = value;
-    console.log(`Input for ${placeholder}:`, value);
     validateInput(placeholder);
     updateContent();
   } catch (error) {
@@ -1147,7 +1146,6 @@ const submitForm = async () => {
     await stopRecording();
 
     const preparedData = prepareFormData();
-    console.log("Final prepared data before submission:", preparedData);
     const wordBlob = await generateWordFile();
     const htmlFile = new Blob([modifiedContent.value], { type: "text/html" });
     const form = new FormData();
@@ -1216,7 +1214,6 @@ const prepareFormData = () => {
     }
   });
 
-  console.log("Prepared data before append:", data);
   return data;
 };
 
@@ -1231,7 +1228,6 @@ const uploadFiles = async (form, formData) => {
   form.forEach((value, key) => {
     formDataObj[key] = value instanceof Blob ? "Blob" : value.toString();
   });
-  console.log("FormData before append:", formDataObj);
 
   recordingState.value.cameraChunks.forEach((chunks, index) => {
     if (chunks?.length) {
@@ -1249,14 +1245,12 @@ const uploadFiles = async (form, formData) => {
   form.forEach((value, key) => {
     finalFormDataObj[key] = value instanceof Blob ? "Blob" : value.toString();
   });
-  console.log("Final FormData entries:", finalFormDataObj);
 
   try {
     const response = await axios.post(`${BACKEND_URL}/commoners`, form, {
       headers: { "Content-Type": "multipart/form-data" },
       timeout: 60000,
     });
-    console.log("Server response:", response.data);
     return response.data;
   } catch (error) {
     console.error("Upload error with response:", error.response?.data || error);

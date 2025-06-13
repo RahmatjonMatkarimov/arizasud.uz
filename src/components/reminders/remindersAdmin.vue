@@ -274,11 +274,6 @@ export default {
             : "Ishlar ro'yxatini olishda xatolik:",
           error
         );
-        alert(
-          dat.value === "datakril"
-            ? "Ишлар рўйхатини юклашда хатолик юз берди."
-            : "Ishlar ro'yxatini yuklashda xatolik yuz berdi."
-        );
       } finally {
         isLoading.value = false;
       }
@@ -298,11 +293,6 @@ export default {
             ? "Статусни ўзгартиришда хатолик:"
             : "Statusni o'zgartirishda xatolik:",
           error
-        );
-        alert(
-          dat.value === "datakril"
-            ? "Статусни ўзгартиришда хатолик юз берди."
-            : "Statusni o'zgartirishda xatolik yuz berdi."
         );
       }
     };
@@ -328,11 +318,6 @@ export default {
           dat.value === "datakril"
             ? "localStorage'да фойдаланувчи ID топилмади"
             : "localStorage'da foydalanuvchi ID topilmadi"
-        );
-        alert(
-          dat.value === "datakril"
-            ? "Илтимос, тизимга киринг."
-            : "Iltimos, tizimga kiring."
         );
         return;
       }

@@ -594,7 +594,7 @@ export default {
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-4">
           <div class="lg:col-span-2">
             <div
-              class="chart-container bg-slate-400/20 dark:bg-slate-700/50 backdrop-blur-sm rounded-lg p-4 shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden border-gradient-to-r from-green-400 via-blue-500 to-red-500"
+              class="chart-container min-h-full bg-slate-400/20 dark:bg-slate-700/50 backdrop-blur-sm rounded-lg p-4 shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden border-gradient-to-r from-green-400 via-blue-500 to-red-500"
             >
               <RevenueChart
                 class="min-h-full"

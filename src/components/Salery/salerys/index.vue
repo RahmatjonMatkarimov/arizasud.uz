@@ -287,7 +287,6 @@ const handleCheckIn = async () => {
   try {
     const newWorkDay = await checkIn(userId.value);
     workDayId.value = newWorkDay.id;
-    alert('Ishga kirish yozildi!');
   } catch (err) {
     console.error(err);
   }
@@ -296,7 +295,6 @@ const handleCheckIn = async () => {
 const handleStartLunch = async () => {
   try {
     await startLunch(workDayId.value);
-    alert('Tushlik boshlanishi yozildi!');
   } catch (err) {
     console.error(err);
   }
@@ -305,7 +303,6 @@ const handleStartLunch = async () => {
 const handleEndLunch = async () => {
   try {
     await endLunch(workDayId.value);
-    alert('Tushlik tugashi yozildi!');
   } catch (err) {
     console.error(err);
   }
@@ -314,7 +311,6 @@ const handleEndLunch = async () => {
 const handleCheckOut = async () => {
   try {
     await checkOut(workDayId.value);
-    alert('Ishdan chiqish yozildi!');
   } catch (err) {
     console.error(err);
   }
@@ -323,7 +319,6 @@ const handleCheckOut = async () => {
 const handleAddBonus = async () => {
   try {
     await addDailyBonus(workDayId.value, bonusAmount.value);
-    alert('Bonus qo‘shildi!');
     bonusAmount.value = null;
   } catch (err) {
     console.error(err);
@@ -333,7 +328,6 @@ const handleAddBonus = async () => {
 const handleCalculateSalary = async () => {
   try {
     await calculateSalary(salaryForm.value.userId, salaryForm.value.month);
-    alert('Maosh hisoblandi!');
   } catch (err) {
     console.error(err);
   }

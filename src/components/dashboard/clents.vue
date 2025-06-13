@@ -413,7 +413,6 @@ const fetchClientFiles = async () => {
   try {
     const response = await axios.get(`${URL}/client-files`);
     clientFiles.value = response.data || [];
-    console.log(response.data);
   } catch (error) {
     console.error("Error fetching client files:", error);
   } finally {
@@ -710,7 +709,6 @@ const printReceipt = () => {
     const img = new Image();
     img.src = image.src;
     img.onload = () => {
-      console.log(`${image.key} loaded successfully`);
       checkAllImagesLoaded();
     };
     img.onerror = () => {

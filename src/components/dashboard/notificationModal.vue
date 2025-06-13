@@ -170,10 +170,6 @@ const setupSocketListeners = () => {
       sentAt: data.sentAt || data.createdAt || new Date(),
       isRead: data.isRead || false,
     });
-    console.log(data);
-    
-
-    
     if (!data.isRead) unreadCount.value += 1;
   });
 
@@ -200,7 +196,6 @@ const setupSocketListeners = () => {
   });
 
   socket.on('notifyAllSuccess', ({ message, count }) => {
-    console.log(`Notification sent to ${count} users: ${message}`);
     isSending.value = false;
   });
 };

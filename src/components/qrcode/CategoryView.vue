@@ -559,7 +559,6 @@ const totalItems = computed(() => {
 const fetchCategories = async () => {
   try {
     const { data } = await axios.get(`${URL}/category`);
-    console.log('Fetched categories:', data);
     categories.value = data;
   } catch (error) {
     console.error('Kategoriyalarni olishda xatolik:', error);

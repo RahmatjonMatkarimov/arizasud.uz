@@ -93,11 +93,6 @@ const setupSocketListeners = () => {
   socket.on('allNotificationsMarkedAsRead', ({ count }) => {
     notifications.value = [];
     unreadCount.value = 0;
-    console.log(`Marked ${count} notifications as read`);
-  });
-
-  socket.on('notifyAllSuccess', ({ message, count }) => {
-    console.log(`Notification sent to ${count} users: ${message}`);
   });
 };
 

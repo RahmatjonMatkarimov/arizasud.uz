@@ -39,8 +39,6 @@ const fetchPermissions = async () => {
     const response = await axios.get(`${URL}/permissions/user/${newId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    console.log(response);
-
     if (response.data.length > 0) {
       data.value = response.data[0];
     } else {
@@ -66,8 +64,6 @@ const togglePermission = async (permission) => {
     if (response.status === 200) {
       data.value[permission] = updatedValue;
     }
-    console.log(response);
-
   } catch (error) {
     console.error(`Failed to update ${permission}:`, error);
   } finally {
@@ -100,7 +96,6 @@ const fetchUserData = async () => {
       headers: { Authorization: `Bearer ${token}` },
     });
     userInfo.value = response.data;
-    console.log('User data fetched successfully:', userInfo.value);
   } catch (err) {
     error.value = 'Failed to load user data';
     console.error('Error fetching user data:', err);

@@ -38,7 +38,6 @@ const createPeerConnection = (socketId) => {
   };
 
   peer.ontrack = (event) => {
-    console.log("✅ Video stream qabul qilindi:", socketId);
     remoteStreams.value[socketId] = event.streams[0];
 
     nextTick(() => attachStreamToVideo(remoteVideos.value[socketId], event.streams[0]));
@@ -59,7 +58,6 @@ onMounted(async () => {
     socket.emit("join-room", "defaultRoom");
 
     socket.on("user-joined", async (socketId) => {
-      console.log("👤 Yangi foydalanuvchi qo‘shildi:", socketId);
       const peer = createPeerConnection(socketId);
       peers.value[socketId] = peer;
 
@@ -69,7 +67,6 @@ onMounted(async () => {
     });
 
     socket.on("offer", async ({ sender, offer }) => {
-      console.log("📡 Offer qabul qilindi:", sender);
       if (!peers.value[sender]) {
         peers.value[sender] = createPeerConnection(sender);
       }
@@ -85,7 +82,6 @@ onMounted(async () => {
     });
 
     socket.on("answer", async ({ sender, answer }) => {
-      console.log("📩 Answer qabul qilindi:", sender);
       const peer = peers.value[sender];
 
       if (peer.signalingState === "have-local-offer") {
@@ -94,7 +90,6 @@ onMounted(async () => {
     });
 
     socket.on("ice-candidate", async ({ sender, candidate }) => {
-      console.log("❄ ICE Candidate qabul qilindi:", sender);
       const peer = peers.value[sender];
 
       if (!peer || !peer.remoteDescription) {
@@ -110,7 +105,6 @@ onMounted(async () => {
     });
 
     socket.on("user-disconnected", (socketId) => {
-      console.log("❌ Foydalanuvchi chiqdi:", socketId);
       peers.value[socketId]?.close();
       delete peers.value[socketId];
       delete remoteStreams.value[socketId];

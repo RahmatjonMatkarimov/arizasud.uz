@@ -637,7 +637,6 @@ const addBonus = async () => {
       amount: parseFloat(total.value),
       description: sabab.value,
     });
-    console.log("Bonus added:", res.data);
     modals.value = false;
     total.value = null;
     sabab.value = "";
@@ -738,7 +737,6 @@ const getSalery = async () => {
         value: Math.floor(res.data.baseSalary),
       },
     ];
-    console.log(res.data);
   } catch (err) {
     console.error("Error fetching user:", err);
   }
@@ -765,10 +763,8 @@ const handleCalculateSalary = async (item) => {
     const month = selectedMonth.value || currentMonth;
     const formattedMonth = Number(month) < 10 ? `0${month}` : month;
     const dateString = `${year}-${formattedMonth}`;
-    console.log(dateString);
 
     await calculateSalary(item.id, dateString);
-    alert("Maosh hisoblandi!");
   } catch (err) {
     console.error("Error calculating salary:", err);
     alert("Maosh hisoblashda xatolik yuz berdi!");
@@ -959,7 +955,6 @@ const getUser = async () => {
   try {
     const res = await axios.get(URL + "/" + role + "/" + id);
     users.value = [res.data];
-    console.log(users.value);
   } catch (err) {
     console.error("Error fetching user:", err);
   }

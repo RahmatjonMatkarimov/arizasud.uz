@@ -50,7 +50,6 @@ const form = ref({
 const handleCalculateSalary = async () => {
   try {
     await calculateSalary(form.value.userId, form.value.month);
-    alert('Maosh hisoblandi!');
   } catch (err) {
     console.error(err);
   }

@@ -96,7 +96,6 @@ const upload = async () => {
     totalSumInternal.value = ''
     Showmodal.value = false
     getFiles()
-    console.log(res)
   } catch (err) {
     console.log(err)
   }
@@ -108,7 +107,6 @@ const upload = async () => {
 const getFiles = async () => {
   try {
     const res = await axios.get(URL + '/accountant-files');
-    console.log(res);
     let sortedData = res.data.slice().filter(item => item.type === 'reports');
 
     if (searchStore.query) {
@@ -181,7 +179,7 @@ const removeFiles = async (ids) => {
     const response = await axios.delete(URL + '/accountant-files/many', {
       data: { ids }
     })
-    console.log('Deleted:', response.data)
+
     showChekbox.value = false
     getFiles()
   } catch (error) {
@@ -216,7 +214,6 @@ const postHistory = async () => {
     })
     modal.value = false
     getFiles()
-    console.log(res)
   } catch (err) {
     console.log(err)
   } finally {
@@ -299,9 +296,7 @@ const downloadExcel = () => {
 const handleViewInvoice = (item) => {
   if (item.pdfPath) {
     selectedFilePath.value = URL + item.pdfPath;
-    console.log('ishladi' + item.pdfPath);
   }
-  console.log(item)
 };
 
 watch(() => searchStore.query, () => {
@@ -592,7 +587,7 @@ select:focus {
   <!-- PDF Viewer -->
   <transition name="pdf-viewer">
     <div
-      v-if="selectedFilePath"
+      v-if="selectedFilePath" @click="selectedFilePath = null"
       class="fixed inset-0 z-40 flex min-h-[100vh] justify-center dark:bg-[#1a2642] bg-white items-center"
     >
       <div
@@ -605,7 +600,8 @@ select:focus {
           ×
         </button>
       </div>
-      <div class="w-full max-w-5xl p-5 max-h-[100vh] overflow-auto">
+      <div 
+      @click.stop class="w-full max-w-5xl p-5 max-h-[100vh] overflow-auto">
         <PDFViewer v-if="selectedFilePath" :file-path="selectedFilePath" />
       </div>
     </div>

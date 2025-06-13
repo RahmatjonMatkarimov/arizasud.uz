@@ -83,7 +83,6 @@ const fetchClientById = async () => {
     try {
         const response = await axios.get(`${URL}/client/${id}`);
         clientData.value = response.data;
-        console.log(response.data)
     } catch (error) {
         console.error("Error fetching client data:", error);
     } finally {

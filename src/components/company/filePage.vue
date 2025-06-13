@@ -261,41 +261,34 @@ let intervalId;
 const checkLanguageChange = () => {
   const currentLang = localStorage.getItem("til") || "datalotin";
   if (currentLang !== dat.value) {
-    console.log("Language changed:", currentLang);
     dat.value = currentLang;
   }
 };
 
 onMounted(() => {
   intervalId = setInterval(checkLanguageChange, 100); // Reduced frequency
-  console.log("Component mounted");
 });
 
 onUnmounted(() => {
   if (intervalId) clearInterval(intervalId);
-  console.log("Component unmounted");
 });
 
 const Navigate = (id) => {
-  console.log("Navigating to:", id);
   router.push(`/companyFile-view/${id}`);
 };
 
 const toggleModal = () => {
-  console.log("Toggling upload modal:", showModal.value);
   showModal.value = !showModal.value;
   if (showModal.value) {
     // Log DOM context after next tick to ensure modal is rendered
     nextTick(() => {
       const modal = document.querySelector("[data-testid='upload-modal-container']");
-      console.log("Upload modal parent:", modal ? modal.parentElement : "Not found");
     });
   }
   if (!showModal.value) resetForm();
 };
 
 const toggle = (id) => {
-  console.log("Toggling edit modal:", showModalfile.value, "ID:", id);
   editingFileId.value = id;
   showModalfile.value = !showModalfile.value;
   showMenu.value = !false;
@@ -316,7 +309,6 @@ const toggle = (id) => {
 };
 
 const toggleDeleteModal = (id) => {
-  console.log("Toggling delete modal:", showDeleteModal.value, "ID:", id);
   selectedId.value = id;
   showDeleteModal.value = !showDeleteModal.value;
   if (!showDeleteModal.value) {
@@ -326,7 +318,6 @@ const toggleDeleteModal = (id) => {
 };
 
 const toggleMenu = (id) => {
-  console.log("Toggling menu:", showMenu.value, "ID:", id, "Selected ID:", selectedId.value);
   if (showMenu.value && selectedId.value === id) {
     showMenu.value = false;
     selectedId.value = null;

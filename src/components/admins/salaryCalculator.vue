@@ -14,16 +14,11 @@ const selectedUserId = ref(null); // Tracks which user's modal is open
 const modalPosition = ref({ top: 0, left: 0 });
 const workDayId = ref(null);
 
-// Watch selectedUserId for debugging
-watch(selectedUserId, (newValue) => {
-  console.log('selectedUserId changed to:', newValue);
-});
-
 const handleCheckIn = async (user) => {
   try {
     const newWorkDay = await checkIn(user.id);
     workDayId.value = newWorkDay.id; // Yangi WorkDay ID ni saqlash
-    alert('Ishga kirish yozildi!');
+    ('Ishga kirish yozildi!');
   } catch (err) {
     console.error(err);
   }``
@@ -32,7 +27,6 @@ const handleCheckIn = async (user) => {
 const handleStartLunch = async (user) => {
   try {
     await startLunch(workDayId.value);
-    alert('Tushlik boshlanishi yozildi!');
   } catch (err) {
     console.error(err);
   }
@@ -41,7 +35,6 @@ const handleStartLunch = async (user) => {
 const handleEndLunch = async (user) => {
   try {
     await endLunch(workDayId.value);
-    alert('Tushlik tugashi yozildi!');
   } catch (err) {
     console.error(err);
   }
@@ -50,7 +43,6 @@ const handleEndLunch = async (user) => {
 const handleCheckOut = async (user) => {
   try {
     await checkOut(workDayId.value);
-    alert('Ishdan chiqish yozildi!');
   } catch (err) {
     console.error(err);
   }
@@ -58,7 +50,6 @@ const handleCheckOut = async (user) => {
 
 // Computed filtered users
 const filteredUsers = computed(() => {
-  console.log('Filtering users, query:', searchQuery.value, 'filter:', currentFilter.value);
   return users.value.filter(user => {
     const matchesSearch = user.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
       user.email.toLowerCase().includes(searchQuery.value.toLowerCase());
@@ -75,7 +66,6 @@ const getUsers = async () => {
         Accept: 'application/json'
       }
     });
-    console.log('Fetched users:', response.data);
     users.value = response.data;
   } catch (error) {
     console.error("Error fetching users:", error.message);
@@ -87,16 +77,10 @@ const getUsers = async () => {
 
 getUsers();
 
-// Toggle user status
-const toggleStatus = (user) => {
-  console.log('Toggling status for user:', user.name);
-  user.status = user.status === 'active' ? 'inactive' : 'active';
-};
 
 // Toggle modal for a specific user
 const toggleModal = (userId, event) => {
   event.stopPropagation(); // Prevent event bubbling
-  console.log('Toggling modal for userId:', userId);
   if (selectedUserId.value === userId) {
     selectedUserId.value = null; // Close if same user
   } else {
@@ -106,7 +90,6 @@ const toggleModal = (userId, event) => {
       top: rect.bottom + window.scrollY + 5,
       left: Math.min(rect.left + window.scrollX, window.innerWidth - 200)
     };
-    console.log('Modal position:', modalPosition.value);
   }
 };
 
@@ -114,7 +97,6 @@ const toggleModal = (userId, event) => {
 import { onMounted, onUnmounted } from 'vue';
 const closeModalOnOutsideClick = (event) => {
   if (!event.target.closest('.modal-content') && !event.target.closest('.rotate-90')) {
-    console.log('Closing modal due to outside click');
     selectedUserId.value = null;
   }
 };

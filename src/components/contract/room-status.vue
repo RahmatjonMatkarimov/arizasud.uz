@@ -178,7 +178,6 @@
       const res = await axios.get(`${URL}/client-files/${ids}`);
       data.value = response.data.client;
       clientFiles.value = res.data ? (Array.isArray(res.data) ? res.data : [res.data]) : [];
-      console.log("Client files:", clientFiles.value);
     } catch (error) {
       console.error("Error fetching client files:", error);
     } finally {
@@ -211,7 +210,6 @@
       });
       taskSectionOpen[fileId] = true;
     }
-    console.log('taskSectionOpen:', { ...taskSectionOpen });
   };
   
   const formatDate = (dateString) => {

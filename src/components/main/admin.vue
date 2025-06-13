@@ -819,7 +819,7 @@
                   class="sr-only peer"
                 />
                 <div
-                  class="relative w-14 h-7 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-slate-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-slate-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-slate-600 peer-checked:bg-blue-600"
+                  class="relative w-14 h-7 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-slate-600 peer-checked:after:translate-x-[27px] peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-slate-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-slate-600 peer-checked:bg-blue-600"
                 ></div>
               </label>
             </div>
@@ -1249,9 +1249,6 @@ const getData = async () => {
     if (!response.ok) throw new Error(`HTTP xato: ${response.status}`);
 
     const result = await response.json();
-
-    console.log("API natijasi:", result);
-
     const role = localStorage.getItem("role");
 
     let filteredData = result.filter((item) => item.status === "active"); // faqat active statusli
@@ -1271,9 +1268,6 @@ const getData = async () => {
 
     // id bo‘yicha saralash
     filteredData.sort((a, b) => a.id - b.id);
-
-    console.log("Filtrlangan ma'lumot:", filteredData);
-
     data.value = filteredData;
   } catch (error) {
     console.error("Xatolik:", error);
