@@ -418,7 +418,6 @@ const filteredAdmins = computed(() => {
 });
 
 import translateText from "@/auth/Translate";
-import { inject } from "vue";
 
 
 const getData = async () => {
