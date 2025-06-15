@@ -329,7 +329,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onUnmounted, nextTick, computed } from "vue";
+import { ref, watch, onMounted,inject, onUnmounted, nextTick, computed } from "vue";
 import axios from "axios";
 import { formatDistanceToNow } from "date-fns";
 import { uz } from "date-fns/locale";
