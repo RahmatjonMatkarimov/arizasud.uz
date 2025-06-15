@@ -102,6 +102,7 @@ onUnmounted(() => {
 const socket = ref(null);
 const socketConnected = ref(false);
 const onlineUserIds = ref([]);
+const isLoading = inject('isLoading')
 const admins = ref([]);
 
 // Search functionality
@@ -127,6 +128,7 @@ const filteredAdmins = computed(() => {
 
 // Socket initialization and management
 const initSocket = () => {
+  isLoading.value = true
   try {
     socket.value = io(URL, {
       transports: ['websocket', 'polling'],
@@ -138,6 +140,8 @@ const initSocket = () => {
     setupSocketListeners();
   } catch (error) {
     console.error('Socket initialization error:', error);
+  }finally{
+    isLoading.value = false
   }
 };
 
@@ -268,12 +272,14 @@ const getStatusTextClass = (admin) => {
 const getData = async () => {
   const token = localStorage.getItem('token');
   if (!token) return;
-
+isLoading.value = true
   try {
     const res = await axios.get(`${URL}/deliverer/allUsers`);
     admins.value = res.data.filter(user => user.role !== 'bigAdmin');
   } catch (error) {
     console.error('Error fetching data:', error);
+  } finally { 
+    isLoading.value = false
   }
 };
 

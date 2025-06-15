@@ -1,4 +1,4 @@
-```vue
+
 <script setup>
 import { URL } from '@/auth/url'
 import router from '@/router'
@@ -8,6 +8,7 @@ import { ref, computed, onMounted } from 'vue'
 import PDFViewer from '@/components/ppdf.vue'
 import { onUnmounted } from 'vue'
 import translateText from '@/auth/Translate'
+import { inject } from 'vue'
 
 const user = ref({})
 const BildirishnomalarData = ref([])
@@ -19,6 +20,7 @@ const tasks = ref([])
 const obligations = ref([])
 const Bildirishnomalar = ref({ email: true, browser: true, invoices: true, payments: true, reports: false })
 const darkMode = ref(false)
+const isLoading = inject('isLoading')
 const settings = ref({
   theme: 'system-default',
   language: localStorage.getItem('til') || 'english', // Initialize language from localStorage
@@ -29,6 +31,7 @@ const selectedFileName = ref(null)
 
 // Fetch user data from backend
 const GetUser = async () => {
+  isLoading.value = false
   try {
     const res = await axios.get(`${URL}/${localStorage.getItem('role')}/${parseInt(localStorage.getItem('id'))}`)
     const data = res.data
@@ -43,7 +46,9 @@ const GetUser = async () => {
     editForm.value = { ...user.value, password: '', confirmPassword: '' }
   } catch (error) {
     console.error('Failed to fetch user data:', error)
-  }
+  }finally{
+  isLoading.value = false
+}
 }
 
 // Check system theme
@@ -77,6 +82,7 @@ function handleLanguageChange(event) {
 
 // Fetch required files
 const getRequireFiles = async () => {
+  isLoading.value = true
   try {
     const response = await axios.get(`${URL}/signingFiles/${parseInt(localStorage.getItem('id'))}`)
     info.value = response.data.userFiles.filter(item => item.type === 'info')
@@ -84,6 +90,8 @@ const getRequireFiles = async () => {
     tasks.value = response.data.userFiles.filter(item => item.type === 'tasks')
   } catch (error) {
     console.error('Fayllarni olishda xatolik:', error)
+  } finally{
+    isLoading.value = false
   }
 }
 
@@ -121,7 +129,8 @@ const openFile = (filePath, fileName) => {
 }
 
 // Download file
-const downloadFile = async () => {
+const downloadFile = async () => { 
+  isLoading.value = true
   try {
     const response = await axios.get(selectedFilePath.value, {
       responseType: 'blob',
@@ -139,6 +148,8 @@ const downloadFile = async () => {
     window.URL.revokeObjectURL(url)
   } catch (error) {
     console.error('Failed to download file:', error)
+  } finally {
+    isLoading.value = false
   }
 }
 

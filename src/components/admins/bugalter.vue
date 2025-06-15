@@ -398,6 +398,7 @@ const updatedImage = ref(null);
 const updatednewPassword1 = ref("");
 const updatednewPassword2 = ref("");
 const Count = ref(null);
+const isLoading = inject('isLoading')
 const existingImage = ref(null);
 import { useSearchStore } from '@/components/Templates/searchQuary'
 import translateText from "@/auth/Translate";
@@ -419,6 +420,7 @@ const filteredAdmins = computed(() => {
 
 
 const getData = async () => {
+  isLoading.value = true
   try {
     const token = localStorage.getItem("token");
     const response = await axios.get(`${URL}/accauntant`, {
@@ -433,6 +435,8 @@ const getData = async () => {
     checkOnlineStatus();
   } catch (error) {
     console.error("Error fetching data:", error);
+  } finally {
+    isLoading.value = false
   }
 };
 
@@ -664,7 +668,7 @@ const post = async () => {
   formData.append("startWork", createdAt);
   formData.append("lavozimi", role.value);
   formData.append("img", image.value);
-
+isLoading.value = true
   try {
     const token = localStorage.getItem("token");
     await axios.post(`${URL}/accauntant`, formData, {
@@ -691,6 +695,8 @@ const post = async () => {
   } catch (error) {
     console.error("Error creating admin:", error.response?.data || error.message);
     err.value = error.response?.data?.message || (dat === 'datakril' ? translateText("Admin yaratishda xatolik") : "Admin yaratishda xatolik");
+  } finally {
+    isLoading.value = false
   }
 };
 
@@ -751,7 +757,7 @@ const updateAdmin = async () => {
   if (updatedImage.value) {
     formData.append("image", updatedImage.value);
   }
-
+isLoading.value = true
   try {
     const token = localStorage.getItem("token");
     await axios.put(`${URL}/accauntant/${selectedId.value}`, formData, {
@@ -777,6 +783,8 @@ const updateAdmin = async () => {
   } catch (error) {
     err.value = error.response?.data?.message || (dat === 'datakril' ? translateText("Yangilashda xatolik") : "Yangilashda xatolik");
     console.error("Error updatingysis admin:", error);
+  } finally {
+    isLoading.value = false
   }
 };
 
@@ -822,7 +830,7 @@ const removeAdmin = async () => {
     console.error("No admin ID selected for deletion");
     return;
   }
-
+isLoading.value = true
   try {
     const token = localStorage.getItem("token");
     await axios.delete(`${URL}/accauntant/${selectedId.value}`, {
@@ -834,7 +842,7 @@ const removeAdmin = async () => {
     asd.value = false;
   } catch (error) {
     console.error("Error deleting admin:", error.response?.data || error.message);
-  }
+  } finally {isLoading.value = false}
 };
 
 const handlePhoneFocus = () => {

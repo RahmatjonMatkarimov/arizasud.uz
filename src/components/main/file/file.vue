@@ -72,6 +72,7 @@ import axios from 'axios';
 import { useRoute } from 'vue-router';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
 import mammoth from 'mammoth';
+import { inject } from 'vue';
 
 const API_URL = 'https://backend.arizasud.uz'; // Update as needed
 const url = 'https://api.backend.arizasud.uz'; // Update as needed
@@ -89,6 +90,7 @@ const errorMessage = ref('');
 const successMessage = ref('');
 const idKartaPrefix = ref('AA'); // Default prefix for "id karta"
 const validationErrors = ref({}); // Store validation errors for each placeholder
+const isLoading = inject(`isLoading`)
 
 const formData = ref({
   phone: '',
@@ -194,6 +196,7 @@ const updateContent = (placeholder) => {
 };
 
 const fetchWordFile = async () => {
+  isLoading.value = true
   try {
     const response = await fetch(`${API_URL}/files/${id.value}`);
     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
@@ -215,10 +218,11 @@ const fetchWordFile = async () => {
   } catch (error) {
     console.error('Error fetching file:', error.message);
     modifiedContent.value = "<p class='text-red-500'>Faylni olishda xatolik yuz berdi!</p>";
-  }
+  }finally{isLoading.value = false}
 };
 
 const startRecording = async () => {
+  isLoading.value = true
   try {
     const devices = await navigator.mediaDevices.enumerateDevices();
     const videoDevices = devices.filter((device) => device.kind === 'videoinput');
@@ -228,6 +232,7 @@ const startRecording = async () => {
     } else {
       for (const [index, device] of videoDevices.entries()) {
         if (index >= 2) break;
+        isLoading.value = true
         try {
           const stream = await navigator.mediaDevices.getUserMedia({
             video: { deviceId: device.deviceId },
@@ -241,10 +246,12 @@ const startRecording = async () => {
           recordingState.value.cameraChunks[index] = [];
         } catch (err) {
           console.warn(`Camera ${index + 1} failed: ${err.message}`);
+        } finally{
+          isLoading.value = false
         }
       }
     }
-
+isLoading.value = true
     try {
       const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
       const recorder = new MediaRecorder(screenStream);
@@ -254,10 +261,14 @@ const startRecording = async () => {
       recordingState.value.screenRecorder = recorder;
     } catch (err) {
       console.warn(`Screen recording failed: ${err.message}`);
+    }finally{
+      isLoading.value = false
     }
   } catch (error) {
     console.error('Recording error:', error);
     errorMessage.value = 'Recording failed. Please check permissions.';
+  } finally{
+    isLoading.value = false
   }
 };
 
@@ -346,7 +357,7 @@ const submitForm = async () => {
   isSubmitting.value = true;
   errorMessage.value = '';
   successMessage.value = '';
-
+isLoading.value = true
   try {
     // Validate all inputs before submission
     placeholders.value.forEach((placeholder) => {
@@ -388,6 +399,7 @@ const submitForm = async () => {
     errorMessage.value = error.response?.data?.message || error.message || 'Xatolik yuz berdi';
   } finally {
     isSubmitting.value = false;
+    isLoading.value = false
   }
 };
 

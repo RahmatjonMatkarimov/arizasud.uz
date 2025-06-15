@@ -241,6 +241,7 @@ import axios from "axios";
 import { useRouter } from "vue-router";
 import translateText from "@/auth/Translate";
 import { Icon } from "@iconify/vue";
+import { inject } from "vue";
 
 const router = useRouter();
 const data = ref([]);
@@ -250,6 +251,7 @@ const showDeleteModal = ref(false);
 const showMenu = ref(false);
 const courtName = ref("");
 const isSignable = ref(false);
+const isLoading = inject('isLoading')
 const successMessage = ref("");
 const errorMessage = ref("");
 const selectedId = ref(null);
@@ -339,7 +341,7 @@ const uploadCourt = async () => {
     name: courtName.value,
     sign: isSignable.value,
   };
-
+isLoading.value = true
   try {
     const response = await axios.post(`${URL}/enterprise`, payload, {
       headers: { "Content-Type": "application/json" },
@@ -353,7 +355,7 @@ const uploadCourt = async () => {
     console.error("Upload error:", error.response?.data || error.message);
     errorMessage.value =
       "Xatolik yuz berdi: " + (error.response?.data?.message || error.message);
-  }
+  } finally{isLoading.value = false}
 };
 
 const updateFile = async () => {
@@ -361,7 +363,7 @@ const updateFile = async () => {
     name: courtName.value,
     sign: isSignable.value,
   };
-
+isLoading.value = true
   try {
     const response = await axios.put(
       `${URL}/enterprise/${editingFileId.value}`,
@@ -382,12 +384,14 @@ const updateFile = async () => {
     errorMessage.value =
       "Faylni yangilashda xatolik yuz berdi: " +
       (error.response?.data?.message || error.message);
+  }finally{
+    isLoading.value = false
   }
 };
 
 const removeSelectedItems = async () => {
   if (!selectedId.value) return;
-
+isLoading.value = true
   try {
     const response = await axios.delete(`${URL}/enterprise/${selectedId.value}`);
     if (response.status === 200) {
@@ -402,10 +406,13 @@ const removeSelectedItems = async () => {
     errorMessage.value =
       "O'chirishda xatolik yuz berdi: " +
       (error.response?.data?.message || error.message);
+  } finally{
+    isLoading.value = false
   }
 };
 
 const getData = async () => {
+  isLoading.value = true
   try {
     const response = await axios.get(`${URL}/enterprise`);
     if (response.status === 200) {
@@ -414,7 +421,7 @@ const getData = async () => {
     }
   } catch (error) {
     console.error("Fetch error:", error.response?.data || error.message);
-  }
+  } finally{isLoading.value = false}
 };
 
 const getImageUrl = (filename) => `${imageBaseUrl}/${filename}`;

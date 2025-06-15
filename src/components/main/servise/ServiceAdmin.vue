@@ -467,7 +467,7 @@ const showSelectionModal = ref(false);
 const route = useRoute();
 const router = useRouter();
 const numericId = ref(parseInt(route.params.id));
-
+const isLoading = inject('isLoading')
 const dat = ref(localStorage.getItem("til") || "datalotin");
 
 let intervalId = null;
@@ -505,6 +505,7 @@ onMounted(async () => {
 const isFolders = ref(Boolean);
 
 const getCourtsData = async () => {
+  isLoading.value = true;
   try {
     const response = await fetch(`${URL}/applications/${ServiceId.value}`);
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -519,10 +520,11 @@ const getCourtsData = async () => {
   } catch (error) {
     console.error("Error fetching data:", error.message);
     alert("Error fetching data!");
-  }
+  }finally{isLoading.value = false}
 };
 
 const getFolderContents = async (folderId) => {
+  isLoading.value = true;
   try {
     const response = await fetch(`${URL}/folders/${folderId}`);
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -533,7 +535,7 @@ const getFolderContents = async (folderId) => {
   } catch (error) {
     console.error("Error fetching folder contents:", error.message);
     alert("Error fetching folder contents!");
-  }
+  }finally{isLoading.value = false}
 };
 
 const toggleFolder = async (item) => {
@@ -594,7 +596,7 @@ const createFolder = async () => {
     alert("Bo'lim yaratib bo'lmadi, chunki fayllar ildiz darajasida allaqachon mavjud!");
     return;
   }
-
+isLoading.value = true;
   try {
     const folderData = {
       name: selectedName.value,
@@ -613,7 +615,7 @@ const createFolder = async () => {
   } catch (error) {
     console.error("Folder creation error:", error);
     alert("Error creating folder!");
-  }
+  } finally{isLoading.value = false}
 };
 
 const uploadFile = async () => {
@@ -632,7 +634,7 @@ const uploadFile = async () => {
   currentFolderId.value
     ? formData.append("folderId", String(currentFolderId.value))
     : formData.append("applicationsId", String(ServiceId.value));
-
+isLoading.value = true;
   try {
     const response = await fetch(`${URL}/files`, {
       method: "POST",
@@ -651,7 +653,7 @@ const uploadFile = async () => {
   } catch (error) {
     console.error("File upload error:", error);
     alert("Error uploading file!");
-  }
+  }finally{isLoading.value =false}
 };
 
 const editFile = (item) => {
@@ -678,7 +680,7 @@ const updateFile = async () => {
   } else {
     formData.append("applicationsId", String(ServiceId.value));
   }
-
+isLoading.value = true;
   try {
     const response = await fetch(`${URL}/files/${editingFileId.value}`, {
       method: "PUT",
@@ -697,10 +699,11 @@ const updateFile = async () => {
   } catch (error) {
     console.error("File update error:", error);
     alert("Error updating file!");
-  }
+  }finally{isLoading.value = false}
 };
 
 const updateFolder = async () => {
+  isLoading.value = true;
   try {
     const folderData = {
       name: selectedName.value,
@@ -723,10 +726,11 @@ const updateFolder = async () => {
   } catch (error) {
     console.error("Folder update error:", error);
     alert("Error updating folder!");
-  }
+  } finally{isLoading.value = false}
 };
 
 const removeSelectedItems = async () => {
+  isLoading.value = true;
   try {
     const item =
       ServiceData.value.find((item) => item.id === numericId.value) ||
@@ -746,6 +750,8 @@ const removeSelectedItems = async () => {
   } catch (error) {
     console.error("Delete error:", error);
     alert("Error deleting item!");
+  }finally{
+    isLoading.value = false
   }
 };
 

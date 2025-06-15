@@ -1111,6 +1111,7 @@ import Upload from "./upload.vue";
 import { URL } from "../../auth/url";
 import axios from "axios";
 import translateText from "@/auth/Translate";
+import { inject } from "vue";
 
 // Reactive variables
 const onFileChange1 = (event) => {
@@ -1119,6 +1120,7 @@ const onFileChange1 = (event) => {
 const courtName1 = ref("");
 const file1 = ref(null);
 const successMessage1 = ref("");
+const isLoading = inject('isLoading')
 const errorMessage1 = ref("");
 const PutId = ref(0);
 const router = useRouter();
@@ -1143,7 +1145,7 @@ const uploadCourt = async () => {
   const formData = new FormData();
   formData.append("name", courtName1.value);
   formData.append("file", file1.value);
-
+isLoading.value = true;
   try {
     await axios.post(`${URL}/courts`, formData, {
       headers: {
@@ -1160,7 +1162,7 @@ const uploadCourt = async () => {
     errorMessage1.value = "Yuklashda xato yuz berdi!";
     successMessage1.value = "";
     console.error("Xatolik:", error);
-  }
+  } finally{isLoading.value = false}
 };
 // Methods
 const toggleModal = () => {
@@ -1225,7 +1227,7 @@ const func = async (id, event) => {
   selectedId.value = id;
   PutId.value = id;
   asd.value = !asd.value;
-
+isLoading.value = true;
   try {
     const response = await axios.get(`${URL}/courts/${id}`);
     if (response.status === 200) {
@@ -1238,12 +1240,12 @@ const func = async (id, event) => {
       dat === "datakril"
         ? translateText("Ma'lumotlarni yuklashda xatolik yuz berdi")
         : "Ma'lumotlarni yuklashda xatolik yuz berdi";
-  }
+  } finally{isLoading.value = false}
 };
 const getData = async () => {
+  isLoading.value = true;
   loading.value = true;
   errorMessage.value = null;
-
   try {
     const response = await fetch(url);
     if (!response.ok) throw new Error(`HTTP xato: ${response.status}`);
@@ -1277,6 +1279,7 @@ const getData = async () => {
         : "Ma'lumotlarni yuklashda xatolik yuz berdi";
   } finally {
     loading.value = false;
+    isLoading.value = false
   }
 };
 
@@ -1291,7 +1294,7 @@ const removeSelectedItems = async () => {
     )
   )
     return;
-
+isLoading.value = true;
   try {
     const response = await fetch(`${url}/${selectedId.value}`, {
       method: "DELETE",
@@ -1316,7 +1319,7 @@ const removeSelectedItems = async () => {
       dat === "datakril"
         ? translateText("O'chirishda xatolik yuz berdi")
         : "O'chirishda xatolik yuz berdi";
-  }
+  }finally{isLoading.value = false}
 };
 
 const getImageUrl = (filename) => `${imageBaseUrl}/${filename}`;
@@ -1339,7 +1342,7 @@ const updateCourt = async () => {
   const formData = new FormData();
   formData.append("name", courtName.value.trim());
   if (file.value) formData.append("file", file.value);
-
+isLoading.value = true;
   try {
     const response = await axios.put(`${URL}/courts/${PutId.value}`, formData, {
       headers: {
@@ -1370,10 +1373,13 @@ const updateCourt = async () => {
           )
         : "Yangilashda xatolik yuz berdi: " +
           (error.response?.data?.message || error.message);
+  }finally{
+    isLoading.value = false
   }
 };
 
 const updateWorkStatus = async () => {
+  isLoading.value = true;
   try {
     const response = await axios.put(`${URL}/courts/${selectedId.value}`, {
       workStatus: selectedCourtWorkStatus.value,
@@ -1399,6 +1405,8 @@ const updateWorkStatus = async () => {
         : "Holatni yangilashda xatolik yuz berdi: " +
           (error.response?.data?.message || error.message);
     selectedCourtWorkStatus.value = !selectedCourtWorkStatus.value;
+  } finally{
+    isLoading.value = false
   }
 };
 

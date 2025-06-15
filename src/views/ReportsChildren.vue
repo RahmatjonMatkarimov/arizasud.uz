@@ -7,9 +7,8 @@ import * as XLSX from 'xlsx'
 import { useRoute, useRouter } from 'vue-router'
 import PDFViewer from '../components/ppdf.vue'
 import { onUnmounted } from 'vue'
-
+const isLoading = inject('isLoading')
 const dat = ref(localStorage.getItem('til') || 'datalotin');
-
 let intervalId = null;
 const checkLanguageChange = () => {
   const currentLang = localStorage.getItem('til') || 'datalotin';
@@ -50,11 +49,14 @@ const filters = ref({
 
 // Get files by ID
 const getFiles = async () => {
+  isLoading.value = true
   try {
     const res = await axios.get(`${URL}/accountant-files/${id.value}`)
     invoices.value.push(res.data)
   } catch (err) {
     console.error('Fayl olishda xato:', err)
+  } finally{
+    isLoading.value = false
   }
 }
 

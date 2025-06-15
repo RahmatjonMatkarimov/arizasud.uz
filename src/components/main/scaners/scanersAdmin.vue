@@ -744,6 +744,7 @@ import axios from "axios";
 import { toast } from "vue3-toastify";
 import { URL } from "@/auth/url";
 import translateText from "@/auth/Translate";
+import { inject } from "vue";
 
 // API Base URL
 const API_URL = `${URL}/scanners`;
@@ -776,6 +777,7 @@ const previewCreateUrl = ref(null);
 const previewEditUrl = ref(null);
 const createFileInput = ref(null);
 const editFileInput = ref(null);
+const isLoading = inject('isLoading')
 const scanners = ref([]);
 const newScanner = reactive({ name: "", img: null, isActive: false });
 const editingScanner = reactive({
@@ -804,11 +806,14 @@ const handleError = (error, message) => {
 
 // Fetch scanners from API
 const fetchScanners = async () => {
+  isLoading.value = true;
   try {
     const response = await axios.get(API_URL);
     scanners.value = response.data.sort((a, b) => a.id - b.id);
   } catch (error) {
     handleError(error, "Error fetching scanners:");
+  }finally{
+    isLoading.value = false
   }
 };
 
@@ -940,6 +945,7 @@ const createScanner = async () => {
   formData.append("name", newScanner.name);
   formData.append("workStatus", false);
   formData.append("img", newScanner.img);
+  isLoading.value = true;
   try {
     const response = await axios.post(API_URL, formData, {
       headers: { "Content-Type": "multipart/form-data" },
@@ -958,10 +964,12 @@ const createScanner = async () => {
   } finally {
     isUploadingCreate.value = false;
     uploadProgressCreate.value = 0;
+    isLoading.value = false;
   }
 };
 
 const updateWorkStatus = async (scanner) => {
+  isLoading.value = true;
   try {
     const endpoint = scanner.isActive
       ? `${API_URL}/${scanner.id}/isActive`
@@ -971,6 +979,8 @@ const updateWorkStatus = async (scanner) => {
     toast.success("Skaner holati muvaffaqiyatli yangilandi!");
   } catch (error) {
     handleError(error, "Error updating workStatus:");
+  }finally{
+    isLoading.value = false
   }
 };
 
@@ -987,6 +997,7 @@ const updateScanner = async () => {
   if (editingScanner.img instanceof File) {
     formData.append("img", editingScanner.img);
   }
+  isLoading.value = true;
   try {
     const response = await axios.put(`${API_URL}/${editingScanner.id}`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
@@ -1005,10 +1016,12 @@ const updateScanner = async () => {
   } finally {
     isUploadingEdit.value = false;
     uploadProgressEdit.value = 0;
+    isLoading.value = false
   }
 };
 
 const deleteScanner = async (id) => {
+  isLoading.value = true;
   try {
     const response = await axios.delete(`${API_URL}/${id}`);
     showDeleteModal.value = false;
@@ -1016,6 +1029,8 @@ const deleteScanner = async (id) => {
     toast.success("Skaner muvaffaqiyatli o'chirildi!");
   } catch (error) {
     handleError(error, "Error deleting scanner:");
+  }finally{
+    isLoading.value = false
   }
 };
 

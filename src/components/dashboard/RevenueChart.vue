@@ -7,6 +7,7 @@ import { URL } from '@/auth/url'
 import translateText from '@/auth/Translate'
 import { inject } from 'vue'
 
+const isLoading = inject('isLoading')
 const dat = ref(localStorage.getItem('til') || 'datalotin');
 
 let intervalId = null;
@@ -128,6 +129,7 @@ const chartOptions = computed(() => {
 })
 
 const getDATA = async () => {
+  isLoading.value = false
   try {
     const revenueSums = Array(12).fill(0)
     const expenseSums = Array(12).fill(0)
@@ -170,6 +172,8 @@ const getDATA = async () => {
     chartData.value.datasets[1].data = [...expenseSums]
   } catch (error) {
     console.error('Error fetching data:', error)
+  } finally{
+    isLoading.value = false
   }
 }
 

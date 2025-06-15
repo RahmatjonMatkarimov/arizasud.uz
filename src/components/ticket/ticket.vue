@@ -1,35 +1,77 @@
 <template>
   <div class="container">
     <div class="flex flex-col justify-center items-center">
-    <Header class="min-w-full"></Header>
+      <Header class="min-w-full"></Header>
       <div class="support-ticket-manager mt-10">
         <div class="ticket-form-container">
-          <div class=" relative ticket-form-header">
-            <h2 v-if="dat === 'datalotin'">Shikoyat va e’tirozlaringizni, shuningdek, qo‘shimcha takliflaringizni yozib
-              qoldiring.</h2>
-            <h2 v-if="dat === 'datakril'">{{ translateText("Shikoyat va e’tirozlaringizni, shuningdek, qo‘shimcha takliflaringizni yozib qoldiring.") }}</h2>
+          <div class="relative ticket-form-header">
+            <h2 v-if="dat === 'datalotin'">
+              Shikoyat va e’tirozlaringizni, shuningdek, qo‘shimcha takliflaringizni yozib
+              qoldiring.
+            </h2>
+            <h2 v-if="dat === 'datakril'">
+              {{
+                translateText(
+                  "Shikoyat va e’tirozlaringizni, shuningdek, qo‘shimcha takliflaringizni yozib qoldiring."
+                )
+              }}
+            </h2>
             <div class="absolute bottom-1 right-1 justify-end">
-              <span v-if="dat === 'datalotin'" class="subtitle">Biz sizga yordam berish uchun shu yerdamiz</span>
-              <span v-if="dat === 'datakril'" class="subtitle">{{ translateText("Biz sizga yordam berish uchun shu yerdamiz") }}</span>
+              <span v-if="dat === 'datalotin'" class="subtitle"
+                >Biz sizga yordam berish uchun shu yerdamiz</span
+              >
+              <span v-if="dat === 'datakril'" class="subtitle">{{
+                translateText("Biz sizga yordam berish uchun shu yerdamiz")
+              }}</span>
             </div>
           </div>
           <form @submit.prevent="createTicket" class="ticket-form">
             <div class="form-group">
-              <label v-if="dat === 'datalotin'" for="comment">Muammoingizni Tasvirlab Bering</label>
-              <label v-if="dat === 'datakril'" for="comment">{{ translateText("Muammoingizni Tasvirlab Bering") }}</label>
-              <textarea class="text-black w-[725px]" v-model="state.newTicket.comment" id="comment"
-                :placeholder="dat === 'datakril' ? translateText('Iltimos, muammoingiz haqida batafsil ma\'lumot bering...') : 'Iltimos, muammoingiz haqida batafsil ma\'lumot bering...'"
-                required></textarea>
+              <label v-if="dat === 'datalotin'" for="comment"
+                >Muammoingizni Tasvirlab Bering</label
+              >
+              <label v-if="dat === 'datakril'" for="comment">{{
+                translateText("Muammoingizni Tasvirlab Bering")
+              }}</label>
+              <textarea
+                class="text-black w-[725px]"
+                v-model="state.newTicket.comment"
+                id="comment"
+                :placeholder="
+                  dat === 'datakril'
+                    ? translateText(
+                        'Iltimos, muammoingiz haqida batafsil ma\'lumot bering...'
+                      )
+                    : 'Iltimos, muammoingiz haqida batafsil ma\'lumot bering...'
+                "
+                required
+              ></textarea>
             </div>
             <div class="flex gap-2">
-              <button v-if="dat === 'datalotin'" type="submit" :disabled="state.isSubmitting" class="submit-btn">
-                {{ state.isSubmitting ? 'Yuborilmoqda...' : 'So\'rovni Yuborish' }}
+              <button
+                v-if="dat === 'datalotin'"
+                type="submit"
+                :disabled="state.isSubmitting"
+                class="submit-btn"
+              >
+                {{ state.isSubmitting ? "Yuborilmoqda..." : "So'rovni Yuborish" }}
               </button>
-              <button v-if="dat === 'datakril'" type="submit" :disabled="state.isSubmitting" class="submit-btn">
-                {{ state.isSubmitting ? translateText('Yuborilmoqda...') : translateText('So\'rovni Yuborish') }}
+              <button
+                v-if="dat === 'datakril'"
+                type="submit"
+                :disabled="state.isSubmitting"
+                class="submit-btn"
+              >
+                {{
+                  state.isSubmitting
+                    ? translateText("Yuborilmoqda...")
+                    : translateText("So'rovni Yuborish")
+                }}
               </button>
               <button @click="router.go(-1)" class="bg-blue-500 rounded-md px-8 py-2">
-                {{ dat === 'datakril' ? translateText('Orqaga qaytish') : 'Orqaga qaytish' }}
+                {{
+                  dat === "datakril" ? translateText("Orqaga qaytish") : "Orqaga qaytish"
+                }}
               </button>
             </div>
           </form>
@@ -46,8 +88,10 @@ import { URL } from '@/auth/url'
 import translateText from '@/auth/Translate'
 import Header from '../header.vue'
 import { useRouter } from 'vue-router'
+import { inject } from 'vue'
 
 const router = useRouter()
+const isLoading = inject(`isLoading`)
 const dat = ref(localStorage.getItem('til') || 'datalotin');
 const checkLanguageChange = () => {
   const currentLang = localStorage.getItem('til') || 'datalotin';
@@ -67,17 +111,21 @@ const state = reactive({
 const API_URL = URL + '/ticket'
 
 const fetchTickets = async () => {
+  isLoading.value = true;
   try {
     const response = await axios.get(API_URL)
     state.tickets = response.data
   } catch (error) {
     console.error('So\'rovlarni olishda xatolik:', error)
+  } finally{
+    isLoading.value = false
   }
 }
 
 const createTicket = async () => {
   if (!state.newTicket.comment.trim()) return
-  state.isSubmitting = true
+  state.isSubmitting = true;
+  isLoading.value = true;
   try {
     const response = await axios.post(API_URL, {
       comment: state.newTicket.comment
@@ -87,7 +135,8 @@ const createTicket = async () => {
   } catch (error) {
     console.error('So\'rov yaratishda xatolik:', error)
   } finally {
-    state.isSubmitting = false
+    state.isSubmitting = false;
+    isLoading.value = false;
   }
 }
 

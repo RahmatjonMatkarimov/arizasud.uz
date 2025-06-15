@@ -27,19 +27,19 @@ const items = ref([]);
 const loading = ref(false);
 const showCheckboxes = ref(false);
 const selectedItems = ref([]);
-
+const isLoading = inject('isLoading')
 const route = useRoute();
 const data = route.params.data;
 
 const fetchItems = async () => {
-  loading.value = true;
+  isLoading.value = true;
   try {
     const res = await axios.get(`${URL}/${data}/archived`);
     items.value = res.data;
   } catch (error) {
     console.error('Xatolik:', error);
   } finally {
-    loading.value = false;
+    isLoading.value = false;
   }
 };
 
@@ -66,6 +66,7 @@ const selectAllItems = () => {
 
 const deleteSelectedItems = async () => {
   if (selectedItems.value.length === 0) return;
+  isLoading.value = true
   try {
     await axios.delete(`${URL}/${data}/archived`, {
       data: { ids: selectedItems.value }
@@ -77,10 +78,13 @@ const deleteSelectedItems = async () => {
     fetchItems()
   } catch (error) {
     console.error('Xatolik:', error);
+  } finally{
+    isLoading.value = false
   }
 };
 
 const updateItem = async (id) => {
+  isLoading.value = true
   try {
     const res = await axios.put(`${URL}/${data}/archived/${id}`, {
       status: "active"
@@ -93,6 +97,8 @@ const updateItem = async (id) => {
     fetchItems()
   } catch (error) {
     console.error('Xatolik:', error);
+  } finally{
+    isLoading.value = false
   }
 };
 

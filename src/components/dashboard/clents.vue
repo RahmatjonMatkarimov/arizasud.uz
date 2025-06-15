@@ -478,7 +478,7 @@ const submitPayment = async () => {
   }
 
   const updatedRemainingSum = latestPayment.remainingSum - paymentAmount;
-
+isLoading.value = true
   try {
     const response = await axios.post(`${URL}/client-pay`, {
       clientFileId: parseInt(selectedItem.value.id),
@@ -514,6 +514,8 @@ const submitPayment = async () => {
   } catch (error) {
     console.error("To'lovni yangilashda xatolik yuz berdi:", error);
     alert("Xatolik yuz berdi: " + error.message);
+  } finally{
+    isLoading.value = false
   }
 };
 
@@ -810,6 +812,7 @@ const generateCheckFile = async () => {
     html2canvas: { scale: 2 },
     jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
   };
+isLoading.value = true
 
   try {
     const pdfBlob = await html2pdf().from(element).set(options).outputPdf("blob");
@@ -827,6 +830,8 @@ const generateCheckFile = async () => {
     });
   } catch (error) {
     console.error("Error generating or sending the check file:", error);
+  } finally{
+    isLoading.value = false
   }
 };
 

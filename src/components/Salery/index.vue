@@ -55,6 +55,7 @@ onUnmounted(() => {
 });
 const router = useRouter()
 const users = ref([])
+const isLoading = inject('isLoading')
 
 const filteridTime = (date) => {
   let years = date.slice(0, 4)
@@ -64,6 +65,7 @@ const filteridTime = (date) => {
 }
 
 const getUsers = async () => {
+  isLoading.value = true
   try {
     const response = await axios.get(`${URL}/deliverer/allUsers`);
     const filteredUsers = [];
@@ -78,6 +80,8 @@ const getUsers = async () => {
     if (error.response?.data) {
       console.error("Server response:", error.response.data);
     }
+  } finally{
+    isLoading.value = false
   }
 };
 

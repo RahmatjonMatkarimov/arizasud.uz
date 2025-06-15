@@ -240,7 +240,7 @@
     <div class="flex justify-center items-center pt-4 px-4">
       <h1
         class="text-[40px] font-bold text-center bg-gradient-to-r from-blue-800 to-purple-500 text-white shadow-sm shadow-white rounded-lg py-2 px-[100px]">
-        {{ dat === 'datakril' ? translateText("Yordamchi yuristlar ro'yxati") : "Yordamchi yuristlar ro'yxati" }} <span v-if="Count"
+        {{ dat === 'datakril' ? translateText("Ombor mudiri ro'yxati") : "Ombor mudiri ro'yxati" }} <span v-if="Count"
           class="border-b-4 px-1 border-white">{{ filteredAdmins.length }}</span>
       </h1>
     </div>
@@ -425,7 +425,7 @@ const getData = async () => {
   isLoading.value = true
   try {
     const token = localStorage.getItem("token");
-    const response = await axios.get(`${URL}/yuristAssistant`, {
+    const response = await axios.get(`${URL}/warehouseman`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -673,7 +673,7 @@ const post = async () => {
 isLoading.value = true
   try {
     const token = localStorage.getItem("token");
-    await axios.post(`${URL}/yuristAssistant`, formData, {
+    await axios.post(`${URL}/warehouseman`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "multipart/form-data",
@@ -762,7 +762,7 @@ const updateAdmin = async () => {
 isLoading.value = true
   try {
     const token = localStorage.getItem("token");
-    await axios.put(`${URL}/yuristAssistant/${selectedId.value}`, formData, {
+    await axios.put(`${URL}/warehouseman/${selectedId.value}`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "multipart/form-data",
@@ -808,7 +808,7 @@ isLoading.value = true
   try {
     const token = localStorage.getItem("token");
     await axios.put(
-      `${URL}/yuristAssistant/${selectedId.value}/password`,
+      `${URL}/warehouseman/${selectedId.value}/password`,
       {
         newPassword: updatednewPassword2.value,
       },
@@ -837,7 +837,7 @@ const removeAdmin = async () => {
 isLoading.value = true
   try {
     const token = localStorage.getItem("token");
-    await axios.delete(`${URL}/yuristAssistant/${selectedId.value}`, {
+    await axios.delete(`${URL}/warehouseman/${selectedId.value}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

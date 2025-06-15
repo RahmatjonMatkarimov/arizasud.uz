@@ -11,6 +11,7 @@ const searchStore = useSearchStore()
 const selectedFilePath = ref(null)
 const router = useRouter()
 const dat = ref(localStorage.getItem('til') || 'datalotin');
+const isLoading = inject('isLoading')
 
 let intervalId = null;
 const checkLanguageChange = () => {
@@ -36,7 +37,6 @@ const totalSumInternal = ref('') // Internal state for raw number
 const file = ref('')
 const chek = ref(null)
 const ids = ref([])
-const isLoading = inject('isLoading');
 const accauntantFilesId = ref(null)
 
 const invoices = ref([])
@@ -105,6 +105,7 @@ const upload = async () => {
 }
 
 const getFiles = async () => {
+  isLoading.value = true
   try {
     const res = await axios.get(URL + '/accountant-files');
     let sortedData = res.data.slice().filter(item => item.type === 'reports');
@@ -147,6 +148,8 @@ const getFiles = async () => {
     invoices.value = sortedData;
   } catch (err) {
     console.error('Error fetching files:', err);
+  } finally{
+    isLoading.value = false
   }
 };
 
@@ -175,6 +178,7 @@ async function deleteManyFiles() {
 }
 
 const removeFiles = async (ids) => {
+  isLoading.value = true
   try {
     const response = await axios.delete(URL + '/accountant-files/many', {
       data: { ids }
@@ -184,6 +188,8 @@ const removeFiles = async (ids) => {
     getFiles()
   } catch (error) {
     console.error('Error deleting files:', error.response?.data || error.message)
+  } finally{
+    isLoading.value = false
   }
 }
 
@@ -291,7 +297,7 @@ const downloadExcel = () => {
   const wb = XLSX.utils.book_new()
   XLSX.utils.book_append_sheet(wb, ws, 'Invoices')
   XLSX.writeFile(wb, 'hisobot.xlsx')
-}
+} 
 
 const handleViewInvoice = (item) => {
   if (item.pdfPath) {
@@ -420,12 +426,12 @@ select:focus {
             <select
               id="status"
               v-model="filters.status"
-              class="block text-black dark:text-white w-full px-4 py-3 border dark:border-gray-300 border-gray-700 bg-[#fff0] text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500"
+              class="block text-black dark:bg-[#1a2642] bg-white dark:text-white w-full px-4 py-3 border dark:border-gray-300 border-gray-700 bg-[#fff0] text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500"
             >
-              <option class="text-black dark:text-white" value="">{{ dat === 'datakril' ? translateText('Tartib raqam') : 'Tartib raqam' }}</option>
-              <option class="text-black dark:text-white" value="Paid">{{ dat === 'datakril' ? translateText('Teskari Yaratilish vaqti') : 'Teskari Yaratilish vaqti' }}</option>
-              <option class="text-black dark:text-white" value="az">{{ dat === 'datakril' ? translateText('A-Z nom bo‘yicha') : 'A-Z nom bo‘yicha' }}</option>
-              <option class="text-black dark:text-white" value="total">{{ dat === 'datakril' ? translateText('Tugash vaqti kelganlar') : 'Tugash vaqti kelganlar' }}</option>
+              <option class="text-black dark:bg-[#1a2642] bg-white dark:text-white" value="">{{ dat === 'datakril' ? translateText('Tartib raqam') : 'Tartib raqam' }}</option>
+              <option class="text-black dark:bg-[#1a2642] bg-white dark:text-white" value="Paid">{{ dat === 'datakril' ? translateText('Teskari Yaratilish vaqti') : 'Teskari Yaratilish vaqti' }}</option>
+              <option class="text-black dark:bg-[#1a2642] bg-white dark:text-white" value="az">{{ dat === 'datakril' ? translateText('A-Z nom bo‘yicha') : 'A-Z nom bo‘yicha' }}</option>
+              <option class="text-black dark:bg-[#1a2642] bg-white dark:text-white" value="total">{{ dat === 'datakril' ? translateText('Tugash vaqti kelganlar') : 'Tugash vaqti kelganlar' }}</option>
             </select>
           </div>
           <button

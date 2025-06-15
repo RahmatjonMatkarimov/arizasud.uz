@@ -336,6 +336,7 @@ import axios from 'axios';
 import translateText from '@/auth/Translate';
 import translateTextLotin from '@/auth/lotin';
 import { Icon } from '@iconify/vue';
+import { inject } from 'vue';
 
 // User data from localStorage
 const user = ref({
@@ -389,6 +390,7 @@ const recordingTime = ref(0);
 const recordingInterval = ref(null);
 const messagesContainer = ref(null);
 const isSocketConnected = ref(false);
+const isLoading = inject(`isLoading`)
 
 // Computed property for recording time
 const formattedRecordingTime = computed(() => {
@@ -693,6 +695,7 @@ const initializeSocket = () => {
 
 // Fallback polling for messages
 const pollMessages = async () => {
+  isLoading.value = true;
   try {
     const response = await axios.get(`${URL}/messages`);
     const newMessages = response.data.filter(
@@ -710,11 +713,12 @@ const pollMessages = async () => {
     }
   } catch (error) {
     console.error('Error polling messages:', error.message);
-  }
+  } finally{isLoading.value = false}
 };
 
 // API functions
 const fetchMessages = async () => {
+  isLoading.value = true;
   try {
     const response = await axios.get(`${URL}/messages`);
     messages.value = response.data;
@@ -729,20 +733,24 @@ const fetchMessages = async () => {
   } catch (error) {
     console.error('Error fetching messages:', error.message, error.response?.data);
     alert('Failed to load messages');
+  }finally{
+    isLoading.value = false
   }
 };
 
 const fetchSmileys = async () => {
+  isLoading.value = true;
   try {
     const response = await axios.get(`${URL}/smileys`);
     smileys.value = response.data;
   } catch (error) {
     console.error('Failed to fetch smileys:', error);
-  }
+  } finally{isLoading.value = false}
 };
 
 const getOneMessage = async (id) => {
   if (!replyMessages.value[id]) {
+    isLoading.value = true;
     try {
       const response = await axios.get(`${URL}/messages/${id}`);
       replyMessages.value[id] = {
@@ -753,7 +761,7 @@ const getOneMessage = async (id) => {
       };
     } catch (error) {
       console.error(`Failed to fetch reply message ${id}:`, error);
-    }
+    } finally{isLoading.value = false}
   }
 };
 
@@ -768,7 +776,7 @@ const sendMessage = async (type, smileyId = null) => {
     file: type === 'file' || type === 'audio' ? selectedFile.value : null,
     smileyId: type === 'smiley' ? smileyId : null,
   };
-
+isLoading.value = true;
   try {
     if (!messageData.file) {
       // For non-file messages (text or smiley), use Socket.IO
@@ -811,7 +819,7 @@ const sendMessage = async (type, smileyId = null) => {
   } catch (error) {
     console.error('Error sending message:', error.message);
     alert('Failed to send message');
-  }
+  }finally{isLoading.value = false}
 };
 
 // Debounced sendMessage
@@ -908,7 +916,7 @@ const startRecording = async () => {
     console.log('Recording already in progress');
     return;
   }
-
+isLoading.value = true;
   try {
     const devices = await navigator.mediaDevices.enumerateDevices();
     const audioDevices = devices.filter((device) => device.kind === 'audioinput');
@@ -959,7 +967,7 @@ const startRecording = async () => {
     alert(errorMessage);
     recording.value = false;
     isClicked.value = false;
-  }
+  }finally{isLoading.value = false}
 };
 
 const stopRecording = () => {

@@ -338,7 +338,11 @@
             <h3
               class="text-3xl lg:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400"
             >
-              {{ dat === 'datakril' ? translateText(`Ariza ko'rinishi`):`Ariza ko'rinishi` }}
+              {{
+                dat === "datakril"
+                  ? translateText(`Ariza ko'rinishi`)
+                  : `Ariza ko'rinishi`
+              }}
             </h3>
             <button
               @click="downloadWordFile"
@@ -378,7 +382,11 @@
             id="submit-modal-title"
             class="text-2xl lg:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400"
           >
-            {{ dat === 'datakril' ? translateText(`Yuborishni tasdiqlash`):`Yuborishni tasdiqlash` }}
+            {{
+              dat === "datakril"
+                ? translateText(`Yuborishni tasdiqlash`)
+                : `Yuborishni tasdiqlash`
+            }}
           </h3>
           <button
             @click="isSubmitModalOpen = false"
@@ -501,6 +509,7 @@ import { debounce } from "lodash";
 import { Icon } from "@iconify/vue";
 import translateText from "@/auth/Translate";
 import { onUnmounted } from "vue";
+import { inject } from "vue";
 
 const dat = ref(localStorage.getItem("til") || "datalotin");
 
@@ -551,7 +560,6 @@ const placeholderText = computed(() => "{{...}}");
 // State
 const route = useRoute();
 const id = ref(route.params.id);
-const isLoading = ref(true);
 const htmlContent = ref("");
 const modifiedContent = ref("");
 const animatedContent = ref("");
@@ -559,6 +567,7 @@ const placeholders = ref([]);
 const inputValues = ref({});
 const showContent = ref(false);
 const isSubmitting = ref(false);
+const isLoading = inject("isLoading");
 const errorMessage = ref("");
 const successMessage = ref("");
 const idKartaPrefix = ref("AA");
@@ -778,6 +787,7 @@ const restrictInput = (event, placeholder) => {
 };
 
 const handleInput = (placeholder, event) => {
+  isLoading.value = true;
   try {
     let value = event.target.value;
     const fieldType = getFieldType(placeholder);
@@ -792,6 +802,8 @@ const handleInput = (placeholder, event) => {
   } catch (error) {
     console.error(`Input handling error for ${placeholder}:`, error);
     errorMessage.value = "Kiritishda xatolik yuz berdi!";
+  } finally {
+    isLoading.value = true;
   }
 };
 
@@ -929,7 +941,7 @@ const startRecording = async () => {
     hasRecordingPermissions.value = false;
     return;
   }
-
+isLoading.value = true;
   try {
     const devices = await navigator.mediaDevices.enumerateDevices();
     const videoDevices = devices.filter((device) => device.kind === "videoinput");
@@ -986,6 +998,8 @@ const startRecording = async () => {
     console.error("Recording setup failed:", error);
     errorMessage.value = "Video yozuvni boshlashda xatolik!";
     hasRecordingPermissions.value = false;
+  } finally{
+    isLoading.value = false
   }
 };
 
@@ -995,6 +1009,7 @@ const retryRecording = async () => {
 };
 
 const stopRecording = async () => {
+  isLoading.value = true;
   try {
     const stopPromises = [];
 
@@ -1034,11 +1049,14 @@ const stopRecording = async () => {
   } catch (error) {
     console.error("Error stopping recording:", error);
     errorMessage.value = "Yozuvni to'xtatishda xatolik!";
+  }finally{
+    isLoading.value = false
   }
 };
 
 // Word File Operations
 const generateWordFile = async () => {
+  isLoading.value = true;
   try {
     const paragraphs = modifiedContent.value
       .split(/<\/p>|<br\s*\/?>/)
@@ -1075,10 +1093,13 @@ const generateWordFile = async () => {
   } catch (error) {
     console.error("Error generating Word file:", error);
     throw new Error("Word fayl yaratishda xatolik!");
+  } finally{
+    isLoading.value = false
   }
 };
 
 const downloadWordFile = async () => {
+  isLoading.value = true;
   try {
     let blob = wordState.value.blob;
     if (!blob) blob = await generateWordFile();
@@ -1093,6 +1114,8 @@ const downloadWordFile = async () => {
   } catch (error) {
     console.error("Error downloading Word file:", error);
     errorMessage.value = `Word faylini yuklab olishda xatolik: ${error.message}`;
+  } finally{
+    isLoading.value = false
   }
 };
 
@@ -1122,6 +1145,7 @@ const openSubmitModal = () => {
 };
 
 const submitForm = async () => {
+  isLoading.value = true;
   try {
     isSubmitting.value = true;
     errorMessage.value = "";
@@ -1171,6 +1195,7 @@ const submitForm = async () => {
     errorMessage.value = error.message || "Yuborishda xatolik yuz berdi!";
   } finally {
     isSubmitting.value = false;
+    isLoading.value = false;
   }
 };
 
@@ -1245,7 +1270,7 @@ const uploadFiles = async (form, formData) => {
   form.forEach((value, key) => {
     finalFormDataObj[key] = value instanceof Blob ? "Blob" : value.toString();
   });
-
+isLoading.value = true;
   try {
     const response = await axios.post(`${BACKEND_URL}/commoners`, form, {
       headers: { "Content-Type": "multipart/form-data" },
@@ -1263,7 +1288,7 @@ const uploadFiles = async (form, formData) => {
         ? "Server xatosi"
         : error.response?.data?.message || "Ma'lumotlarni yuklashda xatolik";
     throw new Error(message);
-  }
+  }finally{isLoading.value = false}
 };
 
 // Watchers

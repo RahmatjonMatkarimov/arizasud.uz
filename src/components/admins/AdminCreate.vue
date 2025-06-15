@@ -329,7 +329,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onUnmounted, nextTick, computed } from "vue";
+import { ref, watch, onMounted, inject, onUnmounted, nextTick, computed } from "vue";
 import axios from "axios";
 import { formatDistanceToNow } from "date-fns";
 import { uz } from "date-fns/locale";
@@ -340,6 +340,7 @@ import { useI18n } from 'vue-i18n';
 import { Icon } from '@iconify/vue';
 import translateText from '@/auth/Translate';
 
+const isLoading = inject('isLoading')
 const buttonRefs = ref({});
 const modalPosition = ref({});
 const { t } = useI18n();
@@ -418,6 +419,7 @@ const filteredAdmins = computed(() => {
 });
 
 const getData = async () => {
+  isLoading.value = true
   try {
     const token = localStorage.getItem("token");
     const response = await axios.get(`${URL}/admin`, {
@@ -432,6 +434,8 @@ const getData = async () => {
     checkOnlineStatus();
   } catch (error) {
     console.error("Error fetching data:", error);
+  } finally { 
+    isLoading.value = false
   }
 };
 
@@ -663,6 +667,7 @@ const post = async () => {
   formData.append("startWork", createdAt);
   formData.append("lavozimi", role.value);
   formData.append("img", image.value);
+  isLoading.value = true
 
   try {
     const token = localStorage.getItem("token");
@@ -690,7 +695,7 @@ const post = async () => {
   } catch (error) {
     console.error("Error creating admin:", error.response?.data || error.message);
     err.value = error.response?.data?.message || (dat === 'datakril' ? translateText("Admin yaratishda xatolik") : "Admin yaratishda xatolik");
-  }
+  } finally{isLoading.value = false}
 };
 
 const updateAdmin = async () => {
@@ -750,6 +755,7 @@ const updateAdmin = async () => {
   if (updatedImage.value) {
     formData.append("image", updatedImage.value);
   }
+  isLoading.value = true
 
   try {
     const token = localStorage.getItem("token");
@@ -776,7 +782,7 @@ const updateAdmin = async () => {
   } catch (error) {
     err.value = error.response?.data?.message || (dat === 'datakril' ? translateText("Yangilashda xatolik") : "Yangilashda xatolik");
     console.error("Error updatingysis admin:", error);
-  }
+  } finally {isLoading.value = false}
 };
 
 const updatepassword = async () => {
@@ -793,7 +799,7 @@ const updatepassword = async () => {
     err.value = dat === 'datakril' ? translateText("Parollar bir xil emas") : "Parollar bir xil emas";
     return;
   }
-
+isLoading.value = true
   try {
     const token = localStorage.getItem("token");
     await axios.put(
@@ -813,6 +819,8 @@ const updatepassword = async () => {
   } catch (error) {
     err.value = error.response?.data?.message || (dat === 'datakril' ? translateText("Parolni yangilashda xatolik") : "Parolni yangilashda xatolik");
     console.error("Error updating password:", error);
+  } finally {
+    isLoading.value = false
   }
 };
 
@@ -821,7 +829,7 @@ const removeAdmin = async () => {
     console.error("No admin ID selected for deletion");
     return;
   }
-
+isLoading.value = true
   try {
     const token = localStorage.getItem("token");
     await axios.delete(`${URL}/admin/${selectedId.value}`, {
@@ -833,6 +841,8 @@ const removeAdmin = async () => {
     asd.value = false;
   } catch (error) {
     console.error("Error deleting admin:", error.response?.data || error.message);
+  } finally{
+    isLoading.value = false
   }
 };
 

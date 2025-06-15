@@ -5,6 +5,7 @@ import axios from 'axios'
 import { onMounted, ref, provide, computed, onBeforeUnmount, watch } from 'vue' 
 import { useRouter } from 'vue-router'
 import { gsap } from 'gsap'
+import { inject } from 'vue'
 
 const dat = ref('datalotin') // Default language setting 
 const isAsideVisible = ref(false) // Sidebar initially closed for better mobile experience
@@ -15,8 +16,7 @@ const user = ref(null)
 const activeItemIndex = ref(0)
 const animationComplete = ref(false)
 const isAnimating = ref(false) // Prevent animation overlap
-
-// Add hover state for menu items
+const isLoading = inject('isLoading')
 const hoveredItem = ref(null)
 
 const menuItems = [
@@ -123,11 +123,14 @@ const animateSidebar = (expand) => {
 }
 
 const getUser = async () => {
+  isLoading.value = true
   try {
     const res = await axios.get(`${URL}/accauntant/${localStorage.getItem('id')}`)
     user.value = res.data
   } catch (error) {
     console.error('Error fetching user:', error)
+  } finally{
+    isLoading.value =false
   }
 }
 

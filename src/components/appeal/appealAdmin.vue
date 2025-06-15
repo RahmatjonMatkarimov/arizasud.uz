@@ -426,12 +426,19 @@
 import { inject, ref, watch } from "vue";
 import { URL } from "../../auth/url.js";
 import axios from "axios";
+import translateText from "@/auth/Translate";
+import { onUnmounted } from "vue";
+import { onMounted } from "vue";
+const datakril = ref([]);
+const dat = ref(localStorage.getItem("til") || "datalotin");
 
+let intervalId = null;
 const PutId = ref(null);
 const PutModal = ref(false);
 const showModal = ref(false);
 const asd = ref(false);
 const url = ref("");
+const isLoading = inject('isLoading')
 const courtName = ref("");
 const file = ref(null);
 const successMessage = ref("");
@@ -474,6 +481,7 @@ const handleSubmit = async () => {
 };
 
 const uploadCourt = async () => {
+  isLoading.value = true
   try {
     const formData = new FormData();
     formData.append("name", courtName.value);
@@ -508,15 +516,12 @@ const uploadCourt = async () => {
     console.error("Upload error:", error);
     errorMessage.value = "Xatolik yuz berdi. Iltimos, qayta urinib ko'ring! ❌";
     successMessage.value = "";
+  } finally{
+    isLoading.value = false
   }
 };
 
-import { onUnmounted } from "vue";
-import { onMounted } from "vue";
-const datakril = ref([]);
-const dat = ref(localStorage.getItem("til") || "datalotin");
 
-let intervalId = null;
 const checkLanguageChange = () => {
   const currentLang = localStorage.getItem("til") || "datalotin";
   if (currentLang !== dat.value) {
@@ -533,9 +538,9 @@ onUnmounted(() => {
   if (intervalId) clearInterval(intervalId);
 });
 
-import translateText from "@/auth/Translate";
 
 const getData = async () => {
+  isLoading.value = true
   try {
     const response = await fetch(`${URL}/appeal`);
     if (response.ok) {
@@ -555,10 +560,13 @@ const getData = async () => {
     }
   } catch (error) {
     console.error("Network error:", error);
+  } finally{
+    isLoading.value = false
   }
 };
 
 const updateCourt = async () => {
+  isLoading.value = true
   try {
     const formData = new FormData();
     formData.append("name", courtName.value);
@@ -592,12 +600,14 @@ const updateCourt = async () => {
     console.error("Update error:", error);
     errorMessage.value = "Yangilashda xatolik yuz berdi! ❌";
     successMessage.value = "";
+  } finally{
+    isLoading.value = false
   }
 };
 
 const removeSelectedItems = async () => {
   if (!PutId.value) return;
-
+isLoading.value = true
   try {
     const response = await fetch(`${URL}/appeal/${PutId.value}`, { 
       method: "DELETE" 
@@ -617,6 +627,8 @@ const removeSelectedItems = async () => {
     }
   } catch (error) {
     console.error("Delete error:", error);
+  } finally{
+    isLoading.value = false
   }
 };
 

@@ -105,6 +105,7 @@ const upload = async () => {
 }
 
 const getFiles = async () => {
+  isLoading.value = false
   try {
     const res = await axios.get(URL + '/accountant-files');;
     let sortedData = res.data.slice().filter(item => item.type === 'taxes');
@@ -147,6 +148,8 @@ const getFiles = async () => {
     invoices.value = sortedData;
   } catch (err) {
     console.error('Error fetching files:', err);
+  } finally {
+    isLoading.value = false
   }
 };
 
@@ -175,6 +178,7 @@ async function deleteManyFiles() {
 }
 
 const removeFiles = async (ids) => {
+  isLoading.value = true
   try {
     const response = await axios.delete(URL + '/accountant-files/many', {
       data: { ids }
@@ -183,6 +187,8 @@ const removeFiles = async (ids) => {
     getFiles()
   } catch (error) {
     console.error('Error deleting files:', error.response?.data || error.message)
+  } finally{
+    isLoading.value = false
   }
 }
 

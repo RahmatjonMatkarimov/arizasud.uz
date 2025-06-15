@@ -16,6 +16,7 @@ const comment = ref('');
 const openDropdownId = ref(null);
 const isModalOpen = ref(false);
 const selectedRejectId = ref(null);
+const isLoading = inject('isLoading')
 const status = ref();
 const router = useRouter();
 const expandedDocId = ref(null);
@@ -119,6 +120,7 @@ const confirmAdminSelection = async () => {
   const latestStatus = task.ClientFileStatusHistory?.[task.ClientFileStatusHistory.length - 1]?.status;
   const currentStatusNumber = parseInt(getLastChar(latestStatus)) || 1;
   const lawyerId = selectedAdminId.value; // Store locally to avoid reset
+  isLoading.value = true
   try {
     // Update the status with the selected admin ID
     await updateType(selectedDocId.value, currentStatusNumber + 1, '', lawyerId);
@@ -130,10 +132,13 @@ const confirmAdminSelection = async () => {
   } catch (error) {
     console.error('Error in confirmAdminSelection:', error.response?.data || error.message);
     alert('Xatolik yuz berdi: ' + (error.response?.data?.message || 'Iltimos, qaytadan urinib ko‘ring.'));
+  } finally{
+    isLoading.value =false
   }
 };
 
 const getAdmin = async () => {
+  isLoading.value =true
   try {
     const response = await axios.get(`${URL}/deliverer`, {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
@@ -141,9 +146,12 @@ const getAdmin = async () => {
     adminData.value = response.data; // Store admin data
   } catch (error) {
     console.error('Error fetching admin data:', error);
+  } finally{
+    isLoading.value = false
   }
 };
 const getAdminFromSubDomain = async () => {
+  isLoading.value = true
   try {
     const response = await axios.get(URL + '/admin', {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
@@ -151,6 +159,8 @@ const getAdminFromSubDomain = async () => {
     adminData.value = response.data; // Subdomen adminlarini saqlash
   } catch (error) {
     console.error('Error fetching admin data from subdomain:', error);
+  } finally{
+    isLoading.value =false
   }
 };
 // Function to set active section
@@ -160,6 +170,7 @@ const setActiveSection = (section) => {
 
 // Existing functions
 const getData = async () => {
+  isLoading.value = true
   try {
     const response = await axios.get(`${URL}/yuristAssistant/${localStorage.getItem('id')}`, {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
@@ -179,6 +190,8 @@ const getData = async () => {
     data.value = { ...fetchedData, LawyerTask: filteredTasks };
   } catch (error) {
     console.error('Error fetching data:', error);
+  } finally { 
+    isLoading.value = false
   }
 };
 
@@ -194,6 +207,7 @@ const openRejectModal = (id) => {
 };
 // Update updateType to avoid resetting selectedAdminId
 const updateType = async (id, newStatus, commentText = '', adminId = null) => {
+  isLoading.value = true
   try {
     const payload = {
       changedById: adminId || localStorage.getItem('id'),
@@ -242,6 +256,8 @@ const updateType = async (id, newStatus, commentText = '', adminId = null) => {
   } catch (error) {
     console.error('Error updating data:', error);
     alert("Xatolik yuz berdi: " + error.message);
+  }finally{
+    isLoading.value = false
   }
 };
 

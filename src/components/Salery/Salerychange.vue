@@ -585,6 +585,7 @@ const users = ref([]);
 const modals = ref(false);
 const sabab = ref("");
 const total = ref(null);
+const isLoading =inject('isLoading')
 const workdayId = ref(null);
 const dat = ref(localStorage.getItem("til") || "datalotin");
 
@@ -630,6 +631,7 @@ const formattedTotal = computed({
 });
 
 const addBonus = async () => {
+  isLoading.value = true
   try {
     const res = await axios.post(URL + "/bonus", {
       userId: parseInt(id),
@@ -645,6 +647,8 @@ const addBonus = async () => {
   } catch (err) {
     console.error("Error adding bonus:", err);
     alert("Bonus qo'shishda xatolik yuz berdi!");
+  } finally{
+    isLoading.value = false
   }
 };
 
@@ -709,6 +713,7 @@ const openModal = (title, event) => {
   );
 };
 const getSalery = async () => {
+  isLoading.value = true
   try {
     const now = new Date();
     const year = now.getFullYear();
@@ -739,6 +744,8 @@ const getSalery = async () => {
     ];
   } catch (err) {
     console.error("Error fetching user:", err);
+  } finally{
+    isLoading.value = false
   }
 };
 
@@ -754,6 +761,7 @@ const data = ref(null);
 const selectedMonth = ref("");
 
 const handleCalculateSalary = async (item) => {
+  isLoading.value = true
   try {
     // Hozirgi sanani olish
     const currentDate = new Date();
@@ -768,6 +776,8 @@ const handleCalculateSalary = async (item) => {
   } catch (err) {
     console.error("Error calculating salary:", err);
     alert("Maosh hisoblashda xatolik yuz berdi!");
+  } finally{
+    isLoading.value = false
   }
 };
 function hisoblaFoiz(value, percent) {
@@ -952,11 +962,14 @@ function filteridTime(isoStr) {
 }
 
 const getUser = async () => {
+  isLoading.value = true
   try {
     const res = await axios.get(URL + "/" + role + "/" + id);
     users.value = [res.data];
   } catch (err) {
     console.error("Error fetching user:", err);
+  } finally{
+    isLoading.value = false
   }
 };
 

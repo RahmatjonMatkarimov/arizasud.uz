@@ -129,6 +129,7 @@ const unreadCount = ref(0);
 const notificationMessage = ref('');
 const selectedNotificationType = ref('socket'); // Default to socket notifications
 const isSending = ref(false);
+const isLoading = inject('isLoading')
 
 // Socket instance
 const socketURL = URL || 'http://localhost:3000';
@@ -209,6 +210,7 @@ const fetchSocketNotifications = () => {
 };
 
 const fetchAxiosNotifications = async () => {
+  isLoading.value = true
   try {
     const userId = parseInt(localStorage.getItem('id')) || 1;
     const response = await axios.get(`${URL}/accauntant-notification/user/${userId}`);
@@ -218,20 +220,28 @@ const fetchAxiosNotifications = async () => {
     }));
   } catch (error) {
     console.error('Error fetching axios notifications:', error);
+  } finally{
+    isLoading.value = false
   }
 };
 
 const fetchUnreadCount = async () => {
+  isLoading.value = true
+
   try {
     const userId = parseInt(localStorage.getItem('id')) || 1;
     const response = await axios.get(`${URL}/accauntant-notification/unread/count?userId=${userId}`);
     unreadCount.value = response.data;
   } catch (error) {
     console.error('Error fetching unread count:', error);
+  } finally{
+    isLoading.value = false
   }
 };
 
 const markAsRead = async (notificationId, type) => {
+  isLoading.value = true
+
   try {
     if (type === 'axios') {
       await axios.put(`${URL}/accauntant-notification/${notificationId}/read`);
@@ -243,6 +253,8 @@ const markAsRead = async (notificationId, type) => {
     await fetchUnreadCount();
   } catch (error) {
     console.error('Error marking notification as read:', error);
+  } finally{
+    isLoading.value = false
   }
 };
 

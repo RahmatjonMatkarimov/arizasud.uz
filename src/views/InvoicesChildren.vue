@@ -7,6 +7,7 @@ import * as XLSX from 'xlsx'
 import { useRoute, useRouter } from 'vue-router'
 import PDFViewer from '../components/ppdf.vue'
 import { onUnmounted } from 'vue'
+import { is } from 'date-fns/locale'
 
 const dat = ref(localStorage.getItem('til') || 'datalotin');
 
@@ -29,6 +30,7 @@ const route = useRoute()
 const invoices = ref([])
 const id = ref(route.query.addressId)
 const selectedFilePath = ref(null)
+const isLoading = inject('isLoading')
 
 // Handle "Ko'rish" tugmasi
 const handleViewInvoice = (history) => {
@@ -50,11 +52,14 @@ const filters = ref({
 
 // Get files by ID
 const getFiles = async () => {
+  isLoading.value = true
   try {
     const res = await axios.get(`${URL}/accountant-files/${id.value}`)
     invoices.value.push(res.data)
   } catch (err) {
     console.error('Fayl olishda xato:', err)
+  } finally { 
+    isLoading.value = false
   }
 }
 

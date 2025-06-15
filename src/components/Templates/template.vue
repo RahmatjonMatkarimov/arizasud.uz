@@ -231,21 +231,27 @@ const fetchUserData = async () => {
 
 const fetchUnreadMessageCount = async () => {
   if (!userIdNum) return
+  isLoading.value = true
   try {
     const response = await axios.get(`${URL}/messages/unread/${userIdNum}`)
     messageCount.value = response.data.length
   } catch (error) {
     console.error('Error fetching unread message count:', error)
+  } finally{
+    isLoading.value = false
   }
 }
 
 const fetchUnreadCount = async () => {
   if (!userIdNum) return
+  isLoading.value = true
   try {
     const response = await axios.get(`${URL}/accauntant-notification/unread/count?userId=${userIdNum}`)
     unreadCount.value = response.data
   } catch (error) {
     console.error('Error fetching unread count:', error)
+  } finally{
+    isLoading.value = false
   }
 }
 

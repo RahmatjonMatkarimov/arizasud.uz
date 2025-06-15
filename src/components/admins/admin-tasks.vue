@@ -6,7 +6,6 @@ import axios from 'axios';
 import { URL } from '@/auth/url';
 import { useRouter } from 'vue-router';
 import translateText from '@/auth/Translate';
-import { faL } from '@fortawesome/free-solid-svg-icons';
 // Reactive state for navigation
 const activeSection = ref('status5'); // Default section: Qabul qilingan fayllar (status4)
 
@@ -25,6 +24,7 @@ const rejectionComment = ref('');
 const isAdminModalOpen = ref(false);
 const adminData = ref([]);
 const selectedAdminId = ref(null);
+const isLoading = inject('isLoading')
 const selectedDoc = ref(null); // Store the full document object
 const selectedDocId = ref(null);
 const selecteradminId = ref(0)
@@ -72,6 +72,7 @@ const statusCards = [
 const filteredTasks = ref([]); // Topda declare qilingan bo'lsin
 
 const tasks = async () => {
+  isLoading.value = true
   try {
     const res = await axios.get(`${URL}/yurist-tasks`);
     const adminId = localStorage.getItem('id');
@@ -90,6 +91,8 @@ const tasks = async () => {
     filteredTasks.value = result; // reactive sifatida saqlaymiz
   } catch (error) {
     console.error("Xatolik yuz berdi:", error);
+  }finally{
+    isLoading.value=false
   }
 };
 
@@ -146,6 +149,7 @@ const confirmAdminSelection = async () => {
   const latestStatus = task.ClientFileStatusHistory?.[task.ClientFileStatusHistory.length - 1]?.status;
   const currentStatusNumber = parseInt(getLastChar(latestStatus)) || 1;
   const lawyerId = selectedAdminId.value; // Store locally to avoid reset
+  isLoading.value = true
   try {
     // Update the status with the selected admin ID
     await updateType(selectedDocId.value, currentStatusNumber + 1, '', lawyerId);
@@ -157,10 +161,13 @@ const confirmAdminSelection = async () => {
   } catch (error) {
     console.error('Error in confirmAdminSelection:', error.response?.data || error.message);
     alert('Xatolik yuz berdi: ' + (error.response?.data?.message || 'Iltimos, qaytadan urinib ko‘ring.'));
+  } finally{
+    isLoading.value = false
   }
 };
 
 const getAdmin = async () => {
+  isLoading.value = true
   try {
     const response = await axios.get(`${URL}/yuristAssistant`, {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
@@ -168,6 +175,8 @@ const getAdmin = async () => {
     adminData.value = response.data;
   } catch (error) {
     console.error('Error fetching admin data:', error);
+  } finally{
+    isLoading.value = false
   }
 };
 // Function to set active section
@@ -177,6 +186,7 @@ const setActiveSection = (section) => {
 
 // Existing functions
 const getData = async () => {
+  isLoading.value = true
   try {
     const response = await axios.get(`${URL}/yuristAssistant/${localStorage.getItem('id')}`, {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
@@ -196,6 +206,8 @@ const getData = async () => {
     data.value = { ...fetchedData, LawyerTask: filteredTasks };
   } catch (error) {
     console.error('Error fetching data:', error);
+  } finally{
+    isLoading.value = false
   }
 };
 
@@ -211,6 +223,7 @@ const openRejectModal = (id) => {
 };
 // Update updateType to avoid resetting selectedAdminId
 const updateType = async (id, newStatus, commentText = '', adminId = null) => {
+  isLoading.value = true
   try {
     const payload = {
       changedById: adminId || localStorage.getItem('id'),
@@ -259,7 +272,7 @@ const updateType = async (id, newStatus, commentText = '', adminId = null) => {
   } catch (error) {
     console.error('Error updating data:', error);
     alert("Xatolik yuz berdi: " + error.message);
-  }
+  } finally{isLoading.value = false}
 };
 
 

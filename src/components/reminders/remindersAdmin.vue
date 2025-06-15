@@ -195,6 +195,7 @@ import { ref, onMounted, computed, onUnmounted } from "vue";
 import axios from "axios";
 import { URL } from "@/auth/url";
 import translateText from "@/auth/Translate";
+import { inject } from "vue";
 
 export default {
   setup() {
@@ -203,7 +204,7 @@ export default {
     const dat = ref(localStorage.getItem("til") || "datalotin");
     const searchTerm = ref("");
     const sortBy = ref("newest");
-    const isLoading = ref(true);
+    const isLoading = inject('isLoading');
     const showToast = ref(false);
     const isDark = ref(
       localStorage.getItem("theme") === "dark" ||
@@ -280,6 +281,7 @@ export default {
     };
 
     const toggleActive = async (workLog) => {
+      isLoading.value = true
       try {
         const response = await axios.put(`${URL}/reminders/${workLog.id}`, {
           isActive: true,
@@ -294,7 +296,7 @@ export default {
             : "Statusni o'zgartirishda xatolik:",
           error
         );
-      }
+      }finally{isLoading.value = false}
     };
 
     const formatDate = (dateString) => {

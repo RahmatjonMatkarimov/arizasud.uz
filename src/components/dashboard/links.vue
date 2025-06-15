@@ -15,10 +15,12 @@
       </button>
     </div>
     <div
-      v-if="togle" @click="togle = false"
+      v-if="togle"
+      @click="togle = false"
       class="fixed inset-0 z-40 flex justify-center items-center bg-black/50"
     >
-      <div @click.stop
+      <div
+        @click.stop
         class="bg-gray-100 relative border-2 border-gray-600 w-[600px] dark:bg-gray-800 p-6 rounded-xl shadow-md mb-6"
       >
         <h1
@@ -129,43 +131,50 @@
         </div>
       </li>
     </ul>
-    <div class="fixed z-40 inset-0" @click="actionModalLink = null" v-if="actionModalLink">
     <div
-      class="absolute z-40" @click.stop
-      :style="{ top: modalPosition.y + 'px', left: modalPosition.x -150  + 'px' }"
+      class="fixed z-40 inset-0"
+      @click="actionModalLink = null"
+      v-if="actionModalLink"
     >
       <div
-        class="bg-gray-100 relative border-2 border-gray-600 w-[300px] dark:bg-gray-800 p-4 rounded-xl shadow-md"
+        class="absolute z-40"
+        @click.stop
+        :style="{ top: modalPosition.y + 'px', left: modalPosition.x - 150 + 'px' }"
       >
-        <div class="flex flex-col space-y-2">
-          <button
-            @click="editLink(actionModalLink)"
-            class="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
-          >
-            {{ dat === "datakril" ? translateText("Tahrirlash") : "Tahrirlash" }}
-          </button>
-          <button
-            @click="deleteLink(actionModalLink.id)"
-            class="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 text-lg"
-          >
-            {{ dat === "datakril" ? translateText("O'chirish") : "O'chirish" }}
-          </button>
-          <button
-            @click="actionModalLink = null"
-            class="px-3 py-1 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 text-lg"
-          >
-            {{ dat === "datakril" ? translateText("Yopish") : "Yopish" }}
-          </button>
+        <div
+          class="bg-gray-100 relative border-2 border-gray-600 w-[300px] dark:bg-gray-800 p-4 rounded-xl shadow-md"
+        >
+          <div class="flex flex-col space-y-2">
+            <button
+              @click="editLink(actionModalLink)"
+              class="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
+            >
+              {{ dat === "datakril" ? translateText("Tahrirlash") : "Tahrirlash" }}
+            </button>
+            <button
+              @click="deleteLink(actionModalLink.id)"
+              class="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 text-lg"
+            >
+              {{ dat === "datakril" ? translateText("O'chirish") : "O'chirish" }}
+            </button>
+            <button
+              @click="actionModalLink = null"
+              class="px-3 py-1 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 text-lg"
+            >
+              {{ dat === "datakril" ? translateText("Yopish") : "Yopish" }}
+            </button>
+          </div>
         </div>
       </div>
     </div>
-    </div>
 
     <div
-      v-if="editingLink" @click="editingLink = null"
+      v-if="editingLink"
+      @click="editingLink = null"
       class="fixed inset-0 bg-black/50 z-40 flex justify-center items-center"
     >
-      <div @click.stop
+      <div
+        @click.stop
         class="bg-gray-100 relative border-2 border-gray-600 w-[600px] dark:bg-gray-800 p-6 rounded-xl shadow-md mb-6"
       >
         <h1
@@ -244,6 +253,7 @@
 import axios from "axios";
 import { URL } from "@/auth/url";
 import translateText from "@/auth/Translate.js";
+import { inject } from "vue";
 
 export default {
   data() {
@@ -251,6 +261,7 @@ export default {
       links: [],
       name: "",
       link: "",
+      isLoading: inject("isLoading"),
       userId: parseInt(localStorage.getItem("id")),
       dat: localStorage.getItem("til") || "datalotin",
       intervalId: null,
@@ -263,14 +274,19 @@ export default {
   methods: {
     translateText,
     async fetchLinks() {
+      this.isLoading = true
       try {
         const response = await axios.get(URL + "/accauntant-links");
         this.links = response.data.sort((a, b) => a.id - b.id);
       } catch (error) {
         console.log(error);
+      } finally{
+      this.isLoading = false
       }
     },
     async postLinks() {
+      this.isLoading = true
+
       try {
         const response = await axios.post(URL + "/accauntant-links", {
           name: this.name,
@@ -283,18 +299,25 @@ export default {
         await this.fetchLinks();
       } catch (error) {
         console.log(error);
+      } finally{
+      this.isLoading = false
       }
     },
     async deleteLink(linkId) {
+      this.isLoading = true
       try {
         const response = await axios.delete(`${URL}/accauntant-links/${linkId}`);
         this.actionModalLink = null;
         await this.fetchLinks();
       } catch (error) {
         console.log(error);
+      } finally{
+      this.isLoading = false
       }
     },
     async updateLink(link) {
+      this.isLoading = true
+      
       try {
         const response = await axios.put(`${URL}/accauntant-links/${link.id}`, {
           name: link.name,
@@ -306,6 +329,8 @@ export default {
         await this.fetchLinks();
       } catch (error) {
         console.log(error);
+      } finally{
+      this.isLoading = false
       }
     },
     openUrl(link) {

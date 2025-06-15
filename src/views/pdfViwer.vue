@@ -92,6 +92,7 @@ const getData = async () => {
 
 // Render PDF pages as images
 const renderPdf = async (url) => {
+  isLoading.value = false
   try {
     const loadingTask = pdfjsLib.getDocument(url);
     const pdf = await loadingTask.promise;
@@ -116,6 +117,8 @@ const renderPdf = async (url) => {
     }
   } catch (error) {
     console.error("PDF yuklashda xatolik:", error);
+  } finally{
+    isLoading.value = false
   }
 };
 

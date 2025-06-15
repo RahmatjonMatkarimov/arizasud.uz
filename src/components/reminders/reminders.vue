@@ -278,13 +278,17 @@ export default {
         });
 
         const API_URL = URL + '/reminders';
-
+        const isLoading = inject('isLoading')
         const fetchWorkLogs = async () => {
+            isLoading.value = true
             try {
                 const response = await axios.get(`${URL}/admin/${userId}/reminder`);
                 state.workLogs = response.data.Reminder;
             } catch (error) {
                 console.error(dat.value === 'datakril' ? 'Ишлар рўйхатини олишда хатолик:' : 'Ishlar ro\'yxatini olishda xatolik:', error);
+            }
+            finally{
+                isLoading.value = false
             }
         };
 
@@ -294,6 +298,7 @@ export default {
                 return;
             }
             state.isSubmitting = true;
+            isLoading.value = true
             try {
                 const response = await axios.post(API_URL, {
                     comment: state.newWorkLog.comment,
@@ -306,6 +311,7 @@ export default {
                 console.error(dat.value === 'datakril' ? 'Иш қайд этишда хатолик:' : 'Ish qayd etishda xatolik:', error);
             } finally {
                 state.isSubmitting = false;
+                isLoading.value = false
             }
         };
 
@@ -320,6 +326,7 @@ export default {
                 alert(dat.value === 'datakril' ? 'Фойдаланувчи ID топилмади' : 'Foydalanuvchi ID topilmadi');
                 return;
             }
+            isLoading.value = true
             try {
                 const response = await axios.put(`${API_URL}/${workLogId}`, {
                     comment: state.editedComment,
@@ -332,18 +339,19 @@ export default {
                 fetchWorkLogs();
             } catch (error) {
                 console.error(dat.value === 'datakril' ? 'Ишни янгилашда хатолик:' : 'Ishni yangilashda xatolik:', error);
-            }
+            } finally{isLoading.value = false}
         };
 
         const deleteWorkLog = async (workLogId) => {
             if (!confirm(dat.value === 'datakril' ? 'Бу иш қайдномасини ўчиришга ишончингиз комилми?' : 'Bu ish qaydnomasini o\'chirishga ishonchingiz komilmi?')) return;
+            isLoading.value = true
             try {
                 await axios.delete(`${API_URL}/${workLogId}`);
                 state.workLogs = state.workLogs.filter(r => r.id !== workLogId);
                 fetchWorkLogs();
             } catch (error) {
                 console.error(dat.value === 'datakril' ? 'Ишни ўчиришда хатолик:' : 'Ishni o\'chirishda xatolik:', error);
-            }
+            }finally{isLoading.value = false}
         };
 
         const cancelEditing = () => {

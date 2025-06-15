@@ -1695,6 +1695,7 @@ const showModal = ref(false);
 const showModalfiles = ref(false);
 const courtName = ref("");
 const file = ref(null);
+const isLoading = inject('isLoading')
 const successMessage = ref("");
 const errorMessage = ref("");
 const asd = ref(false);
@@ -1714,6 +1715,7 @@ const courts = ref([]);
 import translateText from "@/auth/Translate";
 import { onMounted } from "vue";
 import { onUnmounted } from "vue";
+import { inject } from "vue";
 
 const dat = ref(localStorage.getItem("til") || "datalotin");
 
@@ -1859,7 +1861,7 @@ const uploadfile = async () => {
   const formData = new FormData();
   formData.append("fileName", courtName.value);
   formData.append("files", file.value);
-
+isLoading.value = true
   try {
     const response = await axios.post(`${URL}/services/${id1.value}/files`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
@@ -1881,7 +1883,7 @@ const uploadfile = async () => {
         ? translateText(error.response?.data?.message || "Xatolik yuz berdi!")
         : error.response?.data?.message || "Xatolik yuz berdi!";
     console.error("Xatolik tafsilotlari:", error);
-  }
+  }finally{isLoading.value = false}
 };
 
 const uploadCourt = async () => {
@@ -1889,7 +1891,7 @@ const uploadCourt = async () => {
   formData.append("name", courtName.value);
   formData.append("file", file.value);
   formData.append("servicesId", id1.value);
-
+isLoading.value = true
   try {
     const response = await axios.post(`${URL}/applications`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
@@ -1908,10 +1910,11 @@ const uploadCourt = async () => {
   } catch (error) {
     errorMessage.value =
       dat === "datakril" ? translateText("Xatolik yuz berdi!") : "Xatolik yuz berdi!";
-  }
+  }finally{isLoading.value = false}
 };
 
 const getData = async () => {
+  isLoading.value = true
   try {
     const response = await fetch(`${URL}/services/${id1.value}`);
     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
@@ -1952,10 +1955,11 @@ const getData = async () => {
       dat === "datakril"
         ? translateText("Ma'lumotlarni olishda xatolik yuz berdi!")
         : "Ma'lumotlarni olishda xatolik yuz berdi!";
-  }
+  }finally{isLoading.value = false}
 };
 
 const getCourts = async () => {
+  isLoading.value = true
   try {
     const response = await axios.get(`${URL}/courts/${courtsId.value}`);
     const result = response.data;
@@ -1968,7 +1972,7 @@ const getCourts = async () => {
       dat === "datakril"
         ? translateText("Sud ma'lumotlarini olishda xatolik yuz berdi!")
         : "Error fetching courts data!";
-  }
+  }finally{isLoading.value = false}
 };
 
 const removeSelectedItems = async () => {
@@ -1977,7 +1981,7 @@ const removeSelectedItems = async () => {
       dat === "datakril" ? translateText("ID topilmadi!") : "ID topilmadi!";
     return;
   }
-
+isLoading.value = true
   try {
     const response = await fetch(`${URL}/applications/${Id.value}`, {
       method: "DELETE",
@@ -2001,7 +2005,7 @@ const removeSelectedItems = async () => {
       dat === "datakril"
         ? translateText("Xatolik yuz berdi: " + error.message)
         : "Xatolik yuz berdi: " + error.message;
-  }
+  }finally{isLoading.value = false}
 };
 
 const removefileItems = async () => {
@@ -2010,7 +2014,7 @@ const removefileItems = async () => {
       dat === "datakril" ? translateText("ID topilmadi!") : "ID topilmadi!";
     return;
   }
-
+isLoading.value = true
   try {
     const response = await fetch(`${URL}/services/files/${aktivebarss.value}`, {
       method: "DELETE",
@@ -2034,14 +2038,14 @@ const removefileItems = async () => {
       dat === "datakril"
         ? translateText("Xatolik yuz berdi: " + error.message)
         : "Xatolik yuz berdi: " + error.message;
-  }
+  }finally{isLoading.value = false}
 };
 
 const updatefileCourt = async () => {
   const formData = new FormData();
   formData.append("fileName", courtName.value);
   formData.append("file", file.value);
-
+isLoading.value = true
   try {
     const response = await axios.put(
       `${URL}/services/files/${selectedFileId.value}`,
@@ -2066,7 +2070,7 @@ const updatefileCourt = async () => {
       dat === "datakril"
         ? translateText("Xatolik yuz berdi: " + error.message)
         : "Xatolik yuz berdi: " + error.message;
-  }
+  } finally{isLoading.value = false}
 };
 
 const updateCourt = async () => {
@@ -2074,7 +2078,7 @@ const updateCourt = async () => {
   formData.append("name", courtName.value);
   formData.append("file", file.value);
   formData.append("servicesId", parseInt(id1.value));
-
+isLoading.value = true
   try {
     const response = await axios.put(`${URL}/applications/${PutId.value}`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
@@ -2095,7 +2099,7 @@ const updateCourt = async () => {
       dat === "datakril"
         ? translateText("Xatolik yuz berdi: " + error.message)
         : "Xatolik yuz berdi: " + error.message;
-  }
+  }finally{isLoading.value = false}
 };
 
 const updateWorkStatus = async () => {
@@ -2104,7 +2108,7 @@ const updateWorkStatus = async () => {
       dat === "datakril" ? translateText("ID topilmadi!") : "ID topilmadi!";
     return;
   }
-
+isLoading.value = true
   try {
     const item = data.value.find((item) => item.id === Id.value);
     if (!item) {
@@ -2141,7 +2145,7 @@ const updateWorkStatus = async () => {
     const item = data.value.find((item) => item.id === Id.value);
     if (item) item.workStatus = !item.workStatus; // Revert on error
     console.log("Xatolik tafsilotlari:", error);
-  }
+  } finally{isLoading.value = false}
 };
 
 watch(

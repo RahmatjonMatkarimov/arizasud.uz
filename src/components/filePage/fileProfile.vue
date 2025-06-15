@@ -364,6 +364,7 @@ import { useRoute } from "vue-router";
 import * as pdfjsLib from "pdfjs-dist";
 import translateText from "@/auth/Translate";
 import { onUnmounted } from "vue";
+import { inject } from "vue";
 
 const dat = ref(localStorage.getItem("til") || "datalotin");
 
@@ -399,6 +400,7 @@ const list = ref([]);
 const isDarkMode = ref(false);
 const videoErrors = ref({});
 const videoLoading = ref({});
+const isLoading = inject('isLoading')
 
 // Initialize dark mode
 const initializeDarkMode = () => {
@@ -414,6 +416,7 @@ const initializeDarkMode = () => {
 
 // Ma'lumotlarni olish
 async function getdata() {
+  isLoading.value = true
   try {
     loading.value = true;
     error.value = null;
@@ -442,6 +445,7 @@ async function getdata() {
     error.value = `Ma'lumot olishda xato: ${err.response?.data?.message || err.message}`;
   } finally {
     loading.value = false;
+    isLoading.value = false
   }
 }
 

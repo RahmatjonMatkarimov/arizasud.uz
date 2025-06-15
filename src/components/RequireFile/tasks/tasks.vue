@@ -452,6 +452,7 @@ const fileName = ref('')
 const showModal = ref(false)
 const showPdfModal = ref(false)
 const pdfUrl = ref('')
+const isloading = inject('isLoading')
 const selectedFileId = ref(null)
 const isFullScreen = ref(false)
 const dat = ref(localStorage.getItem("til") || "datalotin");
@@ -519,6 +520,7 @@ const getStatusText = (status) => {
 import translateText from "@/auth/Translate";
 
 const getdata = async () => {
+  isloading.value = true
   try {
     const managerID = ref(parseInt(localStorage.getItem("id")))
     const response = await axios.get(`${URL}/${localStorage.getItem("role")}/${managerID.value}`)
@@ -526,14 +528,19 @@ const getdata = async () => {
 
   } catch (error) {
     console.error('Fayllarni olishda xatolik:', error)
+  }finally{
+    isloading.value = false
   }
 }
 const fetchFiles = async () => {
+  isloading.value = true
   try {
     const response = await axios.get(`${API_URL}/${userID.value}`)
     files.value = response.data.userFiles.filter(item => item.type == 'tasks').filter(item => item.status !== 'archive')
   } catch (error) {
     console.error('Fayllarni olishda xatolik:', error)
+  }finally{
+    isloading.value = false
   }
 }
 fetchFiles()
@@ -545,6 +552,7 @@ const uploadFile = async () => {
   formData.append('userId', userID.value)
   formData.append('type', 'tasks')
 
+  isloading.value = true
   try {
     await axios.post(API_URL, formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
@@ -555,22 +563,28 @@ const uploadFile = async () => {
     fetchFiles()
   } catch (error) {
     console.error('Fayl yuklashda xatolik:', error)
+  }finally{
+    isloading.value = false
   }
 }
 const updateFile = async () => {
   const id = selectedFileId.value;
   if (!id) return;
+  isloading.value = true
   try {
     await axios.put(`${URL}/signingFiles/${id}`);
     const baseUrl = pdfUrl.value.split('?')[0];
     pdfUrl.value = `${baseUrl}?t=${new Date().getTime()}`;
   } catch (error) {
     console.error("Xatolik:", error);
+  }finally{
+    isloading.value = false
   }
 };
 
 
 const updateeFile = async (status) => {
+  isloading.value = true
   try {
     await axios.put(`${API_URL}/${selectedFileId.value}/status`, {
       status: status,
@@ -585,11 +599,14 @@ const updateeFile = async (status) => {
     fetchFiles();
   } catch (error) {
     console.error('Faylni yangilashda xatolik:', error);
+  }finally{
+    isloading.value = false
   }
 };
 
 const deleteSelectedFiles = async () => {
   if (selectedFiles.value.length === 0) return;
+  isloading.value = true
   try {
     await axios.delete(`${API_URL}/delete`, { data: { ids: selectedFiles.value } });
     selectedFiles.value = [];
@@ -597,6 +614,8 @@ const deleteSelectedFiles = async () => {
     fetchFiles();
   } catch (error) {
     console.error('Fayllarni o‘chirishda xatolik:', error);
+  }finally{
+    isloading.value = false
   }
 };
 const openFile = (file) => {

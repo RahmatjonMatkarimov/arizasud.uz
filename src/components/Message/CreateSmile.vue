@@ -10,7 +10,7 @@ const smileys = ref([]);
 const isUploadModalOpen = ref(false);
 const isDeleteModalOpen = ref(false);
 const selectedSmiley = ref(null);
-const isLoading = ref(false);
+const isLoading = inject('isLoading');
 const isDragging = ref(false);
 
 const dat = ref(localStorage.getItem("til") || "datalotin");
@@ -108,11 +108,14 @@ const uploadFile = async () => {
 };
 
 const fetchSmileys = async () => {
+  isLoading.value = true;
   try {
     const response = await axios.get(`${URL}/smileys`);
     smileys.value = response.data;
   } catch (error) {
     console.error('Smileylarni yuklashda xatolik:', error);
+  } finally{
+    isLoading.value = false
   }
 };
 

@@ -263,7 +263,7 @@ const showPdfModal = ref(false);
 const pdfUrl = ref('');
 const isFullScreen = ref(false);
 const selectedFileId = ref(null);
-const isLoading = ref(false);
+const isLoading = inject('isLoading');
 import translateText from "@/auth/Translate";
 
 onMounted(async () => {
@@ -305,6 +305,7 @@ const formatDate = (dateString) => {
 };
 
 const getCourtsData = async () => {
+    isLoading.value = true
     try {
         const response = await fetch(`${URL}/enterprise/${ServiceId.value}`);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -321,6 +322,8 @@ const getCourtsData = async () => {
     } catch (error) {
         console.error("Xatolik yuz berdi:", error.message);
         alert("Ma'lumotni olishda xatolik yuz berdi: " + error.message);
+    } finally{
+        isLoading.value = false
     }
 };
 
@@ -350,7 +353,7 @@ const uploadFile = async () => {
     formData.append("file", selectedFile.value);
     formData.append("enterpriseId", numericId.value);
     formData.append("name", selectedName.value);
-
+isLoading.value = true
     try {
         const response = await fetch(`${URL}/enterprise-file`, {
             method: "POST",
@@ -366,6 +369,8 @@ const uploadFile = async () => {
         }
     } catch (error) {
         console.error("Fayl yuklashda xatolik:", error);
+    } finally{
+        isLoading.value = false
     }
 };
 
@@ -383,7 +388,7 @@ const updateFile = async () => {
     if (selectedFile.value) {
         formData.append("file", selectedFile.value);
     }
-
+    isLoading.value = true
     try {
         const response = await fetch(`${URL}/enterprise-file/${editingFileId.value}`, {
             method: "PUT",
@@ -402,6 +407,8 @@ const updateFile = async () => {
         }
     } catch (error) {
         console.error("Fayl yangilashda xatolik:", error);
+    } finally{
+        isLoading.value = false
     }
 };
 
@@ -421,6 +428,7 @@ const func = (id) => {
 };
 
 const removeSelectedItems = async () => {
+    isLoading.value = true
     try {
         const response = await fetch(`${URL}/enterprise-file/${numericId.value}`, {
             method: "DELETE",
@@ -437,6 +445,8 @@ const removeSelectedItems = async () => {
     } catch (error) {
         console.error("Xatolik:", error);
         alert("Server bilan bog'lanishda xatolik yuz berdi!");
+    }finally{
+        isLoading.value = false
     }
 };
 

@@ -30,6 +30,7 @@
 <script setup>
 import { URL1 } from "@/auth/url";
 import axios from "axios";
+import { inject } from "vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 const showPassword = ref(false);
@@ -39,8 +40,9 @@ const error = ref("");
 const router = useRouter();
 const url = `${URL1}/commoners/login`;
 const id = ref(null);
-
+const isLoading = inject('isLoading')
 const setData = async () => {
+  isLoading.value = true
   try {
     const res = await axios.post(url, {
       username: username.value.trim(),
@@ -53,6 +55,8 @@ const setData = async () => {
 
   } catch (err) {
     error.value = err.response?.data?.message || "Login yoki parol noto'g'ri.";
+  } finally{
+    isLoading.value = false
   }
 };
 </script>

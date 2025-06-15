@@ -1,5 +1,4 @@
 <script setup>
-
 import Admin from "@/components/main/admin.vue";
 </script>
 

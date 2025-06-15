@@ -7,6 +7,7 @@ import axios from "axios";
 import { URL, URL1 } from "@/auth/url";
 import { gsap } from "gsap";
 import translateText from "@/auth/Translate";
+import { inject } from "vue";
 
 export default {
   name: "Dashboard",
@@ -15,6 +16,7 @@ export default {
     return {
       dat: localStorage.getItem("til") || "datalotin",
       intervalId: null,
+      isLoading: inject('isLoading'),
       data: 0,
       data1: 0,
       data2: 0,
@@ -64,19 +66,25 @@ export default {
   methods: {
     translateText,
     async GetOylik() {
+      this.isLoading = true;
       try {
         const { data } = await axios.get(`${URL}/salary/calculate-all-to-date`);
         this.oylik = data.summary;
       } catch (error) {
         console.error("Error fetching salary:", error);
+      } finally {
+        this.isLoading = false;
       }
     },
     async Getqarz() {
+      this.isLoading = true;
       try {
         const { data } = await axios.get(`${URL}/client-files/with-debt`);
         this.data5 = data.count;
       } catch (error) {
         console.error(error);
+      } finally {
+        this.isLoading = false;
       }
     },
     checkLanguageChange() {
@@ -89,6 +97,7 @@ export default {
         .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
     async getClientInvoices() {
+      this.isLoading = true;
       try {
         const { data } = await axios.get(`${URL1}/commoners`);
         this.invoices = data
@@ -102,9 +111,12 @@ export default {
           .slice(-5);
       } catch (error) {
         console.error("Error fetching invoices:", error);
+      } finally {
+        this.isLoading = false;
       }
     },
     async getClientTransactions() {
+      this.isLoading = true;
       try {
         const { data } = await axios.get(`${URL}/client`);
         this.transactions = data
@@ -118,9 +130,12 @@ export default {
           .slice(-5);
       } catch (error) {
         console.error("Error fetching transactions:", error);
+      } finally {
+        this.isLoading = false;
       }
     },
     async fetchFinancialData() {
+      this.isLoading = true;
       try {
         let totalRevenue = 0,
           totalRevenue1 = 0,
@@ -256,6 +271,8 @@ export default {
       } catch (error) {
         console.error("Error fetching financial data:", error.message);
         this.isLoaded = true;
+      } finally {
+        this.isLoading = false;
       }
     },
     hisoblaFoiz(value, percent) {
@@ -416,7 +433,7 @@ export default {
             },
             {
               label: t("Umumiy oylik:"),
-              value: this.formatNumberWithDots(this.oylik.totalAllSalaries+ this.oylik.totalAllBonuses - this.oylik.totalAllDeductions),
+              value: this.formatNumberWithDots(this.oylik.totalAllSalaries + this.oylik.totalAllBonuses - this.oylik.totalAllDeductions),
               suffix: t("so'm"),
               class: "bg-green-50 dark:bg-green-900/50",
               valueClass: "text-green-600 dark:text-green-400 font-bold",
@@ -456,12 +473,19 @@ export default {
       });
     },
     async handleSortChange() {
+      this.isLoading = true;
       this.isLoaded = false;
-      await Promise.all([
-        this.fetchFinancialData(),
-        this.getClientInvoices(),
-        this.getClientTransactions(),
-      ]);
+      try {
+        await Promise.all([
+          this.fetchFinancialData(),
+          this.getClientInvoices(),
+          this.getClientTransactions(),
+        ]);
+      } catch (error) {
+        console.error("Error in handleSortChange:", error);
+      } finally {
+        this.isLoading = false;
+      }
     },
   },
   mounted() {
@@ -478,11 +502,16 @@ export default {
         yoyo: true,
       }
     );
-    this.fetchFinancialData();
-    this.getClientInvoices();
-    this.getClientTransactions();
-    this.GetOylik();
-    this.Getqarz();
+    this.isLoading = true;
+    Promise.all([
+      this.fetchFinancialData(),
+      this.getClientInvoices(),
+      this.getClientTransactions(),
+      this.GetOylik(),
+      this.Getqarz(),
+    ]).finally(() => {
+      this.isLoading = false;
+    });
   },
   beforeDestroy() {
     if (this.intervalId) clearInterval(this.intervalId);

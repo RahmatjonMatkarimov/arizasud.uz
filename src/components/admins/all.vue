@@ -12,7 +12,7 @@ import axios from 'axios'
 import { URL } from '@/auth/url'
 const router = useRouter()
 const dat = ref(localStorage.getItem("til") || "datalotin");
-
+const isLoading = inject('isLoading')
 let intervalId = null;
 const checkLanguageChange = () => {
   const currentLang = localStorage.getItem("til") || "datalotin";
@@ -33,6 +33,7 @@ const newId = parseInt(id);
 const data = ref({});
 
 const fetchAdminData = async () => {
+    isLoading.value = true
     try {
         const response = await axios.get(`${URL}/${localStorage.getItem("role")}/${newId}`, {
             headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -40,6 +41,8 @@ const fetchAdminData = async () => {
         data.value = response.data.permissions[response.data.permissions.length - 1];
     } catch (error) {
         console.error("Xatolik yuz berdi:", error);
+    } finally { 
+        isLoading.value = false
     }
 };
 
@@ -105,6 +108,15 @@ const cards = ref([
         bgColor: '#06B6D430',
         bgColor1: '#06B6D4',
         routerLink: '/bugalter',
+        condition: () => data.value?.admins
+    },
+    {
+        title: 'Ombor mudiri Bo\'limi',
+        description: 'Moliyaviy hisobotlar va buxgalteriya',
+        icon: ['fas', 'calculator'],
+        bgColor: '#06B6D430',
+        bgColor1: '#06B6D4',
+        routerLink: '/mudir',
         condition: () => data.value?.admins
     },
 ])

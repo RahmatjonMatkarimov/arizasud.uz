@@ -1258,6 +1258,7 @@ import { Splide, SplideSlide } from "@splidejs/vue-splide";
 import "@splidejs/splide/dist/css/splide.min.css";
 import { Icon } from "@iconify/vue";
 import { onUnmounted } from "vue";
+import { inject } from "vue";
 
 const dat = ref(localStorage.getItem("til") || "datalotin");
 
@@ -1287,6 +1288,7 @@ const form = ref(null);
 const id4 = route.params.id;
 const fileInput1 = ref(null);
 const showCustomModal = ref(false);
+const isLoading = inject('isLoading')
 const dropdownVisible = ref(false);
 const onFileChange1 = (event) => {
   file1.value = event.target.files[0];
@@ -1367,7 +1369,7 @@ const uploadCourt = async () => {
   formData.append("name", courtName1.value);
   formData.append("file", file1.value);
   formData.append("courtsId", id4);
-
+isLoading.value = true;
   try {
     await axios.post(`${URL}/services`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
@@ -1390,6 +1392,8 @@ const uploadCourt = async () => {
           (error.response?.data?.message || error.message)
         : "Yuklashda xato yuz berdi: " + (error.response?.data?.message || error.message);
     successMessage1.value = "";
+  }finally{
+    isLoading.value = false
   }
 };
 
@@ -1464,6 +1468,7 @@ const onFileChange = (event) => {
 };
 
 const getData = async () => {
+  isLoading.value = true;
   try {
     const response = await axios.get(`${url}/${id1.value}`);
     const result = response.data;
@@ -1477,10 +1482,13 @@ const getData = async () => {
       dat.value === "datakril"
         ? translateText("Ma'lumotlarni yuklashda xatolik yuz berdi")
         : "Ma'lumotlarni yuklashda xatolik yuz berdi";
+  }finally{
+    isLoading.value = false
   }
 };
 
 const getCourts = async () => {
+  isLoading.value = true;
   try {
     const response = await axios.get(`${URL}/courts`);
     courts.value = [...response.data.filter((court) => court.status === "active")].sort(
@@ -1493,6 +1501,8 @@ const getCourts = async () => {
       dat.value === "datakril"
         ? translateText("Sudlarni yuklashda xatolik yuz berdi")
         : "Sudlarni yuklashda xatolik yuz berdi";
+  }finally{
+    isLoading.value = false
   }
 };
 
@@ -1507,6 +1517,7 @@ const uploadfile = async () => {
   const formData = new FormData();
   formData.append("fileName", courtName.value);
   formData.append("files", file.value);
+  isLoading.value = true;
   try {
     await axios.post(`${URL}/courts/${id1.value}/files`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
@@ -1526,6 +1537,8 @@ const uploadfile = async () => {
         ? translateText("Fayl yuklashda xatolik!")
         : "Fayl yuklashda xatolik!";
     console.error("Upload error:", error);
+  }finally{
+    isLoading.value = false
   }
 };
 
@@ -1540,6 +1553,7 @@ const updatefileCourt = async () => {
   const formData = new FormData();
   formData.append("fileName", courtName.value);
   if (file.value) formData.append("file", file.value);
+  isLoading.value = true;v
   try {
     await axios.put(`${URL}/courts/files/${selectedFileId.value}`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
@@ -1558,6 +1572,8 @@ const updatefileCourt = async () => {
       dat.value === "datakril"
         ? translateText("Yangilashda xatolik!")
         : "Yangilashda xatolik!";
+  }finally{
+    isLoading.value = false
   }
 };
 
@@ -1573,6 +1589,7 @@ const updateCourt = async () => {
   formData.append("name", courtName.value);
   if (file.value) formData.append("file", file.value);
   formData.append("courtsId", parseInt(id1.value));
+  isLoading.value = true;
   try {
     await axios.put(`${URL}/services/${PutId.value}`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
@@ -1591,6 +1608,8 @@ const updateCourt = async () => {
       dat.value === "datakril"
         ? translateText("Yangilashda xatolik!")
         : "Yangilashda xatolik!";
+  }finally{
+    isLoading.value = false
   }
 };
 
@@ -1600,6 +1619,7 @@ const updateWorkStatus = async () => {
     workStatus: workStatus.value,
     courtsId: parseInt(id1.value),
   };
+isLoading.value = true;
   try {
     await axios.put(`${URL}/services/${selectedId.value}`, payload, {
       headers: { "Content-Type": "application/json" },
@@ -1618,11 +1638,14 @@ const updateWorkStatus = async () => {
         ? translateText("Holadni yangilashda xatolik!")
         : "Holadni yangilashda xatolik!";
     console.error("Update workStatus error:", error);
+  } finally{
+    isLoading.value = false
   }
 };
 
 const removeSelectedItems = async () => {
   if (!selectedId.value) return;
+  isLoading.value = true;
   try {
     await axios.delete(`${URL}/services/${selectedId.value}`);
     successMessage.value =
@@ -1638,10 +1661,13 @@ const removeSelectedItems = async () => {
       dat.value === "datakril"
         ? translateText("O'chirishda xatolik!")
         : "O'chirishda xatolik!";
+  }finally{
+    isLoading.value = false
   }
 };
 
 const removefileItems = async (id) => {
+  isLoading.value = true;
   try {
     await axios.delete(`${URL}/courts/files/${aktivebarss.value}`);
     successMessage.value =
@@ -1657,6 +1683,8 @@ const removefileItems = async (id) => {
       dat.value === "datakril"
         ? translateText("Fayl o'chirishda xatolik!")
         : "Fayl o'chirishda xatolik!";
+  }finally{
+    isLoading.value = false
   }
 };
 

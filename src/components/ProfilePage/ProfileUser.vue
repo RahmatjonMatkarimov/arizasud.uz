@@ -14,6 +14,7 @@ const error = ref(null);
 const route = useRoute();
 const router = useRouter();
 const id = ref(route.params.id);
+const isLoading = inject('isLoading')
 const onlineAdmins = ref([]);
 const socket = io(URL);
 const dat = ref(localStorage.getItem("til") || "datalotin");
@@ -35,6 +36,7 @@ onUnmounted(() => {
 });
 
 const fetchUserData = async () => {
+  isLoading.value = true
   try {
     const token = localStorage.getItem('token');
     if (!token) throw new Error('Authentication token not found');
@@ -49,6 +51,7 @@ const fetchUserData = async () => {
     console.error('Error fetching user data:', err);
   } finally {
     loading.value = false;
+    isLoading.value = false
   }
 };
 

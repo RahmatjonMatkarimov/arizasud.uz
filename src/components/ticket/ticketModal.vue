@@ -44,6 +44,7 @@ import { URL } from '@/auth/url'
 import translateText from '@/auth/Translate'
 
 const hidden = inject('hidden')
+const isLoading = inject('isLoading')
 const dat = ref(localStorage.getItem('til') || 'datalotin');
 const checkLanguageChange = () => {
   const currentLang = localStorage.getItem('til') || 'datalotin';
@@ -63,17 +64,19 @@ const state = reactive({
 const API_URL = URL + '/ticket'
 
 const fetchTickets = async () => {
+  isLoading.value = true
   try {
     const response = await axios.get(API_URL)
     state.tickets = response.data
   } catch (error) {
     console.error('So\'rovlarni olishda xatolik:', error)
-  }
+  }finally{isLoading.value=false}
 }
 
 const createTicket = async () => {
   if (!state.newTicket.comment.trim()) return
   state.isSubmitting = true
+  isLoading.value = true
   try {
     const response = await axios.post(API_URL, {
       comment: state.newTicket.comment
@@ -84,6 +87,8 @@ const createTicket = async () => {
     console.error('So\'rov yaratishda xatolik:', error)
   } finally {
     state.isSubmitting = false
+    isLoading.value = false
+    hidden.value = false
   }
 }
 

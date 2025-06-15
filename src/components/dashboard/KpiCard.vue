@@ -34,8 +34,7 @@ defineProps({
 })
 
 </script>
-<div 
-class=""></div>
+
 <template>
   <div 
     class="w-full p-6 rounded-lg border border-white/5 shadow-lg hover:shadow-blue-500/5 hover:border-white/10 transition-all duration-300"

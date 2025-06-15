@@ -559,7 +559,7 @@ const menuItems = [
   { to: "/remindersAdmin", label: "Ishchilarni bajargan ishlari", icon: "mdi:check-circle-outline", condition: () => data.value?.workDone },
   { to: "/Requirefiles", label: "Imzolanishi kerak boʻlgan fayllar", icon: "mdi:file-sign", condition: () => data.value?.userFiles },
   { to: "/Dashboard", label: "Bugalteriya", icon: "mdi:chart-line", condition: localStorage.getItem('role') ==='bigAdmin' || localStorage.getItem('role') === 'accauntant' },
-  // { to: "/payment", label: "Tizim toʻlovlari", icon: "mdi:credit-card-outline", condition: true },
+  { to: "/ticketAdmin", label: "Taklif va shikoyatlar", icon: "mdi:credit-card-outline", condition: true },
   { to: "/smile", label: "Stikker qoʻshish", icon: "mdi:emoticon-happy-outline", condition: true },
   { to: "/companyFile", label: "Kampaniya fayllari", icon: "mdi:office-building", condition: () => data.value?.companyDocs },
   { to: "/commaners", label: "Tizimdagi foydalanuvchilar roʻyxati", icon: "mdi:account-multiple", condition: true },
@@ -685,21 +685,27 @@ const fetchUserData = async () => {
 
 const fetchUnreadMessageCount = async () => {
   if (!userIdNum) return
+  isLoading.value = true
   try {
     const response = await axios.get(`${URL}/messages/unread/${userIdNum}`)
     messageCount.value = response.data.length
   } catch (error) {
     console.error('Error fetching unread message count:', error)
+  } finally{
+    isLoading.value = false
   }
 }
 
 const fetchUnreadCount = async () => {
   if (!userIdNum) return
+  isLoading.value = true
   try {
     const response = await axios.get(`${URL}/accauntant-notification/unread/count?userId=${userIdNum}`)
     unreadCount.value = response.data
   } catch (error) {
     console.error('Error fetching unread count:', error)
+  } finally{
+    isLoading.value = false
   }
 }
 

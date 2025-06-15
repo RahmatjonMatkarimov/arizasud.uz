@@ -10,7 +10,7 @@ const searchStore = useSearchStore();
 const data = ref([]);
 const router = useRouter();
 const dat = ref(localStorage.getItem("til") || "datalotin");
-
+const isLoading = inject('isLoading')
 let intervalId = null;
 const checkLanguageChange = () => {
   const currentLang = localStorage.getItem("til") || "datalotin";
@@ -32,12 +32,13 @@ const gotToPath = (id) => {
 };
 
 const fetchData = async () => {
+  isLoading.value = true
   try {
     const response = await axios.get(URL1 + '/commoners');
     data.value = response.data;
   } catch (err) {
     console.log(err);
-  }
+  }finally{isLoading.value = false}
 };
 
 const formatDate = (dateString) => {
