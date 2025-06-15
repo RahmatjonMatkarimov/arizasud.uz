@@ -652,10 +652,12 @@ const initializeSocket = () => {
 
   socket.value.on('newMessage', (message) => {
     if (!messages.value.some((msg) => msg.id === message.id)) {
+      socket.value?.emit('markAsRead', user.value.id);
       messages.value.push(message);
       if (message.replyToMessageId) {
         getOneMessage(message.replyToMessageId);
       }
+      
       scrollToBottom();
       nextTick(() => setupNewAudioPlayers());
       if (message.senderId !== user.value.id) {
@@ -1016,8 +1018,6 @@ onMounted(() => {
     if (!e.target.closest('.context-menu')) closeContextMenu();
   });
   setupNewAudioPlayers();
-  // Start polling for testing (every 10 seconds)
-  pollingInterval = setInterval(pollMessages, 10000);
 });
 
 onUnmounted(() => {

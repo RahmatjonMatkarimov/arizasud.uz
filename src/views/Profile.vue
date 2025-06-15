@@ -78,6 +78,7 @@ function handleLanguageChange(event) {
   const newLanguage = event.target.value
   settings.value.language = newLanguage
   localStorage.setItem('til', newLanguage) // Save to localStorage
+  window.location.reload()
 }
 
 // Fetch required files

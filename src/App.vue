@@ -31,7 +31,7 @@ watch(isLoading, (newValue) => {
   } else {
     setTimeout(() => {
       showLoading.value = false;
-    }, 1000);
+    }, 0);
   }
 });
 

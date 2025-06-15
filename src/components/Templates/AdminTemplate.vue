@@ -631,6 +631,7 @@ const getProfileImage = (imgPath) => {
 
 const navigateToChat = () => {
   if (userId) {
+    messageCount.value = 0
     router.push(`/chat/${userId}`)
   }
 }
@@ -641,7 +642,7 @@ const showNotificationModal = () => {
 
 const closeNotificationModal = () => {
   showModal.value = false
-  fetchUnreadCount()
+  getUnreadCount()
 }
 
 const fetchUserData = async () => {
@@ -710,7 +711,7 @@ const fetchUnreadCount = async () => {
 }
 
 const fetchUnreadNotifications = async () => {
-  await fetchUnreadCount()
+   getUnreadCount()
 }
 
 const setupSocketConnection = () => {
@@ -741,12 +742,10 @@ const setupSocketConnection = () => {
     messageCount.value = count
   })
   socket.on('newMessage', () => {
-    messageCount.value += 1
+fetchUnreadMessageCount()
   })
   socket.on('messageRead', () => {
-    if (messageCount.value > 0) {
-      messageCount.value -= 1
-    }
+fetchUnreadMessageCount()
   })
   return socket
 }
