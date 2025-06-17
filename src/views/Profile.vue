@@ -191,7 +191,7 @@ onUnmounted(() => {
                   <div class="text-center md:text-left pt-2 md:pt-0">
                     <h1 class="text-2xl font-bold text-gray-800 dark:text-white">{{ settings.language === 'datakril' ? translateText(user.name) : user.name }}</h1>
                     <div class="flex flex-col md:flex-row md:items-center space-y-1 md:space-y-0 md:space-x-3">
-                      <span class="text-indigo-600 dark:text-indigo-400 font-medium">{{ settings.language === 'datakril' ? translateText(user.user.lavozimi) : user.user.lavozimi }}</span>
+                      <span class="text-indigo-600 dark:text-indigo-400 font-medium">{{ settings.language === 'datakril' ? translateText(user?.user?.lavozimi) : user?.user?.lavozimi }}</span>
                     </div>
                   </div>
                 </div>

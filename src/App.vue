@@ -72,8 +72,6 @@ defineExpose({ fetchData });
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  /* color: white; */
-  font-family: Cambria;
 }
 
 /* Fade transition effekti */
