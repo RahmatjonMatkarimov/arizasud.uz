@@ -455,33 +455,17 @@
               <div class="relative">
                 <video ref="video" autoplay class="rounded-lg border border-gray-300 dark:border-teal-700 w-full" :style="{ maxWidth: '640px', height: videoHeight + 'px' }"></video>
                 <canvas ref="canvas" :width="canvasWidth" :height="canvasHeight" class="hidden"></canvas>
-                <div v-if="capturedImage" class="mt-4">
-                  <img :src="capturedImage" alt="Captured" class="rounded-lg w-full border border-gray-300 dark:border-teal-700" :style="{ maxWidth: '640px', height: videoHeight + 'px' }">
-                </div>
-                <div class="absolute top-2 right-2 flex space-x-2">
-                  <button @click="togglePreview" class="bg-teal-500 dark:bg-teal-700 text-white px-3 py-1 rounded-full text-sm hover:bg-teal-600 dark:hover:bg-teal-800 transition-all duration-200">
-                    {{ previewActive ? (dat === 'datakril' ? translateText('Oldini o‘chirish') : 'Hide Preview') : (dat === 'datakril' ? translateText('Oldini ko‘rsatish') : 'Show Preview') }}
-                  </button>
-                  <select v-model="resolution" @change="setResolution" class="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-300 border border-gray-300 dark:border-teal-700 rounded-full px-3 py-1 focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 outline-none transition-all duration-200">
-                    <option value="640x480">640x480</option>
-                    <option value="1280x720">1280x720</option>
-                    <option value="1920x1080">1920x1080</option>
-                  </select>
-                </div>
               </div>
               <div class="mt-6 flex justify-between items-center gap-3">
-                <button @click="captureImage" :disabled="!streamActive" class="bg-green-500 dark:bg-green-700 text-white px-6 py-2 rounded-lg hover:bg-green-600 dark:hover:bg-green-800 transition-all duration-200 w-full disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed">
-                  {{ dat === 'datakril' ? translateText('Suratga olish') : 'Capture' }}
-                </button>
-                <button @click="switchCamera" :disabled="!streamActive" class="bg-teal-500 dark:bg-teal-700 text-white px-6 py-2 rounded-lg hover:bg-teal-600 dark:hover:bg-teal-800 transition-all duration-200 w-full disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed">
-                  {{ dat === 'datakril' ? translateText('Kamerani almashtirish') : 'Switch Camera' }}
+                <button @click="captureImage" :disabled="streamActive" class="bg-green-500 dark:bg-green-700 text-white px-6 py-2 rounded-lg hover:bg-green-600 dark:hover:bg-green-800 transition-all duration-200 w-full disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed">
+                  {{ dat === 'datakril' ? translateText('Suratga olish') : 'Suratga olish' }}
                 </button>
                 <button @click="closeCameraModal" class="bg-red-500 dark:bg-red-700 text-white px-6 py-2 rounded-lg hover:bg-red-600 dark:hover:bg-red-800 transition-all duration-200 w-full">
-                  {{ dat === 'datakril' ? translateText('Yopish') : 'Close' }}
+                  {{ dat === 'datakril' ? translateText('Yopish') : 'Yopish' }}
                 </button>
               </div>
               <p v-if="!streamActive" class="text-red-500 dark:text-red-400 text-sm mt-2 text-center">
-                {{ dat === 'datakril' ? translateText('Kamera ishlamayapti, iltimos ruxsat bering!') : 'Camera not working, please allow access!' }}
+                {{ dat === 'datakril' ? translateText('Kamera ishlamayapti, iltimos ruxsat bering!') : 'Kamera ishlamayapti, iltimos ruxsat bering!' }}
               </p>
             </div>
           </div>
