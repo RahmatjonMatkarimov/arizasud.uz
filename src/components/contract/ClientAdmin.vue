@@ -311,49 +311,112 @@
           </div>
 
           <!-- Completion Date Modal -->
-          <div v-if="isCompletionDateModalOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50" @click.self="closeCompletionDateModal">
-            <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md w-full shadow-lg transition-colors duration-200">
-              <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">
-                {{ dat === 'datakril' ? translateText('Ishni yakunlash sanasini tanlang') : 'Ishni yakunlash sanasini tanlang' }}
-              </h2>
-              <input v-model="selectedCompletionDate" 
-                type="text" 
-                readonly
-                class="w-full p-3 rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
-                :placeholder="dat === 'datakril' ? translateText('Tanlangan sanasi') : 'Tanlangan sanasi'"
-                :value="formattedCompletionDate" />
-              <div class="calendar mt-4">
-                <div class="flex justify-between items-center mb-4">
-                  <button @click="prevMonth" class="btn bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 font-semibold py-1 px-3 rounded-lg">
-                    <
-                  </button>
-                  <span class="text-gray-900 dark:text-gray-100 font-semibold">{{ getMonthName(currentMonth) }} {{ currentYear }}</span>
-                  <button @click="nextMonth" class="btn bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 font-semibold py-1 px-3 rounded-lg">
-                    >
-                  </button>
-                </div>
-                <div class="grid grid-cols-7 gap-2 text-center">
-                  <span v-for="(day, index) in ['D', 'S', 'Ch', 'P', 'J', 'Sh', 'Y']" :key="index" class="text-sm font-semibold text-gray-700 dark:text-gray-200">
-                    {{ day }}
-                  </span>
-                  <div v-for="date in days" :key="'day' + date.day" 
-                    class="p-2 rounded-lg cursor-pointer text-sm"
-                    :class="{ 
-                      'bg-blue-500 text-white': isSelected(date.day), 
-                      'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100': isToday(date.day), 
-                      'text-gray-400 dark:text-gray-500 cursor-not-allowed': !date.isSelectable,
-                      'hover:bg-gray-200 dark:hover:bg-gray-600': date.isSelectable
-                    }" 
-                    @click="date.isSelectable ? selectDate(date.day) : null">
-                    {{ date.day }}
-                  </div>
-                </div>
-              </div>
-              <button v-if="selectedCompletionDate" @click="saveSelectedDate" class="btn bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg mt-4 w-full transition-colors duration-200">
-                {{ dat === 'datakril' ? translateText('Saqlash') : 'Saqlash' }}
-              </button>
-            </div>
-          </div>
+<div v-if="isCompletionDateModalOpen" 
+     class="fixed inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm z-50 animate-in fade-in duration-300" 
+     @click.self="closeCompletionDateModal">
+     
+  <!-- Modal Content -->
+  <div class="bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-3xl p-4 sm:p-6 max-w-md w-full mx-4 shadow-2xl border border-white/20 dark:border-gray-700/30 animate-in zoom-in-95 slide-in-from-bottom-4 duration-300 max-h-[90vh] overflow-y-auto">
+    
+    <!-- Header -->
+    <div class="text-center mb-6">
+      <div class="w-12 h-12 mx-auto mb-3 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+        </svg>
+      </div>
+      <h2 class="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent leading-tight">
+        {{ dat === 'datakril' ? translateText('Ishni yakunlash sanasini tanlang') : 'Ishni yakunlash sanasini tanlang' }}
+      </h2>
+    </div>
+
+    <!-- Date Input -->
+    <div class="relative mb-5">
+      <input v-model="selectedCompletionDate"
+             type="text"
+             readonly
+             class="w-full px-4 py-3 rounded-xl bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-600 text-gray-900 dark:text-gray-100 font-medium border-2 border-transparent focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:bg-white dark:focus:bg-gray-600 transition-all duration-300 cursor-pointer text-center"
+             :placeholder="dat === 'datakril' ? translateText('Tanlangan sanasi') : 'Tanlangan sanasi'"
+             :value="formattedCompletionDate" />
+    </div>
+
+    <!-- Calendar Navigation -->
+    <div class="flex justify-between items-center mb-4">
+      <button @click="prevMonth" 
+              class="flex items-center space-x-1 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 hover:from-blue-500 hover:to-purple-600 hover:text-white text-gray-700 dark:text-gray-300 font-medium py-2 px-3 rounded-lg border border-gray-200 dark:border-gray-600 hover:border-transparent hover:shadow-md transform hover:scale-105 transition-all duration-200">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+        <span class="text-sm hidden sm:inline">{{ dat === 'datakril' ? translateText(`Oldingi`):`Oldingi` }}</span>
+      </button>
+      
+      <div class="text-center">
+        <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">
+          {{ dat === 'datakril' ? translateText(getMonthName(currentMonth)) :getMonthName(currentMonth)}}
+        </h3>
+        <p class="text-sm text-gray-600 dark:text-gray-400">{{ currentYear }}</p>
+      </div>
+      
+      <button @click="nextMonth" 
+              class="flex items-center space-x-1 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 hover:from-blue-500 hover:to-purple-600 hover:text-white text-gray-700 dark:text-gray-300 font-medium py-2 px-3 rounded-lg border border-gray-200 dark:border-gray-600 hover:border-transparent hover:shadow-md transform hover:scale-105 transition-all duration-200">
+        <span class="text-sm hidden sm:inline">{{ dat === 'datakril' ? translateText(`Keyingi`):`Keyingi` }}</span>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Calendar Grid -->
+    <div class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-700/50 rounded-xl p-4 mb-5 shadow-inner border border-gray-200/50 dark:border-gray-600/30">
+      
+      <!-- Day Headers -->
+      <div class="grid grid-cols-7 gap-1 mb-3">
+        <div v-for="(day, index) in ['Y', 'D', 'S', 'C', 'P', 'J', 'S']" 
+             :key="index" 
+             class="text-center text-xs font-bold text-gray-700 dark:text-gray-300 py-1">
+          {{ day }}
+        </div>
+      </div>
+      
+      <!-- Calendar Days -->
+      <div class="grid grid-cols-7 gap-1">
+        <div v-for="date in days" 
+             :key="'day' + date.day"
+             class="relative min-h-[36px] flex items-center justify-center text-sm font-medium rounded-lg cursor-pointer transform transition-all duration-200 hover:scale-105"
+             :class="{
+                'bg-gradient-to-br from-blue-500 to-purple-600 text-white font-bold shadow-md scale-105': isSelected(date.day),
+                'bg-gradient-to-br from-amber-400 to-orange-500 text-white font-bold shadow-sm': isToday(date.day) && !isSelected(date.day),
+                'text-gray-400 dark:text-gray-600 cursor-not-allowed opacity-90 hover:scale-100': !date.isSelectable,
+                'text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-600 hover:shadow-sm': date.isSelectable && !isSelected(date.day) && !isToday(date.day)
+             }"
+             @click="date.isSelectable ? selectDate(date.day) : null">
+          {{ date.day }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-col sm:flex-row gap-3">
+      <button @click="closeCompletionDateModal" 
+              class="flex items-center justify-center space-x-2 flex-1 py-2.5 px-4 rounded-lg border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-100 dark:hover:bg-gray-700 hover:border-gray-400 dark:hover:border-gray-500 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+        <span>Bekor qilish</span>
+      </button>
+      
+      <button v-if="selectedCompletionDate" 
+              @click="saveSelectedDate" 
+              class="flex items-center justify-center space-x-2 flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium py-2.5 px-4 rounded-lg shadow-md hover:shadow-lg transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-200">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+        <span>{{ dat === 'datakril' ? translateText('Saqlash') : 'Saqlash' }}</span>
+      </button>
+    </div>
+    
+  </div>
+</div>
 
           <!-- Camera Modal -->
           <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50" @click.self="closeCameraModal">
@@ -396,18 +459,18 @@
           <div v-if="isWarningModalOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50" @click.self="closeWarningModal">
             <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md w-full shadow-lg border-4 border-red-500 dark:border-red-600 transition-colors duration-200">
               <img src="/x.png" class="w-20 mx-auto mb-4" alt="Warning">
-              <h1 class="text-red-600 dark:text-red-400 font-extrabold uppercase text-xl text-center">Nimadir xato ketdi!</h1>
+              <h1 class="text-red-600 dark:text-red-400 font-extrabold uppercase text-xl text-center">{{ dat === 'datakril' ? translateText(`Nimadir xato ketdi!`):`Nimadir xato ketdi!` }}</h1>
               <p class="text-red-600 dark:text-red-400 text-center mt-2">
                 {{ dat === "datakril" ? translateText(errorMessage) : errorMessage }}
               </p>
               <button @click="isWarningModalOpen = false" class="btn bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg mt-4 w-full transition-colors duration-200">
-                Tushundim
+                {{ dat === 'datakril' ? translateText(`Tushundim`):`Tushundim` }}
               </button>
             </div>
           </div>
 
           <!-- Fingerprint Scanner -->
-          <div v-if="fingerSearch" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50">
+          <div v-if="fingerSearch" @click.self="fingerSearch = false" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50">
             <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md w-full shadow-lg transition-colors duration-200">
               <div v-if="imageData" class="mb-4">
                 <img :src="`data:image/png;base64,${imageData}`" class="mx-auto rounded-lg" alt="Barmoq izi rasmi" />
