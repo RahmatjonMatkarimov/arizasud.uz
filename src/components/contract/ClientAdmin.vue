@@ -313,7 +313,7 @@
           <!-- Completion Date Modal -->
 <div v-if="isCompletionDateModalOpen" 
      class="fixed inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm z-50 animate-in fade-in duration-300" 
-     @click.self="closeCompletionDateModal">
+     @click.self="isCompletionDateModalOpen = false">
      
   <!-- Modal Content -->
   <div class="bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-3xl p-4 sm:p-6 max-w-md w-full mx-4 shadow-2xl border border-white/20 dark:border-gray-700/30 animate-in zoom-in-95 slide-in-from-bottom-4 duration-300 max-h-[90vh] overflow-y-auto">
@@ -397,7 +397,7 @@
 
     <!-- Action Buttons -->
     <div class="flex flex-col sm:flex-row gap-3">
-      <button @click="closeCompletionDateModal" 
+      <button @click="isCompletionDateModalOpen = false" 
               class="flex items-center justify-center space-x-2 flex-1 py-2.5 px-4 rounded-lg border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-100 dark:hover:bg-gray-700 hover:border-gray-400 dark:hover:border-gray-500 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
