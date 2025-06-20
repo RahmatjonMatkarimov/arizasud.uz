@@ -11,6 +11,7 @@ import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { URL } from '@/auth/url'
 const router = useRouter()
+const isLoading = inject('isLoading')
 const dat = ref(localStorage.getItem("til") || "datalotin");
 
 let intervalId = null;
@@ -34,6 +35,7 @@ const data = ref({});
 
 
 const fetchAdminData = async () => {
+    isLoading.value = true
     try {
         const response = await axios.get(`${URL}/${localStorage.getItem("role")}/${newId}`, {
             headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -41,6 +43,8 @@ const fetchAdminData = async () => {
         data.value = response.data.permissions[response.data.permissions.length - 1];
     } catch (error) {
         console.error("Xatolik yuz berdi:", error);
+    } finally{
+        isLoading.value = false
     }
 };
 

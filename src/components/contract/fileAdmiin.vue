@@ -311,7 +311,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted, onUnmounted, inject } from "vue";
 import { URL } from "../../auth/url.js";
 import { useRouter } from "vue-router";
 import translateText from "@/auth/Translate.js";
@@ -321,7 +321,7 @@ const name = ref("");
 const file = ref(null);
 const fileInput = ref(null);
 const selectedItem = ref(null);
-const isLoading = ref(false);
+const isLoading = inject('isLoading');
 const items = ref([]);
 const getResponse = ref(null);
 const showModal = ref(false);

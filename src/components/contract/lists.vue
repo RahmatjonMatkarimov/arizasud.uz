@@ -1,297 +1,524 @@
 <template>
-  <div class="flex justify-end gap-4">
-    <input
-      v-model="searchQuery"
-      type="text"
-      :placeholder="dat === 'datakril' ? translateText($t('qidiruv')) : $t('qidiruv')"
-      class="border p-2 rounded text-black focus:outline-none border-black mt-4 mr-4 focus:ring focus:ring-blue-300"
-    />
-  </div>
-  <div class="flex justify-center p-5 rounded-lg max-w-full overflow-x-auto">
-    <div class="w-full max-w-3xl bg-gray-300 p-4 rounded-lg">
-      <div class="flex justify-end gap-4">
-        <button
-          @click="showModal = true"
-          class="mb-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-        >
-          {{ dat === 'datakril' ? translateText('Fayl yuklash') : 'Fayl yuklash' }}
-        </button>
+  <div class="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-teal-50 dark:from-gray-900 dark:via-indigo-950 dark:to-purple-950 font-sans relative overflow-hidden">
+    <!-- Header Section -->
+    <div class="container mx-auto px-4 py-8 relative z-10">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4 bg-white/80 dark:bg-gray-800/80 backdrop-blur-2xl p-8 rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700/20 transform hover:scale-[1.02] transition-all duration-500">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+            <iconify-icon icon="mdi:folder-multiple" class="w-7 h-7 text-white"></iconify-icon>
+          </div>
+          <h1 class="text-3xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-teal-600 bg-clip-text text-transparent">
+            {{ dat === 'datakril' ? translateText('Fayl boshqaruvi') : 'Fayl boshqaruvi' }}
+          </h1>
+        </div>
+        <div class="flex items-center gap-4 w-full md:w-auto">
+          <button
+            @click="showModal = true"
+            class="group px-8 py-4 bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-2xl hover:from-teal-700 hover:to-emerald-700 flex items-center gap-3 font-semibold transition-all duration-300 hover:shadow-2xl hover:shadow-teal-500/25 transform hover:scale-105 hover:-translate-y-1 relative overflow-hidden"
+          >
+            <div class="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <iconify-icon icon="mdi:upload" class="w-6 h-6 relative z-10"></iconify-icon>
+            <span class="relative z-10">{{ dat === 'datakril' ? translateText('Fayl yuklash') : 'Fayl yuklash' }}</span>
+          </button>
+        </div>
       </div>
-      <!-- File List -->
-      <ul class="list-none p-0 m-0">
-        <li
-          v-for="file in filteredFiles"
-          @click="router.push(file.type === 'video' ? '/video-open/' + file.id : '/lists-view/' + file.id)"
-          :key="file.id"
-          class="py-2 flex justify-between items-center relative z-10 bg-white p-2 my-2"
-        >
-          <a target="_blank" class="text-gray-800 hover:underline">
-            {{ dat === 'datakril' ? translateText(file.name) : file.name }}
-          </a>
-          <div class="flex items-center relative z-50 gap-4">
-            <div v-if="file.ClientPayment && file.ClientPayment.length" class="text-sm">
-              <div
-                class="text-black cursor-pointer"
-                @click.stop="file.showDetails = !file.showDetails"
-              >
-                <span
-                  @click.stop="openPaymentDetailsModal(file, $event)"
-                  class="text-green-600"
-                  v-if="
-                    file.ClientPayment[file.ClientPayment.length - 1]?.remainingSum <= 0
-                  "
-                >
-                  {{ dat === 'datakril' ? translateText("To'langan") : "To'langan" }}
-                </span>
-                <span
-                  class="text-red-600 cursor-pointer"
-                  v-else
-                  @click.stop="openPaymentDetailsModal(file, $event)"
-                >
-                  {{ dat === 'datakril' ? translateText("Qarzi") : "Qarzi" }}:
-                  {{ formatNumberWithDots(file.ClientPayment[file.ClientPayment.length - 1]?.remainingSum || 0) }}
-                  {{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
-                </span>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 pb-8 relative z-10">
+      <div class="grid gap-6">
+        <ul class="list-none p-0 m-0 space-y-6">
+          <li
+            v-for="file in filteredFiles"
+            :key="file.id"
+            @click="router.push(file.type === 'video' ? '/video-open/' + file.id : '/lists-view/' + file.id)"
+            class="group flex flex-col lg:flex-row justify-between items-start lg:items-center bg-white/85 dark:bg-gray-800/85 backdrop-blur-2xl p-8 rounded-3xl shadow-xl hover:shadow-2xl cursor-pointer transition-all duration-500 border border-white/20 dark:border-gray-700/20 transform hover:scale-[1.02] hover:-translate-y-2 relative overflow-hidden"
+          >
+            <!-- Animated background glow -->
+            <div class="absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-teal-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            
+            <div class="flex items-center gap-4 relative z-10">
+              <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <iconify-icon 
+                  :icon="file.type === 'video' ? 'mdi:video' : 'mdi:file-document'" 
+                  class="w-8 h-8 text-white"
+                ></iconify-icon>
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300">
+                  {{ dat === 'datakril' ? translateText(file.name) : file.name }}
+                </h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">
+                  {{ file.type === 'video' ? 'Video fayl' : 'Hujjat fayli' }}
+                </p>
               </div>
             </div>
-            <div
-              v-if="
-                file.ClientPayment &&
-                file.ClientPayment.length &&
-                file.ClientPayment[file.ClientPayment.length - 1]?.remainingSum > 0
-              "
-            >
-              <button
-                @click.stop="openPaymentModal(file)"
-                class="ml-4 px-2 py-1 bg-green-500 text-white rounded-md hover:bg-green-600"
+
+            <div class="flex flex-col lg:flex-row items-start lg:items-center gap-6 mt-6 lg:mt-0 relative z-10 w-full lg:w-auto">
+              <!-- Debt Information -->
+              <div class="min-w-[200px]">
+                <div v-if="file.ClientPayment && file.ClientPayment.length" class="cursor-pointer">
+                  <div
+                    @click.stop="openPaymentDetailsModal(file, $event)"
+                    class="group/status px-4 py-3 rounded-2xl font-semibold text-sm transition-all duration-300 transform hover:scale-105 inline-flex items-center gap-2 shadow-lg"
+                    :class="file.ClientPayment[file.ClientPayment.length - 1]?.remainingSum <= 0 
+                      ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600 hover:shadow-green-500/25' 
+                      : 'bg-gradient-to-r from-red-500 to-pink-500 text-white hover:from-red-600 hover:to-pink-600 hover:shadow-red-500/25'"
+                  >
+                    <iconify-icon 
+                      :icon="file.ClientPayment[file.ClientPayment.length - 1]?.remainingSum <= 0 ? 'mdi:check-circle' : 'mdi:alert-circle'" 
+                      class="w-5 h-5"
+                    ></iconify-icon>
+                    <span v-if="file.ClientPayment[file.ClientPayment.length - 1]?.remainingSum <= 0">
+                      {{ dat === 'datakril' ? translateText("To'langan") : "To'langan" }}
+                    </span>
+                    <span v-else>
+                      {{ dat === 'datakril' ? translateText("Qarzi") : "Qarzi" }}:
+                      {{ formatNumberWithDots(file.ClientPayment[file.ClientPayment.length - 1]?.remainingSum || 0) }}
+                      {{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
+                    </span>
+                  </div>
+                </div>
+                <!-- Fallback if no payment data -->
+                <div v-else class="px-4 py-3 bg-gray-100 dark:bg-gray-700 rounded-2xl text-gray-500 dark:text-gray-400 italic text-sm">
+                  {{ dat === 'datakril' ? translateText("To'lov ma'lumotlari yo'q") : "To'lov ma'lumotlari yo'q" }}
+                </div>
+              </div>
+
+              <!-- Payment Button -->
+              <div
+                v-if="
+                  file.ClientPayment &&
+                  file.ClientPayment.length &&
+                  file.ClientPayment[file.ClientPayment.length - 1]?.remainingSum > 0
+                "
               >
-                {{ dat === 'datakril' ? translateText("To'lash") : "To'lash" }}
-              </button>
-            </div>
-            <div class="text-black">
-              {{ formatDate(file.createdAt) }}
-            </div>
-          </div>
-        </li>
-      </ul>
-    </div>
-    <!-- File Upload Modal -->
-    <div
-      v-if="showModal"
-      class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-40"
-    >
-      <div class="bg-white p-6 rounded-lg w-full max-w-lg shadow-lg relative">
-        <button
-          @click="showModal = false"
-          class="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
-        <h2 class="text-xl font-semibold text-gray-800 mb-4">
-          {{ dat === 'datakril' ? translateText('Fayl yuklash') : 'Fayl yuklash' }}
-        </h2>
-        <form @submit.prevent="uploadFile" class="flex flex-col gap-4">
-          <input
-            type="text"
-            v-model="formData.name"
-            :placeholder="
-              dat === 'datakril'
-                ? translateText('Shartnoma nomini kiriting')
-                : 'Shartnoma nomini kiriting'
-            "
-            class="p-3 border rounded-lg focus:outline-none text-black border-black focus:ring-2 focus:ring-blue-500"
-            required
-          />
-          <input
-            type="file"
-            @change="handleFileUpload"
-            class="text-black"
-            required
-          />
-          <div class="flex justify-end gap-3">
-            <button
-              type="button"
-              @click="showModal = false"
-              class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
-            >
-              {{ dat === 'datakril' ? translateText('Bekor qilish') : 'Bekor qilish' }}
-            </button>
-            <button
-              type="submit"
-              class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-            >
-              {{ dat === 'datakril' ? translateText('Yuklash') : 'Yuklash' }}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-    <!-- Region and District Selection Modal -->
-    <div
-      v-if="showRegionModal"
-      class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-    >
-      <div class="bg-white p-6 rounded-lg w-full max-w-md shadow-lg relative">
-        <button
-          @click="closeRegionModal"
-          class="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
-        <h2 class="text-xl text-center font-semibold text-gray-800 mb-4">
-          {{ dat === 'datakril' ? translateText('Qarzdorlik uchun to‘lov "YURIST KONSUL KONSALTING" kompaniyasining qaysi filialida amalga oshirilmoqda?') : 'Qarzdorlik uchun to‘lov "YURIST KONSUL KONSALTING" kompaniyasining qaysi filialida amalga oshirilmoqda?' }}
-        </h2>
-        <div class="flex flex-col gap-4">
-          <!-- Region Dropdown -->
-          <select
-            v-model="ofis"
-            class="p-3 border rounded-lg focus:outline-none text-black border-black focus:ring-2 focus:ring-blue-500"
-          >
-            <option class=" text-black" value="" disabled>
-              {{ dat === 'datakril' ? translateText('To\'lov qaysi ofisdan amalga oshirilmoqda') : 'To\'lov qaysi ofisdan amalga oshirilmoqda' }}
-            </option>
-            <option class="text-black" value="Xorazm viloyati Urganch shaxar 1-son filiali">
-              {{ dat === 'datakril' ? translateText('Xorazm viloyati Urganch shaxar 1-son filiali')
-                : 'Xorazm viloyati Urganch shaxar 1-son filiali' }}
-            </option>
-            <option class="text-black" value="Xorazm viloyati Xiva shaxar markaziy binosi">
-              {{ dat === 'datakril' ? translateText('Xorazm viloyati Xiva shaxar markaziy binosi')
-                : 'Xorazm viloyati Xiva shaxar markaziy binosi' }}
-            </option>
-          </select>
-          <div class="flex justify-end gap-3">
-            <button
-              @click="closeRegionModal"
-              class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
-            >
-              {{ dat === 'datakril' ? translateText('Yopish') : 'Yopish' }}
-            </button>
-            <button
-              @click="submitRegionSelection"
-              class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-              {{ dat === 'datakril' ? translateText('Yuborish') : 'Yuborish' }}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Payment Modal -->
-    <div
-      v-if="modal"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-    >
-      <div class="bg-white p-4 rounded shadow-lg w-80">
-        <input
-          v-model="summa"
-          type="number"
-          :placeholder="
-            dat === 'datakril' ? translateText('To\'langan summa') : 'To\'langan summa'
-          "
-          class="w-full p-2 border text-black border-black rounded mb-4 focus:outline-none focus:ring focus:ring-blue-300"
-        />
-        <div class="flex justify-end space-x-2">
-          <button
-            @click="submitPayment"
-            class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300"
-          >
-            {{ dat === 'datakril' ? translateText("To'lash") : "To'lash" }}
-          </button>
-          <button
-            @click="modal = false"
-            class="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-gray-300"
-          >
-            {{ dat === 'datakril' ? translateText("Yopish") : "Yopish" }}
-          </button>
-        </div>
-      </div>
-    </div>
-    <!-- Payment Details Modal -->
-    <div
-      v-if="paymentDetailsModal"
-      @click="closePaymentDetailsModal($event)"
-      class="absolute inset-0 z-50 flex justify-center items-start"
-    >
-      <div
-        :style="{ top: modalPosition.top + 10 + 'px', left: modalPosition.left - 143 + 'px' }"
-        @click.stop
-        class="absolute bg-gray-200 p-6 rounded-lg max-h-[450px] shadow-lg overflow-y-auto"
-      >
-        <h2 class="text-xl font-semibold text-gray-800 mb-4">
-          {{ dat === 'datakril' ? translateText("To'lov tafsilotlari") : "To'lov tafsilotlari" }}
-        </h2>
-        <div class="mb-4">
-          <span
-            class="text-green-600 font-medium"
-            v-if="
-              selectedPaymentDetails &&
-              selectedPaymentDetails[selectedPaymentDetails.length - 1].remainingSum <= 0
-            "
-          >
-            {{ dat === 'datakril' ? translateText("To'langan") : "To'langan" }}
-          </span>
-          <span class="text-red-600 font-medium" v-else>
-            {{ dat === 'datakril' ? translateText("Qarzi") : "Qarzi" }}:
-            {{ formatNumberWithDots(selectedPaymentDetails[selectedPaymentDetails.length - 1].remainingSum) }}
-            {{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
-          </span>
-        </div>
-        <ul class="list-none p-0 m-0">
-          <li
-            v-for="payment in selectedPaymentDetails"
-            :key="payment.id"
-            class="mt-1 border p-2 border-black"
-          >
-            <div class="text-black">
-              {{ dat === 'datakril' ? translateText("Jami summa") : "Jami summa" }}:
-              {{ formatNumberWithDots(payment.TotalSum) }}
-              {{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
-            </div>
-            <div class="text-black">
-              {{ dat === 'datakril' ? translateText("Qoldiq summa") : "Qoldiq summa" }}:
-              {{ formatNumberWithDots(payment.remainingSum) }}
-              {{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
-            </div>
-            <div class="text-black">
-              {{ dat === 'datakril' ? translateText("To'langan summa") : "To'langan summa" }}:
-              {{ formatNumberWithDots(payment.paidSum) }}
-              {{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
-            </div>
-            <div class="text-black">
-              {{ dat === 'datakril' ? translateText("Vaqt") : "Vaqt" }}:
-              {{ formatDate(payment.createdAt) }}
+                <button
+                  @click.stop="openPaymentModal(file)"
+                  class="group/pay px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-2xl hover:from-green-700 hover:to-emerald-700 hover:shadow-2xl hover:shadow-green-500/25 flex items-center gap-3 font-semibold transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 relative overflow-hidden"
+                >
+                  <div class="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover/pay:opacity-100 transition-opacity duration-300"></div>
+                  <iconify-icon icon="mdi:cash" class="w-5 h-5 relative z-10"></iconify-icon>
+                  <span class="relative z-10">{{ dat === 'datakril' ? translateText("To'lash") : "To'lash" }}</span>
+                </button>
+              </div>
+
+              <!-- Created Date -->
+              <div class="flex items-center gap-2 text-gray-600 dark:text-gray-400 text-sm font-medium bg-gray-100/50 dark:bg-gray-700/50 px-4 py-2 rounded-xl">
+                <iconify-icon icon="mdi:calendar" class="w-4 h-4"></iconify-icon>
+                {{ formatDate(file.createdAt) }}
+              </div>
             </div>
           </li>
         </ul>
       </div>
     </div>
+
+    <!-- File Upload Modal -->
+    <div
+      v-if="showModal"
+      class="fixed inset-0 bg-black/70 dark:bg-black/80 flex justify-center items-center z-50 backdrop-blur-sm"
+    >
+      <div class="bg-white/95 dark:bg-gray-800/95 backdrop-blur-3xl p-10 rounded-3xl w-full max-w-2xl shadow-2xl relative transform transition-all duration-700 animate-modal-scale border border-white/20 dark:border-gray-700/20">
+        <!-- Animated background -->
+        <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-teal-500/10 rounded-3xl"></div>
+        
+        <button
+          @click="showModal = false"
+          class="absolute top-6 right-6 w-10 h-10 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full flex items-center justify-center text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 transition-all duration-300 transform hover:scale-110 hover:rotate-90"
+        >
+          <iconify-icon icon="mdi:close" class="w-6 h-6"></iconify-icon>
+        </button>
+
+        <div class="relative z-10">
+          <div class="flex items-center gap-4 mb-8">
+            <div class="w-16 h-16 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+              <iconify-icon icon="mdi:upload" class="w-8 h-8 text-white"></iconify-icon>
+            </div>
+            <h2 class="text-3xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-teal-600 bg-clip-text text-transparent">
+              {{ dat === 'datakril' ? translateText('Fayl yuklash') : 'Fayl yuklash' }}
+            </h2>
+          </div>
+
+          <form @submit.prevent="uploadFile" class="flex flex-col gap-6">
+            <div class="relative">
+              <input
+                type="text"
+                v-model="formData.name"
+                :placeholder="
+                  dat === 'datakril'
+                    ? translateText('Shartnoma nomini kiriting')
+                    : 'Shartnoma nomini kiriting'
+                "
+                class="w-full p-4 pl-12 rounded-2xl bg-white/90 dark:bg-gray-700/90 border border-indigo-200 dark:border-indigo-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-4 focus:ring-indigo-400/50 dark:focus:ring-indigo-500/50 focus:border-indigo-400 dark:focus:border-indigo-500 transition-all duration-300 hover:shadow-lg"
+                required
+              />
+              <iconify-icon icon="mdi:text" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-indigo-500 dark:text-indigo-400 w-5 h-5"></iconify-icon>
+            </div>
+
+            <div class="relative">
+<input
+  type="file"
+  @change="handleFileUpload"
+  accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  class="w-full p-4 pl-12 rounded-2xl bg-white/90 dark:bg-gray-700/90 border border-indigo-200 dark:border-indigo-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-4 focus:ring-indigo-400/50 dark:focus:ring-indigo-500/50 focus:border-indigo-400 dark:focus:border-indigo-500 transition-all duration-300 hover:shadow-lg file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+  required
+/>
+
+              <iconify-icon icon="mdi:file-upload" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-indigo-500 dark:text-indigo-400 w-5 h-5"></iconify-icon>
+            </div>
+
+            <div class="flex justify-end gap-4 mt-4">
+              <button
+                type="button"
+                @click="showModal = false"
+                class="group px-6 py-3 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-2xl hover:bg-gray-300 dark:hover:bg-gray-700 hover:shadow-lg flex items-center gap-3 font-semibold transition-all duration-300 transform hover:scale-105"
+              >
+                <iconify-icon icon="mdi:cancel" class="w-5 h-5"></iconify-icon>
+                {{ dat === 'datakril' ? translateText('Bekor qilish') : 'Bekor qilish' }}
+              </button>
+              <button
+                type="submit"
+                class="group px-8 py-3 bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-2xl hover:from-teal-700 hover:to-emerald-700 hover:shadow-2xl hover:shadow-teal-500/25 flex items-center gap-3 font-semibold transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 relative overflow-hidden"
+              >
+                <div class="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <iconify-icon icon="mdi:upload" class="w-5 h-5 relative z-10"></iconify-icon>
+                <span class="relative z-10">{{ dat === 'datakril' ? translateText('Yuklash') : 'Yuklash' }}</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Region and District Selection Modal -->
+    <div
+      v-if="showRegionModal"
+      class="fixed inset-0 bg-black/70 dark:bg-black/80 flex justify-center items-center z-50 backdrop-blur-sm"
+    >
+      <div class="bg-white/95 dark:bg-gray-800/95 backdrop-blur-3xl p-10 rounded-3xl w-full max-w-lg shadow-2xl relative transform transition-all duration-700 animate-modal-scale border border-white/20 dark:border-gray-700/20">
+        <!-- Animated background -->
+        <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-teal-500/10 rounded-3xl"></div>
+        
+        <button
+          @click="closeRegionModal"
+          class="absolute top-6 right-6 w-10 h-10 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full flex items-center justify-center text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 transition-all duration-300 transform hover:scale-110 hover:rotate-90"
+        >
+          <iconify-icon icon="mdi:close" class="w-6 h-6"></iconify-icon>
+        </button>
+
+        <div class="relative z-10">
+          <div class="flex items-center gap-4 mb-8">
+            <div class="w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl flex items-center justify-center shadow-lg">
+              <iconify-icon icon="mdi:office-building" class="w-8 h-8 text-white"></iconify-icon>
+            </div>
+            <h2 class="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent leading-tight">
+              {{ dat === 'datakril' ? translateText('Qarzdorlik uchun to\'lov "YURIST KONSUL KONSALTING" kompaniyasining qaysi filialida amalga oshirilmoqda?') : 'Qarzdorlik uchun to\'lov "YURIST KONSUL KONSALTING" kompaniyasining qaysi filialida amalga oshirilmoqda?' }}
+            </h2>
+          </div>
+
+          <div class="flex flex-col gap-6">
+            <div class="relative">
+              <select
+                v-model="ofis"
+                class="w-full p-4 pl-12 pr-12 rounded-2xl bg-white/90 dark:bg-gray-700/90 border border-purple-200 dark:border-purple-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-4 focus:ring-purple-400/50 dark:focus:ring-purple-500/50 focus:border-purple-400 dark:focus:border-purple-500 appearance-none transition-all duration-300 hover:shadow-lg"
+              >
+                <option class="text-gray-800 dark:text-gray-200" value="" disabled>
+                  {{ dat === 'datakril' ? translateText('To\'lov qaysi ofisdan amalga oshirilmoqda') : 'To\'lov qaysi ofisdan amalga oshirilmoqda' }}
+                </option>
+                <option class="text-gray-800 dark:text-gray-200" value="Xorazm viloyati Urganch shaxar 1-son filiali">
+                  {{ dat === 'datakril' ? translateText('Xorazm viloyati Urganch shaxar 1-son filiali') : 'Xorazm viloyati Urganch shaxar 1-son filiali' }}
+                </option>
+                <option class="text-gray-800 dark:text-gray-200" value="Xorazm viloyati Xiva shaxar markaziy binosi">
+                  {{ dat === 'datakril' ? translateText('Xorazm viloyati Xiva shaxar markaziy binosi') : 'Xorazm viloyati Xiva shaxar markaziy binosi' }}
+                </option>
+              </select>
+              <iconify-icon icon="mdi:office-building" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-purple-500 dark:text-purple-400 w-5 h-5"></iconify-icon>
+              <iconify-icon icon="mdi:chevron-down" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-purple-500 dark:text-purple-400 w-5 h-5"></iconify-icon>
+            </div>
+
+            <div class="flex justify-end gap-4">
+              <button
+                @click="closeRegionModal"
+                class="px-6 py-3 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-2xl hover:bg-gray-300 dark:hover:bg-gray-700 hover:shadow-lg flex items-center gap-3 font-semibold transition-all duration-300 transform hover:scale-105"
+              >
+                <iconify-icon icon="mdi:close" class="w-5 h-5"></iconify-icon>
+                {{ dat === 'datakril' ? translateText('Yopish') : 'Yopish' }}
+              </button>
+              <button
+                @click="submitRegionSelection"
+                class="group px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl hover:from-purple-700 hover:to-pink-700 hover:shadow-2xl hover:shadow-purple-500/25 flex items-center gap-3 font-semibold transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 relative overflow-hidden"
+              >
+                <div class="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <iconify-icon icon="mdi:send" class="w-5 h-5 relative z-10"></iconify-icon>
+                <span class="relative z-10">{{ dat === 'datakril' ? translateText('Yuborish') : 'Yuborish' }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div
+      v-if="modal"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 dark:bg-black/80 backdrop-blur-sm"
+    >
+      <div class="bg-white/95 dark:bg-gray-800/95 backdrop-blur-3xl p-10 rounded-3xl shadow-2xl w-full max-w-md relative transform transition-all duration-700 animate-modal-scale border border-white/20 dark:border-gray-700/20">
+        <!-- Animated background -->
+        <div class="absolute inset-0 bg-gradient-to-br from-green-500/10 via-emerald-500/10 to-teal-500/10 rounded-3xl"></div>
+        
+        <div class="relative z-10">
+          <div class="flex items-center gap-4 mb-8">
+            <div class="w-16 h-16 bg-gradient-to-r from-green-600 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
+              <iconify-icon icon="mdi:cash" class="w-8 h-8 text-white"></iconify-icon>
+            </div>
+            <h2 class="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+              {{ dat === 'datakril' ? translateText("To'lov qilish") : "To'lov qilish" }}
+            </h2>
+          </div>
+
+          <div class="relative mb-8">
+            <input
+              v-model="summa"
+              type="number"
+              :placeholder="
+                dat === 'datakril' ? translateText('To\'langan summa') : 'To\'langan summa'
+              "
+              class="w-full p-4 pl-12 rounded-2xl bg-white/90 dark:bg-gray-700/90 border border-green-200 dark:border-green-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-4 focus:ring-green-400/50 dark:focus:ring-green-500/50 focus:border-green-400 dark:focus:border-green-500 transition-all duration-300 hover:shadow-lg text-lg font-semibold"
+            />
+            <iconify-icon icon="mdi:currency-usd" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-green-500 dark:text-green-400 w-6 h-6"></iconify-icon>
+          </div>
+
+          <div class="flex justify-end gap-4">
+            <button
+              @click="modal = false"
+              class="px-6 py-3 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-2xl hover:bg-gray-300 dark:hover:bg-gray-700 hover:shadow-lg flex items-center gap-3 font-semibold transition-all duration-300 transform hover:scale-105"
+            >
+              <iconify-icon icon="mdi:close" class="w-5 h-5"></iconify-icon>
+              {{ dat === 'datakril' ? translateText("Yopish") : "Yopish" }}
+            </button>
+            <button
+              @click="submitPayment"
+              class="group px-8 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-2xl hover:from-green-700 hover:to-emerald-700 hover:shadow-2xl hover:shadow-green-500/25 flex items-center gap-3 font-semibold transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 relative overflow-hidden"
+            >
+              <div class="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <iconify-icon icon="mdi:cash-check" class="w-5 h-5 relative z-10"></iconify-icon>
+              <span class="relative z-10">{{ dat === 'datakril' ? translateText("To'lash") : "To'lash" }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Details Modal -->
+    <div
+      v-if="paymentDetailsModal"
+      @click="closePaymentDetailsModal($event)"
+      class="fixed inset-0 z-50 flex justify-center items-center bg-black/50 backdrop-blur-sm"
+    >
+      <div
+        @click.stop
+        class="bg-white/95 dark:bg-gray-800/95 backdrop-blur-3xl p-8 rounded-3xl max-h-[550px] shadow-2xl overflow-y-auto transition-all duration-700 animate-modal-scale border border-white/20 dark:border-gray-700/20 w-96 relative"
+      >
+        <!-- Animated background -->
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-indigo-500/10 to-purple-500/10 rounded-3xl"></div>
+        
+        <div class="relative z-10">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
+              <iconify-icon icon="mdi:receipt" class="w-6 h-6 text-white"></iconify-icon>
+            </div>
+            <h2 class="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              {{ dat === 'datakril' ? translateText("To'lov tafsilotlari") : "To'lov tafsilotlari" }}
+            </h2>
+          </div>
+
+          <div class="mb-6 p-4 rounded-2xl" :class="
+            selectedPaymentDetails &&
+            selectedPaymentDetails[selectedPaymentDetails.length - 1].remainingSum <= 0
+              ? 'bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30'
+              : 'bg-gradient-to-r from-red-100 to-pink-100 dark:from-red-900/30 dark:to-pink-900/30'
+          ">
+            <div class="flex items-center gap-3">
+              <iconify-icon 
+                :icon="selectedPaymentDetails &&
+                       selectedPaymentDetails[selectedPaymentDetails.length - 1].remainingSum <= 0
+                       ? 'mdi:check-circle' : 'mdi:alert-circle'"
+                class="w-6 h-6"
+                :class="selectedPaymentDetails &&
+                        selectedPaymentDetails[selectedPaymentDetails.length - 1].remainingSum <= 0
+                        ? 'text-green-600 dark:text-green-400'
+                        : 'text-red-600 dark:text-red-400'"
+              ></iconify-icon>
+              <span
+                class="font-bold text-lg"
+                :class="selectedPaymentDetails &&
+                        selectedPaymentDetails[selectedPaymentDetails.length - 1].remainingSum <= 0
+                        ? 'text-green-700 dark:text-green-300'
+                        : 'text-red-700 dark:text-red-300'"
+              >
+                <span v-if="selectedPaymentDetails &&
+                           selectedPaymentDetails[selectedPaymentDetails.length - 1].remainingSum <= 0">
+                  {{ dat === 'datakril' ? translateText("To'langan") : "To'langan" }}
+                </span>
+                <span v-else>
+                  {{ dat === 'datakril' ? translateText("Qarzi") : "Qarzi" }}:
+                  {{ formatNumberWithDots(selectedPaymentDetails[selectedPaymentDetails.length - 1].remainingSum) }}
+                  {{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="space-y-4 max-h-80 overflow-y-auto pr-2">
+            <div
+              v-for="(payment, index) in selectedPaymentDetails"
+              :key="payment.id"
+              class="p-6 border border-indigo-200/50 dark:border-indigo-700/50 bg-gradient-to-r from-white/60 to-gray-50/60 dark:from-gray-700/60 dark:to-gray-800/60 backdrop-blur-xl rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+            >
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+                    {{ index + 1 }}
+                  </div>
+                  <span class="text-sm text-gray-600 dark:text-gray-400 font-medium">
+                    {{ dat === 'datakril' ? translateText("To'lov") : "To'lov" }} #{{ index + 1 }}
+                  </span>
+                </div>
+                <div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">
+                  <iconify-icon icon="mdi:calendar" class="w-3 h-3"></iconify-icon>
+                  {{ formatDate(payment.createdAt) }}
+                </div>
+              </div>
+              
+              <div class="grid grid-cols-1 gap-3">
+                <div class="flex justify-between items-center p-3 bg-blue-50/50 dark:bg-blue-900/20 rounded-xl">
+                  <span class="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                    <iconify-icon icon="mdi:calculator" class="w-4 h-4 text-blue-500"></iconify-icon>
+                    {{ dat === 'datakril' ? translateText("Jami summa") : "Jami summa" }}
+                  </span>
+                  <span class="font-bold text-blue-700 dark:text-blue-300">
+                    {{ formatNumberWithDots(payment.TotalSum) }}
+                    {{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
+                  </span>
+                </div>
+                
+                <div class="flex justify-between items-center p-3 bg-green-50/50 dark:bg-green-900/20 rounded-xl">
+                  <span class="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                    <iconify-icon icon="mdi:cash-check" class="w-4 h-4 text-green-500"></iconify-icon>
+                    {{ dat === 'datakril' ? translateText("To'langan summa") : "To'langan summa" }}
+                  </span>
+                  <span class="font-bold text-green-700 dark:text-green-300">
+                    {{ formatNumberWithDots(payment.paidSum) }}
+                    {{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
+                  </span>
+                </div>
+                
+                <div class="flex justify-between items-center p-3 rounded-xl" :class="
+                  payment.remainingSum > 0 
+                    ? 'bg-red-50/50 dark:bg-red-900/20' 
+                    : 'bg-gray-50/50 dark:bg-gray-900/20'
+                ">
+                  <span class="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                    <iconify-icon 
+                      :icon="payment.remainingSum > 0 ? 'mdi:alert-circle' : 'mdi:check-circle'" 
+                      class="w-4 h-4"
+                      :class="payment.remainingSum > 0 ? 'text-red-500' : 'text-gray-500'"
+                    ></iconify-icon>
+                    {{ dat === 'datakril' ? translateText("Qoldiq summa") : "Qoldiq summa" }}
+                  </span>
+                  <span class="font-bold" :class="
+                    payment.remainingSum > 0 
+                      ? 'text-red-700 dark:text-red-300' 
+                      : 'text-gray-700 dark:text-gray-300'
+                  ">
+                    {{ formatNumberWithDots(payment.remainingSum) }}
+                    {{ dat === 'datakril' ? translateText("so'm") : "so'm" }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
+
+
+  <style scoped>
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(30px, -30px) rotate(120deg); }
+    66% { transform: translate(-20px, 20px) rotate(240deg); }
+  }
+  
+  @keyframes float-delayed {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(-30px, 20px) rotate(-120deg); }
+    66% { transform: translate(20px, -20px) rotate(-240deg); }
+  }
+  
+  @keyframes float-slow {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    50% { transform: translate(20px, -20px) rotate(180deg); }
+  }
+  
+  @keyframes modal-scale {
+    0% { transform: scale(0.7) rotate(-5deg); opacity: 0; }
+    50% { transform: scale(1.05) rotate(2deg); }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+  
+  .animate-float {
+    animation: float 20s ease-in-out infinite;
+  }
+  
+  .animate-float-delayed {
+    animation: float-delayed 25s ease-in-out infinite;
+  }
+  
+  .animate-float-slow {
+    animation: float-slow 30s ease-in-out infinite;
+  }
+  
+  .animate-modal-scale {
+    animation: modal-scale 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: rgba(156, 163, 175, 0.1);
+    border-radius: 10px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #6366f1, #8b5cf6);
+    border-radius: 10px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, #4f46e5, #7c3aed);
+  }
+  
+  /* Dark mode scrollbar */
+  .dark ::-webkit-scrollbar-track {
+    background: rgba(75, 85, 99, 0.2);
+  }
+  
+  .dark ::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #4f46e5, #7c3aed);
+  }
+  
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, #6366f1, #8b5cf6);
+  }
+  </style>
 
 <script setup>
 import { ref, onMounted, inject, computed, onUnmounted } from 'vue';
@@ -300,6 +527,8 @@ import { useRoute, useRouter } from 'vue-router';
 import html2pdf from 'html2pdf.js';
 import { URL } from '@/auth/url.js';
 import translateText from '@/auth/Translate';
+import { useSearchStore } from "@/components/Templates/searchQuary";
+const searchQuery = useSearchStore();
 const dat = ref(localStorage.getItem("til") || "datalotin");
 
 let intervalId = null;
@@ -327,7 +556,6 @@ const showModal = ref(false);
 const showRegionModal = ref(false);
 const summa = ref(0);
 const modal = ref(false);
-const searchQuery = ref('');
 const totalsumma= ref(null)
 const districts = ref([]);
 const formData = ref({
@@ -446,7 +674,7 @@ const submitPayment = async () => {
   }
 
   const updatedRemainingSum = latestPayment.remainingSum - paymentAmount;
-
+isLoading.value = true
   try {
     const response = await axios.post(`${URL}/client-pay`, {
       clientFileId: parseInt(selectedItem.value.id),
@@ -483,6 +711,8 @@ const submitPayment = async () => {
   } catch (error) {
     console.error("To'lovni yangilashda xatolik yuz berdi:", error);
     alert("Xatolik yuz berdi: " + error.message);
+  } finally{
+    isLoading.value = false
   }
 };
 
@@ -743,7 +973,7 @@ const generateCheckFile = async () => {
     html2canvas: { scale: 2 },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
   };
-
+isLoading.value = true
   try {
     const pdfBlob = await html2pdf().from(element).set(options).outputPdf('blob');
     const formData = new FormData();
@@ -756,6 +986,8 @@ const generateCheckFile = async () => {
     });
   } catch (error) {
     console.error('Error generating or sending the check file:', error);
+  } finally{
+    isLoading.value = false
   }
 };
 
@@ -790,7 +1022,7 @@ const formatNumberWithDots = (number) => {
 };
 
 const filteredFiles = computed(() => {
-  const query = searchQuery.value.toLowerCase();
+  const query = searchQuery.query.toLowerCase();
   return clientFiles.value.filter((file) => {
     const nameMatch = file.name?.toLowerCase().includes(query);
     const contractIdMatch = file.contractId?.toString().includes(query);

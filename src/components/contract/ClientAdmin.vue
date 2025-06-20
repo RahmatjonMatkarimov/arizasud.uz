@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
     <div v-if="isLoading" class="fixed inset-0 flex flex-col items-center justify-center bg-black bg-opacity-75 z-50">
-      <span class="loader animate-spin w-12 h-12 border-4 border-t-blue-500 rounded-full"></span>
+      <span class="animate-spin w-12 h-12 border-4 border-t-blue-500 rounded-full"></span>
       <p class="mt-4 text-lg font-medium text-white">{{ loadingMessage }}</p>
     </div>
 
