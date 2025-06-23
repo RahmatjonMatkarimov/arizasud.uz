@@ -289,7 +289,7 @@
 <script setup>
 import translateText from '@/auth/Translate'
 import { URL } from '@/auth/url'
-import { ref, onMounted, inject } from 'vue'
+import { ref, onMounted, inject, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
