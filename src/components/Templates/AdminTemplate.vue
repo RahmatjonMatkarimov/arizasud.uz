@@ -532,21 +532,6 @@ const newId = parseInt(id);
 const data = ref({});
 const isCollapsed = ref(false);
 
-const fetchAdminData = async () => {
-  isLoading.value = true;
-  try {
-    const response = await axios.get(`${URL}/${localStorage.getItem("role")}/${newId}`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
-    data.value = response.data.permissions[response.data.permissions.length - 1];
-  } catch (error) {
-    console.error("Xatolik yuz berdi:", error);
-  } finally {
-    isLoading.value = false;
-  }
-};
-
-onMounted(fetchAdminData);
 
 const menuItems = [
   { to: "/admin-list", label: "Ishchi hodimlar ro'yxati", icon: "mdi:account-group", condition: true },
@@ -564,8 +549,9 @@ const menuItems = [
   { to: "/companyFile", label: "Kampaniya fayllari", icon: "mdi:office-building", condition: () => data.value?.companyDocs },
   { to: "/commaners", label: "Tizimdagi foydalanuvchilar roʻyxati", icon: "mdi:account-multiple", condition: true },
   { to: "/archive", label: "Arxiv", icon: "mdi:archive-outline", condition: true },
-  { to: "/category", label: "category", icon: "mdi:archive-outline", condition: true },
-  { to: "/warehousesHouse", label: "warehousesHouse", icon: "mdi:archive-outline", condition: true },
+  { to: "/category", label: "Kategoriyalar", icon: "mdi:shape-outline", condition: true },
+  { to: "/warehousesHouse", label: "Omborlar", icon: "mdi:warehouse", condition: true }, 
+  { to: "/fileconvert", label: "DOCX → PDF konvertor", icon: "mdi:file-sync-outline", condition: true },
 ];
 
 const filteredMenu = computed(() => {
@@ -617,6 +603,20 @@ const changeLanguage = (langCode) => {
 const toggleLanguageDropdown = () => {
   isLanguageDropdownOpen.value = !isLanguageDropdownOpen.value
 }
+const fetchAdminData = async () => {
+  isLoading.value = true;
+  try {
+    const response = await axios.get(`${URL}/${localStorage.getItem("role")}/${newId}`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    data.value = response.data.permissions[response.data.permissions.length - 1];
+  } catch (error) {
+    console.error("Xatolik yuz berdi:", error);
+  } finally {
+    isLoading.value = false;
+  }
+};
+onMounted(fetchAdminData);
 
 watch(dat, (newValue) => {
   dat.value = newValue

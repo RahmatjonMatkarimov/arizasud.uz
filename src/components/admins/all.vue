@@ -4,12 +4,12 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faUsers, faBuilding, faUserTie, faUserPlus, faFileText, faTruck, faCalculator } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import translateText from '@/auth/Translate'
-
 library.add(faUsers, faBuilding, faUserTie, faUserPlus, faFileText, faTruck, faCalculator)
 
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { URL } from '@/auth/url'
+import { Icon } from '@iconify/vue'
 const router = useRouter()
 const dat = ref(localStorage.getItem("til") || "datalotin");
 const isLoading = inject('isLoading')
@@ -47,79 +47,80 @@ const fetchAdminData = async () => {
 };
 
 const cards = ref([
-    {
-        title: 'Barcha Ishchilar Ro\'yxati',
-        description: 'Tizimda ro\'yxatdan o\'tgan barcha hodimlarni ko\'rish',
-        icon: ['fas', 'users'],
-        bgColor1: '#4F46E5',
-        bgColor: '#4F46E530',
-        routerLink: '/all',
-        condition: true
-    },
-    {
-        title: 'Hujjatni Yaratuvchi Devonxona Mudiri',
-        description: 'Rasmiy hujjatlar va devonxona boshqaruvi',
-        icon: ['fas', 'building'],
-        bgColor1: '#10B981',
-        bgColor: '#10B98130',
-        routerLink: '/operators',
-        condition: () => data.value?.call_centres
-    },
-    {
-        title: 'Yurist-Ekspert Yaratish Bo\'limi',
-        description: 'Huquqiy masalalar va ekspert xulosalari',
-        bgColor1: '#F59E0B',
-        bgColor: '#F59E0B30',
-        icon: ['fas', 'user-tie'],
-        routerLink: '/yurists',
-        condition: () => data.value?.yurists
-    },
-    {
-        title: 'Ishchi Hodimlarni Yaratish (Admin Yaratish)',
-        description: 'Yangi hodimlar qo\'shish va admin huquqlari berish',
-        icon: ['fas', 'user-plus'],
-        bgColor1: '#14B8A6',
-        bgColor: '#14B8A630',
-        routerLink: '/admins',
-        condition: () => data.value?.admins
-    },
-    {
-        title: 'Yurist Yordamchisini Yaratish Bo\'limi',
-        description: 'Yurist yordamchilari va legal support',
-        icon: ['fas', 'file-text'],
-        bgColor: '#8B5CF630',
-        bgColor1: '#8B5CF6',
-        routerLink: '/asinstant',
-        condition: () => data.value?.admins
-    },
-    {
-        title: 'Kuryer Yaratish Bo\'limi',
-        description: 'Kuryer xizmatlari va yetkazib berish',
-        icon: ['fas', 'truck'],
-        bgColor1: '#EAB308',
-        bgColor: '#EAB30830',
-        routerLink: '/deliverer',
-        condition: () => data.value?.admins
-    },
-    {
-        title: 'Bugalter Yaratish Bo\'limi',
-        description: 'Moliyaviy hisobotlar va buxgalteriya',
-        icon: ['fas', 'calculator'],
-        bgColor: '#06B6D430',
-        bgColor1: '#06B6D4',
-        routerLink: '/bugalter',
-        condition: () => data.value?.admins
-    },
-    {
-        title: 'Ombor mudiri Bo\'limi',
-        description: 'Moliyaviy hisobotlar va buxgalteriya',
-        icon: ['fas', 'calculator'],
-        bgColor: '#06B6D430',
-        bgColor1: '#06B6D4',
-        routerLink: '/mudir',
-        condition: () => data.value?.admins
-    },
-])
+  {
+    title: "Barcha Ishchilar Ro'yxati",
+    description: "Tizimda ro'yxatdan o'tgan barcha hodimlarni ko'rish",
+    icon: "mdi:account-group", // jamoa
+    bgColor1: "#3B82F6",       // ko‘k
+    bgColor: "#3B82F620",
+    routerLink: "/all",
+    condition: true,
+  },
+  {
+    title: "Hujjatni Yaratuvchi Devonxona Mudiri",
+    description: "Rasmiy hujjatlar va devonxona boshqaruvi",
+    icon: "mdi:office-building", // devonxona
+    bgColor1: "#10B981",         // yashil
+    bgColor: "#10B98120",
+    routerLink: "/operators",
+    condition: () => data.value?.call_centres,
+  },
+  {
+    title: "Yurist-Ekspert Yaratish Bo'limi",
+    description: "Huquqiy masalalar va ekspert xulosalari",
+    icon: "mdi:scale-balance",   // yurist
+    bgColor1: "#F59E0B",         // to'q sariq
+    bgColor: "#F59E0B20",
+    routerLink: "/yurists",
+    condition: () => data.value?.yurists,
+  },
+  {
+    title: "Ishchi Hodimlarni Yaratish (Admin Yaratish)",
+    description: "Yangi hodimlar qo'shish va admin huquqlari berish",
+    icon: "mdi:account-plus-outline", // admin yaratish
+    bgColor1: "#8B5CF6",              // binafsha
+    bgColor: "#8B5CF620",
+    routerLink: "/admins",
+    condition: () => data.value?.admins,
+  },
+  {
+    title: "Yurist Yordamchisini Yaratish Bo'limi",
+    description: "Yurist yordamchilari va legal support",
+    icon: "mdi:account-tie",         // yordamchi
+    bgColor1: "#EC4899",            // pushti
+    bgColor: "#EC489920",
+    routerLink: "/asinstant",
+    condition: () => data.value?.admins,
+  },
+  {
+    title: "Kuryer Yaratish Bo'limi",
+    description: "Kuryer xizmatlari va yetkazib berish",
+    icon: "mdi:truck-fast-outline", // kuryer
+    bgColor1: "#F97316",            // och to'q sariq
+    bgColor: "#F9731620",
+    routerLink: "/deliverer",
+    condition: () => data.value?.admins,
+  },
+  {
+    title: "Bugalter Yaratish Bo'limi",
+    description: "Moliyaviy hisobotlar va buxgalteriya",
+    icon: "mdi:calculator-variant-outline", // buxgalteriya
+    bgColor1: "#0EA5E9",                   // moviy
+    bgColor: "#0EA5E920",
+    routerLink: "/bugalter",
+    condition: () => data.value?.admins,
+  },
+  {
+    title: "Ombor mudiri Bo'limi",
+    description: "Omborlar va zaxiralarni boshqarish",
+    icon: "mdi:warehouse",           // ombor
+    bgColor1: "#A855F7",            // binafsha (farqli)
+    bgColor: "#A855F720",
+    routerLink: "/mudir",
+    condition: () => data.value?.admins,
+  },
+]);
+
 
 const filteredMenu = computed(() => {
     return cards.value.filter(item =>
@@ -152,7 +153,7 @@ onMounted(fetchAdminData);
                         <!-- Icon Container -->
                         <div class="w-16 h-16 rounded-xl flex items-center justify-center mb-4 transition-all duration-300 group-hover:bg-black/30"
                             :style="{ backgroundColor: card.bgColor1 }">
-                            <font-awesome-icon :icon="card.icon" class="text-4xl text-white" />
+                            <Icon :icon="card.icon" class="text-4xl text-white" />
                         </div>
 
                         <!-- Title -->

@@ -1653,7 +1653,7 @@
                   v-if="item.img"
                   :src="getImageUrl(item.img)"
                   alt="Court Image"
-                  class="w-full h-full rounded-md"
+                  class="w-full h-full object-cover rounded-md"
                 />
               </div>
               <h3 class="text-lg w-[400px] line-clamp-2 break-words font-medium dark:text-gray-200 text-black">
