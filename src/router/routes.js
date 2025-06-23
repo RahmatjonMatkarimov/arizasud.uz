@@ -114,6 +114,7 @@ export const routes = [
       { path: '/mudir', component: () => import('@/components/admins/create.vue') },
       { path: '/warehouseHouse/:id', component: () => import('@/components/qrcode/WarehouseDetail.vue') },
       { path: '/warehousesHouse', component: () => import('@/components/qrcode/warehouseHouse.vue') },
+      { path: '/fileconvert', component: () => import('@/views/fileconvert.vue') },
     ],
     meta: { requiresAuth: true, allowedRoles: ['admin', 'manager','warehouseman', 'yuristAssistant', 'accauntant', 'deliverer', 'yurist', 'bigAdmin'] },
   },

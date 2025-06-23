@@ -3,20 +3,20 @@
     <!-- Header -->
     <header class="mb-8">
       <h1 class="text-3xl md:text-4xl font-bold text-neutral-900 dark:text-neutral-100 text-center mb-6">
-        {{ dat === 'datakril' ? translateText(`Ombor va Zimmamdagilar Boshqaruvi`):`Ombor va Zimmamdagilar Boshqaruvi` }}
+        {{ dat === 'datakril' ? translateText(`Ombor va Zimmamdagilar Boshqaruvi`) : `Ombor va Zimmamdagilar Boshqaruvi` }}
       </h1>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <div class="bg-white dark:bg-neutral-800 p-6 rounded-2xl shadow-md ring-1 ring-neutral-200 dark:ring-neutral-700 transition-all duration-300 hover:shadow-lg">
           <span class="block text-3xl font-bold text-indigo-600 dark:text-indigo-400">{{ myAssignments.length }}</span>
-          <span class="text-sm text-neutral-500 dark:text-neutral-400 uppercase tracking-wide">{{ dat === 'datakril' ? translateText(`Mening Zimmamdagilar`):`Mening Zimmamdagilar` }}</span>
+          <span class="text-sm text-neutral-500 dark:text-neutral-400 uppercase tracking-wide">{{ dat === 'datakril' ? translateText(`Mening Zimmamdagilar`) : `Mening Zimmamdagilar` }}</span>
         </div>
         <div class="bg-white dark:bg-neutral-800 p-6 rounded-2xl shadow-md ring-1 ring-neutral-200 dark:ring-neutral-700 transition-all duration-300 hover:shadow-lg">
           <span class="block text-3xl font-bold text-indigo-600 dark:text-indigo-400">{{ transferredAssignments.length }}</span>
-          <span class="text-sm text-neutral-500 dark:text-neutral-400 uppercase tracking-wide">{{ dat === 'datakril' ? translateText(`Topshirilganlar`):`Topshirilganlar` }}</span>
+          <span class="text-sm text-neutral-500 dark:text-neutral-400 uppercase tracking-wide">{{ dat === 'datakril' ? translateText(`Topshirilganlar`) : `Topshirilganlar` }}</span>
         </div>
         <div v-if="role === 'warehouseman'" class="bg-white dark:bg-neutral-800 p-6 rounded-2xl shadow-md ring-1 ring-neutral-200 dark:ring-neutral-700 transition-all duration-300 hover:shadow-lg">
           <span class="block text-3xl font-bold text-indigo-600 dark:text-indigo-400">{{ brokenAssignments.length }}</span>
-          <span class="text-sm text-neutral-500 dark:text-neutral-400 uppercase tracking-wide">{{ dat === 'datakril' ? translateText(`Buzilgan Hom Ashiyolar`):`Buzilgan Hom Ashiyolar` }}</span>
+          <span class="text-sm text-neutral-500 dark:text-neutral-400 uppercase tracking-wide">{{ dat === 'datakril' ? translateText(`Buzilgan Hom Ashiyolar`) : `Buzilgan Hom Ashiyolar` }}</span>
         </div>
       </div>
     </header>
@@ -33,7 +33,7 @@
         @click="activeTab = tab.id"
         :aria-current="activeTab === tab.id ? 'page' : undefined"
       >
-        {{ dat === 'datakril' ? translateText(tab.label):tab.label }}
+        {{ dat === 'datakril' ? translateText(tab.label) : tab.label }}
       </button>
     </nav>
 
@@ -42,7 +42,7 @@
       <!-- My Assignments Tab -->
       <section v-if="activeTab === 'mine'" class="mb-8">
         <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
-          <h2 class="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(`Mening Zimmamdagilar`):`Mening Zimmamdagilar` }}</h2>
+          <h2 class="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(`Mening Zimmamdagilar`) : `Mening Zimmamdagilar` }}</h2>
           <button
             @click="refreshMyAssignments"
             class="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus-visible:ring-2 focus-visible:ring-indigo-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -52,20 +52,20 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h5m6 11v-5h-5m-4-6l7 7m0 0l-7 7" />
             </svg>
-            {{ dat === 'datakril' ? translateText(`Yangilash`):`Yangilash` }}
+            {{ dat === 'datakril' ? translateText(`Yangilash`) : `Yangilash` }}
           </button>
         </div>
         <div class="overflow-x-auto">
           <table class="min-w-full bg-white dark:bg-neutral-800 rounded-2xl shadow-md">
             <thead>
               <tr class="bg-neutral-50 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300">
-                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText('Nomi'):`Nomi` }}</th>
-                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Miqdori`):`Miqdori` }}</th>
-                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Seriya Raqami`):`Seriya Raqami` }}</th>
-                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Turgan Joyi`):`Turgan Joyi` }}</th>
-                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Mas'ul Shaxs`):`Mas'ul Shaxs` }}</th>
-                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Bo'lim`):`Bo'lim` }}</th>
-                <th v-if="role !== 'warehouseman'" class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Topshirish Holati`):`Topshirish Holati` }}</th>
+                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText('Nomi') : `Nomi` }}</th>
+                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Miqdori`) : `Miqdori` }}</th>
+                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Seriya Raqami`) : `Seriya Raqami` }}</th>
+                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Turgan Joyi`) : `Turgan Joyi` }}</th>
+                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Mas'ul Shaxs`) : `Mas'ul Shaxs` }}</th>
+                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Bo'lim`) : `Bo'lim` }}</th>
+                <th v-if="role !== 'warehouseman'" class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Topshirish Holati`) : `Topshirish Holati` }}</th>
               </tr>
             </thead>
             <tbody>
@@ -74,12 +74,12 @@
                 :key="assignment.id"
                 class="border-b border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors duration-200"
               >
-                <td class="p-4 text-neutral-800 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(assignment.warehouse?.name):assignment.warehouse?.name || 'Noma\'lum ombor' }}</td>
+                <td class="p-4 text-neutral-800 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(assignment.warehouse?.name) : assignment.warehouse?.name || 'Noma\'lum ombor' }}</td>
                 <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ assignment.warehouse?.quantity || '1 dona' }}</td>
                 <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ assignment.warehouse?.id || 'N/A' }}</td>
-                <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril'?translateText(assignment.warehouse?.location):assignment.warehouse?.location || 'N/A' }}</td>
-                <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(assignment.assignedBy?.name):assignment.assignedBy?.name || 'N/A' }} {{ dat === 'datakril' ? translateText(assignment.assignedBy?.surname):assignment.assignedBy?.surname || '' }}</td>
-                <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(assignment.warehouse?.category?.name):assignment.warehouse?.category?.name || 'N/A' }}</td>
+                <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(assignment.warehouse?.location) : assignment.warehouse?.location || 'N/A' }}</td>
+                <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(assignment.assignedBy?.name) : assignment.assignedBy?.name || 'N/A' }} {{ dat === 'datakril' ? translateText(assignment.assignedBy?.surname) : assignment.assignedBy?.surname || '' }}</td>
+                <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(assignment.warehouse?.category?.name) : assignment.warehouse?.category?.name || 'N/A' }}</td>
                 <td v-if="role !== 'warehouseman'" class="p-4">
                   <div class="flex gap-2">
                     <button
@@ -88,7 +88,7 @@
                       :disabled="isTransferring"
                       aria-label="Yaxshi holatda topshirish"
                     >
-                      {{ dat === 'datakril' ? translateText(`Yaxshi`):`Yaxshi` }}
+                      {{ dat === 'datakril' ? translateText(`Yaxshi`) : `Yaxshi` }}
                     </button>
                     <button
                       @click="quickTransfer(assignment, 'O\'rtacha')"
@@ -96,7 +96,7 @@
                       :disabled="isTransferring"
                       aria-label="O'rtacha holatda topshirish"
                     >
-                      {{ dat === 'datakril' ? translateText(`O'rtacha`):`O'rtacha` }}
+                      {{ dat === 'datakril' ? translateText(`O'rtacha`) : `O'rtacha` }}
                     </button>
                     <button
                       @click="quickTransfer(assignment, 'Yomon')"
@@ -104,7 +104,7 @@
                       :disabled="isTransferring"
                       aria-label="Buzuq holatda topshirish"
                     >
-                      {{ dat === 'datakril' ? translateText(`Buzuq`):`Buzuq` }}
+                      {{ dat === 'datakril' ? translateText(`Buzuq`) : `Buzuq` }}
                     </button>
                   </div>
                 </td>
@@ -113,7 +113,7 @@
             <tfoot v-if="myAssignments.length === 0">
               <tr>
                 <td :colspan="role === 'warehouseman' ? 6 : 7" class="text-center py-12 text-neutral-500 dark:text-neutral-400 text-lg">
-                  {{ dat === 'datakril' ? translateText(`Hozircha zimmaingizda ombor yo'q`):`Hozircha zimmaingizda ombor yo'q` }}
+                  {{ dat === 'datakril' ? translateText(`Hozircha zimmaingizda ombor yo'q`) : `Hozircha zimmaingizda ombor yo'q` }}
                 </td>
               </tr>
             </tfoot>
@@ -124,7 +124,7 @@
       <!-- Transferred Assignments Tab -->
       <section v-if="activeTab === 'transferred'" class="mb-8">
         <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
-          <h2 class="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(`Topshirilganlar`):`Topshirilganlar` }}</h2>
+          <h2 class="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(`Topshirilganlar`) : `Topshirilganlar` }}</h2>
           <button
             @click="refreshTransferredAssignments"
             class="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus-visible:ring-2 focus-visible:ring-indigo-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -134,20 +134,20 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h5m6 11v-5h-5m-4-6l7 7m0 0l-7 7" />
             </svg>
-            {{ dat === 'datakril' ? translateText(`Yangilash`):`Yangilash` }}
+            {{ dat === 'datakril' ? translateText(`Yangilash`) : `Yangilash` }}
           </button>
         </div>
         <div class="overflow-x-auto">
           <table class="min-w-full bg-white dark:bg-neutral-800 rounded-2xl shadow-md">
             <thead>
               <tr class="bg-neutral-50 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300">
-                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText('Nomi'):`Nomi` }}</th>
-                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Miqdori`):`Miqdori` }}</th>
-                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Seriya Raqami`):`Seriya Raqami` }}</th>
-                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Turgan Joyi`):`Turgan Joyi` }}</th>
-                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Mas'ul Shaxs`):`Mas'ul Shaxs` }}</th>
-                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Bo'lim`):`Bo'lim` }}</th>
-                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Zimmaga Olish Holati`):`Zimmaga Olish Holati` }}</th>
+                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText('Nomi') : `Nomi` }}</th>
+                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Miqdori`) : `Miqdori` }}</th>
+                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Seriya Raqami`) : `Seriya Raqami` }}</th>
+                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Turgan Joyi`) : `Turgan Joyi` }}</th>
+                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Mas'ul Shaxs`) : `Mas'ul Shaxs` }}</th>
+                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Bo'lim`) : `Bo'lim` }}</th>
+                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Zimmaga Olish Holati`) : `Zimmaga Olish Holati` }}</th>
               </tr>
             </thead>
             <tbody>
@@ -156,12 +156,12 @@
                 :key="assignment.id"
                 class="border-b border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors duration-200"
               >
-                <td class="p-4 text-neutral-800 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(assignment.warehouse?.name):assignment.warehouse?.name || 'Noma\'lum ombor' }}</td>
+                <td class="p-4 text-neutral-800 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(assignment.warehouse?.name) : assignment.warehouse?.name || 'Noma\'lum ombor' }}</td>
                 <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ assignment.warehouse?.quantity || '1 dona' }}</td>
                 <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ assignment.warehouse?.id || 'N/A' }}</td>
-                <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril'?translateText(assignment.warehouse?.location):assignment.warehouse?.location || 'N/A' }}</td>
-                <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(assignment.assignedBy?.name):assignment.assignedBy?.name || 'N/A' }} {{ dat === 'datakril' ? translateText(assignment.assignedBy?.surname):assignment.assignedBy?.surname || '' }}</td>
-                <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(assignment.warehouse?.category?.name):assignment.warehouse?.category?.name || 'N/A' }}</td>
+                <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(assignment.warehouse?.location) : assignment.warehouse?.location || 'N/A' }}</td>
+                <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(assignment.assignedBy?.name) : assignment.assignedBy?.name || 'N/A' }} {{ dat === 'datakril' ? translateText(assignment.assignedBy?.surname) : assignment.assignedBy?.surname || '' }}</td>
+                <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(assignment.warehouse?.category?.name) : assignment.warehouse?.category?.name || 'N/A' }}</td>
                 <td class="p-4">
                   <div v-if="role !== 'warehouseman'" class="flex gap-2">
                     <button
@@ -170,7 +170,7 @@
                       :disabled="isTransferring"
                       aria-label="Yaxshi holatda zimmaga olish"
                     >
-                      {{ dat === 'datakril' ? translateText(`Yaxshi`):`Yaxshi` }}
+                      {{ dat === 'datakril' ? translateText(`Yaxshi`) : `Yaxshi` }}
                     </button>
                     <button
                       @click="quickTakeBack(assignment, 'O\'rtacha')"
@@ -178,7 +178,7 @@
                       :disabled="isTransferring"
                       aria-label="O'rtacha holatda zimmaga olish"
                     >
-                      {{ dat === 'datakril' ? translateText(`O'rtacha`):`O'rtacha` }}
+                      {{ dat === 'datakril' ? translateText(`O'rtacha`) : `O'rtacha` }}
                     </button>
                   </div>
                   <div v-else>
@@ -188,7 +188,7 @@
                       :disabled="isTransferring"
                       aria-label="Zimmamga olish"
                     >
-                      {{ dat === 'datakril' ? translateText(`Zimmamga Olish`):`Zimmamga Olish` }}
+                      {{ dat === 'datakril' ? translateText(`Zimmamga Olish`) : `Zimmamga Olish` }}
                     </button>
                   </div>
                 </td>
@@ -197,7 +197,7 @@
             <tfoot v-if="transferredAssignments.length === 0">
               <tr>
                 <td colspan="7" class="text-center py-12 text-neutral-500 dark:text-neutral-400 text-lg">
-                  {{ dat === 'datakril' ? translateText(`Hech qanday topshirilgan ombor yo'q`):`Hech qanday topshirilgan ombor yo'q` }}
+                  {{ dat === 'datakril' ? translateText(`Hech qanday topshirilgan ombor yo'q`) : `Hech qanday topshirilgan ombor yo'q` }}
                 </td>
               </tr>
             </tfoot>
@@ -208,7 +208,7 @@
       <!-- Broken Assignments Tab -->
       <section v-if="activeTab === 'broken' && role === 'warehouseman'" class="mb-8">
         <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
-          <h2 class="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(`Buzilgan Hom Ashiyolar`):`Buzilgan Hom Ashiyolar` }}</h2>
+          <h2 class="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(`Buzilgan Hom Ashiyolar`) : `Buzilgan Hom Ashiyolar` }}</h2>
           <button
             @click="refreshBrokenAssignments"
             class="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus-visible:ring-2 focus-visible:ring-indigo-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -218,20 +218,20 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h5m6 11v-5h-5m-4-6l7 7m0 0l-7 7" />
             </svg>
-            {{ dat === 'datakril' ? translateText(`Yangilash`):`Yangilash` }}
+            {{ dat === 'datakril' ? translateText(`Yangilash`) : `Yangilash` }}
           </button>
         </div>
         <div class="overflow-x-auto">
           <table class="min-w-full bg-white dark:bg-neutral-800 rounded-2xl shadow-md">
             <thead>
               <tr class="bg-neutral-50 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300">
-                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText('Nomi'):`Nomi` }}</th>
-                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Miqdori`):`Miqdori` }}</th>
-                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Seriya Raqami`):`Seriya Raqami` }}</th>
-                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Turgan Joyi`):`Turgan Joyi` }}</th>
-                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Mas'ul Shaxs`):`Mas'ul Shaxs` }}</th>
-                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Bo'lim`):`Bo'lim` }}</th>
-                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Mahsulot Holati`):`Mahsulot Holati` }}</th>
+                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText('Nomi') : `Nomi` }}</th>
+                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Miqdori`) : `Miqdori` }}</th>
+                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Seriya Raqami`) : `Seriya Raqami` }}</th>
+                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Turgan Joyi`) : `Turgan Joyi` }}</th>
+                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Mas'ul Shaxs`) : `Mas'ul Shaxs` }}</th>
+                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Bo'lim`) : `Bo'lim` }}</th>
+                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Mahsulot Holati`) : `Mahsulot Holati` }}</th>
               </tr>
             </thead>
             <tbody>
@@ -240,12 +240,12 @@
                 :key="assignment.id"
                 class="border-b border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors duration-200"
               >
-                <td class="p-4 text-neutral-800 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(assignment.warehouse?.name):assignment.warehouse?.name || 'Noma\'lum ombor' }}</td>
+                <td class="p-4 text-neutral-800 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(assignment.warehouse?.name) : assignment.warehouse?.name || 'Noma\'lum ombor' }}</td>
                 <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ assignment.warehouse?.quantity || '1 dona' }}</td>
                 <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ assignment.warehouse?.id || 'N/A' }}</td>
-                <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril'?translateText(assignment.warehouse?.location):assignment.warehouse?.location || 'N/A' }}</td>
-                <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(assignment.assignedBy?.name):assignment.assignedBy?.name || 'N/A' }} {{ dat === 'datakril' ? translateText(assignment.assignedBy?.surname):assignment.assignedBy?.surname || '' }}</td>
-                <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(assignment.warehouse?.category?.name):assignment.warehouse?.category?.name || 'N/A' }}</td>
+                <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(assignment.warehouse?.location) : assignment.warehouse?.location || 'N/A' }}</td>
+                <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(assignment.assignedBy?.name) : assignment.assignedBy?.name || 'N/A' }} {{ dat === 'datakril' ? translateText(assignment.assignedBy?.surname) : assignment.assignedBy?.surname || '' }}</td>
+                <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(assignment.warehouse?.category?.name) : assignment.warehouse?.category?.name || 'N/A' }}</td>
                 <td class="p-4">
                   <div class="flex gap-2">
                     <button
@@ -254,7 +254,7 @@
                       :disabled="isTransferring"
                       aria-label="Ma'lumotlarni ko'rish"
                     >
-                      {{ dat === 'datakril' ? translateText(`Ko'rish`):`Ko'rish` }}
+                      {{ dat === 'datakril' ? translateText(`Ko'rish`) : `Ko'rish` }}
                     </button>
                     <button
                       @click="markAsFixed(assignment)"
@@ -262,7 +262,7 @@
                       :disabled="isTransferring"
                       aria-label="Tuzatildi deb belgilash"
                     >
-                      {{ dat === 'datakril' ? translateText(`Tuzatildi`):`Tuzatildi` }}
+                      {{ dat === 'datakril' ? translateText(`Tuzatildi`) : `Tuzatildi` }}
                     </button>
                   </div>
                 </td>
@@ -271,7 +271,7 @@
             <tfoot v-if="brokenAssignments.length === 0">
               <tr>
                 <td colspan="7" class="text-center py-12 text-neutral-500 dark:text-neutral-400 text-lg">
-                  {{ dat === 'datakril' ? translateText(`Hech qanday buzilgan hom ashiyolar yo'q`):`Hech qanday buzilgan hom ashiyolar yo'q` }}
+                  {{ dat === 'datakril' ? translateText(`Hech qanday buzilgan hom ashiyolar yo'q`) : `Hech qanday buzilgan hom ashiyolar yo'q` }}
                 </td>
               </tr>
             </tfoot>
@@ -282,7 +282,7 @@
       <!-- My Warehouses Tab -->
       <section v-if="activeTab === 'myWarehouses' && role === 'warehouseman'" class="mb-8">
         <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
-          <h2 class="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(`Mening Omborlarim`):`Mening Omborlarim` }}</h2>
+          <h2 class="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(`Mening Omborlarim`) : `Mening Omborlarim` }}</h2>
           <button
             @click="refreshMyWarehouses"
             class="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus-visible:ring-2 focus-visible:ring-indigo-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -292,20 +292,20 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h5m6 11v-5h-5m-4-6l7 7m0 0l-7 7" />
             </svg>
-            {{ dat === 'datakril' ? translateText(`Yangilash`):`Yangilash` }}
+            {{ dat === 'datakril' ? translateText(`Yangilash`) : `Yangilash` }}
           </button>
         </div>
         <div class="overflow-x-auto">
           <table class="min-w-full bg-white dark:bg-neutral-800 rounded-2xl shadow-md">
             <thead>
               <tr class="bg-neutral-50 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300">
-                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText('Nomi'):`Nomi` }}</th>
-                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Miqdori`):`Miqdori` }}</th>
-                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Seriya Raqami`):`Seriya Raqami` }}</th>
-                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Turgan Joyi`):`Turgan Joyi` }}</th>
-                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Mas'ul Shaxs`):`Mas'ul Shaxs` }}</th>
-                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Bo'lim`):`Bo'lim` }}</th>
-                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Harakat`):`Harakat` }}</th>
+                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText('Nomi') : `Nomi` }}</th>
+                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Miqdori`) : `Miqdori` }}</th>
+                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Seriya Raqami`) : `Seriya Raqami` }}</th>
+                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Turgan Joyi`) : `Turgan Joyi` }}</th>
+                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Mas'ul Shaxs`) : `Mas'ul Shaxs` }}</th>
+                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Bo'lim`) : `Bo'lim` }}</th>
+                <th class="p-4 text-left text-sm font-semibold">{{ dat === 'datakril' ? translateText(`Harakat`) : `Harakat` }}</th>
               </tr>
             </thead>
             <tbody>
@@ -314,12 +314,12 @@
                 :key="assignment.id"
                 class="border-b border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors duration-200"
               >
-                <td class="p-4 text-neutral-800 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(assignment.warehouse?.name):assignment.warehouse?.name || 'Noma\'lum ombor' }}</td>
+                <td class="p-4 text-neutral-800 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(assignment.warehouse?.name) : assignment.warehouse?.name || 'Noma\'lum ombor' }}</td>
                 <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ assignment.warehouse?.quantity || '1 dona' }}</td>
                 <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ assignment.warehouse?.id || 'N/A' }}</td>
-                <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril'?translateText(assignment.warehouse?.location):assignment.warehouse?.location || 'N/A' }}</td>
-                <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(assignment.assignedBy?.name):assignment.assignedBy?.name || 'N/A' }} {{ dat === 'datakril' ? translateText(assignment.assignedBy?.surname):assignment.assignedBy?.surname || '' }}</td>
-                <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(assignment.warehouse?.category?.name):assignment.warehouse?.category?.name || 'N/A' }}</td>
+                <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(assignment.warehouse?.location) : assignment.warehouse?.location || 'N/A' }}</td>
+                <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(assignment.assignedBy?.name) : assignment.assignedBy?.name || 'N/A' }} {{ dat === 'datakril' ? translateText(assignment.assignedBy?.surname) : assignment.assignedBy?.surname || '' }}</td>
+                <td class="p-4 text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(assignment.warehouse?.category?.name) : assignment.warehouse?.category?.name || 'N/A' }}</td>
                 <td class="p-4">
                   <button
                     @click="openAssignModal(assignment)"
@@ -327,7 +327,7 @@
                     :disabled="isTransferring"
                     aria-label="Boshqa foydalanuvchiga topshirish"
                   >
-                    {{ dat === 'datakril' ? translateText(`Topshirish`):`Topshirish` }}
+                    {{ dat === 'datakril' ? translateText(`Topshirish`) : `Topshirish` }}
                   </button>
                 </td>
               </tr>
@@ -335,7 +335,7 @@
             <tfoot v-if="myWarehouses.length === 0">
               <tr>
                 <td colspan="7" class="text-center py-12 text-neutral-500 dark:text-neutral-400 text-lg">
-                  {{ dat === 'datakril' ? translateText(`Hozircha omborlaringiz yo'q`):`Hozircha omborlaringiz yo'q` }}
+                  {{ dat === 'datakril' ? translateText(`Hozircha omborlaringiz yo'q`) : `Hozircha omborlaringiz yo'q` }}
                 </td>
               </tr>
             </tfoot>
@@ -358,7 +358,7 @@
         >
           <div class="flex justify-between items-center mb-6">
             <h3 id="broken-transfer-modal-title" class="text-xl font-semibold text-neutral-900 dark:text-neutral-100">
-              {{ dat === 'datakril' ? translateText(`Omborni Buzuq deb Belgilash`):`Omborni Buzuq deb Belgilash` }}
+              {{ dat === 'datakril' ? translateText(`Omborni Buzuq deb Belgilash`) : `Omborni Buzuq deb Belgilash` }}
             </h3>
             <button
               @click="closeBrokenTransferModal"
@@ -372,12 +372,12 @@
           </div>
           <div>
             <div class="bg-neutral-50 dark:bg-neutral-700 p-4 rounded-lg mb-6">
-              <h4 class="text-lg font-medium text-neutral-900 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(selectedAssignment?.warehouse?.name) :selectedAssignment?.warehouse?.name || 'Noma\'lum' }}</h4>
-              <p class="text-sm text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(`Joriy holat`):`Joriy holat` }}: {{ dat === 'datakril' ? translateText(selectedAssignment?.condition || 'N/A'):selectedAssignment?.condition || 'N/A' }}</p>
+              <h4 class="text-lg font-medium text-neutral-900 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(selectedAssignment?.warehouse?.name) : selectedAssignment?.warehouse?.name || 'Noma\'lum' }}</h4>
+              <p class="text-sm text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(`Joriy holat`) : `Joriy holat` }}: {{ dat === 'datakril' ? translateText(selectedAssignment?.condition || 'N/A') : selectedAssignment?.condition || 'N/A' }}</p>
             </div>
             <form @submit.prevent="handleBrokenTransfer">
               <div class="mb-4">
-                <label for="reason" class="block mb-2 text-sm font-medium text-neutral-800 dark:text-neutral-200">{{ dat === 'datakril' ? translateText(`Buzilish sababi`):`Buzilish sababi` }}:</label>
+                <label for="reason" class="block mb-2 text-sm font-medium text-neutral-800 dark:text-neutral-200">{{ dat === 'datakril' ? translateText(`Buzilish sababi`) : `Buzilish sababi` }}:</label>
                 <textarea
                   id="reason"
                   v-model="transferForm.reason"
@@ -388,7 +388,7 @@
                 ></textarea>
               </div>
               <div class="mb-4">
-                <label for="fixByDate" class="block mb-2 text-sm font-medium text-neutral-800 dark:text-neutral-200">{{ dat === 'datakril' ? translateText(`Tuzatish muddati`):`Tuzatish muddati` }}:</label>
+                <label for="fixByDate" class="block mb-2 text-sm font-medium text-neutral-800 dark:text-neutral-200">{{ dat === 'datakril' ? translateText(`Tuzatish muddati`) : `Tuzatish muddati` }}:</label>
                 <input
                   id="fixByDate"
                   v-model="transferForm.fixByDate"
@@ -404,7 +404,7 @@
                   class="px-5 py-2 bg-neutral-500 text-white rounded-lg hover:bg-neutral-600 focus-visible:ring-2 focus-visible:ring-neutral-500 transition-all duration-200"
                   aria-label="Bekor qilish"
                 >
-                  {{ dat === 'datakril' ? translateText(`Bekor qilish`):`Bekor qilish` }}
+                  {{ dat === 'datakril' ? translateText(`Bekor qilish`) : `Bekor qilish` }}
                 </button>
                 <button
                   type="submit"
@@ -412,7 +412,7 @@
                   class="px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 focus-visible:ring-2 focus-visible:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                   aria-label="Buzuq deb belgilash"
                 >
-                  {{ isTransferring ? 'Amalga oshirilmoqda...' : 'Buzuq deb Belgilash' }}
+                  {{ isTransferring ? (dat === 'datakril' ? translateText('Amalga oshirilmoqda...') : 'Amalga oshirilmoqda...') : (dat === 'datakril' ? translateText('Buzuq deb Belgilash') : 'Buzuq deb Belgilash') }}
                 </button>
               </div>
             </form>
@@ -434,7 +434,7 @@
           @click.stop
         >
           <div class="flex justify-between items-center mb-6">
-            <h3 id="transfer-modal-title" class="text-xl font-semibold text-neutral-900 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(`Omborni Zimmamga Olish`):`Omborni Zimmamga Olish` }}</h3>
+            <h3 id="transfer-modal-title" class="text-xl font-semibold text-neutral-900 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(`Omborni Zimmamga Olish`) : `Omborni Zimmamga Olish` }}</h3>
             <button
               @click="closeTransferModal"
               class="text-neutral-500 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-full w-8 h-8 flex items-center justify-center transition-all duration-200"
@@ -447,26 +447,26 @@
           </div>
           <div>
             <div class="bg-neutral-50 dark:bg-neutral-700 p-4 rounded-lg mb-6">
-              <h4 class="text-lg font-medium text-neutral-900 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(selectedAssignment?.warehouse?.name) :selectedAssignment?.warehouse?.name || 'Noma\'lum' }}</h4>
-              <p class="text-sm text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(`Joriy holat`):`Joriy holat` }}: {{ dat === 'datakril' ? translateText(selectedAssignment?.condition || 'N/A'):selectedAssignment?.condition || 'N/A' }}</p>
+              <h4 class="text-lg font-medium text-neutral-900 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(selectedAssignment?.warehouse?.name) : selectedAssignment?.warehouse?.name || 'Noma\'lum' }}</h4>
+              <p class="text-sm text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(`Joriy holat`) : `Joriy holat` }}: {{ dat === 'datakril' ? translateText(selectedAssignment?.condition || 'N/A') : selectedAssignment?.condition || 'N/A' }}</p>
             </div>
             <form @submit.prevent="transferWarehouse(transferForm.condition, 'takeBack')">
               <div class="mb-4">
-                <label for="condition" class="block mb-2 text-sm font-medium text-neutral-800 dark:text-neutral-200">{{ dat === 'datakril' ? translateText(`Ombor holati`):`Ombor holati` }}:</label>
+                <label for="condition" class="block mb-2 text-sm font-medium text-neutral-800 dark:text-neutral-200">{{ dat === 'datakril' ? translateText(`Ombor holati`) : `Ombor holati` }}:</label>
                 <select
                   id="condition"
                   v-model="transferForm.condition"
                   required
                   class="w-full p-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-100 focus-visible:ring-2 focus-visible:ring-indigo-500"
                 >
-                  <option value="">{{ dat === 'datakril' ? translateText(`Holatni tanlang`):`Holatni tanlang` }}</option>
-                  <option value="Yaxshi">{{ dat === 'datakril' ? translateText(`Yaxshi`):`Yaxshi` }}</option>
-                  <option value="O'rtacha">{{ dat === 'datakril' ? translateText(`O'rtacha`):`O'rtacha` }}</option>
-                  <option value="Yomon">{{ dat === 'datakril' ? translateText(`Buzuq`):`Buzuq` }}</option>
+                  <option value="">{{ dat === 'datakril' ? translateText(`Holatni tanlang`) : `Holatni tanlang` }}</option>
+                  <option value="Yaxshi">{{ dat === 'datakril' ? translateText(`Yaxshi`) : `Yaxshi` }}</option>
+                  <option value="O'rtacha">{{ dat === 'datakril' ? translateText(`O'rtacha`) : `O'rtacha` }}</option>
+                  <option value="Yomon">{{ dat === 'datakril' ? translateText(`Buzuq`) : `Buzuq` }}</option>
                 </select>
               </div>
               <div v-if="transferForm.condition === 'Yomon'" class="mb-4">
-                <label for="reason-general" class="block mb-2 text-sm font-medium text-neutral-800 dark:text-neutral-200">{{ dat === 'datakril' ? translateText(`Buzilish sababi:`):`Buzilish sababi:` }}</label>
+                <label for="reason-general" class="block mb-2 text-sm font-medium text-neutral-800 dark:text-neutral-200">{{ dat === 'datakril' ? translateText(`Buzilish sababi:`) : `Buzilish sababi:` }}</label>
                 <textarea
                   id="reason-general"
                   v-model="transferForm.reason"
@@ -477,7 +477,7 @@
                 ></textarea>
               </div>
               <div v-if="transferForm.condition === 'Yomon'" class="mb-4">
-                <label for="fixByDate-general" class="block mb-2 text-sm font-medium text-neutral-800 dark:text-neutral-200">{{ dat === 'datakril' ? translateText(`Tuzatish muddati:`):`Tuzatish muddati:` }}</label>
+                <label for="fixByDate-general" class="block mb-2 text-sm font-medium text-neutral-800 dark:text-neutral-200">{{ dat === 'datakril' ? translateText(`Tuzatish muddati:`) : `Tuzatish muddati:` }}</label>
                 <input
                   id="fixByDate-general"
                   v-model="transferForm.fixByDate"
@@ -493,7 +493,7 @@
                   class="px-5 py-2 bg-neutral-500 text-white rounded-lg hover:bg-neutral-600 focus-visible:ring-2 focus-visible:ring-neutral-500 transition-all duration-200"
                   aria-label="Bekor qilish"
                 >
-                  {{ dat === 'datakril' ? translateText(`Bekor qilish`):`Bekor qilish` }}
+                  {{ dat === 'datakril' ? translateText(`Bekor qilish`) : `Bekor qilish` }}
                 </button>
                 <button
                   type="submit"
@@ -501,7 +501,7 @@
                   class="px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                   aria-label="Zimmamga olish"
                 >
-                  {{ isTransferring ? dat === 'datakril' ? translateText('Amalga oshirilmoqda...'):'Amalga oshirilmoqda...' : dat === 'datakril' ? translateText(`Zimmamga Olish`):`Zimmamga Olish` }}
+                  {{ isTransferring ? (dat === 'datakril' ? translateText('Amalga oshirilmoqda...') : 'Amalga oshirilmoqda...') : (dat === 'datakril' ? translateText(`Zimmamga Olish`) : `Zimmamga Olish`) }}
                 </button>
               </div>
             </form>
@@ -523,7 +523,7 @@
           @click.stop
         >
           <div class="flex justify-between items-center mb-6">
-            <h3 id="assign-modal-title" class="text-xl font-semibold text-neutral-900 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(`Omborni Topshirish`):`Omborni Topshirish` }}</h3>
+            <h3 id="assign-modal-title" class="text-xl font-semibold text-neutral-900 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(`Omborni Topshirish`) : `Omborni Topshirish` }}</h3>
             <button
               @click="closeAssignModal"
               class="text-neutral-500 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-full w-8 h-8 flex items-center justify-center transition-all duration-200"
@@ -536,21 +536,21 @@
           </div>
           <div>
             <div class="bg-neutral-50 dark:bg-neutral-700 p-4 rounded-lg mb-6">
-              <h4 class="text-lg font-medium text-neutral-900 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(selectedAssignment?.warehouse?.name) :selectedAssignment?.warehouse?.name || 'Noma\'lum' }}</h4>
-              <p class="text-sm text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(`Joriy holat`):`Joriy holat` }}: {{ dat === 'datakril' ? translateText(selectedAssignment?.condition || 'N/A'):selectedAssignment?.condition || 'N/A' }}</p>
+              <h4 class="text-lg font-medium text-neutral-900 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(selectedAssignment?.warehouse?.name) : selectedAssignment?.warehouse?.name || 'Noma\'lum' }}</h4>
+              <p class="text-sm text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(`Joriy holat`) : `Joriy holat` }}: {{ dat === 'datakril' ? translateText(selectedAssignment?.condition || 'N/A') : selectedAssignment?.condition || 'N/A' }}</p>
             </div>
             <form @submit.prevent="transferToAnotherUser">
               <div class="mb-4">
-                <label for="newAssignedById" class="block mb-2 text-sm font-medium text-neutral-800 dark:text-neutral-200">{{ dat === 'datakril' ? translateText(`Foydalanuvchi tanlang`):`Foydalanuvchi tanlang` }}:</label>
+                <label for="newAssignedById" class="block mb-2 text-sm font-medium text-neutral-800 dark:text-neutral-200">{{ dat === 'datakril' ? translateText(`Foydalanuvchi tanlang`) : `Foydalanuvchi tanlang` }}:</label>
                 <select
                   id="newAssignedById"
                   v-model="transferForm.newAssignedById"
                   required
                   class="w-full p-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-100 focus-visible:ring-2 focus-visible:ring-indigo-500"
                 >
-                  <option value="">{{ dat === 'datakril' ? translateText(`Foydalanuvchi tanlang`):`Foydalanuvchi tanlang` }}</option>
+                  <option value="">{{ dat === 'datakril' ? translateText(`Foydalanuvchi tanlang`) : `Foydalanuvchi tanlang` }}</option>
                   <option v-for="user in allDeliverers" :key="user.id" :value="user.id">
-                  {{ dat === 'datakril' ? translateText(`${user.name} ${user.surname}`):`${user.name} ${user.surname}` }}
+                    {{ dat === 'datakril' ? translateText(`${user.name} ${user.surname}`) : `${user.name} ${user.surname}` }}
                   </option>
                 </select>
               </div>
@@ -561,7 +561,7 @@
                   class="px-5 py-2 bg-neutral-500 text-white rounded-lg hover:bg-neutral-600 focus-visible:ring-2 focus-visible:ring-neutral-500 transition-all duration-200"
                   aria-label="Bekor qilish"
                 >
-                  {{ dat === 'datakril' ? translateText(`Bekor qilish`):`Bekor qilish` }}
+                  {{ dat === 'datakril' ? translateText(`Bekor qilish`) : `Bekor qilish` }}
                 </button>
                 <button
                   type="submit"
@@ -569,7 +569,7 @@
                   class="px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                   aria-label="Topshirish"
                 >
-                  {{ isTransferring ? dat === 'datakril' ? translateText('Amalga oshirilmoqda...'):'Amalga oshirilmoqda...' : dat === 'datakril' ? translateText(`Topshirish`):`Topshirish` }}
+                  {{ isTransferring ? (dat === 'datakril' ? translateText('Amalga oshirilmoqda...') : 'Amalga oshirilmoqda...') : (dat === 'datakril' ? translateText(`Topshirish`) : `Topshirish`) }}
                 </button>
               </div>
             </form>
@@ -580,12 +580,13 @@
       <!-- Report Details Modal -->
       <div
         v-if="showReportModal"
-        class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[1000] animate-in fade-in">
+        class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[1000] animate-in fade-in"
+      >
         <div
           class="w-11/12 max-w-md p-6 shadow-xl rounded-2xl bg-white dark:bg-neutral-800 ring-1 ring-neutral-200 dark:ring-neutral-700"
         >
           <div class="flex justify-between items-center mb-6">
-            <h3 id="report-modal-title" class="text-xl font-semibold text-neutral-900 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(`Buzilish Ma'lumotlari`):`Buzilish Ma'lumotlari` }}</h3>
+            <h3 id="report-modal-title" class="text-xl font-semibold text-neutral-900 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(`Buzilish Ma'lumotlari`) : `Buzilish Ma'lumotlari` }}</h3>
             <button
               @click="closeReportModal"
               class="text-neutral-500 dark:text-neutral-400 hover:bg-gray-100 dark:hover:bg-neutral-700 rounded-full w-5 h-5 flex items-center justify-center transition-all duration-300"
@@ -598,31 +599,31 @@
           </div>
           <div>
             <div class="bg-neutral-50 dark:bg-neutral-700 p-6 rounded-lg mb-4">
-              <h4 class="text-lg font-medium text-neutral-900 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(selectedAssignment?.warehouse?.name) :selectedAssignment?.warehouse?.name || 'Noma\'lum ombor' }}</h4>
-              <p class="text-sm text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(`Holati`):`Holati` }}: {{ dat === 'datakril' ? translateText(selectedAssignment?.condition || 'N/A'):selectedAssignment?.condition || 'N/A' }}</p>
+              <h4 class="text-lg font-medium text-neutral-900 dark:text-neutral-100">{{ dat === 'datakril' ? translateText(selectedAssignment?.warehouse?.name) : selectedAssignment?.warehouse?.name || 'Noma\'lum ombor' }}</h4>
+              <p class="text-sm text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(`Holati`) : `Holati` }}: {{ dat === 'datakril' ? translateText(selectedAssignment?.condition || 'N/A') : selectedAssignment?.condition || 'N/A' }}</p>
             </div>
             <div v-if="reportDetails && !reportDetails.isFixed">
               <div class="mb-4">
-                <label class="block mb-2 text-sm font-medium text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(`Buzilish sababi`):`Buzilish sababi` }}:</label>
+                <label class="block mb-2 text-sm font-medium text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(`Buzilish sababi`) : `Buzilish sababi` }}:</label>
                 <p class="p-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-100">
-                  {{ dat === 'datakril' ? translateText(reportDetails.reason):reportDetails.reason || 'Noma\'lum' }}
+                  {{ dat === 'datakril' ? translateText(reportDetails.reason) : reportDetails.reason || 'Noma\'lum' }}
                 </p>
               </div>
               <div class="mb-4">
-                <label class="block mb-2 text-sm font-medium text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(`Buzilgan vaqti`):`Buzilgan vaqti` }}:</label>
+                <label class="block mb-2 text-sm font-medium text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(`Buzilgan vaqti`) : `Buzilgan vaqti` }}:</label>
                 <p class="p-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-100">
-                  {{ reportDetails.createdAt ? new Date(reportDetails.createdAt).toLocaleDateString('uz-UZ', { day: '2-digit', month: '2-digit', target: 'numeric' }) : 'Belgilanmagan' }}
+                  {{ formatDate(reportDetails.createdAt) }}
                 </p>
               </div>
               <div class="mb-4">
-                <label class="block mb-2 text-sm font-medium text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(`Tuzatish muddati`):`Tuzatish muddati` }}:</label>
+                <label class="block mb-2 text-sm font-medium text-neutral-600 dark:text-neutral-400">{{ dat === 'datakril' ? translateText(`Tuzatish muddati`) : `Tuzatish muddati` }}:</label>
                 <p class="p-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-100">
-                  {{ reportDetails.fixByDate ? new Date(reportDetails.fixByDate).toLocaleDateString('uz-UZ', { day: '2-digit', month: '2-digit', target: 'numeric' }) : 'Belgilangan' }}
+                  {{ formatDate(reportDetails.fixByDate) }}
                 </p>
               </div>
             </div>
             <div v-else class="text-center py-6 text-neutral-500 dark:text-neutral-400">
-              {{ dat === 'datakril' ? translateText(`Bu mahsulot tuzatilgan yoki ma'lumot topilmadi`):`Bu mahsulot tuzatilgan yoki ma'lumot topilmadi` }}
+              {{ dat === 'datakril' ? translateText(`Bu mahsulot tuzatilgan yoki ma'lumot topilmadi`) : `Bu mahsulot tuzatilgan yoki ma'lumot topilmadi` }}
             </div>
             <div class="flex justify-end mt-6">
               <button
@@ -630,7 +631,7 @@
                 class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-all duration-300"
                 aria-label="Close"
               >
-                {{ dat === 'datakril' ? translateText(`Yopish`):`Yopish` }}
+                {{ dat === 'datakril' ? translateText(`Yopish`) : `Yopish` }}
               </button>
             </div>
           </div>
@@ -641,10 +642,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted,onUnmounted, computed, inject } from 'vue';
+import { ref, onMounted, onUnmounted, computed, inject } from 'vue';
 import { URL } from '@/auth/url.js';
 import translateText from '@/auth/Translate';
-import { da } from 'date-fns/locale';
 
 // State
 const isLoading = inject('isLoading');
@@ -667,24 +667,32 @@ const myWarehouses = ref([]);
 const allUsers = ref([]);
 const allDeliverers = ref([]);
 
-const dat = ref("datalotin")
+const dat = ref("datalotin");
 
-let intervalId = null
+let intervalId = null;
 
 const checkLanguageChange = () => {
-    const currentLang = localStorage.getItem("til") || "datalotin"
-    if (currentLang !== dat.value) {
-        dat.value = currentLang
-    }
-}
+  const currentLang = localStorage.getItem("til") || "datalotin";
+  if (currentLang !== dat.value) {
+    dat.value = currentLang;
+  }
+};
 
 onMounted(() => {
-    intervalId = setInterval(checkLanguageChange, 0)
-})
+  intervalId = setInterval(checkLanguageChange, 1000); // Har 1 soniyada tilni tekshirish
+});
 
 onUnmounted(() => {
-    if (intervalId) clearInterval(intervalId)
-})
+  if (intervalId) clearInterval(intervalId);
+});
+function formatDate(dateStr) {
+  if (!dateStr) return 'Belgilanmagan'
+  const date = new Date(dateStr)
+  const day = String(date.getDate()).padStart(2, '0')
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const year = date.getFullYear()
+  return `${day}.${month}.${year}`
+}
 // Form
 const transferForm = ref({
   newAssignedById: '',
@@ -727,11 +735,11 @@ const fetchMyAssignments = async () => {
     myAssignments.value = allAssignments.filter(assignment => 
       assignment.assignedById === userId && 
       !assignment.toDate &&
-      (role.value === 'warehouseman' ? assignment.condition !== 'Yomon' : assignment.warehouse?.userId === userId)
+      (role.value === 'warehouseman' ? true : assignment.condition !== 'Yomon') &&
+      (role.value === 'warehouseman' ? true : assignment.warehouse?.userId === userId)
     );
   } catch (error) {
     console.error('Mening topshiriqlarimni olishda xatolik:', error);
-    alert('Xatolik: Ma\'lumotlarni olishda xato yuz berdi');
   } finally {
     isLoading.value = false;
   }
@@ -747,11 +755,10 @@ const fetchTransferredAssignments = async () => {
       (role.value === 'warehouseman' ? true : assignment.warehouse?.userId === userId) && 
       assignment.assignedById !== userId && 
       !assignment.toDate &&
-      assignment.condition !== 'Yomon'
+      (role.value === 'warehouseman' ? true : assignment.condition !== 'Yomon')
     );
   } catch (error) {
     console.error('Topshirilgan topshiriqlarni olishda xatolik:', error);
-    alert('Xatolik: Ma\'lumotlarni olishda xato yuz berdi');
   } finally {
     isLoading.value = false;
   }
@@ -764,13 +771,12 @@ const fetchBrokenAssignments = async () => {
     const response = await fetch(`${URL}/warehouse-assignment`);
     const allAssignments = await response.json();
     brokenAssignments.value = allAssignments.filter(assignment => 
-      assignment.assignedById === userId && 
+      (role.value === 'warehouseman' ? true : assignment.assignedById === userId) && 
       !assignment.toDate &&
       assignment.condition === 'Yomon'
     );
   } catch (error) {
     console.error('Buzilgan topshiriqlarni olishda xatolik:', error);
-    alert('Xatolik: Ma\'lumotlarni olishda xato yuz berdi');
   } finally {
     isLoading.value = false;
   }
@@ -789,33 +795,32 @@ const fetchMyWarehouses = async () => {
     );
   } catch (error) {
     console.error('Mening omborlarimni olishda xatolik:', error);
-    alert('Xatolik: Ma\'lumotlarni olishda xato yuz berdi');
   } finally {
     isLoading.value = false;
   }
 };
 
 const fetchAllUsers = async () => {
-    isLoading.value = true
+  isLoading.value = true;
   try {
     const response = await fetch(`${URL}/warehouseman`);
     allUsers.value = await response.json();
   } catch (error) {
     console.error('Foydalanuvchilarni olishda xatolik:', error);
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
 };
 
 const fetchAllDeliverers = async () => {
-    isLoading.value = true
+  isLoading.value = true;
   try {
     const response = await fetch(`${URL}/deliverer/allUsers`);
     allDeliverers.value = await response.json();
   } catch (error) {
     console.error('Yetkazuvchilarni olishda xatolik:', error);
-  }finally {
-    isLoading.value = false
+  } finally {
+    isLoading.value = false;
   }
 };
 
@@ -875,6 +880,7 @@ const openBrokenTransferModal = (assignment) => {
   selectedAssignment.value = assignment;
   const warehousemanId = getFirstWarehousemanId();
   if (!warehousemanId) {
+    alert('Xatolik: Omborxona xodimi topilmadi');
     return;
   }
   transferForm.value = {
@@ -925,20 +931,23 @@ const closeAssignModal = () => {
 
 const handleBrokenTransfer = async () => {
   if (!transferForm.value.reason.trim()) {
+    alert('Buzilish sababini kiriting!');
     return;
   }
+  await transferWarehouse('Yomon', 'transfer');
 };
 
 const quickTransfer = async (assignment, condition) => {
-  if (condition === 'Yomon') {
-    openBrokenTransferModal(assignment);
-    return;
-  }
-  isLoading.value = true
+  isLoading.value = true;
   try {
     isTransferring.value = true;
+    if (condition === 'Yomon') {
+      openBrokenTransferModal(assignment);
+      return;
+    }
     const warehousemanId = getFirstWarehousemanId();
     if (!warehousemanId) {
+      alert('Xatolik: Omborxona xodimi topilmadi');
       return;
     }
     const transferData = {
@@ -960,17 +969,19 @@ const quickTransfer = async (assignment, condition) => {
       await refreshData();
     } else {
       const error = await response.json();
+      alert(`Xatolik: ${error.message || 'Noma\'lum xatolik'}`);
     }
   } catch (error) {
     console.error('Transfer xatoligi:', error);
+    alert('Xatolik: Transfer amalga oshirilmadi');
   } finally {
     isTransferring.value = false;
-    isLoading.value = false
+    isLoading.value = false;
   }
 };
 
 const quickTakeBack = async (assignment, condition) => {
-    isLoading.value = true
+  isLoading.value = true;
   try {
     isTransferring.value = true;
     const updateData = {
@@ -991,18 +1002,20 @@ const quickTakeBack = async (assignment, condition) => {
       await refreshData();
     } else {
       const error = await response.json();
+      alert(`Xatolik: ${error.message || 'Noma\'lum xatolik'}`);
     }
   } catch (error) {
     console.error('Take back xatoligi:', error);
+    alert('Xatolik: Take back amalga oshirilmadi');
   } finally {
     isTransferring.value = false;
-    isLoading.value = false
+    isLoading.value = false;
   }
 };
 
 const transferWarehouse = async (condition, mode) => {
+  isLoading.value = true;
   try {
-      isLoading.value = true
     isTransferring.value = true;
     if (mode === 'takeBack') {
       const updateData = {
@@ -1022,7 +1035,6 @@ const transferWarehouse = async (condition, mode) => {
       if (response.ok) {
         closeTransferModal();
         await refreshData();
-        alert(`Ombor muvaffaqiyatli "${condition}" holatida zimmaga olindi!`);
       } else {
         const error = await response.json();
         alert(`Xatolik: ${error.message || 'Noma\'lum xatolik'}`);
@@ -1053,21 +1065,24 @@ const transferWarehouse = async (condition, mode) => {
         await refreshData();
       } else {
         const error = await response.json();
+        alert(`Xatolik: ${error.message || 'Noma\'lum xatolik'}`);
       }
     }
   } catch (error) {
     console.error('Transfer yoki update xatoligi:', error);
+    alert('Xatolik: Transfer yoki update amalga oshirilmadi');
   } finally {
     isTransferring.value = false;
-    isLoading.value = false
+    isLoading.value = false;
   }
 };
 
 const transferToAnotherUser = async () => {
+  isLoading.value = true;
   try {
-    isLoading.value = true
     isTransferring.value = true;
     if (!transferForm.value.newAssignedById) {
+      alert('Foydalanuvchi tanlanmadi!');
       return;
     }
     const updateData = {
@@ -1086,18 +1101,20 @@ const transferToAnotherUser = async () => {
       await refreshData();
     } else {
       const error = await response.json();
+      alert(`Xatolik: ${error.message || 'Noma\'lum xatolik'}`);
     }
   } catch (error) {
     console.error('Topshirish xatoligi:', error);
+    alert('Xatolik: Topshirish amalga oshirilmadi');
   } finally {
     isTransferring.value = false;
-    isLoading.value = false
+    isLoading.value = false;
   }
 };
 
 const markAsFixed = async (assignment) => {
+  isLoading.value = true;
   try {
-    isLoading.value = true
     isTransferring.value = true;
     const updateData = {
       assignedById: getCurrentUserId(),
@@ -1115,15 +1132,16 @@ const markAsFixed = async (assignment) => {
 
     if (response.ok) {
       await refreshData();
-      alert('Mahsulot muvaffaqiyatli tuzatildi deb belgilandi!');
     } else {
       const error = await response.json();
+      alert(`Xatolik: ${error.message || 'Noma\'lum xatolik'}`);
     }
   } catch (error) {
     console.error('Tuzatildi deb belgilashda xatolik:', error);
+    alert('Xatolik: Tuzatildi deb belgilash amalga oshirilmadi');
   } finally {
     isTransferring.value = false;
-    isLoading.value = false
+    isLoading.value = false;
   }
 };
 
