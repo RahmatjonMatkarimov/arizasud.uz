@@ -44,7 +44,7 @@ export const routes = [
       { path: '/link', component: () => import('@/components/dashboard/links.vue') },
       { path: '/profile', component: () => import('@/views/Profile.vue') },
     ],
-    meta: { requiresAuth: true, allowedRoles: ['admin', 'manager', 'yuristAssistant', 'accauntant', 'deliverer', 'yurist', 'bigAdmin'] },
+    meta: { requiresAuth: true, allowedRoles: ['accauntant', 'bigAdmin'] },
   },
   {
     path: '/admin',
@@ -113,6 +113,7 @@ export const routes = [
       { path: '/warehouse', component: () => import('@/components/qrcode/WarehouseView.vue') },
       { path: '/mudir', component: () => import('@/components/admins/create.vue') },
       { path: '/warehouseHouse/:id', component: () => import('@/components/qrcode/WarehouseDetail.vue') },
+      { path: '/warehousesHouse', component: () => import('@/components/qrcode/warehouseHouse.vue') },
     ],
     meta: { requiresAuth: true, allowedRoles: ['admin', 'manager', 'yuristAssistant', 'accauntant', 'deliverer', 'yurist', 'bigAdmin'] },
   },

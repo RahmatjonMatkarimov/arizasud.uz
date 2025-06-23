@@ -4,10 +4,10 @@
         <header :class="['flex items-center justify-between p-2 shadow-2xl sticky top-0 z-40', isDarkMode ? 'bg-gray-950/90 backdrop-blur-lg' : 'bg-white/90 backdrop-blur-lg']">
             <div class="flex items-center space-x-2">
                 <img src="/logo.png" alt="Logo" class="h-5 w-5 rounded-full object-cover transition-transform duration-300 hover:scale-110" />
-                <h1 class="text-xs font-semibold truncate max-w-[60vw]">{{ translateText('Mijozlar Fayllari') }}</h1>
+                <h1 class="text-md font-semibold truncate max-w-[60vw]">{{ translateText('Mijozlar Fayllari') }}</h1>
             </div>
             <div class="flex items-center space-x-1">
-                <button @click="toggleLanguage" :class="['px-2 py-0.5 rounded-full text-[0.6rem] font-medium transition-all duration-200 transform hover:scale-105', isDarkMode ? 'bg-gray-800 text-blue-400 hover:bg-gray-700' : 'bg-gray-100 text-blue-600 hover:bg-gray-200']">
+                <button @click="toggleLanguage" :class="['px-2 py-0.5 rounded-full text-[1rem] font-medium transition-all duration-200 transform hover:scale-105', isDarkMode ? 'bg-gray-800 text-blue-400 hover:bg-gray-700' : 'bg-gray-100 text-blue-600 hover:bg-gray-200']">
                     {{ dat === 'datakril' ? 'Лотин' : 'Кирил' }}
                 </button>
                 <button @click="toggleTheme" :class="['p-1 rounded-full transition-all duration-200 transform hover:scale-105', isDarkMode ? 'bg-gray-800 text-white hover:bg-gray-700' : 'bg-gray-100 text-gray-900 hover:bg-gray-200']">
@@ -20,8 +20,8 @@
             <div class="relative">
                 <input v-model="searchQuery" type="text"
                     :placeholder="translateText('Qidiruv')"
-                    :class="['border pl-7 pr-2.5 py-1.5 rounded-full text-[0.65rem] w-full focus:outline-none focus:ring-1 transition-all duration-200', isDarkMode ? 'bg-gray-850 border-gray-800 text-white placeholder-gray-600 focus:ring-blue-500' : 'bg-white border-gray-200 text-gray-900 placeholder-gray-500 focus:ring-blue-400']" />
-                <svg class="absolute left-2 top-2 h-3 w-3" :class="[isDarkMode ? 'text-gray-600' : 'text-gray-500']" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    :class="['border pl-7 pr-2.5 py-1.5 rounded-full text-[0.85rem] w-full focus:outline-none focus:ring-1 transition-all duration-200', isDarkMode ? 'bg-gray-850 border-gray-800 text-white placeholder-gray-600 focus:ring-blue-500' : 'bg-white border-gray-200 text-gray-900 placeholder-gray-500 focus:ring-blue-400']" />
+                <svg class="absolute left-2 top-2 h-4 w-4" :class="[isDarkMode ? 'text-gray-600' : 'text-gray-500']" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
             </div>
@@ -46,7 +46,7 @@
                         <a target="_blank" class="text-[0.65rem] font-medium truncate block" :class="[isDarkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700']">
                             {{ translateText(file.name) }}
                         </a>
-                        <div class="flex flex-col space-y-0.5 text-[0.6rem]">
+                        <div class="flex flex-col space-y-0.5 text-[1rem]">
                             <div v-if="file.ClientPayment && file.ClientPayment.length">
                                 <span v-if="file.ClientPayment[file.ClientPayment.length - 1]?.remainingSum <= 0"
                                     class="text-green-400 font-medium">
@@ -63,18 +63,18 @@
                         </div>
                         <div v-if="file.LawyerTask?.[0]" class="flex justify-end">
                             <button @click.stop="toggleTaskSection(file.id)"
-                                :class="['p-0.5 rounded-full text-[0.6rem] transition-all duration-200 transform', isDarkMode ? 'bg-gray-800 text-blue-400 hover:bg-gray-700 hover:scale-110' : 'bg-gray-100 text-blue-600 hover:bg-gray-200 hover:scale-110', taskSectionOpen[file.id] ? 'rotate-180' : '']">
+                                :class="['p-0.5 rounded-full text-[1rem] transition-all duration-200 transform', isDarkMode ? 'bg-gray-800 text-blue-400 hover:bg-gray-700 hover:scale-110' : 'bg-gray-100 text-blue-600 hover:bg-gray-200 hover:scale-110', taskSectionOpen[file.id] ? 'rotate-180' : '']">
                                 ▼
                             </button>
                         </div>
                     </div>
                     <div v-if="file.LawyerTask?.[0] && taskSectionOpen[file.id]" class="px-2 pb-2 space-y-1">
-                        <h4 class="text-[0.6rem] font-semibold" :class="[isDarkMode ? 'text-gray-500' : 'text-gray-600']">
+                        <h4 class="text-[1rem] font-semibold" :class="[isDarkMode ? 'text-gray-500' : 'text-gray-600']">
                             {{ translateText('Ish jarayoni holati') }}
                         </h4>
                         <div class="space-y-0.5">
                             <div v-for="step in getUniqueStatuses(file.LawyerTask[0].ClientFileStatusHistory)" :key="step.id"
-                                :class="['flex items-center p-1 rounded-lg text-[0.6rem]', step.isLatestRejectionWithComment ? (isDarkMode ? 'bg-red-900/10' : 'bg-red-50/50') : (isDarkMode ? 'bg-green-900/10' : 'bg-green-50/50')]">
+                                :class="['flex items-center p-1 rounded-lg text-[1rem]', step.isLatestRejectionWithComment ? (isDarkMode ? 'bg-red-900/10' : 'bg-red-50/50') : (isDarkMode ? 'bg-green-900/10' : 'bg-green-50/50')]">
                                 <div class="mr-1">
                                     <div :class="['rounded-full w-4 h-4 flex items-center justify-center', step.completed ? (isDarkMode ? 'bg-green-900' : 'bg-green-100') : (isDarkMode ? 'bg-gray-800' : 'bg-gray-100')]">
                                         <img class="w-2.5 h-2.5" :src="step.isLatestRejectionWithComment ? '/x.png' : '/check-mark.png'" alt="Status Icon" />
@@ -103,7 +103,7 @@
                 <h2 class="text-xs font-semibold mb-1.5">
                     {{ translateText('To\'lov tafsilotlari') }}
                 </h2>
-                <div class="mb-1.5 text-[0.6rem]">
+                <div class="mb-1.5 text-[1rem]">
                     <span class="text-green-300 font-medium" v-if="selectedPaymentDetails && selectedPaymentDetails[selectedPaymentDetails.length - 1]?.remainingSum <= 0">
                         {{ translateText('To\'langan') }}
                     </span>
@@ -112,7 +112,7 @@
                     </span>
                 </div>
                 <ul class="list-none p-0 m-0 space-y-1">
-                    <li v-for="payment in selectedPaymentDetails" :key="payment.id" :class="['p-1.5 rounded-lg text-[0.6rem]', isDarkMode ? 'bg-gray-850/30' : 'bg-gray-100/30']">
+                    <li v-for="payment in selectedPaymentDetails" :key="payment.id" :class="['p-1.5 rounded-lg text-[1rem]', isDarkMode ? 'bg-gray-850/30' : 'bg-gray-100/30']">
                         <div>{{ translateText('Jami summa') }}: {{ payment.TotalSum }} {{ translateText('so\'m') }}</div>
                         <div>{{ translateText('Qoldiq summa') }}: {{ payment.remainingSum }} {{ translateText('so\'m') }}</div>
                         <div>{{ translateText('To\'langan summa') }}: {{ payment.paidSum }} {{ translateText('so\'m') }}</div>
@@ -479,7 +479,7 @@ watch(() => localStorage.getItem('til'), (newLang) => {
 
     header button {
         padding: 0.25rem 0.5rem;
-        font-size: 0.6rem;
+        font-size: 1rem;
     }
 
     .px-2 {
@@ -500,7 +500,7 @@ watch(() => localStorage.getItem('til'), (newLang) => {
     }
 
     ul li h4 {
-        font-size: 0.6rem;
+        font-size: 1rem;
     }
 
     ul li .w-4 {

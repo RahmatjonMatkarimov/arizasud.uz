@@ -18,6 +18,7 @@ export default {
       intervalId: null,
       isLoading: inject('isLoading'),
       data: 0,
+      dataTotal: 0,
       data1: 0,
       data2: 0,
       data3: 0,
@@ -26,7 +27,7 @@ export default {
       data6: 0,
       animatedOylik: 0,
       data7: 0,
-      oylik: 0,
+      oylik: { totalAllSalaries: 0, totalAllBonuses: 0, totalAllDeductions: 0 },
       animatedData: 0,
       animatedData1: 0,
       animatedData2: 0,
@@ -69,7 +70,24 @@ export default {
       this.isLoading = true;
       try {
         const { data } = await axios.get(`${URL}/salary/calculate-all-to-date`);
-        this.oylik = data.summary;
+        // Assuming data is an array of salary records with createdAt
+        const filteredSalaries = data.filter((item) => {
+          if (!item.createdAt) return false;
+          const date = new Date(item.createdAt);
+          return (
+            date.getFullYear() === Number(this.selectedYear) &&
+            date.getMonth() === Number(this.selectedMonth)
+          );
+        });
+        // Aggregate filtered salaries
+        this.oylik = filteredSalaries.reduce(
+          (acc, item) => ({
+            totalAllSalaries: acc.totalAllSalaries + (item.totalSalary || 0),
+            totalAllBonuses: acc.totalAllBonuses + (item.totalBonuses || 0),
+            totalAllDeductions: acc.totalAllDeductions + (item.totalDeductions || 0),
+          }),
+          { totalAllSalaries: 0, totalAllBonuses: 0, totalAllDeductions: 0 }
+        );
       } catch (error) {
         console.error("Error fetching salary:", error);
       } finally {
@@ -80,9 +98,18 @@ export default {
       this.isLoading = true;
       try {
         const { data } = await axios.get(`${URL}/client-files/with-debt`);
-        this.data5 = data.count;
+        // Filter client files by selected year and month
+        const filteredData = data.filter((item) => {
+          if (!item.createdAt) return false;
+          const date = new Date(item.createdAt);
+          return (
+            date.getFullYear() === Number(this.selectedYear) &&
+            date.getMonth() === Number(this.selectedMonth)
+          );
+        });
+        this.data5 = filteredData.length; // Count of filtered debt records
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching debt data:", error);
       } finally {
         this.isLoading = false;
       }
@@ -139,6 +166,7 @@ export default {
       try {
         let totalRevenue = 0,
           totalRevenue1 = 0,
+          totalRevenue2 = 0,
           totalExpense = 0,
           totalTaxExpense = 0,
           totalBusinessExpense = 0;
@@ -185,8 +213,15 @@ export default {
           .filter((item) => item.type === "reports")
           .forEach((item) => {
             if (Array.isArray(item.History)) {
-              item.History.forEach((history) => {
-                if (history.createdAt && !isNaN(Math.floor(history.totalSum))) {
+              item.History.filter((history) => {
+                if (!history.createdAt) return false;
+                const date = new Date(history.createdAt);
+                return (
+                  date.getFullYear() === Number(this.selectedYear) &&
+                  date.getMonth() === Number(this.selectedMonth)
+                );
+              }).forEach((history) => {
+                if (!isNaN(Math.floor(history.totalSum))) {
                   const monthIndex = new Date(history.createdAt).getMonth();
                   monthlyExpenses[monthIndex] += Math.floor(history.totalSum);
                   totalBusinessExpense += Math.floor(history.totalSum);
@@ -199,8 +234,15 @@ export default {
           .filter((item) => item.type === "taxes")
           .forEach((item) => {
             if (Array.isArray(item.History)) {
-              item.History.forEach((history) => {
-                if (history.createdAt && !isNaN(Math.floor(history.totalSum))) {
+              item.History.filter((history) => {
+                if (!history.createdAt) return false;
+                const date = new Date(history.createdAt);
+                return (
+                  date.getFullYear() === Number(this.selectedYear) &&
+                  date.getMonth() === Number(this.selectedMonth)
+                );
+              }).forEach((history) => {
+                if (!isNaN(Math.floor(history.totalSum))) {
                   const monthIndex = new Date(history.createdAt).getMonth();
                   monthlyExpenses[monthIndex] += Math.floor(history.totalSum);
                   totalTaxExpense += Math.floor(history.totalSum);
@@ -225,30 +267,22 @@ export default {
               new Date(b.ClientPayment?.[b.ClientPayment.length - 1]?.createdAt || 0)
           );
 
-        this.data7 = filteredClientFiles.filter((file) => {
-          const payment = file.ClientPayment?.[file.ClientPayment.length - 1];
-          if (!payment?.createdAt) return false;
-          const paymentDate = new Date(payment.createdAt);
-          const today = new Date();
-          return (
-            paymentDate.getFullYear() === today.getFullYear() &&
-            paymentDate.getMonth() === today.getMonth() &&
-            paymentDate.getDate() === today.getDate()
-          );
-        }).length;
+        this.data7 = filteredClientFiles.length; // Contracts in selected period
+        this.data6 = filteredClientFiles.length; // Total contracts in selected period
 
         filteredClientFiles.forEach((file) => {
           const payment = file.ClientPayment?.[file.ClientPayment.length - 1];
-          file.ClientPayment?.length > 0 && this.data6++;
           if (payment && payment.createdAt && !isNaN(Math.floor(payment.TotalSum))) {
             const monthIndex = new Date(payment.createdAt).getMonth();
             monthlyRevenue[monthIndex] += Math.floor(payment.TotalSum);
-            totalRevenue += Math.floor(payment.TotalSum);
+            totalRevenue += Math.floor(payment.netProfit);
+            totalRevenue2 += Math.floor(payment.TotalSum);
             totalRevenue1 += Math.floor(payment.remainingSum || 0);
           }
         });
 
         this.data = totalRevenue;
+        this.dataTotal = totalRevenue2;
         this.data1 = totalExpense;
         this.data2 = totalTaxExpense;
         this.data3 = totalBusinessExpense;
@@ -367,6 +401,12 @@ export default {
           return [
             {
               label: t("Umumiy foyda:"),
+              value: this.formatNumberWithDots(this.dataTotal),
+              suffix: t("so'm"),
+              class: "bg-gray-50 dark:bg-slate-700",
+            },
+            {
+              label: t("Bonuslar tarqatilgandan songi foyda:"),
               value: this.formatNumberWithDots(this.data),
               suffix: t("so'm"),
               class: "bg-gray-50 dark:bg-slate-700",
@@ -411,29 +451,33 @@ export default {
         case "ish":
           return [
             {
-              label: t("Barcha ishchilarning yakuniy oylik maoshi:"),
+              label: t(`Oylik maoshlar (${this.monthNames[this.selectedMonth]} ${this.selectedYear}):`),
               value: this.formatNumberWithDots(this.oylik.totalAllSalaries),
               suffix: t("so'm"),
               class: "bg-purple-50 dark:bg-purple-900/50",
               valueClass: "text-purple-600 dark:text-purple-400 font-bold",
             },
             {
-              label: t("Barcha ishchilarning bonuslari yig'indisi:"),
+              label: t(`Bonuslar (${this.monthNames[this.selectedMonth]} ${this.selectedYear}):`),
               value: this.formatNumberWithDots(this.oylik.totalAllBonuses),
               suffix: t("so'm"),
               class: "bg-purple-50 dark:bg-purple-900/50",
               valueClass: "text-purple-600 dark:text-purple-400 font-bold",
             },
             {
-              label: t("Barcha ishchilarning jarimalari yig'indisi:"),
+              label: t(`Jarimalar (${this.monthNames[this.selectedMonth]} ${this.selectedYear}):`),
               value: this.formatNumberWithDots(this.oylik.totalAllDeductions),
               suffix: t("so'm"),
               class: "bg-red-50 dark:bg-red-900/50",
               valueClass: "text-red-600 dark:text-red-400 font-bold",
             },
             {
-              label: t("Umumiy oylik:"),
-              value: this.formatNumberWithDots(this.oylik.totalAllSalaries + this.oylik.totalAllBonuses - this.oylik.totalAllDeductions),
+              label: t(`Umumiy oylik (${this.monthNames[this.selectedMonth]} ${this.selectedYear}):`),
+              value: this.formatNumberWithDots(
+                this.oylik.totalAllSalaries +
+                  this.oylik.totalAllBonuses -
+                  this.oylik.totalAllDeductions
+              ),
               suffix: t("so'm"),
               class: "bg-green-50 dark:bg-green-900/50",
               valueClass: "text-green-600 dark:text-green-400 font-bold",
@@ -442,18 +486,18 @@ export default {
         case "debts":
           return [
             {
-              label: t("Bugun tuzgan shartmonalar soni:"),
+              label: t(`Shartnomalar soni (${this.monthNames[this.selectedMonth]} ${this.selectedYear}):`),
               value: this.formatNumberWithDots(this.data7),
               class: "bg-gray-50 dark:bg-slate-700",
             },
             {
-              label: t("Shartmona bo'yicha qarzlar soni"),
+              label: t(`Qarzlar soni (${this.monthNames[this.selectedMonth]} ${this.selectedYear}):`),
               value: this.formatNumberWithDots(this.data5),
               class: "bg-red-50 dark:bg-red-900/50",
               valueClass: "text-red-600 dark:text-red-400 font-bold",
             },
             {
-              label: t("Bugungacha shartmona tuzganlar soni:"),
+              label: t(`Umumiy shartnomalar (${this.monthNames[this.selectedMonth]} ${this.selectedYear}):`),
               value: this.formatNumberWithDots(this.data6),
               class: "bg-green-50 dark:bg-green-900/50",
               valueClass: "text-green-600 dark:text-green-400 font-bold",
@@ -480,6 +524,8 @@ export default {
           this.fetchFinancialData(),
           this.getClientInvoices(),
           this.getClientTransactions(),
+          this.GetOylik(),
+          this.Getqarz(),
         ]);
       } catch (error) {
         console.error("Error in handleSortChange:", error);
@@ -597,25 +643,25 @@ export default {
         >
           <KpiCard
             class="kpi-card transition-all text-purple-600 dark:text-white bg-purple-500 bg-opacity-20 dark:bg-gradient-to-r from-[#2a3655] to-[#3d4e81] rounded-lg dark:border border-white/5 shadow-lg hover:shadow-blue-500/5 hover:border-white/10 duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-2xl relative overflow-hidden group cursor-pointer"
-            title="Ishchilarni yakuniy oylik maoshi"
+            :title="dat === 'datakril' ? translateText(`Ishchilarni yakuniy oylik maoshi (${monthNames[selectedMonth]} ${selectedYear})`) : `Ishchilarni yakuniy oylik maoshi (${monthNames[selectedMonth]} ${selectedYear})`"
             :value="formatNumberWithDots(animatedOylik) + ` so'm`"
             @click="openModal('Ishchilar maoshi', $event, 'ish')"
           />
           <KpiCard
             class="kpi-card transition-all text-purple-600 dark:text-white bg-purple-500 bg-opacity-20 dark:bg-gradient-to-r from-[#2a3655] to-[#3d4e81] rounded-lg dark:border border-white/5 shadow-lg hover:shadow-blue-500/5 hover:border-white/10 duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-2xl relative overflow-hidden group cursor-pointer"
-            title="Umumiy Xarajatlar"
+            :title="dat === 'datakril' ? translateText(`Umumiy Xarajatlar (${monthNames[selectedMonth]} ${selectedYear})`) : `Umumiy Xarajatlar (${monthNames[selectedMonth]} ${selectedYear})`"
             :value="formatNumberWithDots(animatedData1) + ` so'm`"
             @click="openModal('Umumiy xarajatlar', $event, 'expenses')"
           />
           <KpiCard
             class="kpi-card transition-all text-orange-600 dark:text-white bg-orange-500 bg-opacity-20 dark:bg-gradient-to-r from-[#2a3655] to-[#3d4e81] rounded-lg dark:border border-white/5 shadow-lg hover:shadow-blue-500/5 hover:border-white/10 duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-2xl relative overflow-hidden group cursor-pointer"
-            title="Shartmona bo'yicha qarzlar"
+            :title="dat === 'datakril' ? translateText(`Shartmona bo'yicha qarzlar (${monthNames[selectedMonth]} ${selectedYear})`) : `Shartmona bo'yicha qarzlar (${monthNames[selectedMonth]} ${selectedYear})`"
             :value="formatNumberWithDots(animatedData4) + ` so'm`"
             @click="openModal('Shartmona bo\'yicha qarzlar', $event, 'debts')"
           />
           <KpiCard
             class="kpi-card transition-all text-green-600 dark:text-white bg-green-500 bg-opacity-20 dark:bg-gradient-to-r from-[#2a3655] to-[#3d4e81] rounded-lg dark:border border-white/5 shadow-lg hover:shadow-blue-500/5 hover:border-white/10 duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-2xl relative overflow-hidden group cursor-pointer"
-            title="Foyda"
+            :title="dat === 'datakril' ? translateText(`Foyda (${monthNames[selectedMonth]} ${selectedYear})`) : `Foyda (${monthNames[selectedMonth]} ${selectedYear})`"
             :value="formatNumberWithDots(animatedData) + ` so'm`"
             @click="openModal('Foyda', $event, 'profit')"
           />

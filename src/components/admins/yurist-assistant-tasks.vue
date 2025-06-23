@@ -29,16 +29,117 @@ const selectedAdminId = ref(null);
 const selectedDoc = ref(null); // Store the full document object
 const selectedDocId = ref(null);
 const selecteradminId = ref(0)
-// New reactive state for admin dropdown modal
-const hoveredAdmin = ref(null); // Tracks the hovered admin
-const showHoverModal = ref(false); // Toggles hover modal visibility
+
+const hoveredAdmin = ref(null);
+const showHoverModalOpen = ref(false);
+const hoverPosition = ref({ top: 0, left: 0 });
+const hoverTimeout = ref(null);
+const hideTimeout = ref(null);
+const showHoverModal = (admin, event) => {
+  if (!event || !event.currentTarget) {
+    console.error('Event or currentTarget is null');
+    return;
+  }
+  hoveredAdmin.value = admin;
+  showHoverModalOpen.value = true;
+  const rect = event.currentTarget.getBoundingClientRect();
+  const modalWidth = 300;
+  const modalHeight = 300;
+  let top = rect.bottom + window.scrollY + 5;
+  let left = rect.left + window.scrollX;
+  if (left + modalWidth > window.innerWidth) {
+    left = rect.right + window.scrollX - modalWidth;
+  }
+  if (top + modalHeight > window.innerHeight + window.scrollY) {
+    top = rect.top + window.scrollY - modalHeight - 5;
+  }
+  hoverPosition.value = { top, left };
+};
+
+const hideHoverModal = () => {
+  showHoverModalOpen.value = false;
+  hoveredAdmin.value = null;
+};
+
+const showHoverModalDelayed = (admin, element) => {
+  if (hoverTimeout.value) {
+    clearTimeout(hoverTimeout.value);
+    hoverTimeout.value = null;
+  }
+  if (hideTimeout.value) {
+    clearTimeout(hideTimeout.value);
+    hideTimeout.value = null;
+  }
+  
+  if (!element) {
+    console.error('Element is null');
+    return;
+  }
+  
+  hoveredAdmin.value = admin;
+  showHoverModalOpen.value = true;
+  
+  const rect = element.getBoundingClientRect();
+  
+  const modalWidth = 300;
+  const modalHeight = 300;
+  
+  let top = rect.bottom + window.scrollY + 5;
+  let left = rect.left + window.scrollX;
+  
+  // Boundary checks
+  if (left + modalWidth > window.innerWidth) {
+    left = rect.right + window.scrollX - modalWidth;
+  }
+  
+  if (top + modalHeight > window.innerHeight + window.scrollY) {
+    top = rect.top + window.scrollY - modalHeight - 5;
+  }
+  
+  hoverPosition.value = { top, left };
+  console.log('Final position:', hoverPosition.value);
+};
+
+const hideHoverModalDelayed = () => {
+  console.log('hideHoverModalDelayed called');
+  
+  // Clear existing timeouts
+  if (hoverTimeout.value) {
+    clearTimeout(hoverTimeout.value);
+    hoverTimeout.value = null;
+  }
+  if (hideTimeout.value) {
+    clearTimeout(hideTimeout.value);
+    hideTimeout.value = null;
+  }
+  
+  hideTimeout.value = setTimeout(() => {
+    hideHoverModal();
+  }, 100);
+};
+const cancelHide = () => {
+  console.log('cancelHide called');
+  if (hideTimeout.value) {
+    clearTimeout(hideTimeout.value);
+    hideTimeout.value = null;
+  }
+};
+const cleanup = () => {
+  if (hoverTimeout.value) {
+    clearTimeout(hoverTimeout.value);
+  }
+  if (hideTimeout.value) {
+    clearTimeout(hideTimeout.value);
+  }
+};
+
 const dat = ref(localStorage.getItem("til") || "datalotin");
 
 let intervalId = null;
 const checkLanguageChange = () => {
   const currentLang = localStorage.getItem("til") || "datalotin";
-  if (currentLang !== dat.value) {
-    dat.value = currentLang;
+  if (currentLang !== dat) {
+    dat = currentLang;
   }
 };
 
@@ -48,6 +149,8 @@ onMounted(() => {
 
 onUnmounted(() => {
   if (intervalId) clearInterval(intervalId);
+   cleanup();
+
 });
 
 const statusCards = [
@@ -526,91 +629,111 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col bg">
+  <div class="min-h-screen flex flex-col bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
     <!-- Main Content -->
-    <main class="flex-1 py-6">
-      <div class="container mx-auto px-4">
+    <main class="flex-1 py-8">
+      <div class="container mx-auto px-6">
         <!-- Status Cards as Navigation -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          <div v-for="card in dynamicStatusCards" :key="card.id" @click="setActiveSection(card.section)"
-            class="bg-indigo-300 rounded-xl shadow-soft p-5 h-full border-l-[6px] transition-all duration-300 hover:shadow-medium cursor-pointer"
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div
+            v-for="card in dynamicStatusCards"
+            :key="card.id"
+            @click="setActiveSection(card.section)"
+            class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border-l-4 transition-all duration-300 hover:shadow-2xl hover:scale-105 cursor-pointer"
             :class="{
-              'border-success-500': card.color === 'success' && activeSection === card.section,
-              'border-error-500': card.color === 'error' && activeSection === card.section,
+              'border-green-500': card.color === 'success' && activeSection === card.section,
+              'border-red-500': card.color === 'error' && activeSection === card.section,
               'border-gray-500': card.color === 'as' && activeSection === card.section,
-            }">
+            }"
+          >
             <div class="flex justify-between items-start">
-              <h3 class="text-[19px] font-semibold text-gray-800">{{ dat == 'datakril' ?
-                translateText(card.title) :card.title }}</h3>
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                {{ dat === 'datakril' ? translateText(card.title) : card.title }}
+              </h3>
             </div>
             <div class="mt-4">
-              <p class="text-3xl font-bold text-gray-900 mb-1">{{ card.count }}</p>
+              <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ card.count }}</p>
             </div>
           </div>
         </div>
 
-        <!-- Document List Section (Filtered by Status) -->
-        <div class="animate-fade-in">
-          <div class="bg-white rounded-xl shadow-soft overflow-hidden">
-            <div class="p-4 flex justify-between items-center bg-indigo-300">
-              <h3 class="text-[19px] font-semibold text-gray-800">
+        <!-- Document List Section -->
+        <div class="animate-fade-in ">
+          <div class="bg-white dark:bg-gray-800  rounded-2xl shadow-lg overflow-hidden">
+            <div class="p-6 flex justify-between items-center bg-gray-50 dark:bg-gray-700">
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
                 {{ dat === 'datakril' ? translateText('Yangi fayllar') : 'Yangi fayllar' }}
               </h3>
-              <div class="flex space-x-2">
-                <input v-model="searchQuery" type="text"
+              <div class="flex space-x-3">
+                <input
+                  v-model="searchQuery"
+                  type="text"
                   :placeholder="dat === 'datakril' ? translateText('Hujjat qidirish...') : 'Hujjat qidirish...'"
-                  class="px-3 py-1.5 border bg-lime-600 search text-white border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                  class="px-4 py-2 bg-white dark:bg-gray-600 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-300"
+                />
               </div>
             </div>
 
-            <ul class="bg-indigo-300">
+            <ul class="bg-white dark:bg-gray-800 ">
               <li v-for="(doc, index) in filteredDocuments" :key="doc.id">
-                <div class="px-5 py-4 border-b border-gray-300 flex items-center space-x-3 cursor-pointer"
-                  @click="toggleExpand(doc.id)">
+                <div
+                  class="px-6 py-5 border-b border-gray-200 dark:border-gray-700 flex items-center space-x-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300"
+                  @click="toggleExpand(doc.id)"
+                >
                   <div class="flex-1">
                     <div class="flex items-center justify-between">
-                      <div class="flex items-center space-x-3">
+                      <div class="flex items-center space-x-4">
                         <div
-                          class="w-10 h-10 border-2 rounded-full flex items-center justify-center text-primary-800 font-semibold">
+                          class="w-10 h-10 border-2 border-blue-600 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400 font-semibold"
+                        >
                           {{ index + 1 }}
                         </div>
-                        <span class="font-medium text-gray-900 line-clamp-1">{{ dat === 'datakril' ?
-                          translateText(doc.title) : doc.title }}</span>
+                        <span class="font-medium text-gray-900 dark:text-gray-100 line-clamp-1">
+                          {{ dat === 'datakril' ? translateText(doc.title) : doc.title }}
+                        </span>
                       </div>
                       <div class="flex items-center space-x-4">
-                        <span class="text-sm text-gray-500 hidden md:block">
+                        <span class="text-sm text-gray-500 dark:text-gray-400 hidden md:block">
                           {{ format(new Date(doc.date), 'dd.MM.yyyy') }}
                         </span>
-                        <span class="text-gray-400 transition-transform duration-300"
-                          :class="{ 'rotate-180': expandedDocId === doc.id }">
+                        <span
+                          class="text-gray-500 dark:text-gray-400 transition-transform duration-300"
+                          :class="{ 'rotate-180': expandedDocId === doc.id }"
+                        >
                           ▼
                         </span>
                       </div>
                     </div>
 
-                    <div v-if="expandedDocId === doc.id" class="mt-4 w-[86%] 2xl:w-[100%]">
+                    <div v-if="expandedDocId === doc.id" class="mt-6 w-full">
                       <div class="grid grid-cols-1 md:grid-cols-1 gap-4">
                         <div>
-                          <p class="py-1 text-gray-600">
-                            <span class="font-medium text-gray-600">
+                          <p class="py-1 text-gray-500 dark:text-gray-400">
+                            <span class="font-medium text-gray-800 dark:text-gray-200">
                               {{ dat === 'datakril' ? translateText('Ma\'sul Shaxs:') : 'Ma\'sul Shaxs:' }}
                             </span>
-                            {{ dat === 'datakril' ? translateText(`${doc.user.name} ${doc.user.surname}
-                            ${doc.user.dadname}`) : `${doc.user.name} ${doc.user.surname} ${doc.user.dadname}` }}
+                            {{
+                              dat === 'datakril'
+                                ? translateText(`${doc.user.name} ${doc.user.surname} ${doc.user.dadname}`)
+                                : `${doc.user.name} ${doc.user.surname} ${doc.user.dadname}`
+                            }}
                           </p>
                           <p class="py-1">
-                            <span class="font-medium text-gray-600">
+                            <span class="font-medium text-gray-800 dark:text-gray-200">
                               {{ dat === 'datakril' ? translateText('Holati: ') : 'Holati: ' }}
                             </span>
-                            <span class="text-gray-600" :class="getStatusColor(doc.status)">
-                              {{ dat === 'datakril' ? translateText(getStatus(getLastChar(doc.status))) :
-                                getStatus(getLastChar(doc.status)) }}
+                            <span class="text-gray-500 dark:text-gray-400" :class="getStatusColor(doc.status)">
+                              {{
+                                dat === 'datakril'
+                                  ? translateText(getStatus(getLastChar(doc.status)))
+                                  : getStatus(getLastChar(doc.status))
+                              }}
                             </span>
                           </p>
                         </div>
                         <div>
-                          <p class="md:hidden py-1">
-                            <span class="font-medium text-gray-600">
+                          <p class="md:hidden py-1 text-gray-500 dark:text-gray-400">
+                            <span class="font-medium text-gray-800 dark:text-gray-200">
                               {{ dat === 'datakril' ? translateText('Sana:') : 'Sana:' }}
                             </span>
                             {{ format(new Date(doc.date), 'dd.MM.yyyy') }}
@@ -618,45 +741,61 @@ onMounted(() => {
                         </div>
                       </div>
 
-                      <!-- Workflow Timeline Inside Each Document -->
+                      <!-- Workflow Timeline -->
                       <div class="mt-6">
-                        <h4 class="text-sm font-semibold text-gray-800 mb-2">
+                        <h4 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
                           {{ dat === 'datakril' ? translateText('Ish jarayoni holati') : 'Ish jarayoni holati' }}
                         </h4>
-                        <div class="w-full">
+                        <div class="w-full overflow-scroll ">
                           <div class="inline-block min-w-full">
-                            <div class="flex items-center">
+                            <div class="flex items-center max-w-[10px]">
                               <template v-for="(step, index) in getTimelineSteps(doc.history)" :key="step.id">
-                                <div :class="[
-                                  'relative flex flex-col rounded-xl bg-white items-center p-1 max-w-[135px]',
-                                  step.isLatestRejectionWithComment ? 'border-[6px] border-red-600' : 'border-[6px] border-lime-600'
-                                ]">
+                                <div
+                                  :class="[
+                                    'relative flex flex-col rounded-xl bg-white dark:bg-gray-800 items-center p-3 max-w-[140px]',
+                                    step.isLatestRejectionWithComment ? 'border-4 border-red-600' : 'border-4 border-green-600',
+                                  ]"
+                                >
                                   <div class="relative z-10">
-                                    <div class="rounded-full bg-gray-200 flex items-center justify-center text-gray-600"
-                                      :class="step.completed ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-400'">
-                                      <img class="w-[50px]"
+                                    <div
+                                      class="rounded-full flex items-center justify-center w-10 h-10"
+                                      :class="!step.isLatestRejectionWithComment ? 'bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300' : 'bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300'"
+                                    >
+                                      <img
+                                        class="w-6 h-6"
                                         :src="step.isLatestRejectionWithComment ? '/x.png' : '/check-mark.png'"
-                                        :alt="dat === 'datakril' ? translateText(step.isLatestRejectionWithComment ? 'Rad etildi' : 'Bajarildi') : (step.isLatestRejectionWithComment ? 'Rejected' : 'Completed')" />
+                                        :alt="
+                                          dat === 'datakril'
+                                            ? translateText(step.isLatestRejectionWithComment ? 'Rad etildi' : 'Bajarildi')
+                                            : step.isLatestRejectionWithComment
+                                            ? 'Rejected'
+                                            : 'Completed'
+                                        "
+                                      />
                                     </div>
                                   </div>
-                                  <div class="mt-2 text-center">
+                                  <div class="mt-3 text-center">
                                     <div class="group relative">
-                                      <p class="text-[16px] font-medium text-gray-700 p-1 line-clamp-2 w-[120px] mb-1">
+                                      <p class="text-sm font-medium text-gray-800 dark:text-gray-200 line-clamp-2 w-[120px] mb-1">
                                         {{ dat === 'datakril' ? translateText(step.title) : step.title }}
                                       </p>
                                       <p
-                                        class="absolute -ml-[70%] hidden -mt-2 rounded-md z-40 bg-gray-600 group-hover:block min-w-[300px] text-center">
+                                        class="absolute -ml-[70%] hidden -mt-2 rounded-md z-40 bg-gray-800 dark:bg-gray-700 text-gray-200 dark:text-gray-100 group-hover:block min-w-[300px] text-center p-2"
+                                      >
                                         {{ dat === 'datakril' ? translateText(step.title) : step.title }}
                                       </p>
                                     </div>
-                                    <p class="text-[16px] text-orange-500">
+                                    <p class="text-sm text-orange-500 dark:text-orange-400">
                                       {{ format(new Date(step.date), 'dd.MM.yyyy') }}
                                     </p>
                                   </div>
                                 </div>
                                 <div v-if="index < getTimelineSteps(doc.history).length - 1">
-                                  <div class="w-[70px] rotate-180 h-5 overflow-hidden">
-                                    <div class="h-full bg-lime-600 bg-stripes" style="width: 100%"></div>
+                                  <div class="w-16 h-5 bg-gray-300 rotate-180 dark:bg-gray-700">
+                                    <div
+                                      class="h-full bg-green-600 dark:bg-green-700 bg-stripes"
+                                      style="width: 100%"
+                                    ></div>
                                   </div>
                                 </div>
                               </template>
@@ -664,22 +803,39 @@ onMounted(() => {
                           </div>
                         </div>
                       </div>
-                      <div class="mt-4 flex justify-end space-x-2">
-                        <button @click="router.push('/Check/' + doc.clientFile.clientSection.clientSectionBody.client.id)"
-                          class="btn bg-indigo-400 text-sm">
-                          {{ dat === 'datakril' ? translateText('Buyurtmachini shaxsiy kabinetiga otish') :
-                            'Buyurtmachini shaxsiy kabinetiga otish' }}
+                      <div class="mt-6 flex justify-end space-x-3">
+                        <button
+                          @click="router.push('/Check/' + doc.clientFile.clientSection.clientSectionBody.client.id)"
+                          class="btn bg-blue-600 dark:bg-blue-500 text-white text-sm hover:bg-blue-700 dark:hover:bg-blue-600"
+                        >
+                          {{
+                            dat === 'datakril'
+                              ? translateText('Buyurtmachini shaxsiy kabinetiga otish')
+                              : 'Buyurtmachini shaxsiy kabinetiga otish'
+                          }}
                         </button>
-                        <button v-if="hasRejectionComment(doc.history)" class="btn bg-yellow-500 text-white text-sm"
-                          @click="openReasonModal(getLatestRejectionComment(doc.history))">
+                        <button
+                          v-if="hasRejectionComment(doc.history)"
+                          class="btn bg-yellow-600 dark:bg-yellow-500 text-white text-sm hover:bg-yellow-700 dark:hover:bg-yellow-600"
+                          @click="openReasonModal(getLatestRejectionComment(doc.history))"
+                        >
                           {{ dat === 'datakril' ? translateText('Sababni Ko\'rish') : 'Sababni Ko\'rish' }}
                         </button>
-                        <button class="btn bg-red-500 text-white text-sm" @click="openRejectModal(doc)">
+                        <button
+                          class="btn bg-red-600 dark:bg-red-500 text-white text-sm hover:bg-red-700 dark:hover:bg-red-600"
+                          @click="openRejectModal(doc)"
+                        >
                           {{ dat === 'datakril' ? translateText('Rad etish') : 'Rad etish' }}
                         </button>
-                        <button class="btn btn-primary text-sm" @click="moveToNextStage(doc.id)">
-                          {{ dat === 'datakril' ? translateText('Keyingi bosqichga o\'tish') :
-                           'Keyingi bosqichga o\'tish' }}
+                        <button
+                          class="btn bg-green-600 dark:bg-green-500 text-white text-sm hover:bg-green-700 dark:hover:bg-green-600"
+                          @click="moveToNextStage(doc.id)"
+                        >
+                          {{
+                            dat === 'datakril'
+                              ? translateText('Keyingi bosqichga o\'tish')
+                              : 'Keyingi bosqichga o\'tish'
+                          }}
                         </button>
                       </div>
                     </div>
@@ -691,129 +847,150 @@ onMounted(() => {
         </div>
       </div>
     </main>
-  </div>
-  <!-- Rejection Modal -->
-  <div v-if="isModalOpen" @click="isModalOpen = false" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-    <div @click.stop class="bg-white p-6 rounded-lg w-[400px]">
-      <h2 class="text-xl text-black font-bold mb-4">
-        {{ dat === 'datakril' ? translateText('Rad qilish sababi') : 'Rad qilish sababi' }}
-      </h2>
-      <textarea v-model="comment"
-        :placeholder="dat === 'datakril' ? translateText('Izoh kiriting...') : 'Izoh kiriting...'"
-        class="w-full border p-2 rounded mb-4 text-gray-600"required></textarea>
-      <div class="flex justify-end">
-        <button @click="cancelReject" class="btn btn-secondary text-sm mr-2">
-          {{ dat === 'datakril' ? translateText('Bekor qilish') : 'Bekor qilish' }}
-        </button>
-        <button @click="confirmReject" class="btn bg-red-500 text-white text-sm">
-          {{ dat === 'datakril' ? translateText('Yuborish') : 'Yuborish' }}
-        </button>
-      </div>
-    </div>
-  </div>
-  <!-- Reason Modal -->
-  <div v-if="isReasonModalOpen" @click="isReasonModalOpen = false" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-    <div @click.stop class="bg-white p-6 rounded-lg w-[400px]">
-      <h2 class="text-xl text-black font-bold mb-4">
-        {{ dat === 'datakril' ? translateText('Rad etish sababi') : 'Rad qilish sababi' }}
-      </h2>
-      <p class="text-gray-600 break-words mb-4">{{ rejectionComment }}</p>
-      <div class="flex justify-end">
-        <button @click="closeReasonModal" class="btn btn-secondary text-sm">
-          {{ dat === 'datakril' ? translateText('Yopish') : 'Yopish' }}
-        </button>
-      </div>
-    </div>
-  </div>
-  <!-- Admin Selection Modal -->
-  <div v-if="isAdminModalOpen" @click="isAdminModalOpen = false" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-    <div @click.stop class="bg-gray-200 p-2 rounded-lg w-[400px] max-h-[500px] border border-gray-300 shadow-lg">
-      <h2 class="text-xl text-black font-bold mb-4 px-3">
-        {{ dat === 'datakril' ? translateText('Ma\'sul shaxsni tanlang') : 'Ma\'sul shaxsni tanlang' }}
-      </h2>
-      <div class="flex flex-col gap-2">
-        <div v-for="admin in adminData" :key="admin.id"
-          class="p-3 flex gap-4 border-2 border-blue-500 h-[70px] rounded-md items-center cursor-pointer hover:bg-gray-300 text-black relative"
-          @click="selectAdmin(admin)" @mouseenter="hoveredAdmin = admin; showHoverModal = true"
-          @mouseleave="showHoverModal = false">
-          <img class="w-[50px]" :src="URL + '/upload/' + admin.img"
-            :alt="dat === 'datakril' ? translateText('Rasm') : 'Image'" />
-          <h1 class="text-black text-[15px] font-bold">
-            {{ dat === 'datakril' ? translateText(`${admin.name} ${admin.surname} ${admin.dadname}`) : `${admin.name}
-            ${admin.surname} ${admin.dadname}` }}
-          </h1>
-          <!-- Hover Modal -->
-          <div v-if="showHoverModal && hoveredAdmin?.id === admin.id"
-            class="absolute bottom-0 -right-[250px] p-3 bg-white border border-gray-300 rounded-lg shadow-lg z-20 max-h-[500px] overflow-scroll min-w-[300px]">
-            <p class="text-black">
-              {{ dat === 'datakril' ? translateText('Bajaradigan ishlari') : 'Bajaradigan ishlari' }}
-            </p>
-            <div v-if="admin?.LawyerTask?.length > 0">
-              <div class="text-black bg-gray-300 flex justify-between p-2 rounded-lg my-1"
-                v-for="item in admin.LawyerTask" :key="item.id">
-                <p class="text-black">
-                  {{ dat === 'datakril' ? translateText(item.name) : item.name }}
-                </p>
-                <h1 class="text-black">{{ dat == 'datakril' ? translateText('holati:') : 'holati:' }} <span
-                    class="text-red-500">
-                    {{
-                      item.ClientFileStatusHistory[item.ClientFileStatusHistory.length - 1]?.status === 'status8' ?
-                        dat === 'datakril' ? translateText('1-Bosqich') : '1-Bosqich' :
-                        item.ClientFileStatusHistory[item.ClientFileStatusHistory.length - 1]?.status === 'status5' ?
-                        dat === 'datakril' ? translateText('1-Bosqich') : '1-Bosqich' : ''
-                    }}
-                  </span></h1>
-              </div>
-            </div>
-            <div v-else class="text-black text-center p-2">
-              {{ dat === 'datakril' ? translateText('Bajaradigan ishlari yo\'q') : 'Bajaradigan ishlari yo\'q' }}
-            </div>
-          </div>
+
+    <!-- Rejection Modal -->
+    <div
+      v-if="isModalOpen"
+      @click="isModalOpen = false"
+      class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50"
+    >
+      <div @click.stop class="bg-white dark:bg-gray-800 p-6 rounded-2xl w-[400px] shadow-2xl">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+          {{ dat === 'datakril' ? translateText('Rad qilish sababi') : 'Rad qilish sababi' }}
+        </h2>
+        <textarea
+          v-model="comment"
+          :placeholder="dat === 'datakril' ? translateText('Izoh kiriting...') : 'Izoh kiriting...'"
+          class="w-full bg-white dark:bg-gray-600 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-500 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-300"
+          required
+        ></textarea>
+        <div class="flex justify-end space-x-3 mt-4">
+          <button @click="cancelReject" class="btn bg-gray-500 dark:bg-gray-600 text-gray-100 text-sm hover:bg-gray-600 dark:hover:bg-gray-700">
+            {{ dat === 'datakril' ? translateText('Bekor qilish') : 'Bekor qilish' }}
+          </button>
+          <button @click="confirmReject" class="btn bg-red-600 dark:bg-red-500 text-white text-sm hover:bg-red-700 dark:hover:bg-red-600">
+            {{ dat === 'datakril' ? translateText('Yuborish') : 'Yuborish' }}
+          </button>
         </div>
       </div>
-      <div class="flex justify-end space-x-2 mt-4 px-3">
-        <button @click="cancelAdminSelection" class="btn btn-secondary text-sm">
-          {{ dat === 'datakril' ? translateText('Bekor qilish') : 'Bekor qilish' }}
-        </button>
+    </div>
+
+    <!-- Reason Modal -->
+    <div
+      v-if="isReasonModalOpen"
+      @click="isReasonModalOpen = false"
+      class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50"
+    >
+      <div @click.stop class="bg-white dark:bg-gray-800 p-6 rounded-2xl w-[400px] shadow-2xl">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+          {{ dat === 'datakril' ? translateText('Rad qilish sababi') : 'Rad qilish sababi' }}
+        </h2>
+        <p class="text-gray-600 dark:text-gray-300 break-words mb-4">{{ rejectionComment }}</p>
+        <div class="flex justify-end">
+          <button @click="closeReasonModal" class="btn bg-gray-500 dark:bg-gray-600 text-gray-100 text-sm hover:bg-gray-600 dark:hover:bg-gray-700">
+            {{ dat === 'datakril' ? translateText('Yopish') : 'Yopish' }}
+          </button>
+        </div>
       </div>
     </div>
+
+<!-- Admin Selection Modal -->
+<div
+  v-if="isAdminModalOpen"
+  @click="isAdminModalOpen = false"
+  class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50"
+>
+  <div
+    @click.stop
+    class="bg-white dark:bg-gray-800 p-4 rounded-2xl w-[400px] max-h-[500px] border border-gray-300 dark:border-gray-700 overflow-y-auto shadow-2xl"
+  >
+    <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 px-3">
+      {{ dat === 'datakril' ? translateText('Ma\'sul shaxsni tanlang') : 'Ma\'sul shaxsni tanlang' }}
+    </h2>
+    <div class="flex flex-col gap-3">
+      <div
+        v-for="admin in adminData"
+        :key="admin.id"
+        class="p-3 flex gap-4 border border-blue-600 rounded-lg items-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all duration-200 relative"
+        @click="selectAdmin(admin)"
+        @mouseenter="showHoverModalDelayed(admin, $event.currentTarget)"
+        @mouseleave="hideHoverModalDelayed"
+      >
+        <img
+          class="w-12 h-12 rounded-full object-cover"
+          :src="URL + '/upload/' + admin.img"
+          :alt="dat === 'datakril' ? translateText('Rasm') : 'Image'"
+        />
+        <h1 class="text-sm font-bold text-gray-900 dark:text-gray-100">
+          {{
+            dat === 'datakril'
+              ? translateText(`${admin.name} ${admin.surname} ${admin.dadname}`)
+              : `${admin.name} ${admin.surname} ${admin.dadname}`
+          }}
+        </h1>
+      </div>
+    </div>
+    <div class="flex justify-end space-x-3 mt-4 px-3">
+      <button
+        @click="cancelAdminSelection"
+        class="btn bg-gray-500 dark:bg-gray-600 text-gray-100 text-sm hover:bg-gray-600 dark:hover:bg-gray-700"
+      >
+        {{ dat === 'datakril' ? translateText('Bekor qilish') : 'Bekor qilish' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Hover Modal (outside the main modal) -->
+<div
+  v-if="showHoverModalOpen && hoveredAdmin"
+  class="fixed p-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-2xl z-[60] max-h-[300px] overflow-y-auto min-w-[370px]"
+  :style="{ top: `${hoverPosition.top-80}px`, left: `${hoverPosition.left+350}px` }"
+  @mouseenter="cancelHide"
+  @mouseleave="hideHoverModalDelayed"
+>
+  <p class="text-gray-900 dark:text-gray-100 font-medium mb-2">
+    {{ dat === 'datakril' ? translateText('Bajaradigan ishlari') : 'Bajaradigan ishlari' }}
+  </p>
+  <div v-if="hoveredAdmin?.LawyerTask?.length > 0">
+    <div
+      class="text-gray-800 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 flex justify-between p-3 rounded-lg my-2"
+      v-for="item in hoveredAdmin.LawyerTask"
+      :key="item.id"
+    >
+      <p class="text-gray-800 dark:text-gray-200 text-sm">
+        {{ dat === 'datakril' ? translateText(item.name) : item.name }}
+      </p>
+      <h1 class="text-gray-800 dark:text-gray-200 text-sm">
+        {{ dat === 'datakril' ? translateText('holati:') : 'holati:' }}
+        <span class="text-red-500 dark:text-red-400">
+          {{
+            item.ClientFileStatusHistory[item.ClientFileStatusHistory.length - 1]?.status === 'status8'
+              ? dat === 'datakril'
+                ? translateText('Sudga taqdim etish jarayonida')
+                : 'Sudga taqdim etish jarayonida'
+              : item.ClientFileStatusHistory[item.ClientFileStatusHistory.length - 1]?.status === 'status5'
+              ? dat === 'datakril'
+                ? translateText('Hujjatlarni yozish jarayonida')
+                : 'Hujjatlarni yozish jarayonida'
+              : ''
+          }}
+        </span>
+      </h1>
+    </div>
+  </div>
+  <div v-else class="text-gray-600 dark:text-gray-300 text-center p-2 text-sm">
+    {{ dat === 'datakril' ? translateText('Bajaradigan ishlari yo\'q') : 'Bajaradigan ishlari yo\'q' }}
+  </div>
+</div>
+
+
   </div>
 </template>
 
 <style scoped>
-.workflow-line {
-  height: 2px;
-  position: absolute;
-  top: 16px;
-  z-index: 0;
-}
-
-.workflow-line-completed {
-  background: linear-gradient(90deg, #22C55E, #22C55E);
-}
-
-.workflow-line-pending {
-  background: repeating-linear-gradient(90deg, #D1D5DB, #D1D5DB 4px, #F3F4F6 4px, #F3F4F6 8px);
-}
-
-.badge {
-  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
-}
-
 .btn {
-  @apply inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
-}
-
-.btn-primary {
-  @apply bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500;
-}
-
-.btn-secondary {
-  @apply bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 focus:ring-primary-500;
-}
-
-.btn-sm {
-  @apply px-2.5 py-1.5 text-xs rounded;
+  @apply inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed;
 }
 
 @keyframes fade-in {
@@ -821,83 +998,43 @@ onMounted(() => {
     opacity: 0;
     transform: translateY(-10px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-.infinite-border {
-  position: relative;
-  min-width: 75px;
-  font-size: 24px;
-  display: flex;
-  min-height: 20px;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
 }
 
-.border-line {
-  position: absolute;
-  top: 50%;
-  right: 0;
-  min-width: 200%;
-  white-space: nowrap;
-  font-size: 140px;
-  font-weight: 900;
-  animation: moveLine 5s linear infinite;
-  pointer-events: none;
-  user-select: none;
+/* Progress Bar Stripes */
+.bg-stripes {
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.1) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.1) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 1rem 1rem;
+  animation: progress-bar-stripes 1s linear infinite;
 }
 
 @keyframes progress-bar-stripes {
   from {
     background-position: 1rem 0;
   }
-
   to {
     background-position: 0 0;
   }
 }
 
-.bg-stripes {
-  background-image: linear-gradient(45deg,
-      rgba(255, 255, 255, 0.15) 25%,
-      transparent 25%,
-      transparent 50%,
-      rgba(255, 255, 255, 0.15) 50%,
-      rgba(255, 255, 255, 0.15) 75%,
-      transparent 75%,
-      transparent);
-  background-size: 1rem 1rem;
-  animation: progress-bar-stripes 1s linear infinite;
-}
-
-@keyframes moveLine {
-  0% {
-    transform: translateX(140%);
-  }
-
-  100% {
-    transform: translateX(200%);
-  }
-}
-
-.bg {
-  background: linear-gradient(to bottom, #0e1125 40%, #454e78 100%);
-}
-
-.animate-fade-in {
-  animation: fade-in 0.3s ease-out;
-}
-
-.search {
-  color: white !important;
-}
-
-.search::placeholder {
-  color: white !important;
+/* Custom Shadow */
+.shadow-2xl {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 </style>

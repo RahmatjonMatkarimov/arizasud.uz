@@ -636,7 +636,7 @@ select:focus {
         <label>{{ dat === 'datakril' ? translateText('To\'lanadigan summani') : 'To\'lanadigan summani' }}</label>
         <input
           v-model="totalSum"
-          type="text"
+          type="number"
           class="text-black outline-none p-2 rounded-md transition-all duration-200 focus:ring-2 focus:ring-blue-500"
           :placeholder="dat === 'datakril' ? translateText('To\'lanadigan summani') : 'To\'lanadigan summani'"
         />
@@ -708,7 +708,7 @@ select:focus {
         <label>{{ dat === 'datakril' ? translateText('To\'lanadigan summani') : 'To\'lanadigan summani' }}</label>
         <input
           v-model="totalSum"
-          type="text"
+          type="number"
           class="outline-none text-black p-2 rounded-md transition-all duration-200 focus:ring-2 focus:ring-blue-500"
           :placeholder="dat === 'datakril' ? translateText('To\'lanadigan summani') : 'To\'lanadigan summani'"
         />

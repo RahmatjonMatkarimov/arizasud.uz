@@ -254,8 +254,6 @@ const updateTicket = async (ticketId) => {
 };
 
 const deleteTicket = async (ticketId) => {
-  if (!confirm("Bu qo'llab-quvvatlash so'rovini o'chirishga ishonchingiz komilmi?"))
-    return;
   isLoading.value = true;
   try {
     await axios.delete(`${API_URL}/${ticketId}`);

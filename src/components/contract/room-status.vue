@@ -132,9 +132,12 @@
               </div>
 
               <!-- Striped Connector -->
-              <div v-if="index < getUniqueStatuses(file.LawyerTask).length - 1" class="flex justify-center items-center overflow-hidden rotate-180">
-                <div class="w-[50px] rotate-90 overflow-hidden">
-                  <div class="loader1 "></div>
+              <div v-if="index < getUniqueStatuses(file.LawyerTask).length - 1" class="flex justify-center overflow-hidden items-center">
+                <div class=" rotate-90">
+
+                  <div class="w-[50px] rotate-180 overflow-hidden">
+                    <div class="loader1"></div>
+                  </div>
                 </div>
               </div>
             </template>
@@ -357,7 +360,19 @@ const filteredFiles = computed(() => {
 .fade-in {
   animation: fadeIn 0.3s ease-out;
 }
-
+.loader1 {
+  width: calc(80px / cos(45deg));
+  height: 14px;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--stripe-color, #22c55e) 0 10px,
+    #0000 0 20px
+  ) left/200% 100%;
+  animation: l3 4s infinite linear;
+}
+@keyframes l3 {
+    100% {background-position:right}
+}
 /* Ensure touch-friendly buttons */
 button, select {
   touch-action: manipulation;

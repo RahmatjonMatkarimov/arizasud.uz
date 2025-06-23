@@ -14,630 +14,305 @@
       </h1>
     </div>
 
-    <!-- Upload Modal -->
-    <Transition name="modal" appear>
-      <div
-        v-if="showModal"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-xl"
-        @click.self="toggleModal"
-      >
-        <div
-          class="bg-gradient-to-br from-white via-slate-50 to-white dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 rounded-3xl shadow-2xl border border-white/20 dark:border-slate-700/50 p-12 max-w-4xl w-full mx-6 transform transition-all backdrop-blur-lg overflow-hidden relative"
+<!-- Upload Modal -->
+<Transition name="modal" appear>
+  <div
+    v-if="showModal"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+    @click.self="toggleModal"
+  >
+    <div
+      class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 p-6 max-w-md w-full mx-4"
+    >
+      <!-- Header -->
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <h2 class="text-xl font-bold text-slate-900 dark:text-white">
+            {{ dat === "datakril" ? translateText("Yangi sud yaratish") : "Yangi sud yaratish" }}
+          </h2>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+            {{ dat === "datakril" ? translateText("Sud hujjatini yarating") : "Sud hujjatini yarating" }}
+          </p>
+        </div>
+        <button
+          @click="toggleModal"
+          class="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
         >
-          <!-- Animated Background -->
-          <div
-            class="absolute inset-0 bg-gradient-to-r from-lime-500/5 via-emerald-500/5 to-cyan-500/5 dark:from-lime-400/10 dark:via-emerald-400/10 dark:to-cyan-400/10"
-          ></div>
-          <div
-            class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-lime-400 via-emerald-500 to-cyan-500"
-          ></div>
+          <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
 
-          <!-- Floating Elements -->
-          <div
-            class="absolute top-4 right-20 w-2 h-2 bg-lime-400 rounded-full opacity-60 animate-pulse"
-          ></div>
-          <div
-            class="absolute top-12 right-32 w-1 h-1 bg-emerald-400 rounded-full opacity-40 animate-ping"
-          ></div>
+      <!-- Form -->
+      <form @submit.prevent="uploadCourt" class="space-y-4 min-w-full">
+        <!-- Court Name -->
+        <div>
+          <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+            {{ dat === "datakril" ? translateText("Sud nomi") : "Sud nomi" }}
+          </label>
+          <input
+            v-model="courtName1"
+            class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white placeholder-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+            type="text"
+            :placeholder="dat === 'datakril' ? translateText('Sud nomini kiriting...') : 'Sud nomini kiriting...'"
+            required
+          />
+        </div>
 
-          <!-- Content Container -->
+        <!-- File Upload -->
+        <div>
+          <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+            {{ dat === "datakril" ? translateText("Rasm yuklash") : "Rasm yuklash" }}
+          </label>
           <div class="relative">
-            <!-- Header -->
-            <div class="flex justify-between items-start mb-10">
-              <div class="flex-1">
-                <div class="flex items-center gap-4 mb-3">
-                  <div class="relative">
-                    <div
-                      class="p-3 bg-gradient-to-br from-lime-400 via-emerald-500 to-cyan-500 rounded-2xl shadow-lg"
-                    >
-                      <svg
-                        class="w-7 h-7 text-white"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                        ></path>
-                      </svg>
-                    </div>
-                    <div
-                      class="absolute -top-1 -right-1 w-4 h-4 bg-white dark:bg-slate-900 rounded-full flex items-center justify-center"
-                    >
-                      <div class="w-2 h-2 bg-lime-400 rounded-full animate-pulse"></div>
-                    </div>
-                  </div>
-                  <div>
-                    <h2
-                      class="text-4xl font-black bg-gradient-to-r from-slate-900 via-slate-700 to-slate-900 dark:from-white dark:via-slate-200 dark:to-white bg-clip-text text-transparent"
-                    >
-                      {{
-                        dat === "datakril"
-                          ? translateText("Yangi sud yaratish")
-                          : "Yangi sud yaratish"
-                      }}
-                    </h2>
-                    <div
-                      class="h-1 w-16 bg-gradient-to-r from-lime-400 to-emerald-500 rounded-full mt-2"
-                    ></div>
-                  </div>
-                </div>
-                <p class="text-slate-600 dark:text-slate-400 text-lg font-medium">
-                  {{
-                    dat === "datakril"
-                      ? translateText("Yangi sud hujjatini yarating")
-                      : "Yangi sud hujjatini yarating"
-                  }}
-                </p>
-              </div>
-              <button
-                @click="toggleModal"
-                class="p-4 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-2xl transition-all duration-300 group hover:scale-110 hover:rotate-90"
-              >
-                <svg
-                  class="w-6 h-6 text-slate-500 dark:text-slate-400 group-hover:text-red-500 dark:group-hover:text-red-400 transition-all duration-300"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2.5"
-                    d="M6 18L18 6M6 6l12 12"
-                  ></path>
-                </svg>
-              </button>
-            </div>
-
-            <!-- Content -->
-            <div
-              class="bg-white/80 dark:bg-slate-800/80 rounded-3xl p-12 backdrop-blur-xl border border-white/50 dark:border-slate-700/50 shadow-xl relative overflow-hidden"
-            >
-              <!-- Inner glow effect -->
-              <div
-                class="absolute inset-0 bg-gradient-to-br from-lime-500/5 to-emerald-500/5 dark:from-lime-400/10 dark:to-emerald-400/10 rounded-3xl"
-              ></div>
-
-              <div class="relative">
-                <form @submit.prevent="uploadCourt" class="space-y-8 min-w-full">
-                  <!-- Court Name Input -->
-                  <div class="space-y-3">
-                    <label
-                      class="block text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider"
-                    >
-                      {{ dat === "datakril" ? translateText("Sud nomi") : "Sud nomi" }}
-                    </label>
-                    <div class="relative">
-                      <input
-                        v-model="courtName1"
-                        class="w-full px-6 py-5 bg-gradient-to-r from-white to-slate-50 dark:from-slate-700 dark:to-slate-800 border-2 border-slate-200 dark:border-slate-600 rounded-2xl text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-lime-400 dark:focus:border-lime-400 focus:ring-4 focus:ring-lime-400/20 transition-all duration-300 font-medium text-lg"
-                        type="text"
-                        id="name"
-                        :placeholder="
-                          dat === 'datakril'
-                            ? translateText('Sud nomini kiriting...')
-                            : 'Sud nomini kiriting...'
-                        "
-                        required
-                      />
-                      <div class="absolute right-4 top-1/2 transform -translate-y-1/2">
-                        <div class="w-2 h-2 bg-lime-400 rounded-full animate-pulse"></div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- File Upload -->
-                  <div class="space-y-3">
-                    <label
-                      class="block text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider"
-                    >
-                      {{
-                        dat === "datakril"
-                          ? translateText("Rasm yuklash")
-                          : "Rasm yuklash"
-                      }}
-                    </label>
-                    <div class="relative">
-                      <!-- Custom File Upload Design -->
-                      <div class="relative group">
-                        <input
-                          @change="onFileChange1"
-                          type="file"
-                          id="file"
-                          accept="image/*"
-                          required
-                          class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                        />
-                        <div
-                          class="w-full p-12 border-3 border-dashed border-slate-300 dark:border-slate-600 rounded-3xl bg-gradient-to-br from-slate-50 to-white dark:from-slate-800 dark:to-slate-700 hover:border-lime-400 dark:hover:border-lime-400 transition-all duration-300 group-hover:scale-[1.02] group-hover:shadow-xl"
-                        >
-                          <div class="text-center">
-                            <div class="mb-4">
-                              <div
-                                class="inline-flex p-4 bg-gradient-to-br from-lime-400 to-emerald-500 rounded-2xl group-hover:from-lime-500 group-hover:to-emerald-600 transition-all duration-300 shadow-lg"
-                              >
-                                <svg
-                                  class="w-8 h-8 text-white"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                                  />
-                                </svg>
-                              </div>
-                            </div>
-                            <h3
-                              class="text-xl font-bold text-slate-700 dark:text-slate-300 mb-2"
-                            >
-                              {{
-                                dat === "datakril"
-                                  ? translateText("Rasm yuklash")
-                                  : "Rasm yuklash"
-                              }}
-                            </h3>
-                            <p class="text-slate-500 dark:text-slate-400 font-medium">
-                              {{
-                                dat === "datakril"
-                                  ? translateText("Faylni tanlash yoki bu yerga tashlang")
-                                  : "Faylni tanlash yoki bu yerga tashlang"
-                              }}
-                            </p>
-                            <div
-                              class="mt-4 inline-flex items-center px-6 py-3 bg-gradient-to-r from-lime-500 to-emerald-600 text-white font-bold rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300"
-                            >
-                              <svg
-                                class="w-5 h-5 mr-2"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                                />
-                              </svg>
-                              {{
-                                dat === "datakril"
-                                  ? translateText("Fayl tanlash")
-                                  : "Fayl tanlash"
-                              }}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Submit Button -->
-                  <button
-                    class="w-full py-5 px-8 bg-gradient-to-r from-lime-500 via-emerald-600 to-cyan-600 hover:from-lime-600 hover:via-emerald-700 hover:to-cyan-700 text-white font-black text-xl rounded-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-2xl hover:shadow-lime-500/25 relative overflow-hidden group"
-                    type="submit"
-                  >
-                    <div
-                      class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"
-                    ></div>
-                    <div class="relative flex items-center justify-center gap-3">
-                      <svg
-                        class="w-6 h-6"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 12l2 2 4-4"
-                        />
-                      </svg>
-                      {{ $t("yuklash") }}
-                    </div>
-                  </button>
-                </form>
-
-                <!-- Messages -->
-                <div class="mt-6 space-y-4">
-                  <div
-                    v-if="successMessage1"
-                    class="p-5 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border-2 border-green-200 dark:border-green-700 text-green-800 dark:text-green-400 rounded-2xl font-bold shadow-lg"
-                  >
-                    <div class="flex items-center gap-3">
-                      <div
-                        class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center"
-                      >
-                        <svg
-                          class="w-4 h-4 text-white"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
-                      </div>
-                      {{ successMessage1 }}
-                    </div>
-                  </div>
-                  <div
-                    v-if="errorMessage1"
-                    class="p-5 bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/30 dark:to-pink-900/30 border-2 border-red-200 dark:border-red-700 text-red-800 dark:text-red-400 rounded-2xl font-bold shadow-lg"
-                  >
-                    <div class="flex items-center gap-3">
-                      <div
-                        class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center"
-                      >
-                        <svg
-                          class="w-4 h-4 text-white"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12"
-                          />
-                        </svg>
-                      </div>
-                      {{ errorMessage1 }}
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <input
+              @change="onFileChange1"
+              type="file"
+              id="file"
+              accept="image/*"
+              required
+              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+            />
+            <div class="w-full p-6 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-700 hover:border-blue-400 transition-colors text-center">
+              <svg class="w-8 h-8 text-slate-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+              </svg>
+              <p class="text-sm text-slate-600 dark:text-slate-400">
+                {{ dat === "datakril" ? translateText("Rasm tanlang") : "Rasm tanlang" }}
+              </p>
             </div>
           </div>
         </div>
-      </div>
-    </Transition>
 
-    <!-- Edit Modal -->
-    <Transition name="modal" appear>
-      <div
-        v-if="PutModal"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-xl"
-        @click.self="Modal"
-      >
-        <div
-          class="bg-gradient-to-br from-white via-slate-50 to-white dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 rounded-3xl shadow-2xl border border-white/20 dark:border-slate-700/50 p-12 max-w-4xl w-full mx-6 transform transition-all backdrop-blur-lg overflow-hidden relative"
+        <!-- Submit Button -->
+        <button
+          class="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors shadow-sm hover:shadow-md"
+          type="submit"
         >
-          <!-- Animated Background -->
-          <div
-            class="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-pink-500/5 dark:from-blue-400/10 dark:via-purple-400/10 dark:to-pink-400/10"
-          ></div>
-          <div
-            class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500"
-          ></div>
+          {{ $t("yuklash") }}
+        </button>
+      </form>
 
-          <!-- Floating Elements -->
-          <div
-            class="absolute top-4 right-20 w-2 h-2 bg-blue-400 rounded-full opacity-60 animate-pulse"
-          ></div>
-          <div
-            class="absolute top-12 right-32 w-1 h-1 bg-purple-400 rounded-full opacity-40 animate-ping"
-          ></div>
+      <!-- Messages -->
+      <div class="mt-4 space-y-3">
+        <div
+          v-if="successMessage1"
+          class="p-3 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 text-green-800 dark:text-green-400 rounded-lg text-sm"
+        >
+          {{ successMessage1 }}
+        </div>
+        <div
+          v-if="errorMessage1"
+          class="p-3 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-700 text-red-800 dark:text-red-400 rounded-lg text-sm"
+        >
+          {{ errorMessage1 }}
+        </div>
+      </div>
+    </div>
+  </div>
+</Transition>
 
-          <!-- Content Container -->
+<!-- Upload Modal -->
+<Transition name="modal" appear>
+  <div
+    v-if="showModal"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+    @click.self="toggleModal"
+  >
+    <div
+      class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 p-6 max-w-md w-full mx-4"
+    >
+      <!-- Header -->
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <h2 class="text-xl font-bold text-slate-900 dark:text-white">
+            {{ dat === "datakril" ? translateText("Yangi sud yaratish") : "Yangi sud yaratish" }}
+          </h2>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+            {{ dat === "datakril" ? translateText("Sud hujjatini yarating") : "Sud hujjatini yarating" }}
+          </p>
+        </div>
+        <button
+          @click="toggleModal"
+          class="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+        >
+          <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Form -->
+      <form @submit.prevent="uploadCourt" class="space-y-4 min-w-full">
+        <!-- Court Name -->
+        <div>
+          <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+            {{ dat === "datakril" ? translateText("Sud nomi") : "Sud nomi" }}
+          </label>
+          <input
+            v-model="courtName1"
+            class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white placeholder-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+            type="text"
+            :placeholder="dat === 'datakril' ? translateText('Sud nomini kiriting...') : 'Sud nomini kiriting...'"
+            required
+          />
+        </div>
+
+        <!-- File Upload -->
+        <div>
+          <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+            {{ dat === "datakril" ? translateText("Rasm yuklash") : "Rasm yuklash" }}
+          </label>
           <div class="relative">
-            <!-- Header -->
-            <div class="flex justify-between items-start mb-10">
-              <div class="flex-1">
-                <div class="flex items-center gap-4 mb-3">
-                  <div class="relative">
-                    <div
-                      class="p-3 bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500 rounded-2xl shadow-lg"
-                    >
-                      <svg
-                        class="w-7 h-7 text-white"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                        ></path>
-                      </svg>
-                    </div>
-                    <div
-                      class="absolute -top-1 -right-1 w-4 h-4 bg-white dark:bg-slate-900 rounded-full flex items-center justify-center"
-                    >
-                      <div class="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
-                    </div>
-                  </div>
-                  <div>
-                    <h2
-                      class="text-4xl font-black bg-gradient-to-r from-slate-900 via-slate-700 to-slate-900 dark:from-white dark:via-slate-200 dark:to-white bg-clip-text text-transparent"
-                    >
-                      {{
-                        dat === "datakril" ? translateText("Tahrirlash") : "Tahrirlash"
-                      }}
-                    </h2>
-                    <div
-                      class="h-1 w-16 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full mt-2"
-                    ></div>
-                  </div>
-                </div>
-                <p class="text-slate-600 dark:text-slate-400 text-lg font-medium">
-                  {{
-                    dat === "datakril"
-                      ? translateText("Sud ma'lumotlarini tahrirlang")
-                      : "Sud ma'lumotlarini tahrirlang"
-                  }}
-                </p>
-              </div>
-              <button
-                @click="Modal"
-                class="p-4 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-2xl transition-all duration-300 group hover:scale-110 hover:rotate-90"
-              >
-                <svg
-                  class="w-6 h-6 text-slate-500 dark:text-slate-400 group-hover:text-red-500 dark:group-hover:text-red-400 transition-all duration-300"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  ></path>
-                </svg>
-              </button>
-            </div>
-
-            <!-- Content -->
-            <div
-              class="bg-white/80 dark:bg-slate-800/80 rounded-3xl p-12 backdrop-blur-xl border border-white/50 dark:border-slate-700/50 shadow-xl relative overflow-hidden"
-            >
-              <!-- Inner glow effect -->
-              <div
-                class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 dark:from-blue-400/10 dark:to-purple-400/10 rounded-3xl"
-              ></div>
-
-              <div class="relative">
-                <form @submit.prevent="updateCourt" class="space-y-8 min-w-full">
-                  <!-- Court Name Input -->
-                  <div class="space-y-3">
-                    <label
-                      class="block text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider"
-                    >
-                      {{ dat === "datakril" ? translateText("Sud nomi") : "Sud nomi" }}
-                    </label>
-                    <div class="relative">
-                      <input
-                        v-model="courtName"
-                        class="w-full px-6 py-5 bg-gradient-to-r from-white to-slate-50 dark:from-slate-700 dark:to-slate-800 border-2 border-slate-200 dark:border-slate-600 rounded-2xl text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-4 focus:ring-blue-400/20 transition-all duration-300 font-medium text-lg"
-                        type="text"
-                        id="name"
-                        required
-                        :placeholder="
-                          dat === 'datakril'
-                            ? translateText('Sud nomini kiriting...')
-                            : 'Sud nomini kiriting...'
-                        "
-                      />
-                      <div class="absolute right-4 top-1/2 transform -translate-y-1/2">
-                        <div class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- File Upload -->
-                  <div class="space-y-3">
-                    <label
-                      class="block text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider"
-                    >
-                      {{
-                        dat === "datakril"
-                          ? translateText("Rasm yuklash")
-                          : "Rasm yuklash"
-                      }}
-                    </label>
-                    <div class="relative">
-                      <!-- Custom File Upload Design -->
-                      <div class="relative group">
-                        <input
-                          @change="onFileChange"
-                          type="file"
-                          id="file"
-                          accept="image/*"
-                          class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                        />
-                        <div
-                          class="w-full p-12 border-3 border-dashed border-slate-300 dark:border-slate-600 rounded-3xl bg-gradient-to-br from-slate-50 to-white dark:from-slate-800 dark:to-slate-700 hover:border-blue-400 dark:hover:border-blue-400 transition-all duration-300 group-hover:scale-[1.02] group-hover:shadow-xl"
-                        >
-                          <div class="text-center">
-                            <div class="mb-4">
-                              <div
-                                class="inline-flex p-4 bg-gradient-to-br from-blue-400 to-purple-500 rounded-2xl group-hover:from-blue-500 group-hover:to-purple-600 transition-all duration-300 shadow-lg"
-                              >
-                                <svg
-                                  class="w-8 h-8 text-white"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                  />
-                                </svg>
-                              </div>
-                            </div>
-                            <h3
-                              class="text-xl font-bold text-slate-700 dark:text-slate-300 mb-2"
-                            >
-                              {{
-                                dat === "datakril"
-                                  ? translateText("Rasm almashtirish")
-                                  : "Rasm almashtirish"
-                              }}
-                            </h3>
-                            <p class="text-slate-500 dark:text-slate-400 font-medium">
-                              {{
-                                dat === "datakril"
-                                  ? translateText("Yangi rasm yuklang")
-                                  : "Yangi rasm yuklang"
-                              }}
-                            </p>
-                            <div
-                              class="mt-4 inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300"
-                            >
-                              <svg
-                                class="w-5 h-5 mr-2"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
-                                />
-                              </svg>
-                              {{
-                                dat === "datakril"
-                                  ? translateText("Fayl tanlash")
-                                  : "Fayl tanlash"
-                              }}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Submit Button -->
-                  <button
-                    class="w-full py-5 px-8 bg-gradient-to-r from-blue-500 via-purple-600 to-pink-600 hover:from-blue-600 hover:via-purple-700 hover:to-pink-700 text-white font-black text-xl rounded-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-2xl hover:shadow-blue-500/25 relative overflow-hidden group"
-                    type="submit"
-                  >
-                    <div
-                      class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"
-                    ></div>
-                    <div class="relative flex items-center justify-center gap-3">
-                      <svg
-                        class="w-6 h-6"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                        />
-                      </svg>
-                      {{ dat === "datakril" ? translateText("Yuklash") : "Yuklash" }}
-                    </div>
-                  </button>
-                </form>
-
-                <!-- Messages -->
-                <div class="mt-6 space-y-4">
-                  <Transition name="fade">
-                    <div
-                      v-if="successMessage"
-                      class="p-5 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border-2 border-green-200 dark:border-green-700 text-green-800 dark:text-green-400 rounded-2xl font-bold shadow-lg"
-                    >
-                      <div class="flex items-center gap-3">
-                        <div
-                          class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center"
-                        >
-                          <svg
-                            class="w-4 h-4 text-white"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M5 13l4 4L19 7"
-                            />
-                          </svg>
-                        </div>
-                        {{ successMessage }}
-                      </div>
-                    </div>
-                  </Transition>
-                  <Transition name="fade">
-                    <div
-                      v-if="errorMessage"
-                      class="p-5 bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/30 dark:to-pink-900/30 border-2 border-red-200 dark:border-red-700 text-red-800 dark:text-red-400 rounded-2xl font-bold shadow-lg"
-                    >
-                      <div class="flex items-center gap-3">
-                        <div
-                          class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center"
-                        >
-                          <svg
-                            class="w-4 h-4 text-white"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M6 18L18 6M6 6l12 12"
-                            />
-                          </svg>
-                        </div>
-                        {{ errorMessage }}
-                      </div>
-                    </div>
-                  </Transition>
-                </div>
-              </div>
+            <input
+              @change="onFileChange1"
+              type="file"
+              id="file"
+              accept="image/*"
+              required
+              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+            />
+            <div class="w-full p-6 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-700 hover:border-blue-400 transition-colors text-center">
+              <svg class="w-8 h-8 text-slate-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+              </svg>
+              <p class="text-sm text-slate-600 dark:text-slate-400">
+                {{ dat === "datakril" ? translateText("Rasm tanlang") : "Rasm tanlang" }}
+              </p>
             </div>
           </div>
         </div>
+
+        <!-- Submit Button -->
+        <button
+          class="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors shadow-sm hover:shadow-md"
+          type="submit"
+        >
+          {{ $t("yuklash") }}
+        </button>
+      </form>
+
+      <!-- Messages -->
+      <div class="mt-4 space-y-3">
+        <div
+          v-if="successMessage1"
+          class="p-3 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 text-green-800 dark:text-green-400 rounded-lg text-sm"
+        >
+          {{ successMessage1 }}
+        </div>
+        <div
+          v-if="errorMessage1"
+          class="p-3 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-700 text-red-800 dark:text-red-400 rounded-lg text-sm"
+        >
+          {{ errorMessage1 }}
+        </div>
       </div>
-    </Transition>
+    </div>
+  </div>
+</Transition>
+
+<!-- Edit Modal -->
+<Transition name="modal" appear>
+  <div
+    v-if="PutModal"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+    @click.self="Modal"
+  >
+    <div
+      class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 p-6 max-w-md w-full mx-4"
+    >
+      <!-- Header -->
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <h2 class="text-xl font-bold text-slate-900 dark:text-white">
+            {{ dat === "datakril" ? translateText("Tahrirlash") : "Tahrirlash" }}
+          </h2>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+            {{ dat === "datakril" ? translateText("Sud ma'lumotlarini tahrirlang") : "Sud ma'lumotlarini tahrirlang" }}
+          </p>
+        </div>
+        <button
+          @click="Modal"
+          class="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+        >
+          <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Form -->
+      <form @submit.prevent="updateCourt" class="space-y-4 min-w-full">
+        <!-- Court Name -->
+        <div>
+          <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+            {{ dat === "datakril" ? translateText("Sud nomi") : "Sud nomi" }}
+          </label>
+          <input
+            v-model="courtName"
+            class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white placeholder-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+            type="text"
+            :placeholder="dat === 'datakril' ? translateText('Sud nomini kiriting...') : 'Sud nomini kiriting...'"
+            required
+          />
+        </div>
+
+        <!-- File Upload -->
+        <div>
+          <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+            {{ dat === "datakril" ? translateText("Rasm yuklash") : "Rasm yuklash" }}
+          </label>
+          <div class="relative">
+            <input
+              @change="onFileChange"
+              type="file"
+              id="file"
+              accept="image/*"
+              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+            />
+            <div class="w-full p-6 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-700 hover:border-blue-400 transition-colors text-center">
+              <svg class="w-8 h-8 text-slate-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+              <p class="text-sm text-slate-600 dark:text-slate-400">
+                {{ dat === "datakril" ? translateText("Rasm almashtirish") : "Rasm almashtirish" }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          class="w-full py-3 px-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors shadow-sm hover:shadow-md"
+          type="submit"
+        >
+          {{ dat === "datakril" ? translateText("Yangilash") : "Yangilash" }}
+        </button>
+      </form>
+
+      <!-- Messages -->
+      <div class="mt-4 space-y-3">
+        <Transition name="fade">
+          <div
+            v-if="successMessage"
+            class="p-3 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 text-green-800 dark:text-green-400 rounded-lg text-sm"
+          >
+            {{ successMessage }}
+          </div>
+        </Transition>
+        <Transition name="fade">
+          <div
+            v-if="errorMessage"
+            class="p-3 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-700 text-red-800 dark:text-red-400 rounded-lg text-sm"
+          >
+            {{ errorMessage }}
+          </div>
+        </Transition>
+      </div>
+    </div>
+  </div>
+</Transition>
     <!-- Action Modal -->
     <Transition name="dropdown" appear>
       <div
@@ -1065,7 +740,7 @@
             <Transition name="fade">
               <div
                 v-if="item.workStatus"
-                class="absolute inset-0 bg-gradient-to-br from-blue-500/95 via-blue-600/90 to-purple-600/95 dark:from-blue-600/95 dark:via-blue-700/90 dark:to-purple-700/95 backdrop-blur-sm rounded-2xl flex items-center justify-center"
+                class="absolute inset-0 bg-gradient-to-br from-blue-500/75 via-blue-600/70 to-purple-600/75 dark:from-blue-600/75 dark:via-blue-700/70 dark:to-purple-700/75 backdrop-blur-[2px] rounded-2xl flex items-center justify-center"
               >
                 <div class="text-center p-6">
                   <div

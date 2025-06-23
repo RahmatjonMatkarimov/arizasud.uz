@@ -565,6 +565,7 @@ const menuItems = [
   { to: "/commaners", label: "Tizimdagi foydalanuvchilar roʻyxati", icon: "mdi:account-multiple", condition: true },
   { to: "/archive", label: "Arxiv", icon: "mdi:archive-outline", condition: true },
   { to: "/category", label: "category", icon: "mdi:archive-outline", condition: true },
+  { to: "/warehousesHouse", label: "warehousesHouse", icon: "mdi:archive-outline", condition: true },
 ];
 
 const filteredMenu = computed(() => {
