@@ -1278,7 +1278,7 @@ const createWarehouse = async () => {
     const formData = new FormData();
     formData.append("name", form.value.name);
     formData.append("quantity", form.value.quantity.toString());
-    formData.append("categoryId", route.query.categoryId);
+    formData.append("categoryId", parseFloat(route.query.id));
     formData.append("collection", form.value.collection.toString());
     formData.append("userId", form.value.userId.toString());
     if (form.value.description) formData.append("description", form.value.description);
