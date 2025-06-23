@@ -107,17 +107,7 @@ const setData = async () => {
 
       if (!role) {
         error.value = "Foydalanuvchi roli aniqlanmadi.";
-      } else if (
-        [
-          "admin",
-          "bigAdmin",
-          "yuristAssistant",
-          "accauntant",
-          "deliverer",
-          "yurist",
-          "manager",
-        ].includes(role.trim())
-      ) {
+      } else if (role) {
         router.push(`/admin-list`);
       } else {
         error.value = "Bu rolda tizimga kirish taqiqlangan.";
