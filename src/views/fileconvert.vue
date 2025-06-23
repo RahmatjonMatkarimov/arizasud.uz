@@ -326,7 +326,7 @@
 import { ref, onMounted, inject, onUnmounted } from 'vue';
 import axios from 'axios';
 import { Icon } from '@iconify/vue';
-import { URL } from '@/auth/url';
+import { URL as API_URL } from '@/auth/url';
 import translateText from '@/auth/Translate';
 import { fi } from 'date-fns/locale';
 
@@ -349,7 +349,7 @@ onUnmounted(() => {
     if (intervalId) clearInterval(intervalId)
 })
 // API Configuration
-const API_BASE = `${URL}/file-editor`;
+const API_BASE = `${API_URL}/file-editor`;
 
 // Dark Mode
 const isDark = ref(false);
