@@ -617,7 +617,7 @@ select:focus {
       class="fixed inset-0 bg-black bg-opacity-80 z-40 flex justify-center items-center"
     >
       <div @click.stop
-        class="bg-slate-800 text-white w-[600px] top-0 duration-500 rounded-lg p-6 relative flex flex-col gap-2"
+        class="bg-slate-800 text-white w-[700px] top-0 duration-500 rounded-lg p-6 relative flex flex-col gap-2"
       >
         <img
           @click="Showmodal = false"

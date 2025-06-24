@@ -240,7 +240,7 @@
     <div class="flex justify-center items-center pt-4 px-4">
       <h1
         class="text-[40px] font-bold text-center bg-gradient-to-r from-blue-800 to-purple-500 text-white shadow-sm shadow-white rounded-lg py-2 px-[100px]">
-        {{ dat === 'datakril' ? translateText("Mudirlar ro'yxati") : "Mudirlar ro'yxati" }} <span v-if="Count"
+        {{ dat === 'datakril' ? translateText("Bosh xisobchilar ro'yxati") : "Bosh xisobchilar ro'yxati" }} <span v-if="Count"
           class="border-b-4 px-1 border-white">{{ filteredAdmins.length }}</span>
       </h1>
     </div>
@@ -329,7 +329,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onUnmounted, inject, nextTick, computed } from "vue";
+import { ref, watch, onMounted, inject, onUnmounted, nextTick, computed } from "vue";
 import axios from "axios";
 import { formatDistanceToNow } from "date-fns";
 import { uz } from "date-fns/locale";
@@ -382,7 +382,6 @@ const jshhr = ref("");
 const phone = ref("");
 const birthday = ref("");
 const password1 = ref("");
-const isLoading = inject('isLoading')
 const password2 = ref("");
 const image = ref(null);
 const role = ref("");
@@ -399,8 +398,10 @@ const updatedImage = ref(null);
 const updatednewPassword1 = ref("");
 const updatednewPassword2 = ref("");
 const Count = ref(null);
+const isLoading = inject('isLoading')
 const existingImage = ref(null);
 import { useSearchStore } from '@/components/Templates/searchQuary'
+import translateText from "@/auth/Translate";
 const searchStore = useSearchStore()
 // Computed property to filter admins based on search query
 const filteredAdmins = computed(() => {
@@ -417,14 +418,12 @@ const filteredAdmins = computed(() => {
   });
 });
 
-import translateText from "@/auth/Translate";
-
 
 const getData = async () => {
   isLoading.value = true
   try {
     const token = localStorage.getItem("token");
-    const response = await axios.get(`${URL}/manager`, {
+    const response = await axios.get(`${URL}/chiefAccauntant`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -672,7 +671,7 @@ const post = async () => {
 isLoading.value = true
   try {
     const token = localStorage.getItem("token");
-    await axios.post(`${URL}/manager`, formData, {
+    await axios.post(`${URL}/chiefAccauntant`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "multipart/form-data",
@@ -696,7 +695,7 @@ isLoading.value = true
   } catch (error) {
     console.error("Error creating admin:", error.response?.data || error.message);
     err.value = error.response?.data?.message || (dat === 'datakril' ? translateText("Admin yaratishda xatolik") : "Admin yaratishda xatolik");
-  } finally{
+  } finally {
     isLoading.value = false
   }
 };
@@ -761,7 +760,7 @@ const updateAdmin = async () => {
 isLoading.value = true
   try {
     const token = localStorage.getItem("token");
-    await axios.put(`${URL}/manager/${selectedId.value}`, formData, {
+    await axios.put(`${URL}/chiefAccauntant/${selectedId.value}`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "multipart/form-data",
@@ -784,9 +783,8 @@ isLoading.value = true
   } catch (error) {
     err.value = error.response?.data?.message || (dat === 'datakril' ? translateText("Yangilashda xatolik") : "Yangilashda xatolik");
     console.error("Error updatingysis admin:", error);
-  } finally { 
+  } finally {
     isLoading.value = false
-
   }
 };
 
@@ -804,11 +802,11 @@ const updatepassword = async () => {
     err.value = dat === 'datakril' ? translateText("Parollar bir xil emas") : "Parollar bir xil emas";
     return;
   }
-isLoading.value = true
+
   try {
     const token = localStorage.getItem("token");
     await axios.put(
-      `${URL}/manager/${selectedId.value}/password`,
+      `${URL}/chiefAccauntant/${selectedId.value}/password`,
       {
         newPassword: updatednewPassword2.value,
       },
@@ -824,8 +822,6 @@ isLoading.value = true
   } catch (error) {
     err.value = error.response?.data?.message || (dat === 'datakril' ? translateText("Parolni yangilashda xatolik") : "Parolni yangilashda xatolik");
     console.error("Error updating password:", error);
-  } finally {
-    isLoading.value = false
   }
 };
 
@@ -837,7 +833,7 @@ const removeAdmin = async () => {
 isLoading.value = true
   try {
     const token = localStorage.getItem("token");
-    await axios.delete(`${URL}/manager/${selectedId.value}`, {
+    await axios.delete(`${URL}/chiefAccauntant/${selectedId.value}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -846,9 +842,7 @@ isLoading.value = true
     asd.value = false;
   } catch (error) {
     console.error("Error deleting admin:", error.response?.data || error.message);
-  } finally{
-    isLoading.value = false
-  }
+  } finally {isLoading.value = false}
 };
 
 const handlePhoneFocus = () => {

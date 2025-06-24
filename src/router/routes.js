@@ -44,7 +44,7 @@ export const routes = [
       { path: '/link', component: () => import('@/components/dashboard/links.vue') },
       { path: '/profile', component: () => import('@/views/Profile.vue') },
     ],
-    meta: { requiresAuth: true, allowedRoles: ['accauntant', 'bigAdmin'] },
+    meta: { requiresAuth: true, allowedRoles: ['accauntant','chiefAccauntant', 'bigAdmin'] },
   },
   {
     path: '/admin',
@@ -115,7 +115,8 @@ export const routes = [
       { path: '/warehouseHouse/:id', component: () => import('@/components/qrcode/WarehouseDetail.vue') },
       { path: '/warehousesHouse', component: () => import('@/components/qrcode/warehouseHouse.vue') },
       { path: '/fileconvert', component: () => import('@/views/fileconvert.vue') },
+      { path: '/chiefAccauntant', component: () => import('@/components/admins/chiefAccauntant.vue') },
     ],
-    meta: { requiresAuth: true, allowedRoles: ['admin', 'manager','warehouseman', 'yuristAssistant', 'accauntant', 'deliverer', 'yurist', 'bigAdmin'] },
+    meta: { requiresAuth: true, allowedRoles: ['admin', 'manager','warehouseman','chiefAccauntant', 'yuristAssistant', 'accauntant', 'deliverer', 'yurist', 'bigAdmin'] },
   },
 ];

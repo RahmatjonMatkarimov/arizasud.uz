@@ -311,14 +311,6 @@
         </button>
       </div>
     </div>
-
-    <!-- Dark Mode Toggle -->
-    <button 
-      @click="toggleDarkMode"
-      class="fixed bottom-6 right-6 w-14 h-14 bg-white/20 dark:bg-gray-800/80 backdrop-blur-xl rounded-full shadow-2xl border border-gray-200 dark:border-gray-700 text-2xl hover:scale-110 transition-all duration-300 flex items-center justify-center"
-    >
-      <Icon :icon="isDark ? 'mdi:weather-sunny' : 'mdi:weather-night'" class="text-white" />
-    </button>
   </div>
 </template>
 

@@ -76,15 +76,15 @@
                             <div v-for="step in getUniqueStatuses(file.LawyerTask[0].ClientFileStatusHistory)" :key="step.id"
                                 :class="['flex items-center p-1 rounded-lg text-[1rem]', step.isLatestRejectionWithComment ? (isDarkMode ? 'bg-red-900/10' : 'bg-red-50/50') : (isDarkMode ? 'bg-green-900/10' : 'bg-green-50/50')]">
                                 <div class="mr-1">
-                                    <div :class="['rounded-full w-4 h-4 flex items-center justify-center', step.completed ? (isDarkMode ? 'bg-green-900' : 'bg-green-100') : (isDarkMode ? 'bg-gray-800' : 'bg-gray-100')]">
-                                        <img class="w-2.5 h-2.5" :src="step.isLatestRejectionWithComment ? '/x.png' : '/check-mark.png'" alt="Status Icon" />
+                                    <div :class="['rounded-full min-w-10 min-h-10 max-h-10 max-w-10 p-1 flex items-center justify-center', step.completed ? (isDarkMode ? 'bg-green-900' : 'bg-green-100') : (isDarkMode ? 'bg-gray-800' : 'bg-gray-100')]">
+                                        <img class="w-full h-full" :src="step.isLatestRejectionWithComment ? '/x.png' : '/check-mark.png'" alt="Status Icon" />
                                     </div>
                                 </div>
                                 <div class="flex-1">
-                                    <p class="font-medium truncate" :class="[step.isLatestRejectionWithComment ? 'text-red-300' : 'text-green-300']">
+                                    <p class="font-medium" :class="[step.isLatestRejectionWithComment ? 'dark:text-red-300 text-red-500' : 'dark:text-green-300 text-green-500']">
                                         {{ translateText(getStatus(step.title)) }}
                                     </p>
-                                    <p :class="[step.isLatestRejectionWithComment ? 'text-red-200' : 'text-green-200']">
+                                    <p :class="[step.isLatestRejectionWithComment ? 'dark:text-red-200 text-red-400' : 'dark:text-green-200 text-green-4. 00']">
                                         {{ formatDate(step.date) }}
                                     </p>
                                 </div>
@@ -382,44 +382,53 @@ const getStatus = (status) => {
 };
 
 const getUniqueStatuses = (statusHistory) => {
-    if (!statusHistory || !Array.isArray(statusHistory) || statusHistory.length === 0) {
-        return [];
-    }
+  if (!statusHistory || !Array.isArray(statusHistory) || statusHistory.length === 0) {
+    return [];
+  }
 
-    const statusMap = new Map();
-    statusHistory.forEach(item => {
-        if (!statusMap.has(item.status) || item.id > statusMap.get(item.status).id) {
-            const comment = item.comment || '';
-            statusMap.set(item.status, {
-                id: item.id,
-                status: item.status,
-                title: item.status,
-                date: item.createdAt,
-                completed: true,
-                isLatestRejectionWithComment: false,
-                comment,
-            });
-        }
-    });
+  // Define valid statuses
+  const validStatuses = [
+    'status1', 'status2', 'status3', 'status4',
+    'status5', 'status6', 'status7', 'status8', 'status9'
+  ];
 
-    const extractNumber = (statusStr) => {
-        const match = statusStr.match(/\d+$/);
-        return match ? parseInt(match[0], 10) : 0;
-    };
-
-    const statuses = Array.from(statusMap.values()).sort(
-        (a, b) => extractNumber(a.status) - extractNumber(b.status)
-    );
-
-    if (statuses.length > 0) {
-        const lastStatus = statuses[statuses.length - 1];
-        const isLastCommentEmpty = !lastStatus.comment || lastStatus.comment.trim() === '';
-        statuses.forEach((status, index) => {
-            status.isLatestRejectionWithComment = index === statuses.length - 1 && !isLastCommentEmpty;
+  const statusMap = new Map();
+  statusHistory.forEach(item => {
+    // Only include valid statuses
+    if (validStatuses.includes(item.status)) {
+      if (!statusMap.has(item.status) || item.id > statusMap.get(item.status).id) {
+        const comment = item.comment || '';
+        statusMap.set(item.status, {
+          id: item.id,
+          status: item.status,
+          title: item.status,
+          date: item.createdAt,
+          completed: true,
+          isLatestRejectionWithComment: false,
+          comment,
         });
+      }
     }
+  });
 
-    return statuses;
+  const extractNumber = (statusStr) => {
+    const match = statusStr.match(/\d+$/);
+    return match ? parseInt(match[0], 10) : 0;
+  };
+
+  const statuses = Array.from(statusMap.values()).sort(
+    (a, b) => extractNumber(a.status) - extractNumber(b.status)
+  );
+
+  if (statuses.length > 0) {
+    const lastStatus = statuses[statuses.length - 1];
+    const isLastCommentEmpty = !lastStatus.comment || lastStatus.comment.trim() === '';
+    statuses.forEach((status, index) => {
+      status.isLatestRejectionWithComment = index === statuses.length - 1 && !isLastCommentEmpty;
+    });
+  }
+
+  return statuses;
 };
 
 const filteredFiles = computed(() => {

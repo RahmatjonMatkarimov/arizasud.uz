@@ -148,113 +148,138 @@
           }}</span>
         </div>
       </section>
-
-      <!-- Modal for POST and PUT -->
-      <div
-        v-if="showModal"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 dark:bg-black/80 backdrop-blur-lg transition-all duration-500"
+<!-- Modal for POST and PUT -->
+<div
+  v-if="showModal"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/75 dark:bg-black/85 backdrop-blur-md transition-all duration-700 ease-in-out"
+>
+  <div class="bg-white/95 dark:bg-gray-900/95 p-8 sm:p-12 rounded-3xl shadow-2xl w-full max-w-lg mx-4 border border-gray-200/20 dark:border-gray-700/20 backdrop-blur-xl transform transition-all duration-500 scale-100 hover:scale-[1.02]">
+    <header class="text-center mb-10 relative">
+      <button
+        @click="closeModal"
+        class="absolute top-0 right-0 p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors duration-300"
       >
-        <div class="bg-white/90 dark:bg-gray-800/90 p-8 sm:p-10 rounded-3xl shadow-2xl w-full max-w-md mx-4 border border-gray-200/30 dark:border-gray-700/30 backdrop-blur-lg transform transition-all duration-300 scale-100">
-          <header class="text-center mb-8">
-            <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-cyan-400 to-indigo-500 rounded-full flex items-center justify-center shadow-xl">
-              <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+      <div class="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-cyan-400 to-indigo-600 rounded-full flex items-center justify-center shadow-lg animate-pulse-slow">
+        <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        </svg>
+      </div>
+      <h3 class="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
+        {{ dat === "datakril" ? translateText(modalTitle) : modalTitle }}
+      </h3>
+    </header>
+    
+    <form @submit.prevent="handleModalSubmit" class="space-y-8">
+      <div>
+        <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2 tracking-wide">
+          {{ dat === "datakril" ? translateText("Nomi:") : "Nomi:" }}
+        </label>
+        <input
+          type="text"
+          id="name"
+          v-model="name"
+          required
+          class="w-full p-4 border border-gray-300/30 dark:border-gray-600/30 rounded-xl bg-white/40 dark:bg-gray-800/40 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-cyan-400/40 focus:border-cyan-500 dark:focus:border-cyan-400 transition-all duration-300 shadow-sm hover:shadow-md"
+          :placeholder="
+            dat === 'datakril'
+              ? translateText('Hujjat nomini kiriting')
+              : 'Hujjat nomini kiriting'
+          "
+        />
+      </div>
+      
+      <div>
+        <label for="file" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2 tracking-wide">
+          {{ dat === "datakril" ? translateText("Fayl:") : "Fayl:" }}
+        </label>
+        <div class="relative">
+          <label
+            for="file"
+            class="flex items-center justify-between w-full p-4 border-2 border-dashed border-gray-300/40 dark:border-gray-600/40 rounded-xl bg-gradient-to-r from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 text-gray-900 dark:text-white cursor-pointer hover:bg-gradient-to-r hover:from-cyan-50 hover:to-blue-50 dark:hover:from-cyan-900 dark:hover:to-blue-900 transition-all duration-300 shadow-sm hover:shadow-md"
+          >
+            <span class="flex items-center space-x-3">
+              <svg class="w-6 h-6 text-cyan-500 dark:text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V8m0 0l-4 4m4-4l4 4m6-8h-5.586a1 1 0 00-.707.293l-5.414 5.414a1 1 0 00-.293.707V16m0 0h5.586a1 1 0 00.707-.293l5.414-5.414a1 1 0 00.293-.707V8"></path>
               </svg>
-            </div>
-            <h3 class="text-2xl font-extrabold text-gray-900 dark:text-white">
-              {{ dat === "datakril" ? translateText(modalTitle) : modalTitle }}
-            </h3>
-          </header>
-          
-          <form @submit.prevent="handleModalSubmit" class="space-y-8">
-            <div>
-              <label for="name" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-                {{ dat === "datakril" ? translateText("Nomi:") : "Nomi:" }}
-              </label>
-              <input
-                type="text"
-                id="name"
-                v-model="name"
-                required
-                class="w-full p-4 border border-gray-300/50 dark:border-gray-600/50 rounded-2xl bg-white/50 dark:bg-gray-700/50 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-cyan-500/30 focus:border-cyan-500 dark:focus:border-cyan-400 transition-all duration-300"
-                :placeholder="
-                  dat === 'datakril'
-                    ? translateText('Hujjat nomini kiriting')
-                    : 'Hujjat nomini kiriting'
-                "
-              />
-            </div>
-            
-            <div>
-              <label for="file" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-                {{ dat === "datakril" ? translateText("Fayl:") : "Fayl:" }}
-              </label>
-              <div class="relative">
-                <input
-                  type="file"
-                  id="file"
-                  ref="fileInput"
-                  @change="handleFileChange"
-                  :required="modalType === 'post'"
-                  class="w-full p-4 border-2 border-dashed border-gray-300/50 dark:border-gray-600/50 rounded-2xl bg-gray-50/50 dark:bg-gray-700/50 text-gray-900 dark:text-white file:bg-gradient-to-r file:from-cyan-500 file:to-blue-500 file:text-white file:border-none file:py-3 file:px-6 file:rounded-lg file:font-semibold file:cursor-pointer hover:file:from-cyan-600 hover:file:to-blue-600 transition-all duration-300"
-                />
-              </div>
-              
-              <div v-if="selectedFileSize" class="mt-6 p-5 bg-cyan-50/50 dark:bg-cyan-900/20 rounded-2xl border border-cyan-200/50 dark:border-cyan-700/50">
-                <div class="flex items-center space-x-4">
-                  <div class="flex-shrink-0">
-                    <div class="w-12 h-12 bg-cyan-500 dark:bg-cyan-400 rounded-lg flex items-center justify-center shadow-md">
-                      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                      </svg>
-                    </div>
-                  </div>
-                  <div>
-                    <p class="text-sm font-medium text-cyan-800 dark:text-cyan-200">
-                      {{ dat === "datakril" ? translateText("Fayl hajmi:") : "Fayl hajmi:" }}
-                    </p>
-                    <p class="text-lg font-bold text-cyan-900 dark:text-cyan-100">
-                      {{ selectedFileSize }}
-                    </p>
-                  </div>
-                </div>
+              <span class="text-sm font-medium truncate max-w-[200px]">
+                {{ file ? file.name : (dat === "datakril" ? translateText("Fayl tanlang") : "Fayl tanlang") }}
+              </span>
+            </span>
+            <span class="px-5 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg font-semibold text-sm shadow-md hover:from-cyan-600 hover:to-blue-600 transition-all duration-300">
+              {{ dat === "datakril" ? translateText("Tanlash") : "Tanlash" }}
+            </span>
+          </label>
+          <input
+            type="file"
+            id="file"
+            ref="fileInput"
+            @change="handleFileChange"
+            :required="modalType === 'post'"
+            class="hidden"
+          />
+        </div>
+        
+        <div v-if="selectedFileSize" class="mt-6 p-5 bg-cyan-50/30 dark:bg-cyan-900/30 rounded-xl border border-cyan-200/30 dark:border-cyan-700/30 shadow-sm">
+          <div class="flex items-center space-x-4">
+            <div class="flex-shrink-0">
+              <div class="w-12 h-12 bg-cyan-500 dark:bg-cyan-400 rounded-lg flex items-center justify-center shadow-md">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
               </div>
             </div>
-            
-            <div class="flex justify-end space-x-4 pt-8">
-              <button
-                type="button"
-                @click="closeModal"
-                :disabled="isLoading"
-                class="px-8 py-3.5 text-gray-700 dark:text-gray-300 bg-gray-200/70 dark:bg-gray-700/70 hover:bg-gray-300/70 dark:hover:bg-gray-600/70 rounded-2xl text-lg font-semibold shadow-md hover:shadow-lg transition-all duration-300 disabled:opacity-50"
-              >
-                {{ dat === "datakril" ? translateText("Bekor qilish") : "Bekor qilish" }}
-              </button>
-              <button
-                type="submit"
-                :disabled="isLoading || !name.trim() || (modalType === 'post' && !file)"
-                class="px-10 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 dark:from-emerald-400 dark:to-teal-400 dark:hover:from-emerald-500 dark:hover:to-teal-500 text-white rounded-2xl text-lg font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 disabled:opacity-50 flex items-center space-x-3"
-              >
-                <div
-                  v-if="isLoading"
-                  class="animate-spin rounded-full h-6 w-6 border-2 border-white border-t-transparent"
-                ></div>
-                <span>
-                  {{
-                    isLoading
-                      ? dat === "datakril"
-                        ? translateText("Yuborilmoqda...")
-                        : "Yuborilmoqda..."
-                      : dat === "datakril"
-                      ? translateText("Yuborish")
-                      : "Yuborish"
-                  }}
-                </span>
-              </button>
+            <div>
+              <p class="text-sm font-medium text-cyan-800 dark:text-cyan-200">
+                {{ dat === "datakril" ? translateText("Fayl hajmi:") : "Fayl hajmi:" }}
+              </p>
+              <p class="text-lg font-semibold text-cyan-900 dark:text-cyan-100">
+                {{ selectedFileSize }}
+              </p>
             </div>
-          </form>
+          </div>
         </div>
       </div>
+      
+      <div class="flex justify-end space-x-4 pt-8">
+        <button
+          type="button"
+          @click="closeModal"
+          :disabled="isLoading"
+          class="px-8 py-3 text-gray-700 dark:text-gray-200 bg-gray-200/50 dark:bg-gray-700/50 hover:bg-gray-300/50 dark:hover:bg-gray-600/50 rounded-xl text-base font-semibold shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {{ dat === "datakril" ? translateText("Bekor qilish") : "Bekor qilish" }}
+        </button>
+        <button
+          type="submit"
+          :disabled="isLoading || !name.trim() || (modalType === 'post' && !file)"
+          class="px-10 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 dark:from-emerald-400 dark:to-teal-400 dark:hover:from-emerald-500 dark:hover:to-teal-500 text-white rounded-xl text-base font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-3"
+        >
+          <div
+            v-if="isLoading"
+            class="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"
+          ></div>
+          <span>
+            {{
+              isLoading
+                ? dat === "datakril"
+                  ? translateText("Yuborilmoqda...")
+                  : "Yuborilmoqda..."
+                : dat === "datakril"
+                ? translateText("Yuborish")
+                : "Yuborish"
+            }}
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
 
       <!-- Toast Notifications -->
       <div
@@ -724,7 +749,14 @@ button:focus {
   article { flex-direction: column; align-items: flex-start; gap: 1rem; }
   .flex-1 { width: 100%; }
 }
-
+/* Custom animation for subtle pulse effect */
+@keyframes pulse-slow {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.9; }
+}
+.animate-pulse-slow {
+  animation: pulse-slow 2s ease-in-out infinite;
+}
 /* Shadows */
 .shadow-md {
   box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.08);

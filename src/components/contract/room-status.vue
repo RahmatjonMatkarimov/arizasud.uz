@@ -285,19 +285,28 @@ const getUniqueStatuses = (lawyerTask) => {
   const statusHistory = lawyerTask.flatMap((task) => task.ClientFileStatusHistory || []);
   if (!statusHistory || !Array.isArray(statusHistory) || statusHistory.length === 0) return [];
 
+  // Define valid statuses
+  const validStatuses = [
+    'status1', 'status2', 'status3', 'status4',
+    'status5', 'status6', 'status7', 'status8', 'status9'
+  ];
+
   const statusMap = new Map();
   statusHistory.forEach((item) => {
-    if (!statusMap.has(item.status) || item.id > statusMap.get(item.status).id) {
-      const comment = item.comment || "";
-      statusMap.set(item.status, {
-        id: item.id,
-        status: item.status,
-        title: item.status,
-        date: item.createdAt,
-        completed: true,
-        isLatestRejectionWithComment: false,
-        comment: comment,
-      });
+    // Only include valid statuses
+    if (validStatuses.includes(item.status)) {
+      if (!statusMap.has(item.status) || item.id > statusMap.get(item.status).id) {
+        const comment = item.comment || "";
+        statusMap.set(item.status, {
+          id: item.id,
+          status: item.status,
+          title: item.status,
+          date: item.createdAt,
+          completed: true,
+          isLatestRejectionWithComment: false,
+          comment: comment,
+        });
+      }
     }
   });
 

@@ -90,7 +90,7 @@ const cards = ref([
     bgColor1: "#EC4899",            // pushti
     bgColor: "#EC489920",
     routerLink: "/asinstant",
-    condition: () => data.value?.admins,
+    condition: () => data.value?.yuristAssistant,
   },
   {
     title: "Kuryer Yaratish Bo'limi",
@@ -99,16 +99,25 @@ const cards = ref([
     bgColor1: "#F97316",            // och to'q sariq
     bgColor: "#F9731620",
     routerLink: "/deliverer",
-    condition: () => data.value?.admins,
+    condition: () => data.value?.carrier,
   },
   {
-    title: "Bugalter Yaratish Bo'limi",
+    title: "Xisobchilar Yaratish Bo'limi",
     description: "Moliyaviy hisobotlar va buxgalteriya",
     icon: "mdi:calculator-variant-outline", // buxgalteriya
     bgColor1: "#0EA5E9",                   // moviy
     bgColor: "#0EA5E920",
     routerLink: "/bugalter",
-    condition: () => data.value?.admins,
+    condition: () => data.value?.accauntant,
+  },
+  {
+    title: "Bosh Xisobchilar Yaratish Bo'limi",
+    description: "Moliyaviy hisobotlar va buxgalteriya",
+    icon: "mdi:finance", // buxgalteriya
+    bgColor1: "#2563EB",                   // moviy
+    bgColor: "#2563EB20",
+    routerLink: "/chiefAccauntant",
+    condition: () => data.value?.chiefAccauntant,
   },
   {
     title: "Ombor mudiri Bo'limi",
@@ -117,7 +126,7 @@ const cards = ref([
     bgColor1: "#A855F7",            // binafsha (farqli)
     bgColor: "#A855F720",
     routerLink: "/mudir",
-    condition: () => data.value?.admins,
+    condition: () => data.value?.warehouseman,
   },
 ]);
 

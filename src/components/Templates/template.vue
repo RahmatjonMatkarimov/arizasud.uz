@@ -123,7 +123,7 @@ import Dark from '../dark.vue'
 const { locale } = useI18n()
 const searchStore = useSearchStore()
 const showModal = ref(false)
-const isLoading = inject('isLoading')
+const isLoading = ref(false)
 const isAsideVisible = ref(true)
 provide('isAsideVisible', isAsideVisible)
 const userInfo = ref({})

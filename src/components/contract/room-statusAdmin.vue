@@ -16,7 +16,7 @@
       <!-- Status Timeline -->
       <div class="space-y-6">
         <template v-for="(file, fileIndex) in filteredFiles" :key="file.id">
-          <div class="flex flex-col md:flex-row md:items-center overflow-x-auto py-2">
+          <div class="flex flex-col md:flex-row md:items-center overflow-scroll py-2">
             <template v-for="(step, index) in getUniqueStatuses(file.LawyerTask)" :key="step.id">
               <!-- Status Card -->
               <div :class="[
@@ -200,19 +200,28 @@ const getUniqueStatuses = (lawyerTask) => {
   const statusHistory = lawyerTask.flatMap((task) => task.ClientFileStatusHistory || []);
   if (!statusHistory || !Array.isArray(statusHistory) || statusHistory.length === 0) return [];
 
+  // Define valid statuses
+  const validStatuses = [
+    'status1', 'status2', 'status3', 'status4', 
+    'status5', 'status6', 'status7', 'status8', 'status9'
+  ];
+
   const statusMap = new Map();
   statusHistory.forEach((item) => {
-    if (!statusMap.has(item.status) || item.id > statusMap.get(item.status).id) {
-      const comment = item.comment || "";
-      statusMap.set(item.status, {
-        id: item.id,
-        status: item.status,
-        title: item.status,
-        date: item.createdAt,
-        completed: true,
-        isLatestRejectionWithComment: false,
-        comment: comment,
-      });
+    // Only include valid statuses
+    if (validStatuses.includes(item.status)) {
+      if (!statusMap.has(item.status) || item.id > statusMap.get(item.status).id) {
+        const comment = item.comment || "";
+        statusMap.set(item.status, {
+          id: item.id,
+          status: item.status,
+          title: item.status,
+          date: item.createdAt,
+          completed: true,
+          isLatestRejectionWithComment: false,
+          comment: comment,
+        });
+      }
     }
   });
 
@@ -273,6 +282,33 @@ const filteredFiles = computed(() => {
     transform-origin: center;
   }
 }
+
+/* main.css yoki App.vue ichida <style global> bo‘limiga qo‘shing */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Firefox uchun */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #fb010100;
+}
+
 /* HTML: <div class="loader"></div> */
 .loader1 {
   width: calc(80px / cos(45deg));

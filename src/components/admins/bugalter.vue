@@ -240,7 +240,7 @@
     <div class="flex justify-center items-center pt-4 px-4">
       <h1
         class="text-[40px] font-bold text-center bg-gradient-to-r from-blue-800 to-purple-500 text-white shadow-sm shadow-white rounded-lg py-2 px-[100px]">
-        {{ dat === 'datakril' ? translateText("Bugalter ro'yxati") : "Bugalter ro'yxati" }} <span v-if="Count"
+        {{ dat === 'datakril' ? translateText("Xisobchilar ro'yxati") : "Xisobchilar ro'yxati" }} <span v-if="Count"
           class="border-b-4 px-1 border-white">{{ filteredAdmins.length }}</span>
       </h1>
     </div>

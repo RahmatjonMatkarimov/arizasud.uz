@@ -24,12 +24,17 @@ const newId = parseInt(id.value);
 
 const data = ref({
   admins: false,
-  yurists: false,
   call_centres: false,
+  yurists: false,
   userFiles: false,
-  workDone: false,
+  accauntant: false,
+  chiefAccauntant: false,
+  warehouseman: false,
+  yuristAssistant: false,
   companyDocs: false,
+  carrier: false,
   ticket: false,
+  workDone: false
 });
 
 const fetchPermissions = async () => {
@@ -50,12 +55,17 @@ const fetchPermissions = async () => {
         ticket: false,
         companyDocs: false,
         userFiles: false,
+        accauntant: false,
+        chiefAccauntant: false,
+        warehouseman: false,
+        yuristAssistant: false,
+        carrier: false,
       };
     }
   } catch (error) {
     console.error("Failed to fetch permissions:", error);
   } finally {
-    isLoading.value = false; // 🔹 Yuklanish tugaganini belgilash
+    isLoading.value = false;
   }
 };
 
@@ -63,20 +73,18 @@ const togglePermission = async (permission) => {
   isLoading.value = true;
   try {
     const updatedValue = !data.value[permission];
-
     const response = await axios.put(
       `${URL}/permissions/${newId}`,
       { [permission]: updatedValue },
       { headers: { Authorization: ` Bearer ${localStorage.getItem("token")}` } }
     );
-
     if (response.status === 200) {
       data.value[permission] = updatedValue;
     }
   } catch (error) {
     console.error(`Failed to update ${permission}:`, error);
   } finally {
-    isLoading.value = false; // 🔹 Yuklanish tugaganini belgilash
+    isLoading.value = false;
   }
 };
 
@@ -114,7 +122,7 @@ const fetchUserData = async () => {
     console.error("Error fetching user data:", err);
   } finally {
     loading.value = false;
-    isLoading.value = true;
+    isLoading.value = false;
   }
 };
 
@@ -158,17 +166,21 @@ const adminStatus = computed(() => {
 const checkOnlineStatus = (onlineAdminIds) => {
   onlineAdmins.value = onlineAdminIds.map((adminId) => adminId.toString());
 };
+
 const permissions = [
   { key: "admins", label: "Adminlar ro'yxatini ko'rish uchun ruxsat" },
   { key: "yurists", label: "Yuristlar ro'yxatini ko'rish uchun ruxsat" },
   { key: "call_centres", label: "Devonxona Mudirlar ro'yxatini ko'rish uchun ruxsat" },
-  {
-    key: "ticket",
-    label: "Ishchilarni bajargan ishlarini ro'yxatini ko'rish uchun ruxsat",
-  },
-  { key: "workDone", label: "Kampaniya fayllarini ro'yxatini ko'rish uchun ruxsat" },
+  { key: "ticket", label: "Taklif va shikoyatlar ro'yxatini ko'rish uchun ruxsat" },
+  { key: "workDone", label: "Ishchilarni bajargan ishlarini ro'yxatini ko'rish uchun ruxsat" },
   { key: "userFiles", label: "Imzolanadigan fayllar ro'yxatini ko'rish uchun ruxsat" },
+  { key: "accauntant", label: "Xisobchilar ro'yxatini ko'rish uchun ruxsat" },
+  { key: "chiefAccauntant", label: "Bosh xisobchilar ro'yxatini ko'rish uchun ruxsat" },
+  { key: "warehouseman", label: "Omborchilar ro'yxatini ko'rish uchun ruxsat" },
+  { key: "yuristAssistant", label: "Yurist yordamchilari ro'yxatini ko'rish uchun ruxsat" },
+  { key: "carrier", label: "Yetkazib beruvchilar ro'yxatini ko'rish uchun ruxsat" },
 ];
+
 const info = [
   { key: "/info", label: "Hodim ma'lumotlari" },
   { key: "/tasks", label: "Hodim vazifalari" },
@@ -190,28 +202,22 @@ onUnmounted(() => {
 <template>
   <div class="min-h-screen dark:bg-gray-800 bg-gray-200 dark:text-gray-100 text-gray-800">
     <div class="max-w-[1140px] mx-auto p-6">
-      <div
-        class="bg-gradient-to-r relative from-purple-900 to-purple-600 w-full h-[200px] rounded-t-lg"
-      >
+      <div class="bg-gradient-to-r relative from-purple-900 to-purple-600 w-full h-[200px] rounded-t-lg">
         <div :class="adminStatus.color" class="flex items-center absolute top-4 right-4">
-          <span
-            :class="adminStatus.dotColor"
-            class="w-[25px] border-2 border-white h-[25px] rounded-full shadow-md"
-          ></span>
+          <span :class="adminStatus.dotColor"
+            class="w-[25px] border-2 border-white h-[25px] rounded-full shadow-md"></span>
         </div>
       </div>
       <div class="relative bg-white dark:bg-gray-700 rounded-b-lg shadow-lg">
         <div class="absolute -top-16 left-[40px]">
-          <img
-            :src="userInfo ? getImageUrl(userInfo.img) : '/default-avatar.png'"
-            class="w-32 h-32 rounded-full border-4 border-white dark:border-gray-700"
-          />
+          <img :src="userInfo ? getImageUrl(userInfo.img) : '/default-avatar.png'"
+            class="w-32 h-32 rounded-full border-4 border-white dark:border-gray-700" />
         </div>
         <div class="pt-20 px-6 pb-6">
           <div :class="adminStatus.color" class="flex items-center">
             <span>{{
               dat === "datakril" ? translateText(adminStatus.status) : adminStatus.status
-            }}</span>
+              }}</span>
           </div>
           <div class="flex justify-between items-center">
             <div>
@@ -230,7 +236,7 @@ onUnmounted(() => {
               <Icon icon="mdi:phone" class="w-5 h-5 mr-2 text-blue-500" />
               <span>{{
                 dat === "datakril" ? translateText(userInfo?.phone) : userInfo?.phone
-              }}</span>
+                }}</span>
             </div>
 
             <!-- Tug‘ilgan sana -->
@@ -265,27 +271,20 @@ onUnmounted(() => {
 
             <!-- ID karta raqami -->
             <div class="flex items-center text-gray-700 dark:text-gray-200">
-              <Icon
-                icon="mdi:card-account-details-outline"
-                class="w-5 h-5 mr-2 text-blue-500"
-              />
-              <span
-                >{{
-                  dat === "datakril"
-                    ? translateText("ID karta raqami:")
-                    : "ID karta raqami:"
-                }}
-                {{ userInfo.userCode }}</span
-              >
+              <Icon icon="mdi:card-account-details-outline" class="w-5 h-5 mr-2 text-blue-500" />
+              <span>{{
+                dat === "datakril"
+                  ? translateText("ID karta raqami:")
+                  : "ID karta raqami:"
+              }}
+                {{ userInfo.userCode }}</span>
             </div>
 
             <!-- JSHSHIR -->
             <div class="flex items-center text-gray-700 dark:text-gray-200">
               <Icon icon="mdi:barcode" class="w-5 h-5 mr-2 text-blue-500" />
-              <span
-                >{{ dat === "datakril" ? translateText("JSHSHIR:") : "JSHSHIR:" }}
-                {{ userInfo.uniqueCode }}</span
-              >
+              <span>{{ dat === "datakril" ? translateText("JSHSHIR:") : "JSHSHIR:" }}
+                {{ userInfo.uniqueCode }}</span>
             </div>
           </div>
         </div>
@@ -296,29 +295,22 @@ onUnmounted(() => {
             {{ dat === "datakril" ? translateText("Ruxsatlar") : "Ruxsatlar" }}
           </h2>
           <ul class="space-y-4">
-            <li
-              v-for="item in permissions"
-              :key="item.key"
-              class="flex flex-col md:flex-row md:items-center justify-between border-2 border-black/20 dark:border-white/20 p-4 rounded-xl shadow-md transition hover:shadow-lg"
-            >
+            <li v-for="item in permissions" :key="item.key"
+              class="flex flex-col md:flex-row md:items-center justify-between border-2 border-black/20 dark:border-white/20 p-4 rounded-xl shadow-md transition hover:shadow-lg">
               <div class="text-base font-medium mb-2 md:mb-0 md:mr-4">
                 {{ dat === "datakril" ? translateText(item.label) : item.label }}
               </div>
               <div class="flex items-center gap-2">
                 <span class="text-sm font-semibold">On</span>
                 <label class="relative inline-flex items-center cursor-pointer">
-                  <input
-                    type="checkbox"
-                    class="sr-only peer"
-                    :checked="data[item.key]"
-                    @change="() => togglePermission(item.key)"
-                  />
+                  <input type="checkbox" class="sr-only peer" :checked="data[item.key]"
+                    @change="() => togglePermission(item.key)" />
                   <div
-                    class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:bg-green-500 transition-all duration-300"
-                  ></div>
+                    class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:bg-green-500 transition-all duration-300">
+                  </div>
                   <div
-                    class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full shadow-md transform peer-checked:translate-x-5 transition-all duration-300"
-                  ></div>
+                    class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full shadow-md transform peer-checked:translate-x-5 transition-all duration-300">
+                  </div>
                 </label>
                 <span class="text-sm font-semibold">Off</span>
               </div>
@@ -334,12 +326,8 @@ onUnmounted(() => {
             }}
           </h2>
           <ul class="space-y-4">
-            <li
-              v-for="item in info"
-              :key="item.key"
-              @click="router.push(item.key + `/${newId}`)"
-              class="flex flex-col md:flex-row md:items-center justify-between border-2 border-black/20 dark:border-white/20 p-4 rounded-xl shadow-md transition hover:shadow-lg"
-            >
+            <li v-for="item in info" :key="item.key" @click="router.push(item.key + `/${newId}`)"
+              class="flex flex-col md:flex-row md:items-center justify-between border-2 border-black/20 dark:border-white/20 p-4 rounded-xl shadow-md transition hover:shadow-lg">
               <div class="text-base font-medium mb-2 md:mb-0 md:mr-4">
                 {{ dat === "datakril" ? translateText(item.label) : item.label }}
               </div>
@@ -388,11 +376,11 @@ onUnmounted(() => {
   border-radius: 50%;
 }
 
-input:checked + .slider {
+input:checked+.slider {
   background-color: #09ff52;
 }
 
-input:checked + .slider:before {
+input:checked+.slider:before {
   transform: translateX(14px);
 }
 </style>

@@ -180,7 +180,7 @@ const statusCards = [
   },
   {
     id: 4,
-    title: 'Bonuslar',
+    title: 'To\'liq tugallangan fayllar',
     count: 0,
     documentId: 'N/A',
     status: 'rejected',
@@ -374,28 +374,30 @@ const updateType = async (id, newStatus, commentText = '', adminId = null) => {
     if (adminId) {
       payload.assignedAdminId = adminId;
     }
-    if (newStatus === 4) {
-      await axios.post(`${URL}/client-file-status-history`, payload);
-    } else if (newStatus === 2) {
-      await axios.post(`${URL}/client-file-status-history`, payload);
-    } else if (newStatus === 3) {
+
+    // status1, status2, status3, status4 uchun so'rov
+    if ([1, 2, 3, 4].includes(newStatus)) {
       await axios.post(`${URL}/client-file-status-history`, payload);
     }
+
     openDropdownId.value = null;
     isModalOpen.value = false;
     comment.value = '';
     selectedRejectId.value = null;
     isAdminModalOpen.value = false;
-    getData();
+
+    await getData(); // Yangilangan ma'lumotlarni qayta yuklash
   } catch (error) {
-    console.error('Error updating data:', error);
+    console.error('Error updating data:', error.response?.data || error.message);
   } finally {
     isLoading.value = false
   }
 };
 
 const openRejectModal = (id) => {
-  selectedRejectId.value = id;
+  selectedRejectId.value = id.id;
+  console.log(id.id);
+  
   isModalOpen.value = true;
   openDropdownId.value = null;
 };
@@ -929,7 +931,7 @@ onMounted(() => {
                           @click="openReasonModal(getLatestRejectionComment(doc.history))">
                           {{ dat === 'datakril' ? translateText('Sababni Ko\'rish') : 'Sababni Ko\'rish' }}
                         </button>
-                        <button v-if="activeSection !== 'status1'"
+                        <button v-if="activeSection !== 'status1'&&activeSection !== 'status10'"
                           class="btn bg-red-600 dark:bg-red-500 text-white text-sm hover:bg-red-700 dark:hover:bg-red-600"
                           @click="openRejectModal(doc)">
                           {{ dat === 'datakril' ? translateText('Rad etish') : 'Rad etish' }}

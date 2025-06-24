@@ -319,7 +319,7 @@
     >
       <div
         @click.stop
-        class="bg-white/95 dark:bg-gray-800/95 backdrop-blur-3xl p-8 rounded-3xl max-h-[550px] shadow-2xl overflow-y-auto transition-all duration-700 animate-modal-scale border border-white/20 dark:border-gray-700/20 w-96 relative"
+        class="bg-white/95 dark:bg-gray-800/95 backdrop-blur-3xl p-8 rounded-3xl max-h-[550px] shadow-2xl overflow-y-auto transition-all duration-700 animate-modal-scale border border-white/20 dark:border-gray-700/20 w-[500px] relative"
       >
         <!-- Animated background -->
         <div class="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-indigo-500/10 to-purple-500/10 rounded-3xl"></div>
