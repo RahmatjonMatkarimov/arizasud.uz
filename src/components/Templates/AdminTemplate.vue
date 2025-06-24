@@ -250,26 +250,8 @@
           // Light mode scrollbar
           'scrollbar-thumb-gray-300 scrollbar-track-gray-100/50'
         ]">
-          <!-- Loading -->
-          <div v-if="isLoading" class="flex flex-col items-center justify-center h-32 gap-4">
-            <div :class="[
-              'w-8 h-8 border-2 rounded-full animate-spin',
-              // Dark mode
-              'dark:border-slate-600 dark:border-t-emerald-400',
-              // Light mode
-              'border-gray-300 border-t-blue-500'
-            ]"></div>
-            <p v-if="!isCollapsed" :class="[
-              'font-medium',
-              // Dark mode
-              'dark:text-slate-300',
-              // Light mode
-              'text-gray-600'
-            ]">Yuklanmoqda...</p>
-          </div>
-
           <!-- Menu Items -->
-          <nav v-else class="space-y-3 pb-6">
+          <nav class="space-y-3 pb-6">
             <router-link 
               v-for="(item, i) in filteredMenu" 
               :key="i"
@@ -525,6 +507,7 @@ import { useSearchStore } from './searchQuary'
 import Dark from '../dark.vue'
 import { URL } from "@/auth/url.js";
 import { useRoute } from "vue-router";
+const isLoading = inject('isLoading')
 
 const route = useRoute();
 const id = localStorage.getItem("id");
@@ -563,7 +546,6 @@ const open = () => window.open("https://github.com/");
 const { locale } = useI18n()
 const searchStore = useSearchStore()
 const showModal = ref(false)
-const isLoading = inject('isLoading')
 const isAsideVisible = ref(true)
 provide('isAsideVisible', isAsideVisible)
 const userInfo = ref({})
@@ -604,7 +586,6 @@ const toggleLanguageDropdown = () => {
   isLanguageDropdownOpen.value = !isLanguageDropdownOpen.value
 }
 const fetchAdminData = async () => {
-  isLoading.value = true;
   try {
     const response = await axios.get(`${URL}/${localStorage.getItem("role")}/${newId}`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -612,8 +593,6 @@ const fetchAdminData = async () => {
     data.value = response.data.permissions[response.data.permissions.length - 1];
   } catch (error) {
     console.error("Xatolik yuz berdi:", error);
-  } finally {
-    isLoading.value = false;
   }
 };
 onMounted(fetchAdminData);
@@ -651,7 +630,6 @@ const fetchUserData = async () => {
     console.error('Missing user information')
     return
   }
-  isLoading.value = true
   try {
     const token = localStorage.getItem('token')
     if (!token) {
@@ -680,34 +658,27 @@ const fetchUserData = async () => {
       localStorage.removeItem('token')
       router.push('/login')
     }
-  } finally {
-    isLoading.value = false
   }
 }
 
 const fetchUnreadMessageCount = async () => {
   if (!userIdNum) return
-  isLoading.value = true
   try {
     const response = await axios.get(`${URL}/messages/unread/${userIdNum}`)
     messageCount.value = response.data.length
   } catch (error) {
     console.error('Error fetching unread message count:', error)
-  } finally{
-    isLoading.value = false
   }
 }
 
 const fetchUnreadCount = async () => {
   if (!userIdNum) return
-  isLoading.value = true
   try {
     const response = await axios.get(`${URL}/accauntant-notification/unread/count?userId=${userIdNum}`)
     unreadCount.value = response.data
   } catch (error) {
     console.error('Error fetching unread count:', error)
   } finally{
-    isLoading.value = false
   }
 }
 
