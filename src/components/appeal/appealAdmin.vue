@@ -351,7 +351,7 @@
                   v-for="(item, index) in data" 
                   :key="item.id"
                   :style="{ 'animation-delay': `${index * 100}ms` }"
-                  class=" relative group bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-2 border-gray-200/50 dark:border-gray-700/50 hover:border-emerald-400/50 dark:hover:border-gray-500/50 rounded-2xl p-4 shadow-lg hover:shadow-2xl transform transition-all duration-500 cursor-pointer animate-fade-in-up overflow-hidden"
+                  class=" relative group bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-2 border-gray-200/50 dark:border-gray-700/50 hover:border-emerald-400/50 dark:hover:border-gray-500/50 rounded-2xl p-6 shadow-lg hover:shadow-2xl transform transition-all duration-500 cursor-pointer animate-fade-in-up overflow-hidden"
                   @click="goToPath(item.url)"
                 >
                   <button 

@@ -193,15 +193,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Footer -->
-      <div class="text-center mt-16 opacity-60 animate-fade-in delay-1000">
-        <p class="text-sm flex items-center justify-center gap-2 text-gray-600 dark:text-gray-400">
-          <Icon icon="mdi:heart" class="w-4 h-4 animate-pulse text-gray-600 dark:text-gray-400" />
-          {{ dat === 'datakril' ? translateText('© 2024 Kategoriya Boshqaruv Tizimi') : '© 2024 Kategoriya Boshqaruv Tizimi' }}
-          <Icon icon="mdi:heart" class="w-4 h-4 animate-pulse text-gray-600 dark:text-gray-400" />
-        </p>
-      </div>
     </div>
 
     <!-- Create Modal -->

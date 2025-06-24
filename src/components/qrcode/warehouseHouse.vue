@@ -5,16 +5,16 @@
       <h1 class="text-3xl md:text-4xl font-bold text-neutral-900 dark:text-neutral-100 text-center mb-6">
         {{ dat === 'datakril' ? translateText(`Ombor va Zimmamdagilar Boshqaruvi`) : `Ombor va Zimmamdagilar Boshqaruvi` }}
       </h1>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div class="bg-white dark:bg-neutral-800 p-6 rounded-2xl shadow-md ring-1 ring-neutral-200 dark:ring-neutral-700 transition-all duration-300 hover:shadow-lg">
+      <div class="flex gap-6">
+        <div class="bg-white w-full dark:bg-neutral-800 p-6 rounded-2xl shadow-md ring-1 ring-neutral-200 dark:ring-neutral-700 transition-all duration-300 hover:shadow-lg">
           <span class="block text-3xl font-bold text-indigo-600 dark:text-indigo-400">{{ myAssignments.length }}</span>
           <span class="text-sm text-neutral-500 dark:text-neutral-400 uppercase tracking-wide">{{ dat === 'datakril' ? translateText(`Mening Zimmamdagilar`) : `Mening Zimmamdagilar` }}</span>
         </div>
-        <div class="bg-white dark:bg-neutral-800 p-6 rounded-2xl shadow-md ring-1 ring-neutral-200 dark:ring-neutral-700 transition-all duration-300 hover:shadow-lg">
+        <div class="bg-white w-full dark:bg-neutral-800 p-6 rounded-2xl shadow-md ring-1 ring-neutral-200 dark:ring-neutral-700 transition-all duration-300 hover:shadow-lg">
           <span class="block text-3xl font-bold text-indigo-600 dark:text-indigo-400">{{ transferredAssignments.length }}</span>
           <span class="text-sm text-neutral-500 dark:text-neutral-400 uppercase tracking-wide">{{ dat === 'datakril' ? translateText(`Topshirilganlar`) : `Topshirilganlar` }}</span>
         </div>
-        <div v-if="role === 'warehouseman'" class="bg-white dark:bg-neutral-800 p-6 rounded-2xl shadow-md ring-1 ring-neutral-200 dark:ring-neutral-700 transition-all duration-300 hover:shadow-lg">
+        <div v-if="role === 'warehouseman'" class="bg-white w-full dark:bg-neutral-800 p-6 rounded-2xl shadow-md ring-1 ring-neutral-200 dark:ring-neutral-700 transition-all duration-300 hover:shadow-lg">
           <span class="block text-3xl font-bold text-indigo-600 dark:text-indigo-400">{{ brokenAssignments.length }}</span>
           <span class="text-sm text-neutral-500 dark:text-neutral-400 uppercase tracking-wide">{{ dat === 'datakril' ? translateText(`Buzilgan Hom Ashiyolar`) : `Buzilgan Hom Ashiyolar` }}</span>
         </div>

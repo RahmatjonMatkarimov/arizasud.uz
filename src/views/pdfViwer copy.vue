@@ -1,33 +1,85 @@
 <template>
-  <div class="bg-gray-100">
-    <div class="my-12 flex justify-center items-center md:justify-between px-3 w-full h-[100px] md:h-[150px] lg:h-[200px] opacity-[88%] relative bg-[#0033FF]">
-      <div id="particles-js" class="absolute top-0 left-0 w-full h-full"></div>
-      <b class="lg:text-[25px] text-center w-full md:w-[40%] lg:w-[35%] z-0 uppercase hidden lg:block" style="text-shadow: 2px 2px 50px white;">
-        {{ $t('header') }}
-      </b>
-      <div class="flex justify-center relative ml-2 sm:mx-10 mt-2 z-10">
-        <img src="/logo1.png" class="w-[250px] md:w-[300px] lg:w-[350px]" alt="Logo" />
-      </div>
-      <b class="lg:text-[25px] md:text-[16px] text-[10px] text-center w-[80%] md:w-[60%] lg:w-[35%] z-0 uppercase" style="text-shadow: 2px 2px 50px white;">
-        {{ $t('header') }}
-      </b>
-    </div>
-    <main class="container mx-auto px-4 py-10 flex flex-col items-center justify-center">
-      <div v-if="isLoading" class="text-gray-600 text-lg md:text-xl animate-pulse tracking-wide">
-        Yuklanmoqda...
-      </div>
-      <div v-else-if="pdfPages.length" class="w-full max-w-5xl bg-white rounded-2xl shadow-2xl p-6">
-        <!-- Download Button -->
-        <button @click="downloadPdf" class="mb-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300">
-          PDF-ni Yuklab Olish
-        </button>
-        <!-- PDF Pages as Images -->
-        <div v-for="(page, index) in pdfPages" :key="index" class="mb-4">
-          <img :src="page" class="w-full rounded-lg shadow-md object-cover transition-transform duration-300 hover:scale-105" alt="PDF Page" />
+  <div :class="isDarkMode ? 'bg-gray-900' : 'bg-gray-100'" class="min-h-screen transition-colors duration-300">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 transition-colors duration-300 shadow-lg"
+            :class="isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'">
+      <div class="container mx-auto px-4 py-4">
+        <div class="flex justify-between items-center">
+            <button 
+              v-if="pdfPages.length"
+              @click="downloadPdf" 
+              :class="isDarkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-600 hover:bg-blue-700'"
+              class="px-4 py-2 text-white rounded-lg transition-colors duration-300 flex items-center gap-2 font-medium text-sm"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Yuklab Olish
+            </button>
+            <button 
+              @click="toggleTheme" 
+              :class="isDarkMode ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-100 text-gray-900 hover:bg-gray-200'"
+              class="p-2 rounded-lg transition-all duration-300 border"
+              title="Theme o'zgartirish"
+            >
+              <svg v-if="isDarkMode" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd" />
+              </svg>
+              <svg v-else class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+              </svg>
+            </button>
         </div>
       </div>
-      <div v-else class="text-gray-500 text-base md:text-lg text-center italic">
-        Hech qanday sahifa topilmadi.
+    </header>
+
+    <main class="container mx-auto px-4 py-8 flex flex-col items-center justify-center">
+      <div v-if="pdfPages.length" class="w-full max-w-5xl rounded-2xl shadow-2xl p-6 transition-colors duration-300 mt-4"
+           :class="isDarkMode ? 'bg-gray-800' : 'bg-white'">
+
+        <!-- PDF Pages Container -->
+        <div class="space-y-6 mt-0">
+          <div v-for="(page, index) in pdfPages" :key="index" 
+               class="relative group">
+            <!-- Page Number -->
+            <div class="mb-2 flex justify-center">
+              <span :class="isDarkMode ? 'text-gray-300 bg-gray-700' : 'text-gray-600 bg-gray-100'"
+                    class="px-3 py-1 rounded-full text-sm font-medium">
+                Sahifa {{ index + 1 }}
+              </span>
+            </div>
+            
+            <!-- PDF Page Image -->
+            <div class="overflow-hidden rounded-lg shadow-lg transition-all duration-300 group-hover:shadow-xl"
+                 :class="isDarkMode ? 'bg-gray-700' : 'bg-white'">
+              <img 
+                :src="page" 
+                class="w-full object-cover transition-transform duration-300 group-hover:scale-105" 
+                :alt="`PDF Sahifa ${index + 1}`"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div v-else-if="isLoading" class="flex flex-col items-center justify-center py-20">
+        <div class="animate-spin rounded-full h-16 w-16 border-4 border-t-blue-600"
+             :class="isDarkMode ? 'border-gray-600' : 'border-gray-200'"></div>
+        <p :class="isDarkMode ? 'text-gray-300' : 'text-gray-600'" class="mt-4 text-lg">
+          PDF yuklanmoqda...
+        </p>
+      </div>
+
+      <!-- Error State -->
+      <div v-else class="flex flex-col items-center justify-center py-20">
+        <svg class="w-16 h-16 mb-4" :class="isDarkMode ? 'text-gray-500' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        <p :class="isDarkMode ? 'text-gray-300' : 'text-gray-600'" class="text-lg text-center">
+          PDF yuklanmadi. Iltimos, qayta urinib ko'ring.
+        </p>
       </div>
     </main>
   </div>
@@ -41,15 +93,34 @@ import * as pdfjsLib from "pdfjs-dist";
 
 // Explicitly set the worker source
 pdfjsLib.GlobalWorkerOptions.workerSrc =
-  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js"; // Updated to match API version
+  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
 
-  const isLoading = inject('isLoading');
+// Theme management
+const isDarkMode = ref(false);
+
+// Check for saved theme preference or default to light mode
+onMounted(() => {
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme) {
+    isDarkMode.value = savedTheme === 'dark';
+  } else {
+    // Check system preference
+    isDarkMode.value = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+});
+
+const toggleTheme = () => {
+  isDarkMode.value = !isDarkMode.value;
+  localStorage.setItem('theme', isDarkMode.value ? 'dark' : 'light');
+};
+
+const isLoading = inject('isLoading') || ref(false);
 const route = useRoute();
 const fileId = route.params.id;
 const fileUrl = ref("");
 const pdfPages = ref([]);
 
-const BASE_URL = 'https://backend.arizasud.uz'; // Replace with your actual API base URL
+const BASE_URL = 'https://backend.arizasud.uz';
 
 const getData = async () => {
   isLoading.value = true;
@@ -57,16 +128,14 @@ const getData = async () => {
     const requestUrl = `${BASE_URL}/enterprise-file/signing/${fileId}`;
 
     const res = await axios.get(requestUrl, {
-      validateStatus: (status) => status < 500, // Accept only non-server-error responses
+      validateStatus: (status) => status < 500,
     });
 
-    // Check for HTTP status errors
     if (res.status !== 200) {
       console.error(`HTTP Error: ${res.status} - ${res.statusText}`);
       throw new Error(`Failed to fetch data. HTTP Status: ${res.status}`);
     }
 
-    // Validate API response format
     if (!res.data || typeof res.data !== "object" || !res.data.filePath) {
       if (typeof res.data === "string" && res.data.includes("<!DOCTYPE html>")) {
         console.error("API returned an HTML document. Response:", res.data);
@@ -82,17 +151,15 @@ const getData = async () => {
     await renderPdf(fileUrl.value);
   } catch (error) {
     console.error("Ma'lumot yuklashda xatolik:", error);
-    // Fallback: Display a user-friendly message
     pdfPages.value = [];
-    alert("Xatolik yuz berdi. Iltimos, keyinroq qayta urinib ko'ring."); // Notify the user
+    alert("Xatolik yuz berdi. Iltimos, keyinroq qayta urinib ko'ring.");
   } finally {
     isLoading.value = false;
   }
 };
 
-// Render PDF pages as images
 const renderPdf = async (url) => {
-  isLoading.value = true
+  isLoading.value = true;
   try {
     const loadingTask = pdfjsLib.getDocument(url);
     const pdf = await loadingTask.promise;
@@ -102,32 +169,28 @@ const renderPdf = async (url) => {
       const page = await pdf.getPage(i);
       const viewport = page.getViewport({ scale: 1.5 });
 
-      // Create a canvas element
       const canvas = document.createElement("canvas");
       const context = canvas.getContext("2d");
       canvas.width = viewport.width;
       canvas.height = viewport.height;
 
-      // Render the page into the canvas
       await page.render({ canvasContext: context, viewport }).promise;
 
-      // Convert canvas to image data URL
       const imageDataUrl = canvas.toDataURL("image/png");
       pdfPages.value.push(imageDataUrl);
     }
   } catch (error) {
     console.error("PDF yuklashda xatolik:", error);
-  } finally{
-    isLoading.value = false
+  } finally {
+    isLoading.value = false;
   }
 };
 
-// Download PDF function
 const downloadPdf = () => {
   if (fileUrl.value) {
     const link = document.createElement("a");
     link.href = fileUrl.value;
-    link.download = `document_${fileId}.pdf`; // Default filename
+    link.download = `document_${fileId}.pdf`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -161,8 +224,35 @@ onMounted(() => {
   z-index: 10;
 }
 
-b {
-  color: white;
-  font-weight: bold;
+/* Smooth transitions for theme changes */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Custom scrollbar for dark mode */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #6b7280;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4b5563;
+}
+
+/* Dark mode scrollbar */
+.dark ::-webkit-scrollbar-thumb {
+  background: #4b5563;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
 }
 </style>

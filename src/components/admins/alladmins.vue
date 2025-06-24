@@ -56,19 +56,6 @@
             {{ dat === 'datakril' ? item.birthday?.split('T')[0] : item.birthday?.split('T')[0] }}
           </p>
         </div>
-        <div class="text-center p-4">
-          <button 
-            class="w-full text-white font-bold py-2 px-4 rounded transition-all duration-300"
-            :class="[
-              checkIsOnlineRealtime(item.id) 
-                ? 'bg-green-600 hover:bg-green-700' 
-                : 'bg-green-600 hover:bg-green-700'
-            ]"
-            @click="router.push('/profile/'+item.id)"
-          >
-            {{ dat === 'datakril' ? translateText("Batafsil Ma'lumot") : "Batafsil Ma'lumot" }}
-          </button>
-        </div>
       </div>
     </div>
   </div>

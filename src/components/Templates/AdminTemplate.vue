@@ -18,7 +18,7 @@
             // Light mode
             'text-gray-400'
           ]" />
-          <input type="text" v-model="searchStore.query" :placeholder="$t('qidiruv')" :class="[
+          <input type="search" v-model="searchStore.query" name="search" autocomplete="off" :placeholder="$t('qidiruv')" :class="[
             'pl-10 pr-4 py-2.5 border rounded-xl w-48 md:w-64 transition-all duration-300',
             // Dark mode
             'dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200 dark:focus:border-emerald-400 dark:focus:bg-slate-700 dark:placeholder-slate-400 dark:hover:border-slate-500',

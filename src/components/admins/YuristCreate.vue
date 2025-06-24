@@ -197,13 +197,13 @@
         <label for="updatednewPassword1" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
           {{ $t('passwordModal.newPasswordPlaceholder') }}
         </label>
-        <input v-model="updatednewPassword1" id="updatednewPassword1" type="password"
+        <input v-model="updatednewPassword1" autocomplete="new-password" id="updatednewPassword1" type="password"
           class="w-full p-2 mb-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
           :placeholder="$t('passwordModal.newPasswordPlaceholder')" />
         <label for="updatednewPassword2" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
           {{ $t('passwordModal.confirmNewPasswordPlaceholder') }}
         </label>
-        <input v-model="updatednewPassword2" id="updatednewPassword2" type="password"
+        <input v-model="updatednewPassword2" autocomplete="new-password" id="updatednewPassword2" type="password"
           class="w-full p-2 mb-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
           :placeholder="$t('passwordModal.confirmNewPasswordPlaceholder')" />
         <p class="text-red-600 text-sm dark:text-red-400">{{ err }}</p>
@@ -498,35 +498,36 @@ const checkOnlineStatus = () => {
 const getImageUrl = (img) => {
   return img ? `${URL}/upload/${img}` : "/default-avatar.png";
 };
-
 const toggleModal = async (id) => {
   modalOpen.value = modalOpen.value === id ? null : id;
-
   if (modalOpen.value === id) {
-    await nextTick(); // Wait for DOM to update
+    await nextTick(); // DOM yangilanishini kutadi
     const button = buttonRefs.value[id];
     if (button) {
       const rect = button.getBoundingClientRect();
-      const offsetX = 10; // Space from the button
-      const offsetY = 0; // Align vertically with the button
+      const offsetX = 10; // Tugmadan masofa (horizontal)
+      const offsetY = 0;  // Tugmadan masofa (vertical)
 
-      // Calculate position (right side of the button)
-      let left = rect.right + offsetX + window.scrollX;
-      let top = rect.top + offsetY + window.scrollY;
+      // Scroll offset hisobga olinsin
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
 
-      // Ensure modal stays within viewport
-      const modalWidth = 224; // Modal width in pixels
-      const viewportWidth = window.innerWidth;
-      if (left + modalWidth > viewportWidth) {
-        // If modal overflows on the right, position it to the left of the button
-        left = rect.left - modalWidth - offsetX;
+      let top = rect.top + scrollTop - 250; // Modalni yana biroz tepaga siljitsin
+      let left = rect.right + scrollLeft + offsetX;
+
+      // Modal kengligi
+      const modalWidth = 224;
+
+      // Ekranning o'ng chegarasidan chiqib ketmasligi uchun tekshirish
+      if (left + modalWidth > window.innerWidth + scrollLeft) {
+        left = rect.left + scrollLeft - modalWidth - offsetX;
       }
 
-      // Ensure modal doesn't go off-screen horizontally
-      if (left < 0) left = 10; // Minimum padding from left edge
+      // Ekranning chap chegarasiga tushmasligi uchun
+      if (left < 0) left = 10;
 
       modalPosition.value[id] = {
-        top: `${top -50}px`,
+        top: `${top}px`,
         left: `${left}px`,
         width: `${modalWidth}px`
       };
