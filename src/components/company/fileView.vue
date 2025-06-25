@@ -4,7 +4,7 @@
         <div @click.stop class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 w-full max-w-md mx-4 transform transition-all duration-300 scale-100">
             <div class="flex items-center justify-between mb-6">
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                    {{ isEditing ? $t('Edit File') : $t('Upload File') }}
+                    {{ isEditing ? $t('tahrirlash') : $t('yuklash') }}
                 </h3>
                 <button @click="back()" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                     <iconify-icon icon="mdi:close" class="text-gray-500 dark:text-gray-400 text-xl"></iconify-icon>
@@ -34,7 +34,7 @@
                         <iconify-icon icon="mdi:cloud-upload" class="text-blue-500 text-2xl"></iconify-icon>
                         <div class="flex-1">
                             <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                {{ selectedFile ? selectedFile.name : $t('Choose file') }}
+                                {{ selectedFile ? selectedFile.name : $t('create') }}
                             </p>
                             <p class="text-xs text-gray-500 dark:text-gray-400">PDF, DOC, DOCX</p>
                         </div>
@@ -101,12 +101,10 @@
             
             <!-- Header -->
             <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                    {{ $t('File Preview') }}
-                </h3>
+<div></div>
                 <div class="flex items-center gap-2">
                     <button 
-                        v-if="type === true" 
+                        v-if="type === true && isSigneds === false" 
                         @click="updateEFile()"
                         class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl shadow-sm transition-all duration-200 flex items-center gap-2"
                         :disabled="isLoading"
@@ -152,12 +150,6 @@
             <!-- Header -->
             <div class="flex items-center justify-between mb-8">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
-                        {{ $t('File Management') }}
-                    </h1>
-                    <p class="text-gray-600 dark:text-gray-400 mt-1">
-                        {{ $t('Manage your documents and files') }}
-                    </p>
                 </div>
                 <button 
                     @click="back" 
@@ -175,7 +167,7 @@
                         v-for="(item, index) in ServiceData" 
                         :key="item.id" 
                         class="group flex items-center p-6 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-all duration-200"
-                        @click="goToCard(item.id)"
+                        @click="goToCard(item)"
                     >
                         <!-- Index -->
                         <div class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mr-4">
@@ -196,7 +188,7 @@
                                 {{ dat === 'datakril' ? translateText(item.name) : item.name }}
                             </h3>
                             <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                {{ $t('Document') }} • {{ formatDate(item.createdAt) }}
+                                {{ dat === 'datakril' ? translateText(`Yaratilgan vvaqti`):`Yaratilgan vvaqti` }} • {{ formatDate(item.createdAt) }}
                             </p>
                         </div>
                         
@@ -205,14 +197,12 @@
                             <button 
                                 @click.stop="editFile(item)"
                                 class="p-2.5 rounded-xl bg-blue-100 dark:bg-blue-900/30 hover:bg-blue-200 dark:hover:bg-blue-900/50 text-blue-600 dark:text-blue-400 transition-colors"
-                                :title="$t('Edit')"
                             >
                                 <iconify-icon icon="mdi:pencil" class="text-lg"></iconify-icon>
                             </button>
                             <button 
                                 @click.stop="func(item.id)"
                                 class="p-2.5 rounded-xl bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-900/50 text-red-600 dark:text-red-400 transition-colors"
-                                :title="$t('Delete')"
                             >
                                 <iconify-icon icon="mdi:delete" class="text-lg"></iconify-icon>
                             </button>
@@ -294,14 +284,11 @@ const getFileIcon = (filename) => {
 };
 
 // Helper function to format date
-const formatDate = (dateString) => {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('uz-UZ', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-    });
+const formatDate = (date) => {
+  let years = date?.slice(0, 4)
+  let month = date?.slice(5, 7)
+  let day = date?.slice(8, 10)
+  return `${day}.${month}.${years}`
 };
 
 const getCourtsData = async () => {
@@ -318,6 +305,8 @@ const getCourtsData = async () => {
 
         const filteredFiles = res.files.filter(file => file.status === "active");
         ServiceData.value = filteredFiles;
+        console.log(ServiceData.value);
+        
         type.value = res.sign || '';
     } catch (error) {
         console.error("Xatolik yuz berdi:", error.message);
@@ -449,13 +438,14 @@ const removeSelectedItems = async () => {
         isLoading.value = false
     }
 };
-
-const goToCard = (id) => {
-    const file = ServiceData.value.find(item => item.id === id);
+const isSigneds = ref(null);
+const goToCard = (iyem) => {
+    const file = ServiceData.value.find(item => item.id === iyem.id);
     if (file && file.filePath) {
-        selectedFileId.value = id;
+        selectedFileId.value = iyem.id;
         const BASE_URL = `${URL}`;
         pdfUrl.value = `${BASE_URL}${file.filePath}`;
+        isSigneds.value = iyem.isSigned
         showPdfModal.value = true;
     } else {
         alert("Fayl topilmadi yoki filePath mavjud emas!");

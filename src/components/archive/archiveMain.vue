@@ -166,6 +166,7 @@ const sections = [
   { path: 'appeal', title: 'Interaktiv xizmatlar' },
   { path: 'files', title: 'Filelar' },
   { path: 'signingFiles', title: 'Imzolangan va imzolanmagan filelar' },
+  { path: 'enterprise-file', title: 'Kampaniya fayllari' },
 ];
 
 function goToPath(path) {
