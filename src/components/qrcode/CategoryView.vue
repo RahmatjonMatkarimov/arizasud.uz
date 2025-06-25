@@ -46,7 +46,7 @@
           <div
             class="px-6 py-3 rounded-2xl backdrop-blur-sm border border-gray-200 dark:border-gray-600 bg-white/50 dark:bg-gray-800/50 transition-all duration-300 hover:scale-105 animate-fade-in-up delay-300"
           >
-            <div class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ categories.length }}</div>
+            <div class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ category.length }}</div>
             <div class="text-sm opacity-70 text-gray-600 dark:text-gray-400">
               {{ dat === 'datakril' ? translateText('Kategoriya') : 'Kategoriya' }}
             </div>
@@ -82,7 +82,7 @@
         </button>
       </div>
 
-      <!-- Categories Grid -->
+      <!-- category Grid -->
       <div
         class="backdrop-blur-sm rounded-3xl p-8 border border-gray-200 dark:border-gray-600 bg-white/50 dark:bg-gray-800/50 transition-all duration-500 hover:shadow-lg"
       >
@@ -105,17 +105,17 @@
               class="px-4 py-2 rounded-full text-sm font-bold border border-gray-200 dark:border-gray-600 bg-gray-200/50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300"
             >
               <Icon icon="mdi:format-list-bulleted" class="w-5 h-5 inline-block mr-1" />
-              {{ categories.length }}
+              {{ category.length }}
             </div>
             <button
               class="p-2 rounded-xl transition-all duration-300 hover:scale-110 bg-gray-200/50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300"
-              @click="fetchCategories"
+              @click="fetchcategory"
             >
               <Icon icon="mdi:refresh" class="w-5 h-4" />
             </button>
           </div>
         </div>
-        <div v-if="categories.length === 0" class="text-center py-20 animate-fade-in">
+        <div v-if="category.length === 0" class="text-center py-20 animate-fade-in">
           <div class="relative mb-8">
             <div
               class="absolute inset-0 rounded-full blur-xl opacity-20 animate-pulse bg-gray-300 dark:bg-gray-600"
@@ -141,7 +141,7 @@
         </div>
         <div v-else class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <div
-            v-for="(cat, index) in categories"
+            v-for="(cat, index) in category"
             :key="cat.id"
             @click="goToWarehouse(cat.id)"
             class="group relative p-6 rounded-2xl cursor-pointer transition-all duration-500 hover:scale-105 border border-gray-200 dark:border-gray-600 bg-white/50 dark:bg-gray-800/50 hover:bg-white/70 dark:hover:bg-gray-800/70 hover:border-gray-300 dark:hover:border-gray-500"
@@ -530,7 +530,7 @@ onUnmounted(() => {
 });
 
 const name = ref('');
-const categories = ref([]);
+const category = ref([]);
 const router = useRouter();
 const isSubmitting = ref(false);
 const showModal = ref(false);
@@ -544,13 +544,13 @@ const modalInput = ref<HTMLInputElement | null>(null);
 const editModalInput = ref<HTMLInputElement | null>(null);
 
 const totalItems = computed(() => {
-  return categories.value.reduce((total, cat) => total + (cat.warehouses?.length || 0), 0);
+  return category.value.reduce((total, cat) => total + (cat.warehouses?.length || 0), 0);
 });
 
-const fetchCategories = async () => {
+const fetchcategory = async () => {
   try {
     const { data } = await axios.get(`${URL}/category`);
-    categories.value = data;
+    category.value = data;
   } catch (error) {
     console.error('Kategoriyalarni olishda xatolik:', error);
   }
@@ -562,9 +562,9 @@ const createCategory = async () => {
   isSubmitting.value = true;
 
   try {
-    await axios.post(`${URL}/categories`, { name: name.value });
+    await axios.post(`${URL}/category`, { name: name.value });
     name.value = '';
-    await fetchCategories();
+    await fetchcategory();
     closeModal();
   } catch (error) {
     console.error('Error creating category:', error);
@@ -579,8 +579,8 @@ const updateCategory = async () => {
   isSubmitting.value = true;
 
   try {
-    await axios.patch(`${URL}/categories/${categoryToEdit.value.id}`, { name: editName.value });
-    await fetchCategories();
+    await axios.patch(`${URL}/category/${categoryToEdit.value.id}`, { name: editName.value });
+    await fetchcategory();
     closeEditModal();
   } catch (error) {
     console.error('Error updating category:', error);
@@ -595,8 +595,8 @@ const deleteCategory = async () => {
   isDeleting.value = true;
 
   try {
-    await axios.delete(`${URL}/categories/${categoryToDelete.value.id}`);
-    await fetchCategories();
+    await axios.delete(`${URL}/category/${categoryToDelete.value.id}`);
+    await fetchcategory();
     closeDeleteModal();
   } catch (error) {
     console.error('Error deleting category:', error);
@@ -675,7 +675,7 @@ const toggleTheme = () => {
 };
 
 onMounted(() => {
-  fetchCategories();
+  fetchcategory();
 });
 </script>
 
