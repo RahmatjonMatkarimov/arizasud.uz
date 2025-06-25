@@ -169,6 +169,10 @@ const sections = [
   { path: 'files', title: 'Filelar' },
   { path: 'signingFiles', title: 'Imzolangan va imzolanmagan filelar' },
   { path: 'enterprise-file', title: 'Kampaniya fayllari' },
+  { path: 'client-files', title: 'Shartnoma fayllari' },
+  { path: 'contract-file', title: 'Shablon shartnoma fayllari' },
+  { path: 'category', title: 'Kategoriyalar' },
+  { path: 'warehouse', title: 'Omborlar' },
 ];
 
 function goToPath(path) {
