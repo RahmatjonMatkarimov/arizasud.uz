@@ -188,7 +188,7 @@
                                 {{ dat === 'datakril' ? translateText(item.name) : item.name }}
                             </h3>
                             <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                {{ dat === 'datakril' ? translateText(`Yaratilgan vvaqti`):`Yaratilgan vvaqti` }} • {{ formatDate(item.createdAt) }}
+                                {{ dat === 'datakril' ? translateText(`Yaratilgan vaqti`):`Yaratilgan vaqti` }} • {{ formatDate(item.createdAt) }}
                             </p>
                         </div>
                         
