@@ -112,7 +112,7 @@
           </div>
         </div>
         
-        <div @click="router.push('reminders')" class="relative cursor-pointer group">
+        <div @click="router.push('/reminders')" class="relative cursor-pointer group">
           <div :class="[
             'p-2 rounded-xl transition-all duration-300 hover:scale-110',
             // Dark mode
