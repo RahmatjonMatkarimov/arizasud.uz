@@ -23,40 +23,15 @@
             class="relative bg-gray-50 dark:bg-gray-800/90 rounded-xl p-6 shadow-md dark:shadow-[0_0_8px_rgba(34,211,238,0.2)] hover:shadow-lg hover:scale-[1.03] transition-all duration-300 cursor-pointer group"
             data-testid="card"
           >
-            <!-- Menu Button and Dropdown -->
+            <!-- Menu Button -->
             <div class="absolute z-10" style="top: 16px !important; right: 16px !important;">
               <button
-                @click.stop="toggleMenu(item.id)"
+                @click.stop="toggleActionModal(item.id)"
                 class="p-2 bg-gray-100/50 dark:bg-gray-700/50 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200"
                 data-testid="menu-button"
               >
                 <Icon icon="mdi:dots-vertical" class="w-5 h-5 text-gray-600 dark:text-gray-300 group-hover:scale-110 transition-transform duration-200" />
               </button>
-              <div
-                v-if="showMenu && selectedId === item.id"
-                class="absolute w-40 bg-gray-50 dark:bg-gray-800 rounded-lg shadow-lg z-20 border border-gray-200/20 dark:border-cyan-800/20 mt-2"
-                style="top: 100% !important; right: 0 !important;"
-                data-testid="dropdown"
-              >
-                <button
-                  @click.stop="toggle(item.id)"
-                  class="block w-full text-left px-4 py-2 text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-cyan-800/30 transition-colors duration-200"
-                >
-                  <span class="flex items-center gap-2">
-                    <Icon icon="mdi:pencil" class="w-4 h-4" />
-                    {{ $t("tahrirlash") }}
-                  </span>
-                </button>
-                <button
-                  @click.stop="toggleDeleteModal(item.id)"
-                  class="block w-full text-left px-4 py-2 text-red-500 dark:text-rose-400 hover:bg-red-100 dark:hover:bg-rose-800/30 transition-colors duration-200"
-                >
-                  <span class="flex items-center gap-2">
-                    <Icon icon="mdi:delete" class="w-4 h-4" />
-                    {{ $t("remove") }}
-                  </span>
-                </button>
-              </div>
             </div>
             <div class="flex items-center space-x-4" @click="Navigate(item.id)">
               <Icon icon="mdi:folder" class="w-12 h-12 text-teal-500 dark:text-cyan-400 group-hover:scale-110 transition-transform duration-300" />
@@ -77,6 +52,63 @@
         </div>
       </div>
     </div>
+
+    <!-- Action Modal (Centered, Larger) -->
+    <Teleport to="body">
+      <div
+        v-if="showActionModal"
+        @click="showActionModal = false"
+        class="fixed inset-0 bg-gray-300/70 dark:bg-black/70 flex items-center justify-center z-50"
+        data-testid="action-modal-container"
+      >
+        <div
+          @click.stop
+          class="relative bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-2xl px-8 pb-8 w-full max-w-md shadow-2xl border border-gray-200/20 dark:border-[rgba(34,211,238,0.2)] dark:shadow-[0_0_20px_rgba(34,211,238,0.4)] transform transition-all duration-300 scale-100"
+          data-testid="action-modal"
+        >
+          <button
+            @click="showActionModal = false"
+            class="absolute z-50 p-3 bg-gray-200/50 dark:bg-gray-700/50 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200"
+            style="top: 16px !important; right: 16px !important;"
+            data-testid="action-modal-close"
+          >
+            <Icon icon="mdi:close" class="w-6 h-6 text-gray-600 dark:text-gray-300" />
+          </button>
+
+          <div class="text-center space-y-6 pt-4">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-8">
+              {{ dat === 'datakril' ? translateText("Amallar") : "Amallar" }}
+            </h2>
+
+            <div class="space-y-4">
+              <button
+                @click.stop="handleEdit(selectedId)"
+                class="w-full flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-blue-500 to-indigo-500 dark:from-blue-400 dark:to-indigo-400 text-white rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 font-semibold"
+              >
+                <Icon icon="mdi:pencil" class="w-6 h-6" />
+                {{ $t("tahrirlash") }}
+              </button>
+
+              <button
+                @click.stop="handleDelete(selectedId)"
+                class="w-full flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-red-500 to-rose-500 dark:from-red-400 dark:to-rose-400 text-white rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 font-semibold"
+              >
+                <Icon icon="mdi:delete" class="w-6 h-6" />
+                {{ $t("remove") }}
+              </button>
+
+              <button
+                @click="showActionModal = false"
+                class="w-full flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-gray-400 to-gray-500 dark:from-gray-600 dark:to-gray-700 text-white rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 font-semibold"
+              >
+                <Icon icon="mdi:cancel" class="w-6 h-6" />
+                {{ dat === 'datalotin' ? 'Bekor qilish' : translateText("Bekor qilish") }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Teleport>
 
     <!-- Upload Modal -->
     <Teleport to="body">
@@ -248,7 +280,7 @@ const data = ref([]);
 const showModal = ref(false);
 const showModalfile = ref(false);
 const showDeleteModal = ref(false);
-const showMenu = ref(false);
+const showActionModal = ref(false); // New state for action modal
 const courtName = ref("");
 const isSignable = ref(false);
 const isLoading = inject('isLoading')
@@ -268,7 +300,7 @@ const checkLanguageChange = () => {
 };
 
 onMounted(() => {
-  intervalId = setInterval(checkLanguageChange, 100); // Reduced frequency
+  intervalId = setInterval(checkLanguageChange, 100);
 });
 
 onUnmounted(() => {
@@ -281,19 +313,33 @@ const Navigate = (id) => {
 
 const toggleModal = () => {
   showModal.value = !showModal.value;
-  if (showModal.value) {
-    // Log DOM context after next tick to ensure modal is rendered
-    nextTick(() => {
-      const modal = document.querySelector("[data-testid='upload-modal-container']");
-    });
-  }
   if (!showModal.value) resetForm();
+};
+
+// New function for action modal
+const toggleActionModal = (id) => {
+  selectedId.value = id;
+  showActionModal.value = !showActionModal.value;
+  if (!showActionModal.value) {
+    selectedId.value = null;
+  }
+};
+
+// Handle edit action from action modal
+const handleEdit = (id) => {
+  showActionModal.value = false;
+  toggle(id);
+};
+
+// Handle delete action from action modal
+const handleDelete = (id) => {
+  showActionModal.value = false;
+  toggleDeleteModal(id);
 };
 
 const toggle = (id) => {
   editingFileId.value = id;
   showModalfile.value = !showModalfile.value;
-  showMenu.value = !false;
 
   if (id) {
     const item = data.value.find((item) => item.id === id);
@@ -315,17 +361,6 @@ const toggleDeleteModal = (id) => {
   showDeleteModal.value = !showDeleteModal.value;
   if (!showDeleteModal.value) {
     selectedId.value = null;
-    showMenu.value = false;
-  }
-};
-
-const toggleMenu = (id) => {
-  if (showMenu.value && selectedId.value === id) {
-    showMenu.value = false;
-    selectedId.value = null;
-  } else {
-    selectedId.value = id;
-    showMenu.value = true;
   }
 };
 
@@ -341,7 +376,7 @@ const uploadCourt = async () => {
     name: courtName.value,
     sign: isSignable.value,
   };
-isLoading.value = true
+  isLoading.value = true
   try {
     const response = await axios.post(`${URL}/enterprise`, payload, {
       headers: { "Content-Type": "application/json" },
@@ -363,7 +398,7 @@ const updateFile = async () => {
     name: courtName.value,
     sign: isSignable.value,
   };
-isLoading.value = true
+  isLoading.value = true
   try {
     const response = await axios.put(
       `${URL}/enterprise/${editingFileId.value}`,
@@ -391,12 +426,11 @@ isLoading.value = true
 
 const removeSelectedItems = async () => {
   if (!selectedId.value) return;
-isLoading.value = true
+  isLoading.value = true
   try {
     const response = await axios.delete(`${URL}/enterprise/${selectedId.value}`);
     if (response.status === 200) {
       showDeleteModal.value = false;
-      showMenu.value = false;
       selectedId.value = null;
       await getData();
       successMessage.value = "Muvaffaqiyatli o'chirildi!";
@@ -536,5 +570,21 @@ button:hover::after {
   top: 16px !important;
   right: 16px !important;
   z-index: 50 !important;
+}
+
+/* Action modal animation */
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+[data-testid="action-modal"] {
+  animation: modalSlideIn 0.3s ease-out;
 }
 </style>
