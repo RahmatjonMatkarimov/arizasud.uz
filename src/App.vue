@@ -12,6 +12,8 @@
 
 <script setup>
 import { ref, provide, onMounted, onUnmounted, watch } from 'vue';
+import { userInfo, syncLocalStorageWithToken } from '@/utils/auth'
+import { computed } from 'vue'
 import axios from 'axios';
 import ErrorComponent from '@/components/error.vue';
 import { URL } from './auth/url';
@@ -24,6 +26,9 @@ const hidden = ref(false);
 
 provide('isLoading', isLoading);
 provide('hidden', hidden);
+
+syncLocalStorageWithToken()
+const currentUser = computed(() => userInfo)
 
 watch(isLoading, (newValue) => {
   if (newValue) {
