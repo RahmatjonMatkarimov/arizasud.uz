@@ -740,13 +740,18 @@ const removeSelectedItems = async () => {
     const endpoint = item?.isFolder
       ? `${URL}/folders/${numericId.value}`
       : `${URL}/files/${numericId.value}`;
-    const response = await fetch(endpoint, { method: "DELETE" });
-    if (!response.ok) throw new Error(await response.text());
-    resetForm(); // Close all modals
-    asd.value = false; // Close delete confirmation modal
+      const response = await fetch(endpoint, { method: "DELETE" });
+      if (!response.ok) throw new Error(await response.text());
+      resetForm(); // Close all modals
+      asd.value = false; // Close delete confirmation modal
     currentFolderId.value
       ? await getFolderContents(currentFolderId.value)
-      : await getCourtsData(); // Refresh data
+      : await getCourtsData();
+    for (const item of ServiceData.value) {
+      if (item.isFolder) {
+        await getFolderContents(item.id);
+      }
+    }
   } catch (error) {
     console.error("Delete error:", error);
     alert("Error deleting item!");

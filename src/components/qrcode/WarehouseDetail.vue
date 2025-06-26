@@ -196,10 +196,10 @@
                   {{ warehouse.collection ? (dat === "datakril" ? translateText('Ha') : 'Ha') : (dat === "datakril" ? translateText('Yo\'q') : 'Yo\'q') }}
                 </span>
               </div>
-              <div v-if="warehouse.whomBelongs" class="flex items-center">
+              <div v-if="warehouse" class="flex items-center">
                 <Icon icon="mdi:account-tie-outline" class="w-6 h-6 text-emerald-500 mr-3" />
                 <span class="font-semibold text-gray-700 dark:text-gray-300">{{ dat === "datakril" ? translateText('Mas\'ul shaxs') : 'Mas\'ul shaxs' }}:</span>
-                <span class="ml-2 text-gray-800 dark:text-gray-200">{{ dat === "datakril" ? translateText(warehouse.whomBelongs) : warehouse.whomBelongs }}</span>
+                <span class="ml-2 text-gray-800 dark:text-gray-200">{{ dat === "datakril" ? translateText(warehouse?.use?.name) : warehouse?.user?.surname }}</span>
               </div>
               <div v-if="warehouse?.category?.name" class="flex items-center">
                 <Icon icon="mdi:folder-outline" class="w-6 h-6 text-blue-500 mr-3" />
@@ -924,6 +924,8 @@ const fetchWarehouse = async () => {
       images: data.images || [],
       assignments: data.assignments || [],
     };
+    console.log(warehouse.value );
+    
     editForm.value = {
       id: data.id,
       name: data.name || '',
