@@ -109,23 +109,12 @@
                             <div v-if="isVideoFile(item.file)" class="w-full">
                                 <video :src="URL + item.file" controls class="w-full max-w-md rounded-lg shadow-md"
                                     preload="metadata">
-                                    Brauzeringiz video elementini qo'llab-quvvatlamaydi.
+                                    {{ dat === 'datakril' ? translateText('Brauzeringiz video elementini qo\'llab-quvvatlamaydi.') : 'Brauzeringiz video elementini qo\'llab-quvvatlamaydi.' }}
                                 </video>
                             </div>
                             <div v-else-if="isImageFile(item.file)" class="w-full">
                                 <img :src="URL + item.file" :alt="item.name"
                                     class="w-full max-w-md rounded-lg shadow-md" />
-                            </div>
-                            <div v-else-if="isPdfFile(item.file)" class="w-full">
-                                <iframe :src="URL + item.file" class="w-full h-40 rounded-lg shadow-md"
-                                    frameborder="0"></iframe>
-                            </div>
-                            <div v-else-if="isDocFile(item.file) || isTextFile(item.file)" class="w-full">
-                                <a :href="URL + item.file" download
-                                    class="inline-flex items-center px-4 py-2 bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-200 dark:hover:bg-slate-600 transition-all duration-300">
-                                    <Icon icon="material-symbols:download" class="w-4 h-4 mr-1" />
-                                    <span>Faylni yuklab olish</span>
-                                </a>
                             </div>
                         </div>
                         <h3
