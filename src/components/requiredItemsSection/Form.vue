@@ -79,14 +79,11 @@ function showToast(type, message) {
   }, 3000)
 }
 
-function formatDate(dateString) {
-  if (!dateString) return 'N/A'
-  const date = new Date(dateString)
-  return date.toLocaleDateString('uz-UZ', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  })
+function formatDate(date) {
+  let years = date?.slice(0, 4)
+  let month = date?.slice(5, 7)
+  let day = date?.slice(8, 10)
+  return `${day}.${month}.${years}`
 }
 
 function viewSectionItems(sectionId) {
