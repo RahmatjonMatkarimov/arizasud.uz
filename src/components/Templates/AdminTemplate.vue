@@ -526,15 +526,16 @@ const menuItems = [
   { to: "/deliverer-task", label: "Yangi shartnomalar", icon: "mdi:clipboard-text-outline", condition: localStorage.getItem('role')==='deliverer' },
   { to: "/remindersAdmin", label: "Ishchilarni bajargan ishlari", icon: "mdi:check-circle-outline", condition: () => data.value?.workDone },
   { to: "/Requirefiles", label: "Imzolanishi kerak boʻlgan fayllar", icon: "mdi:file-sign", condition: () => data.value?.userFiles },
-  { to: "/Dashboard", label: "Bugalteriya", icon: "mdi:chart-line", condition: localStorage.getItem('role') ==='bigAdmin' || localStorage.getItem('role') === 'accauntant'||localStorage.getItem('role') === 'chiefAccauntant' },
-  { to: "/ticketAdmin", label: "Taklif va shikoyatlar", icon: "mdi:credit-card-outline", condition: () => data.value?.ticket },
-  { to: "/smile", label: "Stikker qoʻshish", icon: "mdi:emoticon-happy-outline", condition: true },
   { to: "/companyFile", label: "Kampaniya fayllari", icon: "mdi:office-building", condition: () => data.value?.companyDocs },
-  { to: "/commaners", label: "Tizimdagi foydalanuvchilar roʻyxati", icon: "mdi:account-multiple", condition: true },
-  { to: "/archive", label: "Arxiv", icon: "mdi:archive-outline", condition: true },
+  { to: "/required-items-section", label: "Sayt qo'llanmalari va to'liq ishlashi uchun kerakli fayllar", icon: "mdi:file-cog-outline", condition: true },
   { to: "/category", label: "Kategoriyalar", icon: "mdi:shape-outline", condition: true },
   { to: "/warehousesHouse", label: "Omborlar", icon: "mdi:warehouse", condition: true }, 
   { to: "/fileconvert", label: "DOCX → PDF konvertor", icon: "mdi:file-sync-outline", condition: true },
+  { to: "/Dashboard", label: "Bugalteriya", icon: "mdi:chart-line", condition: localStorage.getItem('role') ==='bigAdmin' || localStorage.getItem('role') === 'accauntant'||localStorage.getItem('role') === 'chiefAccauntant' },
+  { to: "/ticketAdmin", label: "Taklif va shikoyatlar", icon: "mdi:credit-card-outline", condition: () => data.value?.ticket },
+  { to: "/smile", label: "Stikker qoʻshish", icon: "mdi:emoticon-happy-outline", condition: true },
+  { to: "/commaners", label: "Tizimdagi foydalanuvchilar roʻyxati", icon: "mdi:account-multiple", condition: true },
+  { to: "/archive", label: "Arxiv", icon: "mdi:archive-outline", condition: true },
 ];
 
 const filteredMenu = computed(() => {
