@@ -289,7 +289,7 @@ onMounted(fetchSmileys);
     <!-- Upload Modal -->
     <div v-if="isUploadModalOpen" 
          class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 transition-all duration-300">
-      <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-lg transform transition-all duration-300 border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div class="bg-white dark:bg-gray-900 rounded-3xl shadow-2xl w-full max-w-lg transform transition-all duration-300 border border-gray-200 dark:border-gray-700 overflow-hidden">
         
         <!-- Modal Header -->
         <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white">
@@ -432,7 +432,7 @@ onMounted(fetchSmileys);
     <!-- Delete Confirmation Modal -->
     <div v-if="isDeleteModalOpen" 
          class="fixed inset-0 flex items-center justify-center z-50 bg-black/60 backdrop-blur-sm p-4 transition-all duration-300">
-      <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-md transform transition-all duration-300 border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div class="bg-white dark:bg-gray-900 rounded-3xl shadow-2xl w-full max-w-md transform transition-all duration-300 border border-gray-200 dark:border-gray-700 overflow-hidden">
         
         <!-- Modal Content -->
         <div class="p-8 text-center">
