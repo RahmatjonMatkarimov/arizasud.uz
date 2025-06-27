@@ -1,4 +1,4 @@
-export const routes = [
+const routes = [
   { path: '/edit/:id/:id2?', name: 'editFile', component: () => import('@/components/main/file/file.vue') },
   { path: '/CommonerLogin', name: 'CommonerLogin', component: () => import('@/components/filePage/fileLogin.vue') },
   { path: '/fileProfiles/:id', name: 'fileProfiles', component: () => import('@/components/filePage/fileProfile.vue') },
@@ -116,7 +116,19 @@ export const routes = [
       { path: '/warehousesHouse', component: () => import('@/components/qrcode/warehouseHouse.vue') },
       { path: '/fileconvert', component: () => import('@/views/fileconvert.vue') },
       { path: '/chiefAccauntant', component: () => import('@/components/admins/chiefAccauntant.vue') },
+      {
+        path: '/required-items-section',
+        name: 'RequiredItemsSectionForm',
+        component: () => import('@/components/requiredItemsSection/Form.vue')
+      },
+      {
+        path: '/required-items-section/:id',
+        name: 'RequiredItemsSectionItems',
+        component: () => import('@/components/requiredItemsSection/ItemsPage.vue'),
+        props: true
+      },
     ],
     meta: { requiresAuth: true, allowedRoles: ['admin', 'manager','warehouseman','chiefAccauntant', 'yuristAssistant', 'accauntant', 'deliverer', 'yurist', 'bigAdmin'] },
   },
 ];
+export default routes
