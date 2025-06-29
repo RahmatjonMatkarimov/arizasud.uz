@@ -57,7 +57,7 @@
       </div>
 
       <!-- Sections Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl mx-auto">
+      <div class="grid sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 max-w-7xl mx-auto">
         <div 
           v-for="(item, index) in sections" 
           :key="item.path" 
@@ -73,12 +73,12 @@
           <div class="absolute -inset-0.5 bg-gradient-to-r from-lime-400 to-blue-500 dark:from-lime-500 dark:to-blue-400 rounded-2xl opacity-0 group-hover:opacity-15 transition-opacity duration-300"></div>
           
           <!-- Content -->
-          <div class="relative z-10 p-8">
+          <div class="relative z-10 p-6 h-full flex flex-col">
             <!-- Icon Container -->
-            <div class="mb-6 flex justify-center">
+            <div class="mb-4 flex justify-center">
               <div class="relative">
-                <div class="relative p-4 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-700 dark:to-gray-600 rounded-xl group-hover:from-blue-100 group-hover:to-indigo-200 dark:group-hover:from-gray-600 dark:group-hover:to-gray-500 transition-all duration-300 shadow-md">
-                  <svg class="w-8 h-8 text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="relative p-3 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-700 dark:to-gray-600 rounded-xl group-hover:from-blue-100 group-hover:to-indigo-200 dark:group-hover:from-gray-600 dark:group-hover:to-gray-500 transition-all duration-300 shadow-md">
+                  <svg class="w-6 h-6 text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
                   </svg>
                 </div>
@@ -86,17 +86,25 @@
             </div>
             
             <!-- Title -->
-            <h3 class="text-xl font-bold text-slate-800 dark:text-white group-hover:text-slate-900 dark:group-hover:text-blue-100 capitalize leading-tight mb-3 transition-colors duration-300 text-center">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-white group-hover:text-slate-900 dark:group-hover:text-blue-100 capitalize leading-tight mb-2 transition-colors duration-300 text-center">
               {{ dat === 'datakril' ? translateText(item.title) : item.title }}
             </h3>
             
-            <!-- Subtitle -->
-            <p class="text-sm text-slate-500 dark:text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300 transition-colors duration-300 text-center font-medium">
-              {{ dat === 'datakril' ? translateText(`Bo'lim`):`Bo'lim` }} #{{ index + 1 }} • {{ dat === 'datakril' ? translateText(`Arxiv`) : `Arxiv` }}
+            <!-- Description -->
+            <p class="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition-colors duration-300 text-center leading-relaxed mb-4 line-clamp-3 flex-grow">
+              {{ dat === 'datakril' ? translateText(item.description) : item.description }}
             </p>
+            
+            <!-- Footer section - pushed to bottom -->
+            <div class="mt-auto">
+              <!-- Subtitle -->
+              <p class="text-xs text-slate-500 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-400 transition-colors duration-300 text-center font-medium mb-4">
+                {{ dat === 'datakril' ? translateText(`Bo'lim`):`Bo'lim` }} #{{ index + 1 }} • {{ dat === 'datakril' ? translateText(`Arxiv`) : `Arxiv` }}
+              </p>
 
-            <!-- Bottom Accent Line -->
-            <div class="mt-6 h-1 w-0 group-hover:w-full bg-gradient-to-r from-lime-400 to-blue-500 dark:from-lime-500 dark:to-blue-400 rounded-full transition-all duration-300 mx-auto"></div>
+              <!-- Bottom Accent Line -->
+              <div class="h-1 w-0 group-hover:w-full bg-gradient-to-r from-lime-400 to-blue-500 dark:from-lime-500 dark:to-blue-400 rounded-full transition-all duration-300 mx-auto"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -127,6 +135,7 @@ onMounted(() => {
 onUnmounted(() => {
   if (intervalId) clearInterval(intervalId);
 });
+
 const cards = ref([]);
 
 // Lazy load animations with IntersectionObserver
@@ -153,26 +162,103 @@ onMounted(() => {
 });
 
 const sections = [
-  { path: 'courts', title: '1-bolim' },
-  { path: 'services', title: '2-bolim' },
-  { path: 'applications', title: '3-bolim' },
-  { path: 'admin', title: 'Adminlar' },
-  { path: 'yurist', title: 'Yuristlar' },
-  { path: 'manager', title: 'Devonxona Mudirlari' },
-  { path: 'yuristAssistant', title: 'Yurist yordamchilari' },
-  { path: 'deliverer', title: 'Kuryerlar' },
-  { path: 'accauntant', title: 'Xisobchilar' },
-  { path: 'chiefAccauntant', title: 'Bosh xisobchilar' },
-  { path: 'warehouseman', title: 'Ombor mudiri' },
-  { path: 'partners', title: 'Hamkorlar' },
-  { path: 'appeal', title: 'Interaktiv xizmatlar' },
-  { path: 'files', title: 'Filelar' },
-  { path: 'signingFiles', title: 'Imzolangan va imzolanmagan filelar' },
-  { path: 'enterprise-file', title: 'Kampaniya fayllari' },
-  { path: 'contract-file', title: 'Shablon shartnoma fayllari' },
-  { path: 'category', title: 'Kategoriyalar' },
-  { path: 'warehouse', title: 'Omborlar' },
+  { 
+    path: 'courts', 
+    title: '1-bolim',
+    description: 'Bu bo‘limda faqat o‘chirilgan sud organlari ro‘yxati saqlanadi. Har bir element haqida alohida ma’lumot ko‘rsatilmaydi, faqatgina ularning nomi va mavjudligi qayd etiladi.'
+  },
+  { 
+    path: 'services', 
+    title: '2-bolim',
+    description: 'O‘chirilgan xizmatlar ro‘yxati ushbu bo‘limda jamlangan. Xizmatlar bo‘yicha hech qanday tafsilot yoki qo‘shimcha ma’lumot mavjud emas, faqat nomi ko‘rsatiladi.'
+  },
+  { 
+    path: 'applications', 
+    title: '3-bolim',
+    description: 'Bu yerda o‘chirilgan ariza va murojaatlarning umumiy ro‘yxati saqlanadi. Har bir ariza haqida batafsil ma’lumot mavjud emas.'
+  },
+  { 
+    path: 'admin', 
+    title: 'Adminlar',
+    description: 'Ushbu bo‘limda tizimdan o‘chirilgan adminlar ro‘yxati joylashgan. Foydalanuvchilar haqida qo‘shimcha tafsilotlar emas, faqatgina ularning mavjud bo‘lganligi qayd etiladi.'
+  },
+  { 
+    path: 'yurist', 
+    title: 'Yuristlar',
+    description: 'Tizimdan o‘chirilgan yuristlar faqat ro‘yxat ko‘rinishida bu yerda saqlanadi. Har bir yurist haqida batafsil ma’lumot berilmaydi.'
+  },
+  { 
+    path: 'manager', 
+    title: 'Devonxona Mudirlari',
+    description: 'O‘chirilgan devonxona mudirlari ushbu bo‘limda ro‘yxat tarzida keltiriladi. Ular haqidagi boshqa ma’lumotlar bu yerda mavjud emas.'
+  },
+  { 
+    path: 'yuristAssistant', 
+    title: 'Yurist yordamchilari',
+    description: 'Bu bo‘limda o‘chirilgan yurist yordamchilari ro‘yxati ko‘rsatiladi. Faqat ismlar yoki identifikatsiya maqsadida ma’lumotlar mavjud bo‘lib, batafsil tafsilotlar keltirilmaydi.'
+  },
+  { 
+    path: 'deliverer', 
+    title: 'Kuryerlar',
+    description: 'Tizimdan o‘chirilgan kuryerlar faqat ro‘yxat shaklida bu yerda jamlangan. Qo‘shimcha ma’lumotlar yoki tafsilotlar mavjud emas.'
+  },
+  { 
+    path: 'accauntant', 
+    title: 'Xisobchilar',
+    description: 'O‘chirilgan hisobchilar faqatgina ro‘yxat tarzida saqlanadi. Hech qanday boshqa ma’lumotlar ko‘rsatilmaydi.'
+  },
+  { 
+    path: 'chiefAccauntant', 
+    title: 'Bosh xisobchilar',
+    description: 'Bu bo‘limda tizimdan o‘chirilgan bosh hisobchilar ro‘yxati saqlanadi. Har bir foydalanuvchi haqida batafsil ma’lumot berilmaydi.'
+  },
+  { 
+    path: 'warehouseman', 
+    title: 'Ombor mudiri',
+    description: 'Ushbu bo‘limda o‘chirilgan ombor mudirlari ro‘yxati mavjud. Ro‘yxat tarkibida faqat nomlar bo‘lib, boshqa tafsilotlar mavjud emas.'
+  },
+  { 
+    path: 'partners', 
+    title: 'Hamkorlar',
+    description: 'Bu yerda o‘chirilgan hamkorlar ro‘yxati jamlangan. Har bir hamkor haqida alohida ma’lumotlar mavjud emas.'
+  },
+  { 
+    path: 'appeal', 
+    title: 'Interaktiv xizmatlar',
+    description: 'O‘chirilgan interaktiv xizmatlar ushbu bo‘limda umumiy ro‘yxat tarzida keltirilgan. Tafsilotli ma’lumotlar mavjud emas.'
+  },
+  { 
+    path: 'files', 
+    title: 'Filelar',
+    description: 'O‘chirilgan fayllar bu bo‘limda ro‘yxat shaklida saqlanadi. Fayllar mazmuni yoki tafsilotlari bu yerda mavjud emas.'
+  },
+  { 
+    path: 'signingFiles', 
+    title: 'Imzolangan va imzolanmagan fayllar',
+    description: 'Imzolangan yoki hali imzolanmagan, lekin o‘chirilgan fayllar ro‘yxati bu yerda jamlangan. Har bir fayl haqida qo‘shimcha ma’lumot mavjud emas.'
+  },
+  { 
+    path: 'enterprise-file', 
+    title: 'Kampaniya fayllari',
+    description: 'O‘chirilgan kampaniyaga oid fayllar bu bo‘limda faqat ro‘yxat shaklida saqlanadi. Tafsilotlar mavjud emas.'
+  },
+  { 
+    path: 'contract-file', 
+    title: 'Shablon shartnoma fayllari',
+    description: 'Shablon shartnomalarning o‘chirilgan fayllari faqatgina ro‘yxat sifatida bu yerda mavjud. Fayllar mazmuni ko‘rsatilmaydi.'
+  },
+  { 
+    path: 'category', 
+    title: 'Kategoriyalar',
+    description: 'O‘chirilgan turkum va kategoriyalar ushbu bo‘limda umumiy ro‘yxat shaklida ko‘rsatiladi. Har bir kategoriya haqida alohida ma’lumot mavjud emas.'
+  },
+  { 
+    path: 'warehouse', 
+    title: 'Omborlar',
+    description: 'Tizimdan o‘chirilgan omborlar faqat ro‘yxat tarzida bu bo‘limda saqlanadi. Ombor tafsilotlari ko‘rsatilmaydi.'
+  }
 ];
+
 
 function goToPath(path) {
   router.push(`/archiveBody/${path}`);
@@ -200,6 +286,14 @@ function goToPath(path) {
   transform: translateY(0);
 }
 
+/* Line clamp utility */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 /* Staggered delays */
 .animate-delay-0 { transition-delay: 0ms; }
 .animate-delay-1 { transition-delay: 100ms; }
@@ -211,6 +305,15 @@ function goToPath(path) {
 .animate-delay-7 { transition-delay: 700ms; }
 .animate-delay-8 { transition-delay: 800ms; }
 .animate-delay-9 { transition-delay: 900ms; }
+.animate-delay-10 { transition-delay: 1000ms; }
+.animate-delay-11 { transition-delay: 1100ms; }
+.animate-delay-12 { transition-delay: 1200ms; }
+.animate-delay-13 { transition-delay: 1300ms; }
+.animate-delay-14 { transition-delay: 1400ms; }
+.animate-delay-15 { transition-delay: 1500ms; }
+.animate-delay-16 { transition-delay: 1600ms; }
+.animate-delay-17 { transition-delay: 1700ms; }
+.animate-delay-18 { transition-delay: 1800ms; }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {

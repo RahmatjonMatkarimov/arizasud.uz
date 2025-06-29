@@ -14,9 +14,7 @@
             <Icon icon="line-md:check-list-3" width="35" height="35" :class="[
               'transition-colors duration-300',
               // Dark mode
-              'dark:text-slate-300 dark:hover:text-emerald-400',
-              // Light mode
-              'text-gray-600 hover:text-blue-600'
+              'text-slate-300 hover:text-emerald-400',
             ]" />
           </div>
           <div class="absolute w-64 -left-24 top-14 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
