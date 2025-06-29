@@ -110,6 +110,8 @@ async function fetchSections() {
         descriptions: item.descriptions || 'No description',
         createdAt: item.createdAt || new Date().toISOString()
       }))
+      console.log(data);
+      
     } else {
       throw new Error(`Failed to fetch sections. Status: ${res.status}`)
     }

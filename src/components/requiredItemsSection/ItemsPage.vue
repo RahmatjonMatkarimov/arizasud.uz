@@ -129,7 +129,7 @@
                         <div
                             class="flex items-center justify-between pt-3 border-t border-gray-200/50 dark:border-slate-700/50">
                             <div v-if="item.file" class="flex items-center space-x-2">
-                                <button v-if="isVideoFile(item.file) || isImageFile(item.file) || isPdfFile(item.file)"
+                                <button v-if="isVideoFile(item.file) || isImageFile(item.file) "
                                     @click="openFileModal(item)"
                                     class="inline-flex items-center px-3 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-lg text-sm font-medium hover:from-emerald-600 hover:to-teal-600 transform hover:scale-105 transition-all duration-300 shadow-md">
                                     <Icon icon="material-symbols:fullscreen" class="w-4 h-4 mr-1" />
@@ -436,14 +436,14 @@ function showToast(type, message) {
 async function fetchItems() {
     loading.value = true
     try {
-        const res = await fetch(`${URL}/required-items?requiredItemsSectionsId=${sectionId.value}`, {
+        const res = await fetch(`${URL}/required-items-sections/${sectionId.value}`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
             }
         })
         if (res.ok) {
             const data = await res.json()
-            items.value = data.map(item => ({
+            items.value = data.items.map(item => ({
                 id: item.id,
                 name: item.name || 'Unnamed',
                 description: item.description || 'No description',
@@ -466,6 +466,8 @@ async function handleSubmit() {
         formData.append('name', form.name.trim())
         formData.append('description', form.description.trim())
         formData.append('requiredItemsSectionsId', sectionId.value)
+console.log(sectionId.value);
+
 
         if (form.file) {
             formData.append('file', form.file)
