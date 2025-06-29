@@ -1553,47 +1553,47 @@
         {{ $t("bolim_yaratish") }}
       </button>
     </div>
-    <div class="w-full z-0 max-w-[1400px] mt-6 mx-auto">
-      <Splide
-        :options="{
-          perPage: 4,
-          autoplay: false,
-          pagination: true,
-          arrows: true,
-          gap: '1rem',
-          breakpoints: {
-            640: { perPage: 1 },
-            768: { perPage: 2 },
-          },
-        }"
-        class="h-[180px] flex items-center justify-center"
-      >
-        <SplideSlide
-          class="z-50"
-          v-for="item in courts"
-          @click="reload(item.id)"
-          :key="item.id"
+    <div class="w-full z-0 max-w-[1100px] mt-6 mx-auto">
+        <Splide
+          :options="{
+            perPage: 4,
+            autoplay: false,
+            pagination: true,
+            arrows: true,
+            gap: '1rem',
+            breakpoints: {
+              640: { perPage: 1 },
+              768: { perPage: 2 },
+            },
+          }"
+          class="h-[180px] flex items-center justify-center"
         >
-          <div
-            class="carousel-item relative min-h-full flex items-center gap-4 dark:bg-gray-800/10 group duration-300 dark:hover:bg-blue-950 hover:shadow-strong shadow-white bg-white border-4 border-gray-300 dark:border-gray-700 rounded-lg p-4 cursor-pointer"
+          <SplideSlide
+            class="z-50"
+            v-for="item in courts"
+            @click="reload(item.id)"
+            :key="item.id"
           >
             <div
-              class="bg-gradient-to-br to-purple-600 from-blue-500 min-h-12 max-h-12 min-w-12 max-w-12 flex rounded-lg justify-center items-center p-2"
+              class="carousel-item relative min-h-full flex items-center gap-4 dark:bg-gray-800/10 group duration-300 dark:hover:bg-blue-950 hover:shadow-strong shadow-white bg-white border-4 border-gray-300 dark:border-gray-700 rounded-lg p-4 cursor-pointer"
             >
-              <img
-                v-if="item.img"
-                :src="getImageUrl(item.img)"
-                alt="Court Image"
-                class="min-w-10 min-h-10 max-w-10 max-h-10 rounded-md"
-              />
+              <div
+                class="bg-gradient-to-br to-purple-600 from-blue-500 min-h-12 max-h-12 min-w-12 max-w-12 flex rounded-lg justify-center items-center p-2"
+              >
+                <img
+                  v-if="item.img"
+                  :src="getImageUrl(item.img)"
+                  alt="Court Image"
+                  class="min-w-10 min-h-10 max-w-10 max-h-10 rounded-md"
+                />
+              </div>
+              <h3 class="text-md font-medium text-black dark:text-gray-200 truncate-text">
+                {{ dat === "datakril" ? translateText(item.name) : item.name }}
+              </h3>
             </div>
-            <h3 class="text-md font-medium text-black dark:text-gray-200 truncate-text">
-              {{ dat === "datakril" ? translateText(item.name) : item.name }}
-            </h3>
-          </div>
-        </SplideSlide>
-      </Splide>
-    </div>
+          </SplideSlide>
+        </Splide>
+      </div>
     <div
       v-if="data.length == 0"
       class="text-black flex flex-col justify-center mt-16 items-center"
@@ -1656,7 +1656,7 @@
                   class="w-full h-full object-cover rounded-md"
                 />
               </div>
-              <h3 class="text-lg w-[400px] line-clamp-2 break-words font-medium dark:text-gray-200 text-black">
+              <h3 class="text-lg max-w-[400px] line-clamp-2 break-words font-medium dark:text-gray-200 text-black">
                 {{ dat === "datakril" ? translateText(item.name) : item.name }}
               </h3>
             </div>

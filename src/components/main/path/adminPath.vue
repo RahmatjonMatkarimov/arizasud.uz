@@ -1226,7 +1226,7 @@
                     class="w-full h-full object-cover rounded-md"
                   />
                 </div>
-                <h3 class="text-lg font-medium break-words w-[400px] dark:text-gray-200 text-black line-clamp-2">
+                <h3 class="text-lg font-medium break-words max-w-[400px] dark:text-gray-200 text-black line-clamp-2">
                   {{ dat === "datakril" ? translateText(item.name) : item.name }}
                 </h3>   
               </div>

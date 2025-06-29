@@ -900,9 +900,7 @@ const fetchDocx = async () => {
   Loading.value = true;
   try {
     const response = await axios.get(`${API_URL}/${id}`);
-    const fileUrl = URL + response.data[0].filePath;
-    console.log(fileUrl);
-    
+    const fileUrl = URL + response.data.filePath;
     const fileResponse = await axios.get(fileUrl, { responseType: "blob" });
     if (!fileResponse.headers["content-type"].includes("application/vnd.openxmlformats")) {
       throw new Error(" Server noto'g'ri formatda ma’lumot qaytardi!");
