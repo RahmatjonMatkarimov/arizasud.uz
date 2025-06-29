@@ -199,7 +199,7 @@
               <div v-if="warehouse" class="flex items-center">
                 <Icon icon="mdi:account-tie-outline" class="w-6 h-6 text-emerald-500 mr-3" />
                 <span class="font-semibold text-gray-700 dark:text-gray-300">{{ dat === "datakril" ? translateText('Mas\'ul shaxs') : 'Mas\'ul shaxs' }}:</span>
-                <span class="ml-2 text-gray-800 dark:text-gray-200">{{ dat === "datakril" ? translateText(warehouse?.use?.name) : warehouse?.user?.surname }}</span>
+                <span class="ml-2 text-gray-800 dark:text-gray-200">{{ dat === "datakril" ? translateText(`${warehouse?.user?.name} ${warehouse?.user?.surname}`) : `${warehouse?.user?.name} ${warehouse?.user?.surname}` }}</span>
               </div>
               <div v-if="warehouse?.category?.name" class="flex items-center">
                 <Icon icon="mdi:folder-outline" class="w-6 h-6 text-blue-500 mr-3" />
@@ -892,7 +892,7 @@ const getConditionStyle = (condition) => {
       return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 px-2 py-1 my-1 rounded-lg';
     case "o'rtacha":
       return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300 px-2 py-1 rounded-lg';
-    case 'tamirlash_kerak':
+    case 'yomon':
       return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300 px-2 py-1 rounded-lg';
     default:
       return '';
@@ -907,7 +907,7 @@ const getConditionText = (condition) => {
       return '👍 Yaxshi';
     case "o'rtacha":
       return '👌 Qoniqarli';
-    case 'tamirlash_kerak':
+    case 'yomon':
       return '🔧 Tamirlash kerak';
     default:
       return condition || 'Noma\'lum';

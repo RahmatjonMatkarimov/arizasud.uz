@@ -33,6 +33,7 @@ const name = ref('')
 const startDate = ref('')
 const endDate = ref('')
 const totalSumInternal = ref('') // Internal state for raw number
+const totalSumDisplay = ref('') // Display value with formatting
 const file = ref('')
 const chek = ref(null)
 const ids = ref([])
@@ -52,18 +53,48 @@ const filters = ref({
 const selectedInvoice = ref(null)
 const showDetails = ref(false)
 
-// Computed property to format totalSum with dots
-const totalSum = computed({
-  get() {
-    if (!totalSumInternal.value) return ''
-    return Number(totalSumInternal.value).toLocaleString('uz-UZ', { minimumFractionDigits: 0 }).replace(/,/g, '.')
-  },
-  set(value) {
-    // Remove all non-numeric characters except for the first dot (if decimal)
-    const cleanedValue = value.replace(/[^0-9]/g, '')
-    totalSumInternal.value = cleanedValue
+// Remove the computed property and replace with a function to format the display
+const formatTotalSum = (value) => {
+  if (!value) return ''
+  return Number(value).toLocaleString('uz-UZ', { minimumFractionDigits: 0 }).replace(/,/g, '.')
+}
+
+// Function to handle totalSum input changes
+const handleTotalSumChange = (event) => {
+  const value = event.target.value
+  // Remove all non-numeric characters
+  const cleanedValue = value.replace(/[^0-9]/g, '')
+  totalSumInternal.value = cleanedValue
+  totalSumDisplay.value = formatTotalSum(cleanedValue)
+}
+
+// Function to prevent non-numeric input
+const handleTotalSumKeydown = (event) => {
+  // Allow: backspace, delete, tab, escape, enter, and navigation keys
+  if ([8, 9, 27, 13, 46, 37, 38, 39, 40].includes(event.keyCode) ||
+      // Allow Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+      (event.ctrlKey && [65, 67, 86, 88].includes(event.keyCode))) {
+    return
   }
-})
+  
+  // Allow only numeric keys (0-9)
+  if (event.keyCode >= 48 && event.keyCode <= 57) {
+    return
+  }
+  
+  // Allow numpad keys (0-9)
+  if (event.keyCode >= 96 && event.keyCode <= 105) {
+    return
+  }
+  
+  // Prevent all other keys
+  event.preventDefault()
+}
+
+// Function to handle totalSum input on blur (when user finishes typing)
+const handleTotalSumBlur = () => {
+  totalSumDisplay.value = formatTotalSum(totalSumInternal.value)
+}
 
 const handleImageUpload = (event) => {
   file.value = event.target.files[0]
@@ -94,6 +125,7 @@ const upload = async () => {
     startDate.value = ''
     endDate.value = ''
     totalSumInternal.value = ''
+    totalSumDisplay.value = ''
     Showmodal.value = false
     getFiles()
   } catch (err) {
@@ -163,9 +195,9 @@ function closeDetails() {
 }
 
 const filteridTime = (date) => {
-  let years = date.slice(0, 4)
-  let month = date.slice(5, 7)
-  let day = date.slice(8, 10)
+  let years = date?.slice(0, 4)
+  let month = date?.slice(5, 7)
+  let day = date?.slice(8, 10)
   return `${day}.${month}.${years}`
 }
 
@@ -498,18 +530,18 @@ select:focus {
             <tr v-for="item in invoices" :key="item.id" class="text-center">
               <td colspan="7" class="py-1">
                 <div
-                  :class="[getBorderClass(item.History[item.History.length - 1].endDate), 'rounded-lg p-2']"
+                  :class="[getBorderClass(item.History[item.History.length - 1]?.endDate), 'rounded-lg p-2']"
                   class="flex justify-between items-center"
                 >
                   <div class="w-full grid grid-cols-8 gap-2 items-center">
                     <div class="text-center">{{ item.id }}</div>
                     <div class="text-center">{{ dat === 'datakril' ? translateText(item.name) : item.name }}</div>
-                    <div class="text-center">{{ filteridTime(item.History[item.History.length - 1].startDate) }}</div>
-                    <div class="text-center">{{ filteridTime(item.History[item.History.length - 1].endDate) }}</div>
-                    <div class="text-center">{{ FilteredDots(item.History[item.History.length - 1].totalSum) }} {{ dat === 'datakril' ? translateText('So\'m') : 'So\'m' }}</div>
+                    <div class="text-center">{{ filteridTime(item.History[item.History.length - 1]?.startDate) }}</div>
+                    <div class="text-center">{{ filteridTime(item.History[item.History.length - 1]?.endDate) }}</div>
+                    <div class="text-center">{{ FilteredDots(item.History[item.History.length - 1]?.totalSum) }} {{ dat === 'datakril' ? translateText('So\'m') : 'So\'m' }}</div>
                     <div>
                       <span class="inline-block px-2 py-1 text-center rounded-lg text-sm font-medium bg-black bg-opacity-20">
-                        {{ dat === 'datakril' ? translateText(getStatusClass(item.History[item.History.length - 1].endDate)) : getStatusClass(item.History[item.History.length - 1].endDate) }}
+                        {{ dat === 'datakril' ? translateText(getStatusClass(item.History[item.History.length - 1]?.endDate)) : getStatusClass(item.History[item.History.length - 1]?.endDate) }}
                       </span>
                     </div>
                     <button
@@ -635,8 +667,11 @@ select:focus {
         />
         <label>{{ dat === 'datakril' ? translateText('To\'lanadigan summani') : 'To\'lanadigan summani' }}</label>
         <input
-          v-model="totalSum"
-          type="number"
+          :value="totalSumDisplay"
+          @input="handleTotalSumChange"
+          @keydown="handleTotalSumKeydown"
+          @blur="handleTotalSumBlur"
+          type="text"
           class="text-black outline-none p-2 rounded-md transition-all duration-200 focus:ring-2 focus:ring-blue-500"
           :placeholder="dat === 'datakril' ? translateText('To\'lanadigan summani') : 'To\'lanadigan summani'"
         />
@@ -707,8 +742,11 @@ select:focus {
         <h4 class="text-lg font-semibold">{{ dat === 'datakril' ? translateText('Qayta to\'lash') : 'Qayta to\'lash' }}</h4>
         <label>{{ dat === 'datakril' ? translateText('To\'lanadigan summani') : 'To\'lanadigan summani' }}</label>
         <input
-          v-model="totalSum"
-          type="number"
+          :value="totalSumDisplay"
+          @input="handleTotalSumChange"
+          @keydown="handleTotalSumKeydown"
+          @blur="handleTotalSumBlur"
+          type="text"
           class="outline-none text-black p-2 rounded-md transition-all duration-200 focus:ring-2 focus:ring-blue-500"
           :placeholder="dat === 'datakril' ? translateText('To\'lanadigan summani') : 'To\'lanadigan summani'"
         />

@@ -11,7 +11,6 @@ const searchStore = useSearchStore()
 const selectedFilePath = ref(null)
 const router = useRouter()
 const dat = ref(localStorage.getItem('til') || 'datalotin');
-const isLoading = inject('isLoading')
 
 let intervalId = null;
 const checkLanguageChange = () => {
@@ -34,9 +33,11 @@ const name = ref('')
 const startDate = ref('')
 const endDate = ref('')
 const totalSumInternal = ref('') // Internal state for raw number
+const totalSumDisplay = ref('') // Display value with formatting
 const file = ref('')
 const chek = ref(null)
 const ids = ref([])
+const isLoading = inject('isLoading');
 const accauntantFilesId = ref(null)
 
 const invoices = ref([])
@@ -52,18 +53,48 @@ const filters = ref({
 const selectedInvoice = ref(null)
 const showDetails = ref(false)
 
-// Computed property to format totalSum with dots
-const totalSum = computed({
-  get() {
-    if (!totalSumInternal.value) return ''
-    return Number(totalSumInternal.value).toLocaleString('uz-UZ', { minimumFractionDigits: 0 }).replace(/,/g, '.')
-  },
-  set(value) {
-    // Remove all non-numeric characters except for the first dot (if decimal)
-    const cleanedValue = value.replace(/[^0-9]/g, '')
-    totalSumInternal.value = cleanedValue
+// Remove the computed property and replace with a function to format the display
+const formatTotalSum = (value) => {
+  if (!value) return ''
+  return Number(value).toLocaleString('uz-UZ', { minimumFractionDigits: 0 }).replace(/,/g, '.')
+}
+
+// Function to handle totalSum input changes
+const handleTotalSumChange = (event) => {
+  const value = event.target.value
+  // Remove all non-numeric characters
+  const cleanedValue = value.replace(/[^0-9]/g, '')
+  totalSumInternal.value = cleanedValue
+  totalSumDisplay.value = formatTotalSum(cleanedValue)
+}
+
+// Function to prevent non-numeric input
+const handleTotalSumKeydown = (event) => {
+  // Allow: backspace, delete, tab, escape, enter, and navigation keys
+  if ([8, 9, 27, 13, 46, 37, 38, 39, 40].includes(event.keyCode) ||
+      // Allow Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+      (event.ctrlKey && [65, 67, 86, 88].includes(event.keyCode))) {
+    return
   }
-})
+  
+  // Allow only numeric keys (0-9)
+  if (event.keyCode >= 48 && event.keyCode <= 57) {
+    return
+  }
+  
+  // Allow numpad keys (0-9)
+  if (event.keyCode >= 96 && event.keyCode <= 105) {
+    return
+  }
+  
+  // Prevent all other keys
+  event.preventDefault()
+}
+
+// Function to handle totalSum input on blur (when user finishes typing)
+const handleTotalSumBlur = () => {
+  totalSumDisplay.value = formatTotalSum(totalSumInternal.value)
+}
 
 const handleImageUpload = (event) => {
   file.value = event.target.files[0]
@@ -94,6 +125,7 @@ const upload = async () => {
     startDate.value = ''
     endDate.value = ''
     totalSumInternal.value = ''
+    totalSumDisplay.value = ''
     Showmodal.value = false
     getFiles()
   } catch (err) {
@@ -105,9 +137,9 @@ const upload = async () => {
 }
 
 const getFiles = async () => {
-  isLoading.value = true
+  isLoading.value = false
   try {
-    const res = await axios.get(URL + '/accountant-files');
+    const res = await axios.get(URL + '/accountant-files');;
     let sortedData = res.data.slice().filter(item => item.type === 'reports');
 
     if (searchStore.query) {
@@ -148,7 +180,7 @@ const getFiles = async () => {
     invoices.value = sortedData;
   } catch (err) {
     console.error('Error fetching files:', err);
-  } finally{
+  } finally {
     isLoading.value = false
   }
 };
@@ -163,9 +195,9 @@ function closeDetails() {
 }
 
 const filteridTime = (date) => {
-  let years = date.slice(0, 4)
-  let month = date.slice(5, 7)
-  let day = date.slice(8, 10)
+  let years = date?.slice(0, 4)
+  let month = date?.slice(5, 7)
+  let day = date?.slice(8, 10)
   return `${day}.${month}.${years}`
 }
 
@@ -183,7 +215,6 @@ const removeFiles = async (ids) => {
     const response = await axios.delete(URL + '/accountant-files/many', {
       data: { ids }
     })
-
     showChekbox.value = false
     getFiles()
   } catch (error) {
@@ -297,7 +328,7 @@ const downloadExcel = () => {
   const wb = XLSX.utils.book_new()
   XLSX.utils.book_append_sheet(wb, ws, 'Invoices')
   XLSX.writeFile(wb, 'hisobot.xlsx')
-} 
+}
 
 const handleViewInvoice = (item) => {
   if (item.pdfPath) {
@@ -426,7 +457,7 @@ select:focus {
             <select
               id="status"
               v-model="filters.status"
-              class="block text-black dark:bg-[#1a2642] bg-white dark:text-white w-full px-4 py-3 border dark:border-gray-300 border-gray-700 bg-[#fff0] text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500"
+              class="block text-black dark:text-white dark:bg-[#1a2642] bg-white w-full px-4 py-3 border dark:border-gray-300 border-gray-700 bg-[#fff0] text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500"
             >
               <option class="text-black dark:bg-[#1a2642] bg-white dark:text-white" value="">{{ dat === 'datakril' ? translateText('Tartib raqam') : 'Tartib raqam' }}</option>
               <option class="text-black dark:bg-[#1a2642] bg-white dark:text-white" value="Paid">{{ dat === 'datakril' ? translateText('Teskari Yaratilish vaqti') : 'Teskari Yaratilish vaqti' }}</option>
@@ -499,18 +530,18 @@ select:focus {
             <tr v-for="item in invoices" :key="item.id" class="text-center">
               <td colspan="7" class="py-1">
                 <div
-                  :class="[getBorderClass(item.History[item.History.length - 1].endDate), 'rounded-lg p-2']"
+                  :class="[getBorderClass(item.History[item.History.length - 1]?.endDate), 'rounded-lg p-2']"
                   class="flex justify-between items-center"
                 >
                   <div class="w-full grid grid-cols-8 gap-2 items-center">
                     <div class="text-center">{{ item.id }}</div>
                     <div class="text-center">{{ dat === 'datakril' ? translateText(item.name) : item.name }}</div>
-                    <div class="text-center">{{ filteridTime(item.History[item.History.length - 1].startDate) }}</div>
-                    <div class="text-center">{{ filteridTime(item.History[item.History.length - 1].endDate) }}</div>
-                    <div class="text-center">{{ FilteredDots(item.History[item.History.length - 1].totalSum) }} {{ dat === 'datakril' ? translateText('So\'m') : 'So\'m' }}</div>
+                    <div class="text-center">{{ filteridTime(item.History[item.History.length - 1]?.startDate) }}</div>
+                    <div class="text-center">{{ filteridTime(item.History[item.History.length - 1]?.endDate) }}</div>
+                    <div class="text-center">{{ FilteredDots(item.History[item.History.length - 1]?.totalSum) }} {{ dat === 'datakril' ? translateText('So\'m') : 'So\'m' }}</div>
                     <div>
                       <span class="inline-block px-2 py-1 text-center rounded-lg text-sm font-medium bg-black bg-opacity-20">
-                        {{ dat === 'datakril' ? translateText(getStatusClass(item.History[item.History.length - 1].endDate)) : getStatusClass(item.History[item.History.length - 1].endDate) }}
+                        {{ dat === 'datakril' ? translateText(getStatusClass(item.History[item.History.length - 1]?.endDate)) : getStatusClass(item.History[item.History.length - 1]?.endDate) }}
                       </span>
                     </div>
                     <button
@@ -522,7 +553,7 @@ select:focus {
                     <div class="flex justify-evenly items-center">
                       <button
                         class="border border-gray-300 text-white px-2 py-1 rounded text-sm bg-blue-500 hover:bg-blue-600"
-                        @click="router.push({ path: '/ReportsChild', query: { addressId: item.id } })"
+                        @click="router.push({ path: '/invoicesChild', query: { addressId: item.id } })"
                       >
                         {{ dat === 'datakril' ? translateText('Ko\'rish') : 'Ko\'rish' }}
                       </button>
@@ -593,7 +624,7 @@ select:focus {
   <!-- PDF Viewer -->
   <transition name="pdf-viewer">
     <div
-      v-if="selectedFilePath" @click="selectedFilePath = null"
+      v-if="selectedFilePath"
       class="fixed inset-0 z-40 flex min-h-[100vh] justify-center dark:bg-[#1a2642] bg-white items-center"
     >
       <div
@@ -606,8 +637,7 @@ select:focus {
           ×
         </button>
       </div>
-      <div 
-      @click.stop class="w-full max-w-5xl p-5 max-h-[100vh] overflow-auto">
+      <div class="w-full max-w-5xl p-5 max-h-[100vh] overflow-auto">
         <PDFViewer v-if="selectedFilePath" :file-path="selectedFilePath" />
       </div>
     </div>
@@ -637,8 +667,11 @@ select:focus {
         />
         <label>{{ dat === 'datakril' ? translateText('To\'lanadigan summani') : 'To\'lanadigan summani' }}</label>
         <input
-          v-model="totalSum"
-          type="number"
+          :value="totalSumDisplay"
+          @input="handleTotalSumChange"
+          @keydown="handleTotalSumKeydown"
+          @blur="handleTotalSumBlur"
+          type="text"
           class="text-black outline-none p-2 rounded-md transition-all duration-200 focus:ring-2 focus:ring-blue-500"
           :placeholder="dat === 'datakril' ? translateText('To\'lanadigan summani') : 'To\'lanadigan summani'"
         />
@@ -709,8 +742,11 @@ select:focus {
         <h4 class="text-lg font-semibold">{{ dat === 'datakril' ? translateText('Qayta to\'lash') : 'Qayta to\'lash' }}</h4>
         <label>{{ dat === 'datakril' ? translateText('To\'lanadigan summani') : 'To\'lanadigan summani' }}</label>
         <input
-          v-model="totalSum"
-          type="number"
+          :value="totalSumDisplay"
+          @input="handleTotalSumChange"
+          @keydown="handleTotalSumKeydown"
+          @blur="handleTotalSumBlur"
+          type="text"
           class="outline-none text-black p-2 rounded-md transition-all duration-200 focus:ring-2 focus:ring-blue-500"
           :placeholder="dat === 'datakril' ? translateText('To\'lanadigan summani') : 'To\'lanadigan summani'"
         />
