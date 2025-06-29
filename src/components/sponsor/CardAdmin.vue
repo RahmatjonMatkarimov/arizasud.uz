@@ -11,6 +11,21 @@
       </h1>
     </div>
 
+    <!-- Floating Action Button -->
+    <button 
+  @click="toggleModal"
+  class="absolute top-[110px] right-4 group overflow-hidden bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 hover:scale-105 transition-all duration-300 ease-out"
+>
+  <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+  <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-30 transform -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out"></div>
+  <span class="relative z-10 flex items-center gap-2">
+    <svg class="w-5 h-5 transform group-hover:rotate-180 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+    </svg>
+    {{ dat === "datakril" ? translateText("Qo'shish") : "Qo'shish" }}
+  </span>
+</button>
+
     <!-- Upload Modal -->
     <div
       v-if="showModal" @click="showModal = false"
@@ -153,7 +168,8 @@
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
-                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6-cart
+L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                 />
               </svg>
               {{ dat === "datakril" ? translateText(`Yuklash`) : `Yuklash` }}
@@ -185,7 +201,7 @@
             >
               <button
                 @click.stop="func(item.id)"
-                class="absolute z-30 top-4 right-4 w-8 h-8 bg-slate-600 hover:bg-blue-600 rounded-full flex items-center justify-center transition-colors duration-200 opacity-0 group-hover:opacity-100"
+                class="absolute z-10 top-4 right-4 w-8 h-8 bg-slate-600 hover:bg-blue-600 rounded-full flex items-center justify-center transition-colors duration-200 opacity-0 group-hover:opacity-100"
               >
                 <svg
                   class="w-4 h-4 dark:text-white"
@@ -250,7 +266,7 @@
             >
               <button
                 @click.stop="func(item.id)"
-                class="absolute z-30 top-4 right-4 w-8 h-8 bg-slate-600 hover:bg-blue-600 rounded-full flex items-center justify-center transition-colors duration-200 opacity-0 group-hover:opacity-100"
+                class="absolute z-10 top-4 right-4 w-8 h-8 bg-slate-600 hover:bg-blue-600 rounded-full flex items-center justify-center transition-colors duration-200 opacity-0 group-hover:opacity-100"
               >
                 <svg
                   class="w-4 h-4 dark:text-white"
@@ -583,7 +599,7 @@ const checkLanguageChange = () => {
 };
 
 onMounted(() => {
-  intervalId = setInterval(checkLanguageChange, 1000); // Reduced polling frequency
+  intervalId = setInterval(checkLanguageChange, 1000);
   getData();
 });
 
