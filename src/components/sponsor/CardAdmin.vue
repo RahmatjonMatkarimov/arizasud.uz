@@ -437,7 +437,6 @@ L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
               @change="onFileChange"
               type="file"
               accept="image/*"
-              required
               class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             />
           </div>
