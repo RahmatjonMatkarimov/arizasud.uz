@@ -1,13 +1,12 @@
 <template>
-  <div
-    class="mx-auto bg-gray-200 h-[calc(101vh-100px)] dark:bg-gradient-to-br from-gray-900 to-gray-800">
+  <div class="mx-auto bg-gray-200 h-[calc(101vh-100px)] dark:bg-gradient-to-br from-gray-900 to-gray-800">
     <div id="" class="relative flex min-w-full  justify-between h-full">
       <div class="w-full container flex flex-col mx-auto items-center justify-center p-4">
         <div ref="messagesContainer"
           class="min-w-full mb-[50px] h-[calc(100%-100px)] overflow-y-auto p-4 space-y-4 scrollbar-custom">
           <div v-for="message in messages" :key="message.id" :ref="el => messageRefs[message.id] = el"
-            :class="['flex', message.senderId === user?.id ? 'justify-end' : 'justify-start']"@dblclick="handleReply(message)"
-            @contextmenu.prevent="showContextMenu($event, message)">
+            :class="['flex', message.senderId === user?.id ? 'justify-end' : 'justify-start']"
+            @dblclick="handleReply(message)" @contextmenu.prevent="showContextMenu($event, message)">
             <div class="flex items-start max-w-[80%] space-x-2">
               <div v-if="message?.sender?.img" class="w-8 h-8 rounded-full bg-gray-700 flex-shrink-0">
                 <img :src="getImageUrl(message?.sender?.img)" class="w-full h-full rounded-full object-cover"
@@ -28,7 +27,7 @@
                   <span class="font-semibold text-teal-300 text-sm">
                     {{ dat === 'datakril' ? translateText(`${message?.senderName} ${message?.senderSurname}`) :
                       translateTextLotin(`${message?.senderName} ${message?.senderSurname}`) }}
-                      </span>
+                  </span>
                 </div>
                 <div :class="[
                   'message-bubble px-3 py-2 max-w-md transition-all duration-200 shadow-md',
@@ -66,7 +65,7 @@
                     <a v-else-if="isWord(replyMessages[message.replyToMessageId]?.attachmentUrl)"
                       :href="getMessageImageUrl(replyMessages[message.replyToMessageId]?.attachmentUrl)" target="_blank"
                       class="text-xs text-gray-400 underline">{{ dat === 'datakril' ? translateText('Word hujjati') :
-                      'Word hujjati' }}</a>
+                        'Word hujjati' }}</a>
                     <div v-else-if="replyMessages[message.replyToMessageId]?.attachmentUrl"
                       class="text-xs text-gray-300">{{ dat === 'datakril' ? translateText('Fayl') : 'Fayl' }}</div>
                     <p v-else class="text-xs text-gray-500">{{ dat === 'datakril' ? translateText('Noma\'lum') :
@@ -75,255 +74,286 @@
                   <div class="px-1 text-lg">{{ dat === 'datakril' ? translateText(message.content) :
                     translateTextLotin(message.content) }}</div>
                   <div v-if="message.attachmentUrl" class="border border-teal-500/30 p-1 relative rounded-md mt-1">
-                    <div v-if="isImage(message.attachmentUrl)" >
+                    <div v-if="isImage(message.attachmentUrl)">
 
-                      <div @click="downloadImage(message.attachmentUrl)" class="flex cursor-pointer items-center justify-end gap-1">
-                        <Icon  icon="line-md:cloud-alt-download-filled-loop" class="text-[#ffff] text-[30px]" />
+                      <div @click="downloadImage(message.attachmentUrl)"
+                        class="flex cursor-pointer items-center justify-end gap-1">
+                        <Icon icon="line-md:cloud-alt-download-filled-loop" class="text-[#ffff] text-[30px]" />
                         <p>{{ dat === 'datakril' ? translateText('Yuklab olish') : 'Yuklab olish' }}</p>
                       </div>
-                      <img :src="getMessageImageUrl(message.attachmentUrl)"
-                       class="rounded-md"
-                      :alt="dat === 'datakril' ? translateText('Biriktirilgan rasm') : 'Biriktirilgan rasm'" />
-                  </div>
-                  <video v-else-if="isVideo(message.attachmentUrl)" :src="getMessageImageUrl(message.attachmentUrl)"
-                    class="rounded-md" controls></video>
-                  <div v-else-if="isAudio(message.attachmentUrl)"
-                    class="audio-player rounded-lg overflow-hidden w-[300px] bg-gray-900/60 border border-teal-500/30 hover:border-teal-400/50 transition-all p-3">
-                    <div class="flex items-center justify-between mb-2">
-                      <div class="flex items-center space-x-2">
-                        <div v-on:click="toggleAudioPlayback"
-                          class="h-8 w-8 rounded-full bg-teal-600 flex items-center justify-center audio-play-btn">
-                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round" class="play-icon">
-                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                          </svg>
-                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round" class="pause-icon hidden">
-                            <rect x="6" y="4" width="4" height="16"></rect>
-                            <rect x="14" y="4" width="4" height="16"></rect>
+                      <img :src="getMessageImageUrl(message.attachmentUrl)" class="rounded-md"
+                        :alt="dat === 'datakril' ? translateText('Biriktirilgan rasm') : 'Biriktirilgan rasm'" />
+                    </div>
+                    <video v-else-if="isVideo(message.attachmentUrl)" :src="getMessageImageUrl(message.attachmentUrl)"
+                      class="rounded-md" controls></video>
+                    <div v-else-if="isAudio(message.attachmentUrl)"
+                      class="audio-player rounded-lg overflow-hidden w-[300px] bg-gray-900/60 border border-teal-500/30 hover:border-teal-400/50 transition-all p-3">
+                      <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center space-x-2">
+                          <div v-on:click="toggleAudioPlayback"
+                            class="h-8 w-8 rounded-full bg-teal-600 flex items-center justify-center audio-play-btn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+                              stroke-linecap="round" stroke-linejoin="round" class="play-icon">
+                              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                            </svg>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+                              stroke-linecap="round" stroke-linejoin="round" class="pause-icon hidden">
+                              <rect x="6" y="4" width="4" height="16"></rect>
+                              <rect x="14" y="4" width="4" height="16"></rect>
+                            </svg>
+                          </div>
+                          <div>
+                            <div class="text-xs font-medium text-teal-300">{{ dat === 'datakril' ?
+                              translateText('Ovozli xabar') : 'Ovozli xabar' }}</div>
+                            <div class="text-xs text-gray-400 audio-time">00:00</div>
+                          </div>
+                        </div>
+                        <div class="text-teal-400">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+                            <path
+                              d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z">
+                            </path>
                           </svg>
                         </div>
-                        <div>
-                          <div class="text-xs font-medium text-teal-300">{{ dat === 'datakril' ? 
-                          translateText('Ovozli xabar') : 'Ovozli xabar' }}</div>
-                          <div class="text-xs text-gray-400 audio-time">00:00</div>
-                        </div>
                       </div>
-                      <div class="text-teal-400">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                          <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
-                          <path
-                            d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z">
-                          </path>
-                        </svg>
+                      <div class="relative h-1.5 bg-gray-700 rounded-full overflow-hidden">
+                        <div
+                          class="absolute left-0 top-0 h-full bg-gradient-to-r from-teal-500 to-teal-300 rounded-full audio-progress"
+                          style="width: 0%"></div>
                       </div>
+                      <audio :src="getMessageImageUrl(message.attachmentUrl)" class="hidden audio-element"
+                        @timeupdate="updateAudioProgress" @loadedmetadata="initAudioPlayer" @ended="audioEnded"></audio>
                     </div>
-                    <div class="relative h-1.5 bg-gray-700 rounded-full overflow-hidden">
-                      <div
-                        class="absolute left-0 top-0 h-full bg-gradient-to-r from-teal-500 to-teal-300 rounded-full audio-progress"
-                        style="width: 0%"></div>
-                    </div>
-                    <audio :src="getMessageImageUrl(message.attachmentUrl)" class="hidden audio-element"
-                      @timeupdate="updateAudioProgress" @loadedmetadata="initAudioPlayer" @ended="audioEnded"></audio>
+                    <a v-else-if="isPDF(message.attachmentUrl)" :href="getMessageImageUrl(message.attachmentUrl)"
+                      target="_blank" class="text-red-400 underline flex items-center gap-1">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" class="file-icon">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <text x="8" y="16" font-size="8" fill="#f87171">{{ dat === 'datakril' ? translateText('PDF') :
+                          'PDF' }}</text>
+                      </svg>
+                      {{ dat === 'datakril' ? translateText('PDF') : 'PDF' }}
+                    </a>
+                    <a v-else-if="isWord(message.attachmentUrl)" :href="getMessageImageUrl(message.attachmentUrl)"
+                      target="_blank" class="text-white underline flex items-center gap-1">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" class="file-icon">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <text x="8" y="16" font-size="8" fill="#60a5fa"></text>
+                      </svg>
+                      {{ dat === 'datakril' ? translateText('Word hujjati') : 'Word hujjati' }}
+                    </a>
+                    <a v-else :href="getMessageImageUrl(message.attachmentUrl)" target="_blank"
+                      class="text-gray-300 flex items-center gap-1">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" class="file-icon">
+                        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                        <polyline points="13 2 13 9 20 9"></polyline>
+                      </svg>
+                      {{ dat === 'datakril' ? translateText('Fayl') : 'Fayl' }}
+                    </a>
                   </div>
-                  <a v-else-if="isPDF(message.attachmentUrl)" :href="getMessageImageUrl(message.attachmentUrl)"
-                    target="_blank" class="text-red-400 underline flex items-center gap-1">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2"
-                      stroke-linecap="round" stroke-linejoin="round" class="file-icon">
-                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                      <polyline points="14 2 14 8 20 8"></polyline>
-                      <text x="8" y="16" font-size="8" fill="#f87171">{{ dat === 'datakril' ? translateText('PDF') :
-                        'PDF' }}</text>
-                    </svg>
-                    {{ dat === 'datakril' ? translateText('PDF') : 'PDF' }}
-                  </a>
-                  <a v-else-if="isWord(message.attachmentUrl)" :href="getMessageImageUrl(message.attachmentUrl)"
-                    target="_blank" class="text-white underline flex items-center gap-1">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"
-                      stroke-linecap="round" stroke-linejoin="round" class="file-icon">
-                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                      <polyline points="14 2 14 8 20 8"></polyline>
-                      <text x="8" y="16" font-size="8" fill="#60a5fa"></text>
-                    </svg>
-                    {{ dat === 'datakril' ? translateText('Word hujjati') : 'Word hujjati' }}
-                  </a>
-                  <a v-else :href="getMessageImageUrl(message.attachmentUrl)" target="_blank"
-                    class="text-gray-300 flex items-center gap-1">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="2"
-                      stroke-linecap="round" stroke-linejoin="round" class="file-icon">
-                      <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
-                      <polyline points="13 2 13 9 20 9"></polyline>
-                    </svg>
-                    {{ dat === 'datakril' ? translateText('Fayl') : 'Fayl' }}
-                  </a>
                 </div>
-              </div>
-              <div class="text-xs text-gray-400 flex items-center space-x-2">
-                <button @click="handleReply(message)" class="text-teal-400 hover:text-teal-300 font-medium">
-                  {{ dat === 'datakril' ? translateText('Javob berish') : 'Javob berish' }}
-                </button>
-                <span>{{ formatDate(message.createdAt) }}</span>
-                <span v-if="message.updated" class="text-gray-500">({{ dat === 'datakril' ?
-                  translateText('Tahrirlangan') : 'Tahrirlangan' }})</span>
+                <div class="text-xs text-gray-400 flex items-center space-x-2">
+                  <button @click="handleReply(message)" class="text-teal-400 hover:text-teal-300 font-medium">
+                    {{ dat === 'datakril' ? translateText('Javob berish') : 'Javob berish' }}
+                  </button>
+                  <span>{{ formatDate(message.createdAt) }}</span>
+                  <span v-if="message.updated" class="text-gray-500">({{ dat === 'datakril' ?
+                    translateText('Tahrirlangan') : 'Tahrirlangan' }})</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <button v-if="false" @click="scrollToBottom"
-        class="fixed bottom-[160px] bg-teal-500 text-white p-2 rounded-full shadow-lg hover:bg-teal-600 transition animate-pulse">
-        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-        </svg>
-      </button>
+        <button v-if="false" @click="scrollToBottom"
+          class="fixed bottom-[160px] bg-teal-500 text-white p-2 rounded-full shadow-lg hover:bg-teal-600 transition animate-pulse">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          </svg>
+        </button>
 
-      <div
-        class="fixed bottom-4 w-[calc(100%-500px)] bg-gray-800/90 shadow-xl px-3 py-4 flex flex-col rounded-2xl border border-teal-500/50 backdrop-blur-sm">
-        <div v-if="replyTo" class="w-full bg-gray-700/50 p-2 rounded-md mb-2 flex justify-between items-center">
-  <div class="flex items-center space-x-1">
-    <span class="text-teal-400 font-semibold text-xs">{{ dat === 'datakril' ? translateText('Javob berilmoqda:') : 'Javob berilmoqda:' }}</span>
-    <div class="text-gray-300 text-xs">
-      <template v-if="replyMessages[replyTo]?.content">
-        {{ replyMessages[replyTo].content.substring(0, 40) + (replyMessages[replyTo].content.length > 40 ? '...' : '') }}
-      </template>
-      <template v-else-if="replyMessages[replyTo]?.smileyPath">
-        {{ dat === 'datakril' ? translateText('Stikker') : 'Stikker' }}
-      </template>
-      <template v-else-if="replyMessages[replyTo]?.attachmentUrl">
-        {{ dat === 'datakril' ? translateText('Fayl') : 'Fayl' }}
-      </template>
-      <template v-else>
-        {{ dat === 'datakril' ? translateText('Noma\'lum') : 'Noma\'lum' }}
-      </template>
-    </div>
-  </div>
-  <button @click="cancelReply" class="text-red-400 hover:text-red-500 text-sm">✖</button>
-</div>
-        <div v-if="recording" class="flex items-center justify-between">
-          <div class="flex items-center">
-            <div class="w-3 h-3 bg-red-500 rounded-full mr-1 animate-pulse"></div>
-            <span class="text-gray-300 text-xs font-mono">00:{{ formattedRecordingTime }}</span>
+        <div
+          class="fixed bottom-4 w-[calc(100%-500px)] bg-gray-800/90 shadow-xl px-3 py-4 flex flex-col rounded-2xl border border-teal-500/50 backdrop-blur-sm">
+          <div v-if="replyTo" class="w-full bg-gray-700/50 p-2 rounded-md mb-2 flex justify-between items-center">
+            <div class="flex items-center space-x-1">
+              <span class="text-teal-400 font-semibold text-xs">{{ dat === 'datakril' ? 
+              translateText('Javob berilmoqda: ') : 'Javob berilmoqda:' }}</span>
+              <div class="text-gray-300 text-xs">
+                <template v-if="replyMessages[replyTo]?.content">
+                  {{ replyMessages[replyTo].content.substring(0, 40) + (replyMessages[replyTo].content.length > 40 ?
+                  '...' : '') }}
+                </template>
+                <template v-else-if="replyMessages[replyTo]?.smileyPath">
+                  {{ dat === 'datakril' ? translateText('Stikker') : 'Stikker' }}
+                </template>
+                <template v-else-if="replyMessages[replyTo]?.attachmentUrl">
+                  {{ dat === 'datakril' ? translateText('Fayl') : 'Fayl' }}
+                </template>
+                <template v-else>
+                  {{ dat === 'datakril' ? translateText('Noma\'lum') : 'Noma\'lum' }}
+                </template>
+              </div>
+            </div>
+            <button @click="cancelReply" class="text-red-400 hover:text-red-500 text-sm">✖</button>
           </div>
-          <button @click="cancelRecording"
-            class="text-red-400 border border-red-400 px-2 py-1 rounded-md text-xs font-semibold hover:bg-red-400 hover:text-gray-900 transition">
+          <div v-if="recording" class="flex items-center justify-between">
+            <div class="flex items-center">
+              <div class="w-3 h-3 bg-red-500 rounded-full mr-1 animate-pulse"></div>
+              <span class="text-gray-300 text-xs font-mono">00:{{ formattedRecordingTime }}</span>
+            </div>
+            <button @click="cancelRecording"
+              class="text-red-400 border border-red-400 px-2 py-1 rounded-md text-xs font-semibold hover:bg-red-400 hover:text-gray-900 transition">
+              {{ dat === 'datakril' ? translateText('Bekor qilish') : 'Bekor qilish' }}
+            </button>
+            <button @click="stopRecording" class="p-1 rounded-full bg-teal-500 hover:bg-teal-600 transition">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 2L11 13"></path>
+                <path d="M22 2L15 22L11 13L2 9L22 2Z"></path>
+              </svg>
+            </button>
+          </div>
+          <div v-else class="flex items-center w-full space-x-2">
+            <button @click="openEmojiPicker" class="text-xl hover:bg-gray-700 p-1 rounded-full transition">😊</button>
+            <label class="cursor-pointer p-1 hover:bg-gray-700 rounded-full transition">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#38b2ac" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path
+                  d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48">
+                </path>
+              </svg>
+              <input type="file" @change="handleFileUpload" class="hidden" />
+            </label>
+            <input @keypress.enter="debouncedSendMessage('text')" v-model="newMessage"
+              :placeholder="dat === 'datakril' ? translateText('Xabar yozing...') : 'Xabar yozing...'"
+              class="flex-1 border border-gray-600 bg-gray-700 text-gray-200 rounded-full px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500" />
+            <button @click="debouncedSendMessage('text')"
+              class="p-1 rounded-full bg-teal-500 hover:bg-teal-600 transition">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 2L11 13"></path>
+                <path d="M22 2L15 22L11 13L2 9L22 2Z"></path>
+              </svg>
+            </button>
+            <button @click="recording ? stopRecording() : startRecording()"
+              :class="{ 'animate-bounce bg-teal-500': isClicked, 'bg-gray-600': !isClicked }"
+              class="p-1 rounded-full hover:bg-teal-600 transition">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="#ffffff" stroke="none">
+                <path d="M12 1a3 3 0 0 1 3 3v8a3 3 0 0 1-6 0V4a3 3 0 0 1 3-3z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <line x1="12" y1="19" x2="12" y2="23"></line>
+                <line x1="8" y1="23" x2="16" y2="23"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="showModal" @click="showModal = false"
+      class="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
+      <div @click.stop class="bg-gray-800/90 p-5 rounded-xl shadow-2xl w-72 backdrop-blur-md border border-teal-500/50">
+        <h2 class="text-base text-teal-300 font-bold mb-3">{{ dat === 'datakril' ? translateText('Xabarni tahrirlash') :
+          'Xabarni tahrirlash' }}</h2>
+        <input v-model="editedContent"
+          class="w-full border border-gray-600 bg-gray-700 text-gray-200 rounded px-2 py-2 mb-3 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500" />
+        <div class="flex justify-end space-x-2">
+          <button @click="updateMessage"
+            class="bg-teal-500 text-white w-full px-3 py-2 rounded hover:bg-teal-600 transition text-sm">
+            {{ dat === 'datakril' ? translateText('Yangilash') : 'Yangilash' }}
+          </button>
+          <button @click="showModal = false"
+            class="bg-red-500 text-white px-3 py-2 w-full rounded hover:bg-red-600 transition text-sm">
             {{ dat === 'datakril' ? translateText('Bekor qilish') : 'Bekor qilish' }}
           </button>
-          <button @click="stopRecording" class="p-1 rounded-full bg-teal-500 hover:bg-teal-600 transition">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M22 2L11 13"></path>
-              <path d="M22 2L15 22L11 13L2 9L22 2Z"></path>
-            </svg>
-          </button>
         </div>
-        <div v-else class="flex items-center w-full space-x-2">
-          <button @click="openEmojiPicker" class="text-xl hover:bg-gray-700 p-1 rounded-full transition">😊</button>
-          <label class="cursor-pointer p-1 hover:bg-gray-700 rounded-full transition">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#38b2ac" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path
-                d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48">
-              </path>
-            </svg>
-            <input type="file" @change="handleFileUpload" class="hidden" />
-          </label>
-          <input @keypress.enter="debouncedSendMessage('text')" v-model="newMessage"
-            :placeholder="dat === 'datakril' ? translateText('Xabar yozing...') : 'Xabar yozing...'"
-            class="flex-1 border border-gray-600 bg-gray-700 text-gray-200 rounded-full px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500" />
-          <button @click="debouncedSendMessage('text')"
-            class="p-1 rounded-full bg-teal-500 hover:bg-teal-600 transition">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M22 2L11 13"></path>
-              <path d="M22 2L15 22L11 13L2 9L22 2Z"></path>
-            </svg>
+      </div>
+    </div>
+
+    <div v-if="showDeleteConfirm" @click="showDeleteConfirm = false"
+      class="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
+      <div @click.stop class="bg-gray-800/90 p-5 rounded-xl shadow-2xl w-72 backdrop-blur-md border border-teal-500/50">
+        <h2 class="text-base text-teal-300 font-bold mb-3">{{ dat === 'datakril' ? translateText('Xabarni o‘chirish') :
+          'Xabarni o‘chirish' }}</h2>
+        <p class="text-gray-300 text-sm mb-3">{{ dat === 'datakril' ?
+          translateText('Ushbu xabarni o‘chirishga ishonchingiz komilmi ? ') :
+          'Ushbu xabarni o‘chirishga ishonchingiz komilmi?' }}</p>
+        <div class="flex justify-end space-x-2">
+          <button @click="confirmDelete"
+            class="bg-red-500 text-white w-full px-3 py-2 rounded hover:bg-red-600 transition text-sm">
+            {{ dat === 'datakril' ? translateText('O‘chirish') : 'O‘chirish' }}
           </button>
-          <button @click="recording ? stopRecording() : startRecording()"
-            :class="{ 'animate-bounce bg-teal-500': isClicked, 'bg-gray-600': !isClicked }"
-            class="p-1 rounded-full hover:bg-teal-600 transition">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="#ffffff" stroke="none">
-              <path d="M12 1a3 3 0 0 1 3 3v8a3 3 0 0 1-6 0V4a3 3 0 0 1 3-3z"></path>
-              <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-              <line x1="12" y1="19" x2="12" y2="23"></line>
-              <line x1="8" y1="23" x2="16" y2="23"></line>
-            </svg>
+          <button @click="showDeleteConfirm = false"
+            class="bg-gray-600 text-white px-3 py-2 w-full rounded hover:bg-gray-700 transition text-sm">
+            {{ dat === 'datakril' ? translateText('Bekor qilish') : 'Bekor qilish' }}
           </button>
         </div>
       </div>
     </div>
-  </div>
 
-  <div v-if="showModal" @click="showModal  = false" class="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
-    <div @click.stop class="bg-gray-800/90 p-5 rounded-xl shadow-2xl w-72 backdrop-blur-md border border-teal-500/50">
-      <h2 class="text-base text-teal-300 font-bold mb-3">{{ dat === 'datakril' ? translateText('Xabarni tahrirlash') :
-        'Xabarni tahrirlash' }}</h2>
-      <input v-model="editedContent"
-        class="w-full border border-gray-600 bg-gray-700 text-gray-200 rounded px-2 py-2 mb-3 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500" />
-      <div class="flex justify-end space-x-2">
-        <button @click="updateMessage"
-          class="bg-teal-500 text-white w-full px-3 py-2 rounded hover:bg-teal-600 transition text-sm">
-          {{ dat === 'datakril' ? translateText('Yangilash') : 'Yangilash' }}
-        </button>
-        <button @click="showModal = false"
-          class="bg-red-500 text-white px-3 py-2 w-full rounded hover:bg-red-600 transition text-sm">
+    <div v-if="showContextMenuModal"
+      class="fixed bg-gray-800/90 border border-teal-500/50 rounded-lg shadow-2xl p-3 z-50 context-menu backdrop-blur-md"
+      :style="{ top: contextMenuY - 100 + 'px', left: contextMenuX + 'px' }">
+      <button v-if="contextMenuMessage?.senderId === user?.id" @click="startEditing(contextMenuMessage)"
+        class="block w-full text-left px-2 py-1 text-teal-300 hover:bg-gray-700 rounded text-sm">
+        {{ dat === 'datakril' ? translateText('Tahrirlash') : 'Tahrirlash' }}
+      </button>
+      <button v-if="contextMenuMessage?.senderId === user?.id" @click="confirmDeleteMessage(contextMenuMessage.id)"
+        class="block w-full text-left px-2 py-1 text-red-400 hover:bg-gray-700 rounded text-sm">
+        {{ dat === 'datakril' ? translateText('O‘chirish') : 'O‘chirish' }}
+      </button>
+      <button @click="handleReply(contextMenuMessage)"
+        class="block w-full text-left px-2 py-1 text-teal-300 hover:bg-gray-700 rounded text-sm">
+        {{ dat === 'datakril' ? translateText('Javob berish') : 'Javob berish' }}
+      </button>
+      <button @click="closeContextMenu"
+        class="block w-full text-left px-2 py-1 text-gray-300 hover:bg-gray-700 rounded text-sm">
+        {{ dat === 'datakril' ? translateText('Bekor qilish') : 'Bekor qilish' }}
+      </button>
+    </div>
+
+    <div v-if="showEmojiPicker"
+      class="fixed bottom-[100px] left-[250px] w-[calc(100%-500px)] bg-gray-800/90 shadow-2xl rounded-xl z-50 p-4 grid grid-cols-8 gap-2 max-h-64 overflow-y-auto scrollbar-custom border border-teal-500/50 backdrop-blur-md">
+      <button v-for="item in smileys" :key="item.id" @click="debouncedSendMessage('smiley', item.id)"
+        class="block rounded-md hover:scale-110 transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
+        :title="dat === 'datakril' ? translateText(`Tabassum ${item.id}`) : `Tabassum ${item.id}`">
+        <img :src="getSmileyUrl(item.filePath)" class="w-12 h-12 rounded-md object-contain"
+          :alt="dat === 'datakril' ? translateText(`Tabassum ${item.id}`) : `Tabassum ${item.id}`" />
+      </button>
+    </div>
+  </div>
+  <button class="absolute h-16 w-16 bg-gray-700/90 hover:bg-gray-600 rounded-full top-[12%] z-30 right-[2%]"
+    @click="all = true">
+    <Icon icon="mdi:delete-forever" class="text-red-400 text-4xl" />
+  </button>
+  <div v-if="all" @click.self="all = false"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity">
+    <div
+      class="bg-gray-900 text-white rounded-2xl p-6 shadow-2xl w-80 border border-teal-500/40 animate-fade-in">
+      <h2 class="text-lg font-semibold text-teal-300 mb-4">
+        {{ dat === 'datakril' ? translateText('Xabarlarni o‘chirish') : 'Xabarlarni o‘chirish' }}
+      </h2>
+      <p class="text-sm text-gray-300 mb-6">
+        {{ dat === 'datakril' ? translateText('Ushbu xabarlarni o‘chirishga ishonchingiz komilmi ?') :
+        'Ushbu xabarlarni o‘chirishga ishonchingiz komilmi?' }}
+      </p>
+      <div class="flex justify-end gap-2">
+        <button @click="all = false"
+          class="px-4 py-2 text-sm rounded-md border border-gray-500 text-gray-300 hover:bg-gray-700 transition">
           {{ dat === 'datakril' ? translateText('Bekor qilish') : 'Bekor qilish' }}
         </button>
-      </div>
-    </div>
-  </div>
-
-  <div v-if="showDeleteConfirm" @click="showDeleteConfirm = false" class="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
-    <div @click.stop class="bg-gray-800/90 p-5 rounded-xl shadow-2xl w-72 backdrop-blur-md border border-teal-500/50">
-      <h2 class="text-base text-teal-300 font-bold mb-3">{{ dat === 'datakril' ? translateText('Xabarni o‘chirish') :
-        'Xabarni o‘chirish' }}</h2>
-      <p class="text-gray-300 text-sm mb-3">{{ dat === 'datakril' ? 
-      translateText('Ushbu xabarni o‘chirishga ishonchingiz komilmi ? ') : 
-      'Ushbu xabarni o‘chirishga ishonchingiz komilmi?' }}</p>
-      <div class="flex justify-end space-x-2">
-        <button @click="confirmDelete"
-          class="bg-red-500 text-white w-full px-3 py-2 rounded hover:bg-red-600 transition text-sm">
+        <button @click="deleteMessage"
+          class="px-4 py-2 text-sm rounded-md bg-red-600 hover:bg-red-700 text-white transition">
           {{ dat === 'datakril' ? translateText('O‘chirish') : 'O‘chirish' }}
         </button>
-        <button @click="showDeleteConfirm = false"
-          class="bg-gray-600 text-white px-3 py-2 w-full rounded hover:bg-gray-700 transition text-sm">
-          {{ dat === 'datakril' ? translateText('Bekor qilish') : 'Bekor qilish' }}
-        </button>
       </div>
     </div>
-  </div>
-
-  <div v-if="showContextMenuModal"
-    class="fixed bg-gray-800/90 border border-teal-500/50 rounded-lg shadow-2xl p-3 z-50 context-menu backdrop-blur-md"
-    :style="{ top: contextMenuY - 100 + 'px', left: contextMenuX + 'px' }">
-    <button v-if="contextMenuMessage?.senderId === user?.id" @click="startEditing(contextMenuMessage)"
-      class="block w-full text-left px-2 py-1 text-teal-300 hover:bg-gray-700 rounded text-sm">
-      {{ dat === 'datakril' ? translateText('Tahrirlash') : 'Tahrirlash' }}
-    </button>
-    <button v-if="contextMenuMessage?.senderId === user?.id" @click="confirmDeleteMessage(contextMenuMessage.id)"
-      class="block w-full text-left px-2 py-1 text-red-400 hover:bg-gray-700 rounded text-sm">
-      {{ dat === 'datakril' ? translateText('O‘chirish') : 'O‘chirish' }}
-    </button>
-    <button @click="handleReply(contextMenuMessage)"
-      class="block w-full text-left px-2 py-1 text-teal-300 hover:bg-gray-700 rounded text-sm">
-      {{ dat === 'datakril' ? translateText('Javob berish') : 'Javob berish' }}
-    </button>
-    <button @click="closeContextMenu"
-      class="block w-full text-left px-2 py-1 text-gray-300 hover:bg-gray-700 rounded text-sm">
-      {{ dat === 'datakril' ? translateText('Bekor qilish') : 'Bekor qilish' }}
-    </button>
-  </div>
-
-  <div v-if="showEmojiPicker"
-    class="fixed bottom-[100px] left-[250px] w-[calc(100%-500px)] bg-gray-800/90 shadow-2xl rounded-xl z-50 p-4 grid grid-cols-8 gap-2 max-h-64 overflow-y-auto scrollbar-custom border border-teal-500/50 backdrop-blur-md">
-    <button v-for="item in smileys" :key="item.id" @click="debouncedSendMessage('smiley', item.id)"
-      class="block rounded-md hover:scale-110 transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
-      :title="dat === 'datakril' ? translateText(`Tabassum ${item.id}`) : `Tabassum ${item.id}`">
-      <img :src="getSmileyUrl(item.filePath)" class="w-12 h-12 rounded-md object-contain"
-        :alt="dat === 'datakril' ? translateText(`Tabassum ${item.id}`) : `Tabassum ${item.id}`" />
-    </button>
-  </div>
   </div>
 </template>
 
@@ -339,6 +369,7 @@ import { Icon } from '@iconify/vue';
 import { inject } from 'vue';
 
 // User data from localStorage
+const all = ref(false);
 const user = ref({
   id: parseInt(localStorage.getItem('id')) || null,
   username: localStorage.getItem('username') || 'TestUser',
@@ -657,7 +688,7 @@ const initializeSocket = () => {
       if (message.replyToMessageId) {
         getOneMessage(message.replyToMessageId);
       }
-      
+
       scrollToBottom();
       nextTick(() => setupNewAudioPlayers());
       if (message.senderId !== user.value.id) {
@@ -715,7 +746,7 @@ const pollMessages = async () => {
     }
   } catch (error) {
     console.error('Error polling messages:', error.message);
-  } finally{isLoading.value = false}
+  } finally { isLoading.value = false }
 };
 
 // API functions
@@ -735,7 +766,7 @@ const fetchMessages = async () => {
   } catch (error) {
     console.error('Error fetching messages:', error.message, error.response?.data);
     alert('Failed to load messages');
-  }finally{
+  } finally {
     isLoading.value = false
   }
 };
@@ -747,7 +778,7 @@ const fetchSmileys = async () => {
     smileys.value = response.data;
   } catch (error) {
     console.error('Failed to fetch smileys:', error);
-  } finally{isLoading.value = false}
+  } finally { isLoading.value = false }
 };
 
 const getOneMessage = async (id) => {
@@ -763,7 +794,7 @@ const getOneMessage = async (id) => {
       };
     } catch (error) {
       console.error(`Failed to fetch reply message ${id}:`, error);
-    } finally{isLoading.value = false}
+    } finally { isLoading.value = false }
   }
 };
 
@@ -778,7 +809,7 @@ const sendMessage = async (type, smileyId = null) => {
     file: type === 'file' || type === 'audio' ? selectedFile.value : null,
     smileyId: type === 'smiley' ? smileyId : null,
   };
-isLoading.value = true;
+  isLoading.value = true;
   try {
     if (!messageData.file) {
       // For non-file messages (text or smiley), use Socket.IO
@@ -821,7 +852,7 @@ isLoading.value = true;
   } catch (error) {
     console.error('Error sending message:', error.message);
     alert('Failed to send message');
-  }finally{isLoading.value = false}
+  } finally { isLoading.value = false }
 };
 
 // Debounced sendMessage
@@ -856,6 +887,14 @@ const updateMessage = async () => {
   editedContent.value = '';
   showModal.value = false;
 };
+
+const deleteMessage = async () => {
+  const response = await axios.delete(`${URL}/messages`);
+  if (response.status === 200) {
+    fetchMessages();
+    all.value = false;
+  }
+}
 
 const confirmDeleteMessage = (messageId) => {
   messageToDelete.value = messageId;
@@ -918,7 +957,7 @@ const startRecording = async () => {
     console.log('Recording already in progress');
     return;
   }
-isLoading.value = true;
+  isLoading.value = true;
   try {
     const devices = await navigator.mediaDevices.enumerateDevices();
     const audioDevices = devices.filter((device) => device.kind === 'audioinput');
@@ -969,7 +1008,7 @@ isLoading.value = true;
     alert(errorMessage);
     recording.value = false;
     isClicked.value = false;
-  }finally{isLoading.value = false}
+  } finally { isLoading.value = false }
 };
 
 const stopRecording = () => {
