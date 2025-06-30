@@ -135,7 +135,8 @@ export default {
               date.getMonth() === Number(this.selectedMonth)
             );
           })
-          .slice(-5);
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // eng oxirgi birinchi
+          .slice(0, 3); // faqat 3 ta eng yangi invoice
       } catch (error) {
         console.error("Error fetching invoices:", error);
       } finally {
@@ -154,7 +155,8 @@ export default {
               date.getMonth() === Number(this.selectedMonth)
             );
           })
-          .slice(-5);
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // eng yangi birinchi
+          .slice(0, 3); // faqat 3 ta eng oxirgi
       } catch (error) {
         console.error("Error fetching transactions:", error);
       } finally {
@@ -478,8 +480,8 @@ export default {
               label: t(`Umumiy oylik (${this.monthNames[this.selectedMonth]} ${this.selectedYear}):`),
               value: this.formatNumberWithDots(
                 this.oylik.totalAllSalaries +
-                  this.oylik.totalAllBonuses -
-                  this.oylik.totalAllDeductions
+                this.oylik.totalAllBonuses -
+                this.oylik.totalAllDeductions
               ),
               suffix: t("so'm"),
               class: "bg-green-50 dark:bg-green-900/50",
@@ -573,31 +575,16 @@ export default {
 </style>
 
 <template>
-  <div
-    class="p-6 min-h-screen bg-gray-200 dark:bg-gradient-to-br from-slate-800 to-slate-900 text-gray-100"
-  >
+  <div class="p-6 min-h-screen bg-gray-200 dark:bg-gradient-to-br from-slate-800 to-slate-900 text-gray-100">
     <div class="container mx-auto">
       <div v-if="!isLoaded" class="flex flex-col items-center justify-center h-screen">
         <div class="loading-pulse">
-          <svg
-            class="animate-spin h-12 w-12 text-blue-500"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              class="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              stroke-width="4"
-            ></circle>
-            <path
-              class="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            ></path>
+          <svg class="animate-spin h-12 w-12 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+            </path>
           </svg>
         </div>
         <p class="mt-4 text-white">
@@ -614,12 +601,8 @@ export default {
             <label for="yearSelect" class="mr-2 text-gray-600 dark:text-gray-300">{{
               dat === "datakril" ? translateText("Yil:") : "Yil:"
             }}</label>
-            <select
-              id="yearSelect"
-              v-model="selectedYear"
-              @change="handleSortChange"
-              class="p-2 rounded-lg bg-white dark:bg-slate-700 text-gray-800 dark:text-white border border-gray-300 dark:border-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
+            <select id="yearSelect" v-model="selectedYear" @change="handleSortChange"
+              class="p-2 rounded-lg bg-white dark:bg-slate-700 text-gray-800 dark:text-white border border-gray-300 dark:border-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
               <option v-for="year in availableYears" :key="year" :value="year">
                 {{ year }}
               </option>
@@ -629,68 +612,50 @@ export default {
             <label for="monthSelect" class="mr-2 text-gray-600 dark:text-gray-300">{{
               dat === "datakril" ? translateText("Oy:") : "Oy:"
             }}</label>
-            <select
-              id="monthSelect"
-              v-model="selectedMonth"
-              @change="handleSortChange"
-              class="p-2 rounded-lg bg-white dark:bg-slate-700 text-gray-800 dark:text-white border border-gray-300 dark:border-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
+            <select id="monthSelect" v-model="selectedMonth" @change="handleSortChange"
+              class="p-2 rounded-lg bg-white dark:bg-slate-700 text-gray-800 dark:text-white border border-gray-300 dark:border-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
               <option v-for="(month, index) in monthNames" :key="index" :value="index">
                 {{ month }}
               </option>
             </select>
           </div>
         </div>
-        <div
-          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-4"
-        >
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-4">
           <KpiCard
             class="kpi-card transition-all text-purple-600 dark:text-white bg-purple-500 bg-opacity-20 dark:bg-gradient-to-r from-[#2a3655] to-[#3d4e81] rounded-lg dark:border border-white/5 shadow-lg hover:shadow-blue-500/5 hover:border-white/10 duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-2xl relative overflow-hidden group cursor-pointer"
             :title="dat === 'datakril' ? translateText(`Ishchilarni yakuniy oylik maoshi (${monthNames[selectedMonth]} ${selectedYear})`) : `Ishchilarni yakuniy oylik maoshi (${monthNames[selectedMonth]} ${selectedYear})`"
             :value="formatNumberWithDots(animatedOylik) + ` so'm`"
-            @click="openModal('Ishchilar maoshi', $event, 'ish')"
-          />
+            @click="openModal('Ishchilar maoshi', $event, 'ish')" />
           <KpiCard
             class="kpi-card transition-all text-purple-600 dark:text-white bg-purple-500 bg-opacity-20 dark:bg-gradient-to-r from-[#2a3655] to-[#3d4e81] rounded-lg dark:border border-white/5 shadow-lg hover:shadow-blue-500/5 hover:border-white/10 duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-2xl relative overflow-hidden group cursor-pointer"
             :title="dat === 'datakril' ? translateText(`Umumiy Xarajatlar (${monthNames[selectedMonth]} ${selectedYear})`) : `Umumiy Xarajatlar (${monthNames[selectedMonth]} ${selectedYear})`"
             :value="formatNumberWithDots(animatedData1) + ` so'm`"
-            @click="openModal('Umumiy xarajatlar', $event, 'expenses')"
-          />
+            @click="openModal('Umumiy xarajatlar', $event, 'expenses')" />
           <KpiCard
             class="kpi-card transition-all text-orange-600 dark:text-white bg-orange-500 bg-opacity-20 dark:bg-gradient-to-r from-[#2a3655] to-[#3d4e81] rounded-lg dark:border border-white/5 shadow-lg hover:shadow-blue-500/5 hover:border-white/10 duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-2xl relative overflow-hidden group cursor-pointer"
             :title="dat === 'datakril' ? translateText(`Shartmona bo'yicha qarzlar (${monthNames[selectedMonth]} ${selectedYear})`) : `Shartmona bo'yicha qarzlar (${monthNames[selectedMonth]} ${selectedYear})`"
             :value="formatNumberWithDots(animatedData4) + ` so'm`"
-            @click="openModal('Shartmona bo\'yicha qarzlar', $event, 'debts')"
-          />
+            @click="openModal('Shartmona bo\'yicha qarzlar', $event, 'debts')" />
           <KpiCard
             class="kpi-card transition-all text-green-600 dark:text-white bg-green-500 bg-opacity-20 dark:bg-gradient-to-r from-[#2a3655] to-[#3d4e81] rounded-lg dark:border border-white/5 shadow-lg hover:shadow-blue-500/5 hover:border-white/10 duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-2xl relative overflow-hidden group cursor-pointer"
             :title="dat === 'datakril' ? translateText(`Foyda (${monthNames[selectedMonth]} ${selectedYear})`) : `Foyda (${monthNames[selectedMonth]} ${selectedYear})`"
-            :value="formatNumberWithDots(animatedData) + ` so'm`"
-            @click="openModal('Foyda', $event, 'profit')"
-          />
+            :value="formatNumberWithDots(animatedData) + ` so'm`" @click="openModal('Foyda', $event, 'profit')" />
         </div>
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-4">
           <div class="lg:col-span-2">
             <div
-              class="chart-container min-h-full bg-slate-400/20 dark:bg-slate-700/50 backdrop-blur-sm rounded-lg p-4 shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden border-gradient-to-r from-green-400 via-blue-500 to-red-500"
-            >
-              <RevenueChart
-                class="min-h-full"
-                :revenueData="chartData"
-                :expenseData="chartData1"
-                :options="chartOptions"
-              />
+              class="chart-container min-h-full bg-slate-400/20 dark:bg-slate-700/50 backdrop-blur-sm rounded-lg p-4 shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden border-gradient-to-r from-green-400 via-blue-500 to-red-500">
+              <RevenueChart class="min-h-full" :revenueData="chartData" :expenseData="chartData1"
+                :options="chartOptions" />
             </div>
           </div>
           <div class="flex flex-col justify-center space-y-4">
             <div
-              class="chart-container bg-slate-400/20 dark:bg-slate-700/50 backdrop-blur-sm rounded-lg p-4 shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden"
-            >
+              class="chart-container bg-slate-400/20 dark:bg-slate-700/50 backdrop-blur-sm rounded-lg p-4 shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
               <TransactionsTable :transactions="transactions" />
             </div>
             <div
-              class="chart-container bg-slate-400/20 dark:bg-slate-700/50 backdrop-blur-sm rounded-lg p-4 shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden"
-            >
+              class="chart-container bg-slate-400/20 dark:bg-slate-700/50 backdrop-blur-sm rounded-lg p-4 shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
               <InvoicesTable :invoices="invoices" />
             </div>
           </div>
@@ -701,59 +666,36 @@ export default {
             :style="{
               top: `${modalPosition.top}px`,
               left: `${modalPosition.left - 70}px`,
-            }"
-          >
+            }">
             <div class="flex justify-between items-center mb-6">
               <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">
                 {{
                   dat === "datakril" ? translateText(selectedKpiTitle) : selectedKpiTitle
                 }}
               </h2>
-              <button
-                @click="closeModal"
-                class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
-              >
-                <svg
-                  class="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
+              <button @click="closeModal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
             <div class="space-y-4">
-              <div
-                v-for="(item, index) in modalContent"
-                :key="index"
-                :class="[
-                  'flex items-center p-3 rounded-lg dark:border-none border border-gray-800',
-                  item.class,
-                ]"
-              >
+              <div v-for="(item, index) in modalContent" :key="index" :class="[
+                'flex items-center p-3 rounded-lg dark:border-none border border-gray-800',
+                item.class,
+              ]">
                 <span class="text-gray-600 dark:text-gray-300 font-medium w-[240px]">{{
                   item.label
                 }}</span>
-                <span
-                  :class="[
-                    'ml-auto font-semibold text-gray-800 dark:text-white',
-                    item.valueClass || '',
-                  ]"
-                  >{{ item.value }} {{ item.suffix || "" }}</span
-                >
+                <span :class="[
+                  'ml-auto font-semibold text-gray-800 dark:text-white',
+                  item.valueClass || '',
+                ]">{{ item.value }} {{ item.suffix || "" }}</span>
               </div>
             </div>
             <div class="mt-6 flex justify-end">
-              <button
-                @click="closeModal"
-                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
-              >
+              <button @click="closeModal"
+                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
                 {{ dat === "datakril" ? translateText("Yopish") : "Yopish" }}
               </button>
             </div>
@@ -776,10 +718,12 @@ export default {
   transform: rotate(45deg);
   transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
 }
+
 .kpi-card:hover::after {
   top: -30px;
   left: 80%;
 }
+
 .chart-container::before {
   content: "";
   position: absolute;
@@ -791,13 +735,16 @@ export default {
   background-size: 200% 100%;
   animation: gradientBorder 3s ease infinite;
 }
+
 @keyframes gradientBorder {
   0% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
+
   100% {
     background-position: 0% 50%;
   }
