@@ -1,13 +1,13 @@
 <template>
   <div>
     <header class="fixed top-0 bg-[#1e2a46] w-full z-20 flex justify-between items-center px-6 py-4 h-[90px] shadow-sm">
-      <router-link to="/profile">
+      <div  @click="router.push('/profile')">
         <div class="w-[70px] h-[68px] rounded-full overflow-hidden">
           <img :src="getProfileImage(userInfoLotin.img)" alt="Profile" class="w-full h-full object-cover" />
         </div>
-      </router-link>
+      </div>
       <div class="flex items-center space-x-4">
-                      <div @click="router.push('reminders')" class="relative cursor-pointer group">
+        <div @click="router.push('/reminders')" class="relative cursor-pointer group">
           <div :class="[
             'p-2 rounded-xl transition-all duration-300 hover:scale-110',
           ]">

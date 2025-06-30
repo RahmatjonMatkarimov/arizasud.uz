@@ -192,7 +192,6 @@ const navigateTo = (path, index) => {
     animateSidebar(false)
   }
   
-  router.push(path)
 }
 
 // Initialize animations
@@ -347,7 +346,7 @@ onMounted(() => {
         ]"
         @mouseenter="setHoveredItem(index)"
         @mouseleave="clearHoveredItem(index)"
-        @click="navigateTo(item.path, index)">
+        @click="navigateTo(item.path, index),router.push(item.path)">
         
         <!-- Glowing dot for active item -->
         <div v-if="isActive(item.path)" class="absolute left-0 w-1 h-1 bg-yellow-400 rounded-full glow-dot"></div>

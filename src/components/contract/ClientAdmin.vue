@@ -1388,13 +1388,11 @@ return
         generatedLogin.value = res.data.login;
         generatedPassword.value = res.data.adressID;
       } catch (error) {
-        console.error("So‘rovda xatolik yuz berdi:", error);
         generatedLogin.value = `${formData.name}${generateRandomName()}`
         generatedPassword.value = `12345678`
       }
     };
     await loginSearch();
-
     // Add calculated fields to data
     data["sum1"] = formatNumberWithDots(sum1Num);
     data["sum2"] = formatNumberWithDots(sum2Num);

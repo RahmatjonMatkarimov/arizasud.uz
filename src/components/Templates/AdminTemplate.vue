@@ -194,7 +194,7 @@
           </div>
         </div>
         
-        <router-link to="/profiles" class="hover:scale-105 border-l-2 border-gray-600 pl-5 flex justify-end items-center gap-4 transition-transform duration-200">
+        <div @click="router.push('/profiles')" class="hover:scale-105 border-l-2 border-gray-600 pl-5 flex justify-end items-center gap-4 transition-transform duration-200">
           <div class="flex flex-col items-end">
             <h1 class="dark:text-gray-200 text-gray-800">{{ dat === 'datakril' ? translateText(`${userInfoLotin.name} ${userInfoLotin.surname} ${userInfoLotin.dadname}`):`${userInfoLotin.name} ${userInfoLotin.surname} ${userInfoLotin.dadname}` }}</h1>
             <h1 class="dark:text-gray-200/50 to-gray-800/50">{{ dat === 'datakril' ? translateText(userInfoLotin.lavozimi):userInfoLotin.lavozimi }}</h1>
@@ -208,7 +208,7 @@
         ]">
           <img :src="getProfileImage(userInfoLotin.img)" alt="Profile" class="w-full h-full object-cover" />
         </div>
-      </router-link> 
+      </div> 
       </div>
     </header>
 
