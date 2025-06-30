@@ -41,15 +41,12 @@ watch(isLoading, (newValue) => {
 });
 
 const fetchData = async (url) => {
-  isLoading.value = true;
   try {
     const response = await axios.get(url);
     return response.data;
   } catch (error) {
     errorCode.value = error.response?.status || 500;
     throw error;
-  } finally {
-    isLoading.value = false;
   }
 };
 
