@@ -1,53 +1,26 @@
 <template>
   <div class="min-h-screen bg-slate-200 flex items-center justify-center px-4">
-    <div
-      class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 animate-slide-up border border-slate-300"
-    >
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 animate-slide-up border border-slate-300">
       <h2 class="text-3xl font-bold text-slate-800 text-center mb-6 animate-fade-in">
         Tizimga Kirish
       </h2>
 
       <form @submit.prevent="setData" class="space-y-4 animate-fade-in delay-200">
-        <input
-          v-model="username"
-          type="text"
-          placeholder="Foydalanuvchi nomi"
-          class="input-field"
-          required
-        />
+        <input v-model="username" type="text" placeholder="Foydalanuvchi nomi" class="input-field" required />
 
         <div class="relative">
-          <input
-            v-model="password"
-            :type="showPassword ? 'text' : 'password'"
-            placeholder="Parol"
-            class="input-field pr-10"
-            required
-          />
-          <button
-            type="button"
-            @click="showPassword = !showPassword"
-            class="absolute right-3 top-1/2 -translate-y-1/2"
-          >
-            <img
-              :src="showPassword ? '/eyes.png' : '/eye.png'"
-              class="w-5 h-5 opacity-70"
-            />
+          <input v-model="password" :type="showPassword ? 'text' : 'password'" placeholder="Parol"
+            class="input-field pr-10" required />
+          <button type="button" @click="showPassword = !showPassword" class="absolute right-3 top-1/2 -translate-y-1/2">
+            <img :src="showPassword ? '/eyes.png' : '/eye.png'" class="w-5 h-5 opacity-70" />
           </button>
         </div>
 
-        <input
-          v-model="tell"
-          type="number"
-          placeholder="Telefon raqam"
-          class="input-field"
-        />
+        <input v-model="tell" type="number" placeholder="Telefon raqam" class="input-field" />
         <input v-model="jshshr" type="number" placeholder="JSHSHR" class="input-field" />
 
-        <button
-          type="submit"
-          class="w-full bg-blue-700 hover:bg-blue-800 active:scale-95 transition-transform text-white py-3 rounded-xl font-semibold shadow-md"
-        >
+        <button type="submit"
+          class="w-full bg-blue-700 hover:bg-blue-800 active:scale-95 transition-transform text-white py-3 rounded-xl font-semibold shadow-md">
           Kirish
         </button>
 
@@ -87,14 +60,12 @@ const setData = async () => {
     error.value = "Telefon orqali tizimga kirish taqiqlangan!";
     return;
   }
-
-  isLoading.value = true;
   try {
+    isLoading.value = true;
     const res = await axios.post(url, {
       username: username.value.trim(),
       password: password.value.trim(),
     });
-
     if (res.data.statusCode === 200) {
       id.value = res.data.data.user.id;
       localStorage.setItem("id", res.data.data.user.id);
@@ -106,15 +77,19 @@ const setData = async () => {
       localStorage.setItem("role", role);
 
       if (!role) {
-        error.value = "Foydalanuvchi roli aniqlanmadi.";
+        error.value = "Login yoki parol noto'g'ri.";
+        isLoading.value = false;
       } else if (role) {
         router.push(`/admin-list`);
+        isLoading.value = false;
       } else {
-        error.value = "Bu rolda tizimga kirish taqiqlangan.";
+        error.value = "Bu tizimga Kirish huquqingiz mavjud emas";
+        isLoading.value = false;
       }
     }
   } catch (err) {
     error.value = "Login yoki parol noto'g'ri.";
+    isLoading.value = false;
   } finally {
     isLoading.value = false;
   }
@@ -132,11 +107,13 @@ const setData = async () => {
     opacity: 0;
     transform: translateY(40px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
   }
 }
+
 .animate-slide-up {
   animation: slide-up 0.6s ease-out;
 }
@@ -145,13 +122,16 @@ const setData = async () => {
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }
 }
+
 .animate-fade-in {
   animation: fade-in 1s ease-in;
 }
+
 .delay-200 {
   animation-delay: 0.2s;
   animation-fill-mode: both;
@@ -159,19 +139,23 @@ const setData = async () => {
 
 /* Shake for error */
 @keyframes shake {
+
   0%,
   100% {
     transform: translateX(0);
   }
+
   20%,
   60% {
     transform: translateX(-8px);
   }
+
   40%,
   80% {
     transform: translateX(8px);
   }
 }
+
 .animate-shake {
   animation: shake 0.4s ease-in-out;
 }
