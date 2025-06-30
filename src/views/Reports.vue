@@ -488,7 +488,6 @@ select:focus {
   
   /* Universal - har qanday fonda chiroyli */
   background: rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: 
     0 2px 8px rgba(0, 0, 0, 0.1),
@@ -645,7 +644,7 @@ select:focus {
                     <div class="flex justify-evenly items-center">
                       <button 
   @click="openModal(item.id)"
-  class="minimal-btn w-full"
+  class="minimal-btn dark:text-white text-black w-full"
 >
   {{ dat === 'datakril' ? translateText('Qayta to\'lash') : 'Qayta to\'lash' }}
 </button>
