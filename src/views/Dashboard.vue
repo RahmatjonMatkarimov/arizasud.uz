@@ -271,13 +271,16 @@ export default {
         this.data6 = filteredClientFiles.length; // Total contracts in selected period
 
         filteredClientFiles.forEach((file) => {
-          const payment = file.ClientPayment?.[file.ClientPayment.length - 1];
+          const payment = file.ClientPayment?.[0];
+          const payment1 = file.ClientPayment?.[file.ClientPayment.length - 1];
           if (payment && payment.createdAt && !isNaN(Math.floor(payment.TotalSum))) {
             const monthIndex = new Date(payment.createdAt).getMonth();
             monthlyRevenue[monthIndex] += Math.floor(payment.TotalSum);
             totalRevenue += Math.floor(payment.netProfit);
             totalRevenue2 += Math.floor(payment.TotalSum);
-            totalRevenue1 += Math.floor(payment.remainingSum || 0);
+          }
+          if (payment1 && payment1.createdAt && !isNaN(Math.floor(payment1.TotalSum))) {
+            totalRevenue1 += Math.floor(payment1.remainingSum || 0);
           }
         });
 
@@ -330,7 +333,7 @@ export default {
     animateCounters() {
       gsap.to(this.$data, {
         duration: 2,
-        animatedData: this.data - this.hisoblaFoiz(this.data, 13),
+        animatedData: this.dataTotal - this.hisoblaFoiz(this.dataTotal, 13),
         ease: "power2.out",
         onUpdate: () => (this.animatedData = Math.round(this.animatedData)),
       });
