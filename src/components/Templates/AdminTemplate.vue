@@ -252,10 +252,10 @@
         ]">
           <!-- Menu Items -->
           <nav class="space-y-3 pb-6">
-            <router-link 
+            <div
               v-for="(item, i) in filteredMenu" 
               :key="i"
-              :to="item.to" 
+              @click="router.push(item.to)"
               :class="[
                 'flex items-center rounded-xl shadow-xl transition-all duration-300 group relative overflow-hidden',
                 isCollapsed ? 'p-3 justify-center' : 'p-4',
@@ -343,7 +343,7 @@
                   'border-r-white'
                 ]"></div>
               </div>
-            </router-link>
+            </div>
 
             <!-- GitHub -->
             <div @click="open()" :class="[
@@ -509,11 +509,37 @@ import { URL } from "@/auth/url.js";
 import { useRoute } from "vue-router";
 const isLoading = inject('isLoading')
 
+const router = useRouter()
 const route = useRoute();
 const id = localStorage.getItem("id");
 const newId = parseInt(id);
 const data = ref({});
 const isCollapsed = ref(false);
+const { locale } = useI18n()
+const searchStore = useSearchStore()
+const showModal = ref(false)
+const isAsideVisible = ref(true)
+provide('isAsideVisible', isAsideVisible)
+const userInfo = ref({})
+const userInfoLotin = ref({})
+const isOnline = ref(false)
+const unreadCount = ref(0)
+const messageCount = ref(0)
+const error = ref(null)
+const dat = ref("")
+const isLanguageDropdownOpen = ref(false)
+const storedLang = localStorage.getItem('til')
+const userId = localStorage.getItem('id')
+const userIdNum = userId ? parseInt(userId) : null
+const userRole = localStorage.getItem('role')
+const languages = ref([
+  { code: 'uzb', label: 'O‘ZB' },
+  { code: 'ўзб', label: 'ЎЗБ' },
+  { code: 'ru', label: 'РУС' },
+  { code: 'en', label: 'ENG' },
+])
+const initialLangCode = storedLang === 'datalotin' ? 'uzb' : storedLang === 'datakril' ? 'ўзб' : 'uzb'
+const selectedLanguage = ref(languages.value.find(lang => lang.code === initialLangCode) || languages.value[0])
 
 
 const menuItems = [
@@ -544,32 +570,8 @@ const filteredMenu = computed(() => {
 
 const open = () => window.open("https://github.com/");
 
-const { locale } = useI18n()
-const searchStore = useSearchStore()
-const showModal = ref(false)
-const isAsideVisible = ref(true)
-provide('isAsideVisible', isAsideVisible)
-const userInfo = ref({})
-const userInfoLotin = ref({})
-const isOnline = ref(false)
-const unreadCount = ref(0)
-const messageCount = ref(0)
-const error = ref(null)
-const router = useRouter()
-const dat = ref("")
-const isLanguageDropdownOpen = ref(false)
 
-const languages = ref([
-  { code: 'uzb', label: 'O‘ZB' },
-  { code: 'ўзб', label: 'ЎЗБ' },
-  { code: 'ru', label: 'РУС' },
-  { code: 'en', label: 'ENG' },
-])
 
-// Initialize selectedLanguage based on localStorage
-const storedLang = localStorage.getItem('til')
-const initialLangCode = storedLang === 'datalotin' ? 'uzb' : storedLang === 'datakril' ? 'ўзб' : 'uzb'
-const selectedLanguage = ref(languages.value.find(lang => lang.code === initialLangCode) || languages.value[0])
 dat.value = storedLang || 'datalotin' // Set dat based on localStorage or default to 'datalotin'
 locale.value = initialLangCode // Set initial locale
 
@@ -602,9 +604,6 @@ watch(dat, (newValue) => {
   dat.value = newValue
 })
 
-const userId = localStorage.getItem('id')
-const userIdNum = userId ? parseInt(userId) : null
-const userRole = localStorage.getItem('role')
 
 const getProfileImage = (imgPath) => {
   return imgPath ? `${URL}/upload/${imgPath}` : '/default-avatar.png'

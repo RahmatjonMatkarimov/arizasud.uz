@@ -7,6 +7,7 @@ import * as XLSX from 'xlsx'
 import { useRoute, useRouter } from 'vue-router';
 import PDFViewer from '../components/ppdf.vue'
 import { useSearchStore } from '@/components/Templates/searchQuary'
+import { Icon } from '@iconify/vue'
 const searchStore = useSearchStore()
 const selectedFilePath = ref(null)
 const router = useRouter()
@@ -274,6 +275,22 @@ const getBorderClass = (endDate) => {
   }
   return 'border-black'
 }
+const getBorderClass1 = (endDate) => {
+  if (!endDate) return 'border-black'
+  const today = new Date()
+  const end = new Date(endDate)
+  const timeDiff = end - today
+  const daysRemaining = Math.ceil(timeDiff / (1000 * 60 * 60 * 24))
+
+  if (daysRemaining > 15) {
+    return 'green1'
+  } else if (daysRemaining <= 15 && daysRemaining > 10) {
+    return 'yellow1'
+  } else if (daysRemaining <= 10) {
+    return 'red1'
+  }
+  return 'border-black'
+}
 
 const getStatusClass = (endDate) => {
   if (!endDate) return 'Nomalum'
@@ -351,15 +368,27 @@ onMounted(() => {
 <style scoped>
 /* Existing styles with added animations */
 .red {
-  @apply bg-[#ff0000] text-white text-[22px] rounded-lg transition-all duration-300 transform hover:scale-100
+  @apply dark:bg-[#ff000080] bg-white text-black dark:text-white text-[22px] rounded-lg transition-all duration-300 transform hover:scale-100
 }
 
 .yellow {
-  @apply bg-[#fbff00] text-black text-[22px] rounded-lg border border-white/5 shadow-lg hover:shadow-yellow-500/20 hover:border-white/10 transition-all duration-300 transform hover:scale-100;
+  @apply dark:bg-[#fbff0080] bg-white text-black dark:text-white text-[22px] rounded-lg border border-white/5 shadow-lg hover:shadow-yellow-500/20 hover:border-white/10 transition-all duration-300 transform hover:scale-100;
 }
 
 .green {
-  @apply bg-[#04ff00] text-black text-[22px] rounded-lg border border-white/5 shadow-lg hover:shadow-green-500/20 hover:border-white/10 transition-all duration-300 transform hover:scale-100;
+  @apply dark:bg-[#04ff0080] bg-white text-black dark:text-white text-[22px] rounded-lg border border-white/5 shadow-lg hover:shadow-green-500/20 hover:border-white/10 transition-all duration-300 transform hover:scale-100;
+}
+
+.red1 {
+  @apply bg-[#ff000080] dark:text-white animate-pulse w-full text-[#343434] rounded-lg transition-all duration-300 transform;
+}
+
+.yellow1 {
+  @apply bg-[#fbff0080] dark:text-white text-[#343434] w-full rounded-lg transition-all duration-300 transform;
+}
+
+.green1 {
+  @apply bg-[#04ff0080] dark:text-white text-[#343434] w-full rounded-lg transition-all duration-300 transform;
 }
 
 /* Modal Animation */
@@ -445,6 +474,42 @@ select:focus {
     transform: translateY(0);
   }
 }
+.minimal-btn {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 120px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  
+  /* Universal - har qanday fonda chiroyli */
+  background: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.minimal-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-1px);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.minimal-btn:active {
+  transform: translateY(0);
+  box-shadow: 
+    0 1px 4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
 </style>
 
 <template>
@@ -515,15 +580,6 @@ select:focus {
               <th class="p-3 text-center font-semibold flex justify-center items-center gap-4">
                 {{ dat === 'datakril' ? translateText('Harakatlar') : 'Harakatlar' }}
               </th>
-              <th class="p-1">
-                <div
-                  v-if="ids.length"
-                  @click="selectedAll()"
-                  class="py-2 px-4 bg-lime-500 hover:bg-lime-600 rounded-lg cursor-pointer transition"
-                >
-                  {{ dat === 'datakril' ? translateText('Barchasini belgilash') : 'Barchasini belgilash' }}
-                </div>
-              </th>
             </tr>
           </thead>
           <tbody>
@@ -534,35 +590,7 @@ select:focus {
                   class="flex justify-between items-center"
                 >
                   <div class="w-full grid grid-cols-8 gap-2 items-center">
-                    <div class="text-center">{{ item.id }}</div>
-                    <div class="text-center">{{ dat === 'datakril' ? translateText(item.name) : item.name }}</div>
-                    <div class="text-center">{{ filteridTime(item.History[item.History.length - 1]?.startDate) }}</div>
-                    <div class="text-center">{{ filteridTime(item.History[item.History.length - 1]?.endDate) }}</div>
-                    <div class="text-center">{{ FilteredDots(item.History[item.History.length - 1]?.totalSum) }} {{ dat === 'datakril' ? translateText('So\'m') : 'So\'m' }}</div>
-                    <div>
-                      <span class="inline-block px-2 py-1 text-center rounded-lg text-sm font-medium bg-black bg-opacity-20">
-                        {{ dat === 'datakril' ? translateText(getStatusClass(item.History[item.History.length - 1]?.endDate)) : getStatusClass(item.History[item.History.length - 1]?.endDate) }}
-                      </span>
-                    </div>
-                    <button
-                      class="border border-gray-300 text-white px-2 py-1 rounded text-sm bg-blue-500 hover:bg-blue-600"
-                      @click="handleViewInvoice(item)"
-                    >
-                      {{ dat === 'datakril' ? translateText('Shartnomani ko\'rish') : 'Shartnomani ko\'rish' }}
-                    </button>
-                    <div class="flex justify-evenly items-center">
-                      <button
-                        class="border border-gray-300 text-white px-2 py-1 rounded text-sm bg-blue-500 hover:bg-blue-600"
-                        @click="router.push({ path: '/invoicesChild', query: { addressId: item.id } })"
-                      >
-                        {{ dat === 'datakril' ? translateText('Ko\'rish') : 'Ko\'rish' }}
-                      </button>
-                      <button
-                        @click="openModal(item.id)"
-                        class="border border-gray-300 px-2 py-1 rounded text-sm text-black bg-yellow-500 hover:bg-yellow-600"
-                      >
-                        {{ dat === 'datakril' ? translateText('Qayta to\'lash') : 'Qayta to\'lash' }}
-                      </button>
+                    <div class="text-center flex justify-center items-center gap-2">
                       <div v-if="showChekbox">
                         <input
                           type="checkbox"
@@ -587,6 +615,40 @@ select:focus {
                           </svg>
                         </label>
                       </div>
+                      #{{ item.id }}</div>
+                    <div class="text-center">{{ dat === 'datakril' ? translateText(item.name) : item.name }}</div>
+                    <div class="text-center">{{ filteridTime(item.History[item.History.length - 1]?.startDate) }}</div>
+                    <div class="text-center">{{ filteridTime(item.History[item.History.length - 1]?.endDate) }}</div>
+                    <div class="text-center">{{ FilteredDots(item.History[item.History.length - 1]?.totalSum) }} {{ dat === 'datakril' ? translateText('So\'m') : 'So\'m' }}</div>
+                    <div>
+                      <span 
+                      :class="getBorderClass1(item.History[item.History.length - 1]?.endDate)"
+                      class="inline-block px-2 py-1 text-center rounded-lg text-sm font-medium bg-opacity-20">
+                        {{ dat === 'datakril' ? translateText(getStatusClass(item.History[item.History.length - 1]?.endDate)) : getStatusClass(item.History[item.History.length - 1]?.endDate) }}
+                      </span>
+                    </div>
+                    <div class="flex gap-2 justify-center items-center">
+                      <button
+                      class=" text-white p-2 rounded-lg text-sm bg-blue-500 hover:bg-blue-600"
+                      @click="handleViewInvoice(item)"
+                      >
+                      <Icon icon="material-symbols:table-eye-outline-rounded" width="24" height="24" />
+                    </button>
+                    <button
+                      class=" text-white p-2 rounded-lg text-sm bg-secondary-500 hover:bg-blue-600"
+                      @click="router.push({ path: '/invoicesChild', query: { addressId: item.id } })"
+                    >
+                    <Icon icon="material-symbols:open-in-new" width="24" height="24" />
+                    </button>
+
+                  </div>
+                    <div class="flex justify-evenly items-center">
+                      <button 
+  @click="openModal(item.id)"
+  class="minimal-btn w-full"
+>
+  {{ dat === 'datakril' ? translateText('Qayta to\'lash') : 'Qayta to\'lash' }}
+</button>
                     </div>
                   </div>
                 </div>
