@@ -1390,7 +1390,7 @@ return
       } catch (error) {
         console.error("So‘rovda xatolik yuz berdi:", error);
         generatedLogin.value = `${formData.name}${generateRandomName()}`
-        generatedPassword.value = `123456`
+        generatedPassword.value = `12345678`
       }
     };
     await loginSearch();
