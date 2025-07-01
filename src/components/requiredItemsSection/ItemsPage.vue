@@ -107,7 +107,7 @@
                         <!-- File Content Display -->
                         <div v-if="item.file" class="mb-4">
                             <div v-if="isVideoFile(item.file)" class="w-full">
-                                <video :src="URL + item.file" controls class="w-full max-w-md rounded-lg shadow-md"
+                                <video :src="URL + item.file"  poster="/logo1.png" controls class="w-full max-w-md rounded-lg shadow-md"
                                     preload="metadata">
                                     {{ dat === 'datakril' ? translateText('Brauzeringiz video elementini qo\'llab-quvvatlamaydi.') : 'Brauzeringiz video elementini qo\'llab-quvvatlamaydi.' }}
                                 </video>
