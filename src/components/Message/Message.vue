@@ -37,7 +37,7 @@
                 ]">
                   <div v-if="message.replyToMessageId" @click="scrollToRepliedMessage(message.replyToMessageId)"
                     class="border-l-4 border-teal-400/50 rounded-tr-sm rounded-tl-md rounded-bl-md rounded-br-sm p-2 bg-black/30 cursor-pointer hover:bg-black/40 transition">
-                    <p v-if="replyMessages[message.replyToMessageId]?.content" class="text-xs text-gray-200">
+                    <p v-if="replyMessages[message.replyToMessageId]?.content" class="text-xs break-words max-w-[400px] text-gray-200">
                       {{ dat === 'datakril' ? translateText(replyMessages[message.replyToMessageId].content) :
                         translateTextLotin(replyMessages[message.replyToMessageId].content) }}
                     </p>
@@ -71,7 +71,7 @@
                     <p v-else class="text-xs text-gray-500">{{ dat === 'datakril' ? translateText('Noma\'lum') :
                       'Noma\'lum' }}</p>
                   </div>
-                  <div class="px-1 text-lg">{{ dat === 'datakril' ? translateText(message.content) :
+                  <div class="px-1 text-lg break-words max-w-[400px]">{{ dat === 'datakril' ? translateText(message.content) :
                     translateTextLotin(message.content) }}</div>
                   <div v-if="message.attachmentUrl" class="border border-teal-500/30 p-1 relative rounded-md mt-1">
                     <div v-if="isImage(message.attachmentUrl)">
@@ -171,8 +171,8 @@
           </div>
         </div>
 
-        <button v-if="false" @click="scrollToBottom"
-          class="fixed bottom-[160px] bg-teal-500 text-white p-2 rounded-full shadow-lg hover:bg-teal-600 transition animate-pulse">
+        <button v-if="showScrollButton" @click="scrollToBottom"
+          class="fixed bottom-[160px] right-[40%] w-[40px] bg-teal-500 text-white p-2 rounded-full shadow-lg hover:bg-teal-600 transition animate-pulse z-50">
           <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
           </svg>
@@ -328,28 +328,29 @@
       </button>
     </div>
   </div>
-  <button class="absolute h-16 w-16 bg-gray-700/90 hover:bg-gray-600 rounded-full top-[12%] z-30 right-[2%]"
+  <button class="absolute flex items-center gap-2 justify-center   h-16 w-[300px] bg-gray-700/90 hover:bg-gray-600 rounded-bl-2xl top-[93px] z-30 right-[0]"
     @click="all = true">
-    <Icon icon="mdi:delete-forever" class="text-red-400 text-4xl" />
+<Icon icon="mdi:broom" class="text-white text-4xl" />
+    <span class="text-white text-[20px]">{{ dat === 'datakril' ? translateText('Chat tarixini tozalash') : 'Chat tarixini tozalash'}}</span> 
   </button>
   <div v-if="all" @click.self="all = false"
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity">
     <div
       class="bg-gray-900 text-white rounded-2xl p-6 shadow-2xl w-80 border border-teal-500/40 animate-fade-in">
-      <h2 class="text-lg font-semibold text-teal-300 mb-4">
+      <h2 class="text-xl font-semibold text-teal-300 mb-4">
         {{ dat === 'datakril' ? translateText('Xabarlarni o‘chirish') : 'Xabarlarni o‘chirish' }}
       </h2>
-      <p class="text-sm text-gray-300 mb-6">
-        {{ dat === 'datakril' ? translateText('Ushbu xabarlarni o‘chirishga ishonchingiz komilmi ?') :
-        'Ushbu xabarlarni o‘chirishga ishonchingiz komilmi?' }}
+      <p class="text-md text-gray-300 mb-6">
+        {{ dat === 'datakril' ? translateText('Butun chat xabarlarni o‘chirishga ishonchingiz komilmi ?') :
+        'Butun chat xabarlarni o‘chirishga ishonchingiz komilmi ?' }}
       </p>
       <div class="flex justify-end gap-2">
         <button @click="all = false"
-          class="px-4 py-2 text-sm rounded-md border border-gray-500 text-gray-300 hover:bg-gray-700 transition">
+          class="px-4 py-2 text-md rounded-md border border-gray-500 text-gray-300 hover:bg-gray-700 transition">
           {{ dat === 'datakril' ? translateText('Bekor qilish') : 'Bekor qilish' }}
         </button>
         <button @click="deleteMessage"
-          class="px-4 py-2 text-sm rounded-md bg-red-600 hover:bg-red-700 text-white transition">
+          class="px-4 py-2 text-md rounded-md bg-red-600 hover:bg-red-700 text-white transition">
           {{ dat === 'datakril' ? translateText('O‘chirish') : 'O‘chirish' }}
         </button>
       </div>
@@ -422,6 +423,7 @@ const recordingInterval = ref(null);
 const messagesContainer = ref(null);
 const isSocketConnected = ref(false);
 const isLoading = inject(`isLoading`)
+const role = ref(localStorage.getItem('role'));
 
 // Computed property for recording time
 const formattedRecordingTime = computed(() => {
@@ -1043,16 +1045,20 @@ const showContextMenu = (event, message) => {
 
 // Lifecycle hooks
 let pollingInterval = null;
+const handleMessagesScroll = () => {
+  const container = messagesContainer.value;
+  if (!container) return;
+  const { scrollTop, scrollHeight, clientHeight } = container;
+  showScrollButton.value = scrollTop + clientHeight < scrollHeight - 100;
+};
+
 onMounted(() => {
   initializeSocket();
   fetchMessages();
   fetchSmileys();
-  window.addEventListener('scroll', () => {
-    if (messagesContainer.value) {
-      const { scrollTop, scrollHeight, clientHeight } = messagesContainer.value;
-      showScrollButton.value = scrollTop + clientHeight < scrollHeight - 50;
-    }
-  });
+  if (messagesContainer.value) {
+    messagesContainer.value.addEventListener('scroll', handleMessagesScroll);
+  }
   document.addEventListener('click', (e) => {
     if (!e.target.closest('.context-menu')) closeContextMenu();
   });
@@ -1067,7 +1073,9 @@ onUnmounted(() => {
   clearInterval(recordingInterval.value);
   clearInterval(pollingInterval);
   mediaRecorder.value?.stream?.getTracks().forEach((track) => track.stop());
-  window.removeEventListener('scroll', () => { });
+  if (messagesContainer.value) {
+    messagesContainer.value.removeEventListener('scroll', handleMessagesScroll);
+  }
   document.removeEventListener('click', () => { });
 });
 </script>
