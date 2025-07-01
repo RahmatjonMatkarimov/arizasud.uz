@@ -38,6 +38,8 @@
           v-if="dat === 'datakril'"
           v-for="(file, index) in filteredFiles"
           :key="index"
+              @click="openFile(file)"
+
           class="flex items-center justify-between p-4 rounded-xl bg-gray-100/80 dark:bg-gray-800/40 backdrop-blur-sm border border-gray-200/30 dark:border-gray-700/20 group hover:bg-blue-50/30 dark:hover:bg-gradient-to-r dark:hover:from-emerald-900/30 dark:hover:to-indigo-900/30 transition-all duration-300 dark:animate-pulse-glow"
         >
           <div class="flex-1 min-w-0">
@@ -46,7 +48,6 @@
               <span class="text-sm text-gray-500 dark:text-gray-400">{{ translateText(file.User.lavozimi) }}</span>
             </h1>
             <p
-              @click="openFile(file)"
               class="text-blue-600 dark:text-cyan-400 cursor-pointer font-medium hover:text-blue-500 dark:hover:text-cyan-300 hover:underline truncate transition-colors duration-200"
             >
               {{ translateText(file.name) }}
@@ -60,12 +61,13 @@
           </span>
           <button
             v-if="file.statusReason"
-            @click="qwenn(file.statusReason)"
+            @click.stop="qwenn(file.statusReason)"
             class="hidden group-hover:block py-1.5 px-4 bg-red-500 dark:bg-rose-700 text-white rounded-full shadow-md hover:bg-red-600 dark:hover:bg-rose-800 transition-all duration-300 ml-4"
           >
             {{ $t('sababni') }}
           </button>
-          <label
+          <label @click.stop
+            Fund
             v-if="deleteMode"
             class="flex items-center cursor-pointer ml-4"
           >
@@ -98,6 +100,8 @@
           v-if="dat === 'datalotin'"
           v-for="(file, index) in filteredFiles"
           :key="index"
+              @click="openFile(file)"
+
           class="flex items-center justify-between p-4 rounded-xl bg-gray-100/80 dark:bg-gray-800/40 backdrop-blur-sm border border-gray-200/30 dark:border-gray-700/20 group hover:bg-blue-50/30 dark:hover:bg-gradient-to-r dark:hover:from-emerald-900/30 dark:hover:to-indigo-900/30 transition-all duration-300 dark:animate-pulse-glow"
         >
           <div class="flex-1 min-w-0">
@@ -106,7 +110,6 @@
               <span class="text-sm text-gray-500 dark:text-gray-400">{{ file.User.lavozimi }}</span>
             </h1>
             <p
-              @click="openFile(file)"
               class="text-blue-600 dark:text-cyan-400 cursor-pointer font-medium hover:text-blue-500 dark:hover:text-cyan-300 hover:underline truncate transition-colors duration-200"
             >
               {{ file.name }}
@@ -120,12 +123,12 @@
           </span>
           <button
             v-if="file.statusReason"
-            @click="qwenn(file.statusReason)"
+            @click.stop="qwenn(file.statusReason)"
             class="hidden group-hover:block py-1.5 px-4 bg-red-500 dark:bg-rose-700 text-white rounded-full shadow-md hover:bg-red-600 dark:hover:bg-rose-800 transition-all duration-300 ml-4"
           >
             {{ $t('sababni') }}
           </button>
-          <label
+          <label @click.stop
             Fund v-if="deleteMode"
             class="flex items-center cursor-pointer ml-4"
           >
