@@ -924,7 +924,6 @@ const fetchWarehouse = async () => {
       images: data.images || [],
       assignments: data.assignments || [],
     };
-    console.log(warehouse.value );
     
     editForm.value = {
       id: data.id,

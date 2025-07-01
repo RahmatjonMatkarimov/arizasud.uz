@@ -1002,7 +1002,6 @@ const showContextMenu = (event, message) => {
 // Lifecycle hooks
 let pollingInterval = null;
 onMounted(() => {
-  console.log('Component mounted, initializing socket');
   initializeSocket();
   fetchMessages();
   fetchSmileys();
@@ -1021,7 +1020,6 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  console.log('Component unmounted, cleaning up');
   if (socket.value) {
     socket.value.disconnect();
     socket.value.off();

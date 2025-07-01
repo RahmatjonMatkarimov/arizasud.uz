@@ -466,8 +466,6 @@ async function handleSubmit() {
         formData.append('name', form.name.trim())
         formData.append('description', form.description.trim())
         formData.append('requiredItemsSectionsId', sectionId.value)
-console.log(sectionId.value);
-
 
         if (form.file) {
             formData.append('file', form.file)

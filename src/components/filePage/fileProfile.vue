@@ -427,7 +427,6 @@ async function getdata() {
     });
 
     data.value = response.data;
-    console.log("API Response:", JSON.stringify(response.data, null, 2));
 
     // Validate Common array
     if (!response.data.Common || !Array.isArray(response.data.Common)) {

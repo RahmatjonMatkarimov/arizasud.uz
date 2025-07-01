@@ -461,10 +461,10 @@ const handleSwipeGesture = () => {
     if (Math.abs(deltaX) > 50) {
       if (deltaX > 0) {
         // Swipe right - previous page
-        console.log('Swipe right');
+        console.log('');
       } else {
         // Swipe left - next page
-        console.log('Swipe left');
+        console.log('');
       }
     }
   }

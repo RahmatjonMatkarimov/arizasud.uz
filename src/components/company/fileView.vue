@@ -305,8 +305,6 @@ const getCourtsData = async () => {
 
         const filteredFiles = res.files.filter(file => file.status === "active");
         ServiceData.value = filteredFiles;
-        console.log(ServiceData.value);
-        
         type.value = res.sign || '';
     } catch (error) {
         console.error("Xatolik yuz berdi:", error.message);

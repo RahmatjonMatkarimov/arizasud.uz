@@ -32,7 +32,6 @@ const subscribeToPush = async () => {
 // Oldindan push kelganini tinglash
 onMounted(() => {
   onMessage(messaging, (payload) => {
-    console.log("Yangi push:", payload)
   })
 })
 </script>

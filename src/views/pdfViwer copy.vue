@@ -132,13 +132,13 @@ const getData = async () => {
     });
 
     if (res.status !== 200) {
-      console.error(`HTTP Error: ${res.status} - ${res.statusText}`);
+      console.error(`HTTP Error:`);
       throw new Error(`Failed to fetch data. HTTP Status: ${res.status}`);
     }
 
     if (!res.data || typeof res.data !== "object" || !res.data.filePath) {
       if (typeof res.data === "string" && res.data.includes("<!DOCTYPE html>")) {
-        console.error("API returned an HTML document. Response:", res.data);
+        console.error("API returned an HTML document. Response:");
         throw new Error("API response returned an HTML document instead of JSON. Check the API endpoint.");
       }
       throw new Error("API response is missing filePath or invalid");

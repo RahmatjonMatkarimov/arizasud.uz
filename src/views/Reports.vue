@@ -219,7 +219,7 @@ const removeFiles = async (ids) => {
     showChekbox.value = false
     getFiles()
   } catch (error) {
-    console.error('Error deleting files:', error.response?.data || error.message)
+    console.error('Error deleting files:', error)
   } finally{
     isLoading.value = false
   }

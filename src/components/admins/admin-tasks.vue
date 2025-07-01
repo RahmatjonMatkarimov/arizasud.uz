@@ -96,12 +96,9 @@ const showHoverModalDelayed = (admin, element) => {
   }
   
   hoverPosition.value = { top, left };
-  console.log('Final position:', hoverPosition.value);
 };
 
 const hideHoverModalDelayed = () => {
-  console.log('hideHoverModalDelayed called');
-  
   // Clear existing timeouts
   if (hoverTimeout.value) {
     clearTimeout(hoverTimeout.value);
@@ -117,7 +114,6 @@ const hideHoverModalDelayed = () => {
   }, 100);
 };
 const cancelHide = () => {
-  console.log('cancelHide called');
   if (hideTimeout.value) {
     clearTimeout(hideTimeout.value);
     hideTimeout.value = null;

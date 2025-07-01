@@ -97,11 +97,9 @@ const showHoverModalDelayed = (admin, element) => {
   }
 
   hoverPosition.value = { top, left };
-  console.log('Final position:', hoverPosition.value);
 };
 
 const hideHoverModalDelayed = () => {
-  console.log('hideHoverModalDelayed called');
 
   // Clear existing timeouts
   if (hoverTimeout.value) {
@@ -118,7 +116,6 @@ const hideHoverModalDelayed = () => {
   }, 100);
 };
 const cancelHide = () => {
-  console.log('cancelHide called');
   if (hideTimeout.value) {
     clearTimeout(hideTimeout.value);
     hideTimeout.value = null;
@@ -279,8 +276,6 @@ const getData = async () => {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
     });
     const fetchedData = response.data;
-    console.log('API Response:', fetchedData);
-
     const filteredTasks = fetchedData.LawyerTask.filter((item) => {
       if (item.ClientFileStatusHistory && item.ClientFileStatusHistory.length > 0) {
         const latestStatusEntry = item.ClientFileStatusHistory[item.ClientFileStatusHistory.length - 1];
@@ -290,8 +285,6 @@ const getData = async () => {
       }
       return false;
     });
-    console.log('Filtered Tasks:', filteredTasks);
-
     data.value = { ...fetchedData, LawyerTask: filteredTasks };
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -303,7 +296,6 @@ const addbonuses = async (item) => {
 let summa = ref(item.clientFile.ClientPayment[0].TotalSum)
 let paymentID = ref(item.clientFile.ClientPayment[0].id)
 let count = 0
-  console.log(item.id);
   arr.value = [...new Set(item.LawyerTaskHistory.map(el => el.lawyerId))];
   const res = await axios.post(`${URL}/deliverer/workdayIds`, {
     userIds: arr.value
@@ -316,17 +308,14 @@ let count = 0
       description: item.name,
     });
     count++
-    console.log(res.data);
   }
   const response = await axios.put(`${URL}/yurist-tasks/${item.id}`, {
     btnStatus: true
   })
-  console.log(response);
 
     const resp = await axios.put(`${URL}/client-pay/${paymentID.value}`, {
     netProfit: +summa.value - (+sum3.value * +count)
   })
-  console.log(resp,'payment');
 }
 
 const sortes = (item) => {
@@ -396,7 +385,6 @@ const updateType = async (id, newStatus, commentText = '', adminId = null) => {
 
 const openRejectModal = (id) => {
   selectedRejectId.value = id.id;
-  console.log(id.id);
   
   isModalOpen.value = true;
   openDropdownId.value = null;
