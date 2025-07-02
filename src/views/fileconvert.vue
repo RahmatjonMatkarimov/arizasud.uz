@@ -62,15 +62,39 @@
           </div>
 
           <!-- Conversion Type -->
-          <button 
-            @click="convertFile" 
-            :disabled="!selectedFile || isConverting"
-            class="w-full py-4 px-6 bg-gradient-to-r from-blue-600 to-purple-700 dark:from-blue-700 dark:to-purple-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-3"
-          >
-            <Icon v-if="isConverting" icon="mdi:loading" class="w-5 h-5 animate-spin text-white" />
-            {{ isConverting ? dat === 'datakril'?translateText('Konvertatsiya qilinmoqda...'):'Konvertatsiya qilinmoqda...' : dat === 'datakril' ? translateText(`Konvertatsiya qilish`):`Konvertatsiya qilish` }}
-          </button>
 
+<!-- Conversion Type - Updated section with three buttons -->
+<div class="flex flex-col sm:flex-row gap-4">
+  <button 
+    @click="convertFile" 
+    :disabled="!selectedFile || isConverting"
+    class="flex-1 py-4 px-6 bg-gradient-to-r from-blue-600 to-purple-700 dark:from-blue-700 dark:to-purple-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-3"
+  >
+    <Icon v-if="isConverting" icon="mdi:loading" class="w-5 h-5 animate-spin text-white" />
+    {{ isConverting ? dat === 'datakril'?translateText('Konvertatsiya qilinmoqda...'):'Konvertatsiya qilinmoqda...' : dat === 'datakril' ? translateText(`Konvertatsiya qilish`):`Konvertatsiya qilish` }}
+  </button>
+  
+  <!-- New additional button -->
+  <button 
+    @click="uploadFile" 
+    :disabled="!selectedFile || isUploading"
+    class="flex-1 py-4 px-6 bg-gradient-to-r from-green-600 to-emerald-700 dark:from-green-700 dark:to-emerald-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-3"
+  >
+    <Icon v-if="isUploading" icon="mdi:loading" class="w-5 h-5 animate-spin text-white" />
+    <Icon v-else icon="mdi:cloud-upload" class="w-5 h-5 text-white" />
+    {{ isUploading ? dat === 'datakril'?translateText('Yuborilmoqda...'):'Yuborilmoqda...' : dat === 'datakril' ? translateText(`QR kodli PDF tayyorlash`):`QR kodli PDF tayyorlash` }}
+  </button>
+</div>
+
+<!-- Upload Result Message -->
+<div v-if="uploadMessage" class="p-4 rounded-xl border-l-4 flex items-center gap-3 mt-4"
+     :class="uploadStatus === 'success' 
+       ? 'bg-green-50 dark:bg-green-900/30 border-green-500 text-green-700 dark:text-green-400' 
+       : 'bg-red-50 dark:bg-red-900/30 border-red-500 text-red-700 dark:text-red-400'"
+>
+  <Icon :icon="uploadStatus === 'success' ? 'mdi:check-circle' : 'mdi:close-circle'" class="text-xl" />
+  <p class="font-medium text-gray-800 dark:text-white">{{ dat === 'datakril' ? translateText(uploadMessage):uploadMessage }}</p>
+</div>
           <!-- Conversion Result -->
           <div v-if="conversionMessage" class="p-4 rounded-xl border-l-4 flex items-center gap-3"
                :class="conversionStatus === 'success' 
@@ -202,7 +226,7 @@
       </div>
     </div>
 
-    <!-- QR Code History Section -->
+    <!-- History Section -->
     <div class="max-w-7xl mx-auto mt-12">
       <div class="bg-white dark:bg-gray-800 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-gray-200 dark:border-gray-700">
         <div class="flex items-center justify-between gap-4 mb-8">
@@ -210,9 +234,9 @@
             <div class="w-16 h-16 bg-gradient-to-br from-teal-500 to-cyan-600 dark:from-teal-600 dark:to-cyan-700 rounded-2xl flex items-center justify-center text-white text-3xl shadow-lg">
               <Icon icon="mdi:history" class="text-white" />
             </div>
-            <h2 class="text-2xl font-bold text-gray-800 dark:text-white">{{ dat === 'datakril' ? translateText(`QR Kod Tarixi`):`QR Kod Tarixi` }}</h2>
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white">{{ dat === 'datakril' ? translateText(`Tarix`):`Tarix` }}</h2>
           </div>
-          <div class="flex gap-4">
+          <div v-if="activeTab === 'qr'" class="flex gap-4">
             <button 
               @click="toggleCheckboxVisibility"
               class="py-2 px-4 bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2"
@@ -221,8 +245,8 @@
               {{ showCheckboxes ? dat === 'datakril' ? translateText(`Yashirish`):`Yashirish` : dat === 'datakril' ? translateText(`Tanlab o'chirish`):`Tanlab o'chirish` }}
             </button>
             <button 
-              @click="deleteSelectedQRCodes"
-              :disabled="selectedQRCodes.length === 0"
+              @click="activeTab === 'qr' ? deleteSelectedQRCodes() : deleteSelectedOtherFiles()"
+              :disabled="activeTab === 'qr' ? selectedQRCodes.length === 0 : selectedOtherFiles.length === 0"
               v-if="showCheckboxes"
               class="py-2 px-4 bg-gradient-to-r from-orange-500 to-red-600 dark:from-orange-600 dark:to-red-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
@@ -230,8 +254,8 @@
               {{ dat === 'datakril' ? translateText(`Tanlanganlarni o'chirish`):`Tanlanganlarni o'chirish` }}
             </button>
             <button 
-              @click="deleteAllQRCodes"
-              :disabled="qrCodes.length === 0"
+              @click="activeTab === 'qr' ? deleteAllQRCodes() : deleteAllOtherFiles()"
+              :disabled="activeTab === 'qr' ? qrCodes.length === 0 : otherFiles.length === 0"
               class="py-2 px-4 bg-gradient-to-r from-red-500 to-red-600 dark:from-red-600 dark:to-red-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <Icon icon="mdi:delete-forever" class="text-lg text-white" />
@@ -239,49 +263,157 @@
             </button>
           </div>
         </div>
-        <div v-if="isLoadingQRCodes" class="flex justify-center items-center py-8">
-          <Icon icon="mdi:loading" class="w-8 h-8 animate-spin text-teal-500 dark:text-teal-400" />
-          <span class="ml-4 text-gray-600 dark:text-gray-400">{{ dat === 'datakril' ? translateText(`Yuklanmoqda...`):  `Yuklanmoqda...vvv` }}</span>
+        
+        <!-- Tab Navigation -->
+        <div class="flex gap-2 mb-6">
+          <button 
+            @click="activeTab = 'qr'"
+            class="px-6 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center gap-2"
+            :class="activeTab === 'qr' 
+              ? 'bg-gradient-to-r from-teal-500 to-cyan-600 dark:from-teal-600 dark:to-cyan-700 text-white shadow-lg' 
+              : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'"
+          >
+            <Icon icon="mdi:qrcode" class="text-lg" />
+            {{ dat === 'datakril' ? translateText(`QR Kodlar`):`QR Kodlar` }}
+            <span class="bg-white/20 dark:bg-gray-800/20 px-2 py-1 rounded-lg text-sm">{{ qrCodes.length }}</span>
+          </button>
+          <button 
+            @click="activeTab = 'files'"
+            class="px-6 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center gap-2"
+            :class="activeTab === 'files' 
+              ? 'bg-gradient-to-r from-teal-500 to-cyan-600 dark:from-teal-600 dark:to-cyan-700 text-white shadow-lg' 
+              : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'"
+          >
+            <Icon icon="mdi:file-document" class="text-lg" />
+            {{ dat === 'datakril' ? translateText(`Fayllar`):`Fayllar` }}
+            <span class="bg-white/20 dark:bg-gray-800/20 px-2 py-1 rounded-lg text-sm">{{ otherFiles.length }}</span>
+          </button>
         </div>
-        <div v-else-if="qrCodes.length === 0" class="text-center py-8 text-gray-600 dark:text-gray-400">
-          {{ dat === 'datakril' ? translateText(`Hozircha QR kodlar yo'q`):`Hozircha QR kodlar yo'q` }}
-        </div>
-        <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div v-for="qr in qrCodes" :key="qr.id" class="bg-gray-50 dark:bg-gray-700/50 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-600">
-            <div class="flex items-center justify-between mb-2">
-              <label v-if="showCheckboxes" class="custom-checkbox">
-                <input 
-                  type="checkbox" 
-                  :value="qr.id" 
-                  v-model="selectedQRCodes"
-                  class="opacity-0 absolute"
-                >
-                <span class="checkmark"></span>
-              </label>
-              <span v-else class="w-5 h-5"></span>
+        <!-- QR Codes Tab Content -->
+        <div v-if="activeTab === 'qr'">
+          <div v-if="isLoadingQRCodes" class="flex justify-center items-center py-8">
+            <Icon icon="mdi:loading" class="w-8 h-8 animate-spin text-teal-500 dark:text-teal-400" />
+            <span class="ml-4 text-gray-600 dark:text-gray-400">{{ dat === 'datakril' ? translateText(`Yuklanmoqda...`):  `Yuklanmoqda...` }}</span>
+          </div>
+          <div v-else-if="qrCodes.length === 0" class="text-center py-8 text-gray-600 dark:text-gray-400">
+            {{ dat === 'datakril' ? translateText(`Hozircha QR kodlar yo'q`):`Hozircha QR kodlar yo'q` }}
+          </div>
+          <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div v-for="qr in qrCodes" :key="qr.id" class="bg-gray-50 dark:bg-gray-700/50 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-600">
+              <div class="flex items-center justify-between mb-2">
+                <label v-if="showCheckboxes" class="custom-checkbox">
+                  <input 
+                    type="checkbox" 
+                    :value="qr.id" 
+                    v-model="selectedQRCodes"
+                    class="opacity-0 absolute"
+                  >
+                  <span class="checkmark"></span>
+                </label>
+                <span v-else class="w-5 h-5"></span>
+              </div>
+              <img 
+                :src="`data:image/png;base64,${qr.filePath}`" 
+                :alt="qr.fileName" 
+                class="w-full h-40 object-contain rounded-xl mb-4"
+              >
+              <div class="space-y-2 text-lg text-center text-gray-800 dark:text-gray-200">
+                <p><strong>{{ dat === 'datakril' ? translateText(`URL`) :`URL` }}:</strong> <a :href="qr.url" target="_blank" class="text-blue-500 dark:text-blue-400 hover:underline">{{ qr.url }}</a></p>
+                <div class="grid grid-cols-3 gap-2 mt-4">
+                  <button 
+                    @click="downloadQRFromHistory(qr.filePath, qr.fileName)"
+                    class="py-2 bg-gradient-to-r from-teal-500 to-cyan-600 dark:from-teal-600 dark:to-cyan-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-1 text-xs sm:text-sm"
+                    :title="dat === 'datakril' ? translateText('Yuklab olish') : 'Yuklab olish'"
+                  >
+                    <Icon icon="mdi:download" class="text-sm sm:text-lg text-white" />
+                    <span class="hidden sm:inline">{{ dat === 'datakril' ? translateText(`Yuklab olish`):`Yuklab olish` }}</span>
+                  </button>
+                  <button 
+                    @click="copyQRToClipboard(qr.filePath)"
+                    class="py-2 bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-1 text-xs sm:text-sm"
+                    :title="dat === 'datakril' ? translateText('Nusxalash') : 'Nusxalash'"
+                  >
+                    <Icon icon="mdi:content-copy" class="text-sm sm:text-lg text-white" />
+                    <span class="hidden sm:inline">{{ dat === 'datakril' ? translateText(`Nusxalash`):`Nusxalash` }}</span>
+                  </button>
+                  <button 
+                    @click="deleteQRCode(qr.id)"
+                    class="py-2 bg-gradient-to-r from-red-500 to-red-600 dark:from-red-600 dark:to-red-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-1 text-xs sm:text-sm"
+                    :title="dat === 'datakril' ? translateText('O\'chirish') : 'O\'chirish'"
+                  >
+                    <Icon icon="mdi:delete" class="text-sm sm:text-lg text-white" />
+                    <span class="hidden sm:inline">{{ dat === 'datakril' ? translateText(`O'chirish`):`O'chirish` }}</span>
+                  </button>
+                </div>
+              </div>
             </div>
-            <img 
-              :src="`data:image/png;base64,${qr.filePath}`" 
-              :alt="qr.fileName" 
-              class="w-full h-40 object-contain rounded-xl mb-4"
-            >
-            <div class="space-y-2 text-lg text-center text-gray-800 dark:text-gray-200">
-              <p><strong>{{ dat === 'datakril' ? translateText(`URL`) :`URL` }}:</strong> <a :href="qr.url" target="_blank" class="text-blue-500 dark:text-blue-400 hover:underline">{{ qr.url }}</a></p>
-              <div class="flex gap-2 mt-4">
-                <button 
-                  @click="downloadQRFromHistory(qr.filePath, qr.fileName)"
-                  class="flex-1 py-2 bg-gradient-to-r from-teal-500 to-cyan-600 dark:from-teal-600 dark:to-cyan-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2"
+          </div>
+        </div>
+
+        <!-- Other Files Tab Content -->
+        <div v-if="activeTab === 'files'">
+          <div v-if="isLoadingOtherFiles" class="flex justify-center items-center py-8">
+            <Icon icon="mdi:loading" class="w-8 h-8 animate-spin text-teal-500 dark:text-teal-400" />
+            <span class="ml-4 text-gray-600 dark:text-gray-400">{{ dat === 'datakril' ? translateText(`Yuklanmoqda...`):  `Yuklanmoqda...` }}</span>
+          </div>
+          <div v-else-if="otherFiles.length === 0" class="text-center py-8 text-gray-600 dark:text-gray-400">
+            {{ dat === 'datakril' ? translateText(`Hozircha fayllar yo'q`):`Hozircha fayllar yo'q` }}
+          </div>
+          <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div v-for="file in otherFiles" :key="file.id" class="bg-gray-50 dark:bg-gray-700/50 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-600">
+              <div class="flex items-center justify-between mb-2">
+                <label v-if="showCheckboxes" class="custom-checkbox">
+                  <input 
+                    type="checkbox" 
+                    :value="file.id" 
+                    v-model="selectedOtherFiles"
+                    class="opacity-0 absolute"
+                  >
+                  <span class="checkmark"></span>
+                </label>
+                <span v-else class="w-5 h-5"></span>
+              </div>
+              
+              <!-- QR Code Preview -->
+              <div v-if="file.QrCode" class="mb-4">
+                <img 
+                  :src="`${URL}${file.QrCode}`" 
+                  :alt="`QR Code for ${file.name}`" 
+                  class="w-full h-[200px] object-contain rounded-xl  border-gray-200 dark:border-gray-600"
                 >
-                  <Icon icon="mdi:download" class="text-lg text-white" />
-                  {{ dat === 'datakril' ? translateText(`Yuklab olish`):`Yuklab olish` }}
-                </button>
-                <button 
-                  @click="deleteQRCode(qr.id)"
-                  class="flex-1 py-2 bg-gradient-to-r from-red-500 to-red-600 dark:from-red-600 dark:to-red-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2"
-                >
-                  <Icon icon="mdi:delete" class="text-lg text-white" />
-                  {{ dat === 'datakril' ? translateText(`O'chirish`):`O'chirish` }}
-                </button>
+              </div>
+              
+              <div class="space-y-2 text-sm text-center text-gray-800 dark:text-gray-200">
+                <p><strong>{{ dat === 'datakril' ? translateText(`Fayl nomi`) :`Fayl nomi` }}:</strong> {{ file.name }}</p>
+                <p><strong>{{ dat === 'datakril' ? translateText(`Hajmi`) :`Hajmi` }}:</strong> {{ file.fileSize }}</p>
+                <p><strong>{{ dat === 'datakril' ? translateText(`Sana`) :`Sana` }}:</strong> {{ new Date(file.createdAt).toLocaleDateString() }}</p>
+                
+                <div class="grid grid-cols-3 gap-2 mt-4">
+                  <button 
+                    @click="downloadOtherFileFromHistory(file.filePath, file.filePath)"
+                    class="py-2 bg-gradient-to-r from-teal-500 to-cyan-600 dark:from-teal-600 dark:to-cyan-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-1 text-xs"
+                    :title="dat === 'datakril' ? translateText('Yuklab olish') : 'Yuklab olish'"
+                  >
+                    <Icon icon="mdi:download" class="text-sm text-white" />
+                    <span class="hidden sm:inline">{{ dat === 'datakril' ? translateText(`Yuklab olish`):`Yuklab olish` }}</span>
+                  </button>
+                  <button 
+                    @click="copyQRToClipboard(`${URL}${file.QrCode}`)"
+                    class="py-2 bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-1 text-xs sm:text-sm"
+                    :title="dat === 'datakril' ? translateText('Nusxalash') : 'Nusxalash'"
+                  >
+                    <Icon icon="mdi:content-copy" class="text-sm sm:text-lg text-white" />
+                    <span class="hidden sm:inline">{{ dat === 'datakril' ? translateText(`Nusxalash`):`Nusxalash` }}</span>
+                  </button>
+                  <button 
+                    @click="deleteOtherFile(file.id)"
+                    class="py-2 bg-gradient-to-r from-red-500 to-red-600 dark:from-red-600 dark:to-red-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-1 text-xs"
+                    :title="dat === 'datakril' ? translateText('O\'chirish') : 'O\'chirish'"
+                  >
+                    <Icon icon="mdi:delete" class="text-sm text-white" />
+                    <span class="hidden sm:inline">{{ dat === 'datakril' ? translateText(`O'chirish`):`O'chirish` }}</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -318,7 +450,7 @@
 import { ref, onMounted, inject, onUnmounted } from 'vue';
 import axios from 'axios';
 import { Icon } from '@iconify/vue';
-import { URL as API_URL } from '@/auth/url';
+import { URL } from '@/auth/url';
 import translateText from '@/auth/Translate';
 import { fi } from 'date-fns/locale';
 
@@ -341,7 +473,7 @@ onUnmounted(() => {
     if (intervalId) clearInterval(intervalId)
 })
 // API Configuration
-const API_BASE = `${API_URL}/file-editor`;
+const API_BASE = `${URL}/file-editor`;
 
 // Dark Mode
 const isDark = ref(false);
@@ -365,9 +497,13 @@ const qrImageUrl = ref('');
 
 // QR Code History State
 const qrCodes = ref([]);
+const otherFiles = ref([]); // New state for other files
 const isLoadingQRCodes = ref(false);
+const isLoadingOtherFiles = ref(false); // New state for other files loading
 const selectedQRCodes = ref([]);
+const selectedOtherFiles = ref([]); // New state for selected other files
 const showCheckboxes = ref(false); // New state for checkbox visibility
+const activeTab = ref('qr'); // New state for active tab (qr or files)
 
 // Toast System
 const toasts = ref([]);
@@ -393,6 +529,7 @@ const toggleCheckboxVisibility = () => {
   showCheckboxes.value = !showCheckboxes.value;
   if (!showCheckboxes.value) {
     selectedQRCodes.value = []; // Clear selections when hiding checkboxes
+    selectedOtherFiles.value = []; // Clear other files selections when hiding checkboxes
   }
 };
 
@@ -404,6 +541,7 @@ onMounted(() => {
     document.documentElement.classList.add('dark');
   }
   fetchQRCodes(); // Fetch QR codes on mount
+  fetchOtherFiles(); // Fetch other files on mount
 });
 
 // File Handling Methods
@@ -425,6 +563,43 @@ const clearFile = () => {
   conversionStatus.value = '';
   if (fileInputRef.value) {
     fileInputRef.value.value = '';
+  }
+};
+
+// Barcha ma'lumotlarni tozalash funksiyasi
+const clearAllData = () => {
+  // Fayl ma'lumotlarini tozalash
+  selectedFile.value = null;
+  conversionMessage.value = '';
+  conversionStatus.value = '';
+  uploadMessage.value = '';
+  uploadStatus.value = '';
+  
+  // File input ni tozalash
+  if (fileInputRef.value) {
+    fileInputRef.value.value = '';
+  }
+  
+  // QR kod ma'lumotlarini tozalash
+  clearQRData();
+  
+  // Tarix ma'lumotlarini yangilash
+  fetchQRCodes();
+  fetchOtherFiles();
+};
+
+// QR kod ma'lumotlarini tozalash funksiyasi
+const clearQRData = () => {
+  qrUrl.value = '';
+  qrSize.value = 300;
+  qrMargin.value = 2;
+  qrDarkColor.value = '#000000';
+  qrLightColor.value = '#ffffff';
+  qrImageUrl.value = '';
+  
+  // Blob URL ni tozalash
+  if (qrImageUrl.value && qrImageUrl.value.startsWith('blob:') && typeof window !== 'undefined' && window.URL) {
+    window.URL.revokeObjectURL(qrImageUrl.value);
   }
 };
 
@@ -483,6 +658,9 @@ const convertFile = async () => {
     conversionStatus.value = 'success';
     showToast('Konvertatsiya muvaffaqiyatli bajarildi!', 'success');
 
+    // Muvaffaqiyatli konvertatsiyadan keyin ma'lumotlarni tozalash
+    clearAllData();
+
   } catch (error) {
     console.error('Konvertatsiya xatosi:', error);
     conversionMessage.value = 'Konvertatsiya xatosi: ' + error.message;
@@ -493,7 +671,59 @@ const convertFile = async () => {
     isLoading.value = false;
   }
 };
+// Add these new reactive variables to your existing state
+const isUploading = ref(false);
+const uploadMessage = ref('');
+const uploadStatus = ref('');
 
+// Add this new upload function
+const uploadFile = async () => {
+  if (!selectedFile.value) {
+    showToast('Iltimos, faylni tanlang!', 'error');
+    return;
+  }
+
+  const file = selectedFile.value;
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('name', file.name);
+
+  isUploading.value = true;
+  uploadMessage.value = '';
+  uploadStatus.value = '';
+
+  try {
+    isLoading.value = true;
+    
+    // Your upload API endpoint - adjust this URL according to your backend
+    const response = await fetch(`${URL}/other-files`, {
+      method: 'POST',
+      body: formData
+    });
+
+    if (!response.ok) {
+      throw new Error(`Server xatosi: ${response.status}`);
+    }
+
+    const result = await response.json();
+    
+    uploadMessage.value = 'Fayl muvaffaqiyatli yuborildi!';
+    uploadStatus.value = 'success';
+    showToast('Fayl muvaffaqiyatli yuborildi!', 'success');
+    
+    // Muvaffaqiyatli yuklashdan keyin ma'lumotlarni tozalash
+    clearAllData();
+
+  } catch (error) {
+    console.error('Yuklash xatosi:', error);
+    uploadMessage.value = 'Fayl yuklashda xatolik: ' + error.message;
+    uploadStatus.value = 'error';
+    showToast('Fayl yuklashda xatolik yuz berdi', 'error');
+  } finally {
+    isUploading.value = false;
+    isLoading.value = false;
+  }
+};
 // Fetch QR Codes
 const fetchQRCodes = async () => {
   isLoadingQRCodes.value = true;
@@ -511,6 +741,28 @@ const fetchQRCodes = async () => {
     showToast('QR kodlarni olishda xatolik yuz berdi', 'error');
   } finally {
     isLoadingQRCodes.value = false;
+    isLoading.value = false;
+  }
+};
+
+// Fetch Other Files
+const fetchOtherFiles = async () => {
+  isLoadingOtherFiles.value = true;
+  try {
+    isLoading.value = true;
+    const response = await axios.get(`${URL}/other-files`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    otherFiles.value = response.data;
+    console.log(otherFiles.value);
+    selectedOtherFiles.value = []; // Clear selection when refreshing
+  } catch (error) {
+    console.error('Boshqa fayllarni olishda xatolik:', error);
+    showToast('Boshqa fayllarni olishda xatolik yuz berdi', 'error');
+  } finally {
+    isLoadingOtherFiles.value = false;
     isLoading.value = false;
   }
 };
@@ -602,6 +854,89 @@ const deleteAllQRCodes = async () => {
   }
 };
 
+// Delete Single Other File
+const deleteOtherFile = async (id) => {
+  if (!confirm('Bu faylni o\'chirishni tasdiqlaysizmi?')) return;
+
+  try {
+    isLoading.value = true;
+    const response = await axios.delete(`${URL}/other-files/${id}`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    showToast('Fayl muvaffaqiyatli o\'chirildi!', 'success');
+    await fetchOtherFiles(); // Refresh other files list
+  } catch (error) {
+    console.error('Fayl o\'chirishda xatolik:', error);
+    showToast('Fayl o\'chirishda xatolik yuz berdi: ' + error.message, 'error');
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+// Delete Selected Other Files
+const deleteSelectedOtherFiles = async () => {
+  if (selectedOtherFiles.value.length === 0) {
+    showToast('Hech qanday fayl tanlanmagan!', 'error');
+    return;
+  }
+
+  if (!confirm(`${selectedOtherFiles.value.length} ta faylni o'chirishni tasdiqlaysizmi?`)) return;
+
+  try {
+    isLoading.value = true;
+    const response = await axios.delete(`${URL}/other-files/deleteAll`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        ids: selectedOtherFiles.value
+      }
+    });
+    showToast('Tanlangan fayllar muvaffaqiyatli o\'chirildi!', 'success');
+    await fetchOtherFiles(); // Refresh other files list
+  } catch (error) {
+    console.error('Tanlangan fayllarni o\'chirishda xatolik:', error);
+    showToast('Fayllarni o\'chirishda xatolik yuz berdi: ' + error.message, 'error');
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+// Delete All Other Files
+const deleteAllOtherFiles = async () => {
+  if (otherFiles.value.length === 0) {
+    showToast('O\'chirish uchun fayllar yo\'q!', 'error');
+    return;
+  }
+
+  if (!confirm('Barcha fayllarni o\'chirishni tasdiqlaysizmi?')) return;
+
+  const allIds = otherFiles.value.map(file => file.id);
+
+  try {
+    isLoading.value = true;
+    const response = await axios.delete(`${URL}/other-files/deleteAll`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        ids: allIds
+      }
+    });
+
+    showToast('Barcha fayllar muvaffaqiyatli o\'chirildi!', 'success');
+    await fetchOtherFiles(); // Refresh other files list
+  } catch (error) {
+    console.error('Barcha fayllarni o\'chirishda xatolik:', error);
+    showToast('Barcha fayllarni o\'chirishda xatolik yuz berdi: ' + error.message, 'error');
+  } finally {
+    isLoading.value = false;
+  }
+};
+
 // QR Code Generation (POST request only on download)
 const generateQRCode = async () => {
   if (!qrUrl.value.trim()) {
@@ -676,9 +1011,24 @@ const downloadQRCode = async () => {
     const qrBlob = await generateQRCode();
     const fileName = `qrcode_${Date.now()}.png`;
     downloadFile(qrBlob, fileName);
-    qrImageUrl.value = URL.createObjectURL(qrBlob); // Update preview with real QR
+    
+    // Update preview with real QR using safe URL creation
+    if (typeof window !== 'undefined' && window.URL && window.URL.createObjectURL) {
+      qrImageUrl.value = window.URL.createObjectURL(qrBlob);
+    } else {
+      // Fallback for preview
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        qrImageUrl.value = e.target.result;
+      };
+      reader.readAsDataURL(qrBlob);
+    }
+    
     showToast('QR kod muvaffaqiyatli yuklab olindi!', 'success');
     await fetchQRCodes(); // Refresh QR code history
+    
+    // Muvaffaqiyatli QR kod yaratishdan keyin ma'lumotlarni tozalash
+    clearQRData();
   } catch (error) {
     showToast('QR kod yuklashda xatolik: ' + error.message, 'error');
   } finally {
@@ -700,16 +1050,122 @@ const downloadQRFromHistory = (base64, fileName) => {
   showToast('QR kod tarixdan yuklab olindi!', 'success');
 };
 
+// Download Other File from History
+const downloadOtherFileFromHistory = async (filePath, fileName) => {
+  try {
+    isLoading.value = true;
+    const response = await fetch(`${URL}${filePath}`);
+    
+    if (!response.ok) {
+      throw new Error(`Server xatosi: ${response.status}`);
+    }
+    
+    const blob = await response.blob();
+    downloadFile(blob, fileName);
+    showToast('Fayl tarixdan yuklab olindi!', 'success');
+  } catch (error) {
+    console.error('Fayl yuklashda xatolik:', error);
+    showToast('Fayl yuklashda xatolik yuz berdi: ' + error.message, 'error');
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+// Copy QR Code to Clipboard
+const copyQRToClipboard = async (data) => {
+  try {
+    let blob;
+    
+    // Check if data is a URL or base64
+    if (data.startsWith('http') || data.startsWith('/')) {
+      // It's a URL, fetch the image
+      const response = await fetch(data);
+      if (!response.ok) {
+        throw new Error('Rasmni yuklashda xatolik');
+      }
+      blob = await response.blob();
+    } else {
+      // It's base64 data
+      const byteString = atob(data);
+      const arrayBuffer = new ArrayBuffer(byteString.length);
+      const uint8Array = new Uint8Array(arrayBuffer);
+      for (let i = 0; i < byteString.length; i++) {
+        uint8Array[i] = byteString.charCodeAt(i);
+      }
+      blob = new Blob([arrayBuffer], { type: 'image/png' });
+    }
+    
+    // Clipboard API dan foydalanish
+    if (navigator.clipboard && navigator.clipboard.write) {
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          'image/png': blob
+        })
+      ]);
+      showToast('QR kod muvaffaqiyatli nusxalandi!', 'success');
+    } else {
+      // Fallback metod - rasmni yaratib, uni nusxalash
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      
+      img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+        
+        canvas.toBlob(async (blob) => {
+          try {
+            await navigator.clipboard.write([
+              new ClipboardItem({
+                'image/png': blob
+              })
+            ]);
+            showToast('QR kod muvaffaqiyatli nusxalandi!', 'success');
+          } catch (error) {
+            showToast('Nusxalashda xatolik yuz berdi', 'error');
+          }
+        }, 'image/png');
+      };
+      
+      // Set image source based on data type
+      if (data.startsWith('http') || data.startsWith('/')) {
+        img.src = data;
+      } else {
+        img.src = `data:image/png;base64,${data}`;
+      }
+    }
+  } catch (error) {
+    console.error('Nusxalash xatosi:', error);
+    showToast('Nusxalashda xatolik yuz berdi: ' + error.message, 'error');
+  }
+};
+
 // Download File Helper
 const downloadFile = (blob, filename) => {
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  // Check if URL.createObjectURL is available
+  if (typeof window !== 'undefined' && window.URL && window.URL.createObjectURL) {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  } else {
+    // Fallback method for environments where URL.createObjectURL is not available
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const a = document.createElement('a');
+      a.href = e.target.result;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    };
+    reader.readAsDataURL(blob);
+  }
 };
 
 // Toast System
@@ -736,8 +1192,8 @@ const removeToast = (id) => {
 // Cleanup blob URLs on unmount
 onMounted(() => {
   return () => {
-    if (qrImageUrl.value && qrImageUrl.value.startsWith('blob:')) {
-      URL.revokeObjectURL(qrImageUrl.value);
+    if (qrImageUrl.value && qrImageUrl.value.startsWith('blob:') && typeof window !== 'undefined' && window.URL) {
+      window.URL.revokeObjectURL(qrImageUrl.value);
     }
   };
 });
