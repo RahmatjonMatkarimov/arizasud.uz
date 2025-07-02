@@ -3,11 +3,12 @@ import vue from "@vitejs/plugin-vue";
 import { fileURLToPath, URL } from "node:url";
 
 export default defineConfig({
+  base: '/',
   plugins: [vue()],
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
-      "pdfjs-dist": "pdfjs-dist/legacy/build/pdf", // Legacy build orqali to'g'ri yo'naltirish
+      "pdfjs-dist": "pdfjs-dist/legacy/build/pdf",
     },
   },
   server: {
@@ -16,7 +17,7 @@ export default defineConfig({
     strictPort: true,
     cors: true,
     watch: {
-      usePolling: true, // Windows yoki konteynerlarda ishlatiladi
+      usePolling: true,
     },
   },
 });
