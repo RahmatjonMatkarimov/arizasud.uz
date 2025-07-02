@@ -317,16 +317,22 @@
         {{ dat === 'datakril' ? translateText('Bekor qilish') : 'Bekor qilish' }}
       </button>
     </div>
+<div v-if="showEmojiPicker" 
 
-    <div v-if="showEmojiPicker"
-      class="fixed bottom-[100px] left-[250px] w-[calc(100%-500px)] bg-gray-800/90 shadow-2xl rounded-xl z-50 p-4 flex flex-wrap gap-2 max-h-64 overflow-y-auto scrollbar-custom border border-teal-500/50 backdrop-blur-md">
-      <button v-for="item in smileys" :key="item.id" @click="debouncedSendMessage('smiley', item.id)"
-        class="block rounded-md hover:scale-110 transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
-        :title="dat === 'datakril' ? translateText(`Tabassum ${item.id}`) : `Tabassum ${item.id}`">
-        <img :src="getSmileyUrl(item.filePath)" class="w-12 h-12 rounded-md object-contain"
-          :alt="dat === 'datakril' ? translateText(`Tabassum ${item.id}`) : `Tabassum ${item.id}`" />
-      </button>
-    </div>
+class="fixed inset-0 z-50"
+@click="showEmojiPicker = false"
+>
+
+  <div 
+  class="fixed bottom-[100px] left-[250px] w-[calc(100%-500px)] bg-gray-800/90 shadow-2xl rounded-xl z-50 p-4 flex flex-wrap gap-2 max-h-64 overflow-y-auto scrollbar-custom border border-teal-500/50 backdrop-blur-md">
+  <button v-for="item in smileys" :key="item.id" @click="debouncedSendMessage('smiley', item.id)"
+  class="block rounded-md hover:scale-110 transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
+  :title="dat === 'datakril' ? translateText(`Tabassum ${item.id}`) : `Tabassum ${item.id}`">
+  <img :src="getSmileyUrl(item.filePath)" class="w-12 h-12 rounded-md object-contain"
+  :alt="dat === 'datakril' ? translateText(`Tabassum ${item.id}`) : `Tabassum ${item.id}`" />
+</button>
+</div>
+</div>
   </div>
   <button v-if="role === 'bigAdmin'" class="absolute flex items-center gap-2 justify-center   h-16 w-[300px] bg-gray-700/90 hover:bg-gray-600 rounded-bl-2xl top-[93px] z-30 right-[0]"
     @click="all = true">
