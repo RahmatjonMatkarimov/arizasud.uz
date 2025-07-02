@@ -328,7 +328,7 @@
       </button>
     </div>
   </div>
-  <button class="absolute flex items-center gap-2 justify-center   h-16 w-[300px] bg-gray-700/90 hover:bg-gray-600 rounded-bl-2xl top-[93px] z-30 right-[0]"
+  <button v-if="role === 'bigAdmin'" class="absolute flex items-center gap-2 justify-center   h-16 w-[300px] bg-gray-700/90 hover:bg-gray-600 rounded-bl-2xl top-[93px] z-30 right-[0]"
     @click="all = true">
 <Icon icon="mdi:broom" class="text-white text-4xl" />
     <span class="text-white text-[20px]">{{ dat === 'datakril' ? translateText('Chat tarixini tozalash') : 'Chat tarixini tozalash'}}</span> 
