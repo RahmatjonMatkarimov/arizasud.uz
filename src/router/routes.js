@@ -23,7 +23,8 @@ const routes = [
   { path: '/room-lists/:id1/:id', component: () => import('@/components/contract/room-lists.vue') },
   { path: '/clientLogin', name: 'clientLogin', component: () => import('@/components/contract/cilendLogin.vue') },
   { path: '/ticket', name: 'ticket', component: () => import('@/components/ticket/ticket.vue') },
-  { path: '/servise/:id', name: 'screen', component: () => import('@/components/main/servise/servise.vue') },
+  { path: '/PdfOpen/:folder/:filePath', name: 'PdfOdpen', component: () => import('@/views/PdfOpenPage.vue') },
+  { path: '/servise/:id', name: 'PdfOpen', component: () => import('@/components/main/servise/servise.vue') },
   { path: '/:catchAll(.*)', component: () => import('@/components/error.vue'), props: { errorCode: 404 } },
   { path: '/finger', component: () => import('@/components/finger.vue'), props: { errorCode: 404 } },
   {
