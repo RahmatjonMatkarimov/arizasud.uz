@@ -319,7 +319,7 @@
     </div>
 
     <div v-if="showEmojiPicker"
-      class="fixed bottom-[100px] left-[250px] w-[calc(100%-500px)] bg-gray-800/90 shadow-2xl rounded-xl z-50 p-4 grid grid-cols-8 gap-2 max-h-64 overflow-y-auto scrollbar-custom border border-teal-500/50 backdrop-blur-md">
+      class="fixed bottom-[100px] left-[250px] w-[calc(100%-500px)] bg-gray-800/90 shadow-2xl rounded-xl z-50 p-4 flex flex-wrap gap-2 max-h-64 overflow-y-auto scrollbar-custom border border-teal-500/50 backdrop-blur-md">
       <button v-for="item in smileys" :key="item.id" @click="debouncedSendMessage('smiley', item.id)"
         class="block rounded-md hover:scale-110 transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
         :title="dat === 'datakril' ? translateText(`Tabassum ${item.id}`) : `Tabassum ${item.id}`">
