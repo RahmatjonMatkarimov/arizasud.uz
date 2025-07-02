@@ -335,7 +335,7 @@ export default {
     animateCounters() {
       gsap.to(this.$data, {
         duration: 2,
-        animatedData: this.dataTotal - this.hisoblaFoiz(this.dataTotal, 13),
+        animatedData: this.data - this.hisoblaFoiz(this.data, 13),
         ease: "power2.out",
         onUpdate: () => (this.animatedData = Math.round(this.animatedData)),
       });
