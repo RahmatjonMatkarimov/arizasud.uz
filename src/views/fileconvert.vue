@@ -234,7 +234,7 @@
             <div class="w-16 h-16 bg-gradient-to-br from-teal-500 to-cyan-600 dark:from-teal-600 dark:to-cyan-700 rounded-2xl flex items-center justify-center text-white text-3xl shadow-lg">
               <Icon icon="mdi:history" class="text-white" />
             </div>
-            <h2 class="text-2xl font-bold text-gray-800 dark:text-white">{{ dat === 'datakril' ? translateText(`Tarix`):`Tarix` }}</h2>
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white">{{ dat === 'datakril' ? translateText(`Qr-Code joylashtirilgan fayllar ro'yxati`):`Qr-Code joylashtirilgan fayllar ro'yxati` }}</h2>
           </div>
           <div v-if="activeTab === 'qr'" class="flex gap-4">
             <button 
