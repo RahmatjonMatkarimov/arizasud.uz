@@ -634,7 +634,7 @@ const fetchUserData = async () => {
     const token = localStorage.getItem('token')
     if (!token) {
       console.error('Token not found. User is not authorized.')
-      router.push('/login')
+      // router.push('/login')
       return
     }
     const response = await axios.get(`${URL}/${userRole}/${userIdNum}`, {
@@ -656,7 +656,7 @@ const fetchUserData = async () => {
     error.value = 'Error loading data.'
     if (err.response?.status === 401) {
       localStorage.removeItem('token')
-      router.push('/login')
+      // router.push('/login')
     }
   }
 }
