@@ -19,7 +19,7 @@ export function useAuth() {
     localStorage.removeItem("tokenExpiration");
     token.value = null;
     expirationTime.value = null;
-    router.push('/login');
+    // router.push('/login');
   };
 
   return {
