@@ -75,7 +75,7 @@ export default {
           localStorage.removeItem("token");
           localStorage.removeItem("tokenExpiration");
           updateTokenRefs();
-          router.push('/login');
+          // router.push('/login');
         }
       }
     };
@@ -87,7 +87,7 @@ export default {
         
         // Agar token o'chirilgan bo'lsa
         if (!event.newValue && event.key === 'token') {
-          router.push('/login');
+          // router.push('/login');
         }
       }
     };
