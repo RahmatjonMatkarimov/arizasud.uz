@@ -2,7 +2,7 @@
   <div>
     <!-- Header -->
     <header :class="[
-      'fixed top-0 z-20 flex justify-between items-center px-6 py-4 h-[90px] shadow-xl transition-all duration-300',
+      'fixed top-0 z-20 flex justify-between items-center px-6 py-4 h-[90px] shadow-xl transition-all duration-500',
       isCollapsed ? 'left-20 w-[calc(100%-5rem)]' : 'left-80 w-[calc(100%-20rem)]',
       // Dark mode
       'dark:bg-gradient-to-r dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 dark:border-b dark:border-slate-700/50',
