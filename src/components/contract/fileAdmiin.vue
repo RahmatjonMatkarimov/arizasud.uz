@@ -462,6 +462,7 @@ const handleGet = async () => {
     }
 
     const result = await response.json();
+    console.log(result);
     getResponse.value = "success";
     items.value = result.map((item) => ({
       ...item,
