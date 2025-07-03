@@ -15,7 +15,7 @@ export function useAuth() {
   });
 
   const logout = () => {
-    localStorage.removeItem("token");
+    // localStorage.removeItem("token");
     localStorage.removeItem("tokenExpiration");
     token.value = null;
     expirationTime.value = null;
@@ -72,7 +72,7 @@ export default {
         
         if (currentTime >= parseInt(expirationTime.value)) {
           // Token expired bo'ldi
-          localStorage.removeItem("token");
+          // localStorage.removeItem("token");
           localStorage.removeItem("tokenExpiration");
           updateTokenRefs();
           // router.push('/login');
