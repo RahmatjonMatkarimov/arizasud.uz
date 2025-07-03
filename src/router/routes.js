@@ -45,7 +45,7 @@ const routes = [
       { path: '/link', component: () => import('@/components/dashboard/links.vue') },
       { path: '/profile', component: () => import('@/views/Profile.vue') },
     ],
-    meta: { requiresAuth: true, allowedRoles: ['accauntant','chiefAccauntant', 'bigAdmin'] },
+    // meta: { requiresAuth: true, allowedRoles: ['accauntant','chiefAccauntant', 'bigAdmin'] },
   },
   {
     path: '/admin',
@@ -129,7 +129,7 @@ const routes = [
         props: true
       },
     ],
-    meta: { requiresAuth: true, allowedRoles: ['admin', 'manager','warehouseman','chiefAccauntant', 'yuristAssistant', 'accauntant', 'deliverer', 'yurist', 'bigAdmin'] },
+    // meta: { requiresAuth: true, allowedRoles: ['admin', 'manager','warehouseman','chiefAccauntant', 'yuristAssistant', 'accauntant', 'deliverer', 'yurist', 'bigAdmin'] },
   },
 ];
 export default routes
