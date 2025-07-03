@@ -173,12 +173,7 @@ const getProfileImage = (imgPath) => {
   return imgPath ? `${URL}/upload/${imgPath}` : '/default-avatar.png'
 }
 
-const navigateToChat = () => {
-  if (userId) {
-    messageCount.value = 0
-    router.push(`/chat/${userId}`)
-  }
-}
+
 
 const showNotificationModal = () => {
   showModal.value = true
@@ -336,7 +331,13 @@ const getUnreadCount = () => {
   const userId = parseInt(localStorage.getItem('id')) || 1
   socket1.emit('getUnreadCount', userId)
 }
-
+const navigateToChat = () => {
+  if (userId) {
+    router.push(`/chat/${userId}`)
+    fetchUnreadMessageCount()
+    messageCount.value = 0
+  }
+}
 onMounted(async () => {
   await fetchUserData()
   await fetchUnreadCount()
