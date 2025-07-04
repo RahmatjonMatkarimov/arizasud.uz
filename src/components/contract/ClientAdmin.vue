@@ -212,37 +212,53 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
               </svg>
             </div>
-            <div v-if="isDropdownOpen" 
-              class="absolute mt-2 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10 max-h-80 overflow-y-auto">
-              <div v-for="yurist in yurists" :key="yurist.id"
-                class="p-3 flex gap-4 items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 relative"
-                @click="selectYurist(yurist)" @mouseenter="hoveredYurist = yurist; showHoverModal = true" @mouseleave="showHoverModal = false">
-                <img :src="URL + '/upload/' + yurist.img" alt="Yurist" class="w-12 h-12 rounded-full object-cover">
-                <h1 class="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                  {{ dat === 'datakril' ? translateText(yurist.name) : yurist.name }}
-                </h1>
-                <div v-if="showHoverModal && hoveredYurist?.id === yurist.id"
-                  class="absolute left-full ml-2 p-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-20 min-w-[300px] max-h-96 overflow-y-auto">
-                  <p class="text-sm font-semibold text-gray-700 dark:text-gray-200">{{ dat === 'datakril' ? translateText('Bajaradigan ishlari') : 'Bajaradigan ishlari' }}</p>
-                  <div v-if="filteredTasks.length > 0">
-                    <div v-for="item in filteredTasks" :key="item.id" 
-                      class="text-sm text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 p-2 rounded-lg my-1 flex justify-between">
-                      <p>{{ dat === 'datakril' ? translateText(item.name) : item.name }}</p>
-                      <h1>{{ dat=='datakril'? translateText('holati:'):'holati:' }} 
-                        <span class="text-red-500">
-                          {{ item.ClientFileStatusHistory[item.ClientFileStatusHistory.length - 1]?.status === 'status1' ? (dat === 'datakril' ? translateText('Kutish') : 'Kutish') : 
-                             item.ClientFileStatusHistory[item.ClientFileStatusHistory.length - 1]?.status === 'status2' ? '2-Bosqichda' : 
-                             item.ClientFileStatusHistory[item.ClientFileStatusHistory.length - 1]?.status === 'status3' ? '3-Bosqichda' : '' }}
-                        </span>
-                      </h1>
-                    </div>
-                  </div>
-                  <div v-else class="text-center text-sm text-gray-700 dark:text-gray-200 p-2">
-                    {{ dat === 'datakril' ? translateText('Bajaradigan ishlari yo\'q') : "Bajaradigan ishlari yo'q" }}
-                  </div>
-                </div>
-              </div>
-            </div>
+<div v-if="isDropdownOpen" 
+  class="absolute mt-2 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10 max-h-80 overflow-y-auto"
+  @mouseleave="showHoverModal = false">
+  
+  <!-- Yurist list -->
+  <div 
+    v-for="yurist in yurists" :key="yurist.id"
+    class="p-3 flex gap-4 items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 relative"
+  @mouseenter="handleMouseEnter($event, yurist)"
+    @click="selectYurist(yurist)"
+  >
+    <img :src="URL + '/upload/' + yurist.img" alt="Yurist" class="w-12 h-12 rounded-full object-cover">
+    <h1 class="text-sm font-semibold text-gray-900 dark:text-gray-100">
+      {{ dat === 'datakril' ? translateText(yurist.name) : yurist.name }}
+    </h1>
+  </div>
+
+  <!-- Hover modal (outside the loop and positioned outside div) -->
+  <div v-if="showHoverModal && hoveredYurist"
+    class="fixed p-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-50 min-w-[300px] max-h-96 overflow-y-auto"
+  :style="{ 
+    top: modalPosition.y + 'px', 
+    left: modalPosition.x + 'px',
+    transform: 'translate(0, 0)' // Pozitsiyani aniqlashtirish uchun
+  }"
+  >
+    <p class="text-sm font-semibold text-gray-700 dark:text-gray-200">
+      {{ dat === 'datakril' ? translateText('Bajaradigan ishlari') : 'Bajaradigan ishlari' }}
+    </p>
+    <div v-if="filteredTasks.length > 0">
+      <div v-for="item in filteredTasks" :key="item.id" 
+        class="text-sm text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 p-2 rounded-lg my-1 flex justify-between">
+        <p>{{ dat === 'datakril' ? translateText(item.name) : item.name }}</p>
+        <h1>{{ dat == 'datakril' ? translateText('holati:') : 'holati:' }} 
+          <span class="text-red-500">
+            {{ item.ClientFileStatusHistory[item.ClientFileStatusHistory.length - 1]?.status === 'status1' ? (dat === 'datakril' ? translateText('Kutish') : 'Kutish') : 
+               item.ClientFileStatusHistory[item.ClientFileStatusHistory.length - 1]?.status === 'status2' ? '2-Bosqichda' : 
+               item.ClientFileStatusHistory[item.ClientFileStatusHistory.length - 1]?.status === 'status3' ? '3-Bosqichda' : '' }}
+          </span>
+        </h1>
+      </div>
+    </div>
+    <div v-else class="text-center text-sm text-gray-700 dark:text-gray-200 p-2">
+      {{ dat === 'datakril' ? translateText("Bajaradigan ishlari yo'q") : "Bajaradigan ishlari yo'q" }}
+    </div>
+  </div>
+</div>
           </div>
 
           <!-- Payment Branch Selection -->
@@ -611,6 +627,7 @@ const regionFormData = ref({
   regionId: '',
   districtId: ''
 });
+const modalPosition = ref({ x: 0, y: 0 });
 const selectedRegionForPrint = ref({ regionName: '', districtName: '' });
 const buyurtmachiIndex = ref(null);
 const clientId = ref(null);
@@ -688,6 +705,38 @@ const startVideoStream = async () => {
     errorMessage.value = " Kameraga kirishda xatolik!";
   }
 };
+function handleMouseEnter(event, yurist) {
+  hoveredYurist.value = yurist;
+  showHoverModal.value = true;
+
+  nextTick(() => {
+    const modalWidth = 300;
+    const modalHeight = 400;
+
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+
+    const rect = event.target.getBoundingClientRect(); // hover bo‘lgan elementning joylashuvi
+    const mouseX = rect.right;
+    const mouseY = rect.top;
+
+    let x = mouseX + 15;
+    let y = mouseY;
+
+    if (x + modalWidth > windowWidth) {
+      x = rect.left - modalWidth - 15;
+    }
+
+    if (y + modalHeight > windowHeight) {
+      y = windowHeight - modalHeight - 10;
+    }
+
+    if (y < 0) y = 10;
+
+    modalPosition.value = { x, y };
+  });
+}
+
 
 const stopVideoStream = () => {
   if (recordingVideo.value && recordingVideo.value.srcObject) {
