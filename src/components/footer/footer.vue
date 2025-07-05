@@ -75,4 +75,7 @@ const updateDisplayedData = () => {
 
 const getImageUrl = (filename) => `${URL}/upload/${filename}`;
 
+onMounted(() => {
+  fetchData();
+});
 </script>
