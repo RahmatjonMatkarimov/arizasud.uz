@@ -128,7 +128,7 @@
                   <div class="flex items-start justify-between mb-4">
                     <div>
                       <h3 class="text-2xl font-bold text-gray-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 mb-2">
-                       {{ dat === 'datakril' ? translateText(`${workLog.user.name} ${workLog.user.surname}`) : `${workLog.user.name} ${workLog.user.surname}` }}
+                       {{ dat === 'datakril' ? translateText(`${workLog.user.name} ${workLog.user.surname}`):`${workLog.user.name} ${workLog.user.surname}` }}
                       </h3>
                       <div class="flex items-center space-x-3">
                         <span class="inline-flex items-center px-4 py-2 rounded-xl text-sm font-bold bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 dark:from-green-900/50 dark:to-emerald-900/50 dark:text-green-300 shadow-lg">
