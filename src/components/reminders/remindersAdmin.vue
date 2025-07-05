@@ -135,7 +135,7 @@
                           <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                           </svg>
-                          <!-- {{ dat === "datakril" ? translateText("Tugallangan") : "Tugallangan" }} -->
+                          {{ dat === "datakril" ? translateText("Tugallangan") : "Tugallangan" }}
                         </span>
                       </div>
                     </div>
@@ -143,7 +143,7 @@
 
                   <div class="bg-gray-50/80 dark:bg-gray-700/50 rounded-2xl p-6 mb-6 border border-gray-200/50 dark:border-gray-600/50">
                     <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed font-medium">
-                      <!-- {{ dat === "datakril" ? translateText(workLog.comment) : workLog.comment }} -->
+                      {{ dat === "datakril" ? translateText(workLog.comment) : workLog.comment }}
                     </p>
                   </div>
 
@@ -156,10 +156,10 @@
                       </div>
                       <div>
                         <span class="text-sm font-medium">
-                          <!-- {{ dat === "datakril" ? translateText("Qayd etilgan:") : "Qayd etilgan:" }} -->
+                          {{ dat === "datakril" ? translateText("Qayd etilgan:") : "Qayd etilgan:" }}
                         </span>
                         <div class="text-lg font-bold text-gray-700 dark:text-gray-200">
-                          <!-- {{ formatDate(workLog.createdAt) }} -->
+                          {{ formatDate(workLog.createdAt) }}
                         </div>
                       </div>
                     </div>
@@ -183,7 +183,7 @@
           </svg>
         </div>
         <span class="text-lg font-bold">
-          <!-- {{ dat === "datakril" ? translateText("Muvaffaqiyatli yangilandi!") : "Muvaffaqiyatli yangilandi!" }} -->
+          {{ dat === "datakril" ? translateText("Muvaffaqiyatli yangilandi!") : "Muvaffaqiyatli yangilandi!" }}
         </span>
       </div>
     </div>
