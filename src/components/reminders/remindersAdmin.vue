@@ -12,7 +12,7 @@
           <div class="flex justify-between items-center">
             <div class="max-w-2xl">
               <h2 class="text-4xl font-bold text-white mb-4 leading-tight">
-                <!-- {{ dat === "datakril" ? translateText("Ishchilarning Ishlar Ro'yxati") : "Ishchilarning Ishlar Ro'yxati" }} -->
+                {{ dat === "datakril" ? translateText("Ishchilarning Ishlar Ro'yxati") : "Ishchilarning Ishlar Ro'yxati" }}
               </h2>
               <p class="text-xl text-blue-100 dark:text-blue-200 font-medium">
                 {{ dat === "datakril" ? translateText("Barcha bajarilgan ishlar ro'yxati") : "Barcha bajarilgan ishlar ro'yxati" }}
@@ -22,7 +22,7 @@
               <div class="bg-white/20 dark:bg-white/10 backdrop-blur-lg rounded-3xl px-8 py-6 border border-white/20">
                 <div class="text-4xl font-bold text-white mb-2">{{ data.length }}</div>
                 <div class="text-lg text-blue-100 dark:text-blue-200 font-medium">
-                  <!-- {{ dat === "datakril" ? translateText("ta ish") : "ta ish" }} -->
+                  {{ dat === "datakril" ? translateText("ta ish") : "ta ish" }}
                 </div>
               </div>
             </div>
@@ -48,8 +48,8 @@
             <!-- Sort Dropdown -->
             <div class="relative">
               <select v-model="sortBy" class="appearance-none bg-gray-50/80 dark:bg-gray-700/80 border border-gray-200/80 dark:border-gray-600/80 rounded-2xl px-6 py-4 pr-12 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:focus:ring-blue-400/50 focus:border-transparent transition-all duration-300 text-lg font-medium backdrop-blur-sm cursor-pointer">
-                <!-- <option value="newest">{{ dat === "datakril" ? translateText("Yangisidan eskisiga") : "Yangisidan eskisiga" }}</option> -->
-                <!-- <option value="oldest">{{ dat === "datakril" ? translateText("Eskisidan yangisiga") : "Eskisidan yangisiga" }}</option> -->
+                <option value="newest">{{ dat === "datakril" ? translateText("Yangisidan eskisiga") : "Yangisidan eskisiga" }}</option>
+                <option value="oldest">{{ dat === "datakril" ? translateText("Eskisidan yangisiga") : "Eskisidan yangisiga" }}</option>
               </select>
               <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
                 <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -76,10 +76,10 @@
             <div class="absolute bottom-8 right-1/4 w-2 h-2 bg-indigo-500 rounded-full animate-bounce" style="animation-delay: 1s"></div>
           </div>
           <h3 class="text-3xl font-bold text-gray-600 dark:text-gray-300 mb-4">
-            <!-- {{ dat === "datakril" ? translateText("Hali bajarilgan ishlar yo'q") : "Hali bajarilgan ishlar yo'q" }} -->
+            {{ dat === "datakril" ? translateText("Hali bajarilgan ishlar yo'q") : "Hali bajarilgan ishlar yo'q" }}
           </h3>
           <p class="text-xl text-gray-500 dark:text-gray-400 max-w-md mx-auto">
-            <!-- {{ dat === "datakril" ? translateText("Bajarilgan ishlar bu yerda ko'rsatiladi") : "Bajarilgan ishlar bu yerda ko'rsatiladi" }} -->
+            {{ dat === "datakril" ? translateText("Bajarilgan ishlar bu yerda ko'rsatiladi") : "Bajarilgan ishlar bu yerda ko'rsatiladi" }}
           </p>
         </div>
 
@@ -128,7 +128,7 @@
                   <div class="flex items-start justify-between mb-4">
                     <div>
                       <h3 class="text-2xl font-bold text-gray-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 mb-2">
-                       <!-- {{ dat === 'datakril' ? translateText(`${workLog.user.name} ${workLog.user.surname}`):`${workLog.user.name} ${workLog.user.surname}` }} -->
+                       {{ dat === 'datakril' ? translateText(`${workLog.user.name} ${workLog.user.surname}`) : `${workLog.user.name} ${workLog.user.surname}` }}
                       </h3>
                       <div class="flex items-center space-x-3">
                         <span class="inline-flex items-center px-4 py-2 rounded-xl text-sm font-bold bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 dark:from-green-900/50 dark:to-emerald-900/50 dark:text-green-300 shadow-lg">
