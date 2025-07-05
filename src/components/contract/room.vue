@@ -121,25 +121,6 @@ function cancelLeave() {
 const route = useRoute();
 const isLoading = inject('isLoading');
 const dat = ref(localStorage.getItem('til') || 'datalotin');
-
-let intervalId = null;
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem('til') || 'datalotin';
-  if (currentLang !== dat.value) {
-    dat.value = currentLang;
-  }
-};
-
-onMounted(() => {
-  intervalId = setInterval(checkLanguageChange, 1000);
-});
-
-onUnmounted(() => {
-  if (intervalId) {
-    clearInterval(intervalId);
-  }
-});
-
 const router = useRouter();
 const id = parseInt(route.params.id);
 const clientData = ref(null);

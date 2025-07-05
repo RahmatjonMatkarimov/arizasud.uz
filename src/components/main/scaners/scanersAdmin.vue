@@ -750,22 +750,6 @@ import { inject } from "vue";
 const API_URL = `${URL}/scanners`;
 const dat = ref(localStorage.getItem("til") || "datalotin");
 
-let intervalId = null;
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem("til") || "datalotin";
-  if (currentLang !== dat.value) {
-    dat.value = currentLang;
-  }
-};
-
-onMounted(() => {
-  intervalId = setInterval(checkLanguageChange, 0);
-});
-
-onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
-});
-
 // Reactive state for file handling and modals
 const isDraggingCreate = ref(false);
 const isDraggingEdit = ref(false);

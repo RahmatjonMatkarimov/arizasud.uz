@@ -31,16 +31,9 @@ import axios from 'axios';
 import { URL } from '@/auth/url';
 import translateText from '@/auth/Translate';
 
-let intervalId = null;
 const scanners = ref([]);
 const API_URL = URL + '/scanners';
 const dat = ref(localStorage.getItem('til') || 'datalotin');
-const checkLanguageChange = () => {
-    const currentLang = localStorage.getItem('til') || 'datalotin';
-    if (currentLang !== dat.value) {
-        dat.value = currentLang;
-    }
-};
 
 const fetchScanners = async () => {
     try {
@@ -53,11 +46,8 @@ const fetchScanners = async () => {
 
 onMounted(() => {
     fetchScanners()
-    intervalId = setInterval(checkLanguageChange, 0);
 })
-onUnmounted(() => {
-    if (intervalId) clearInterval(intervalId);
-});
+
 </script>
 
 <style scoped></style>

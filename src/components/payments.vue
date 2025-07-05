@@ -35,23 +35,6 @@ import { onMounted, ref, computed, onUnmounted } from 'vue'
 
 const dat = ref("datalotin")
 
-let intervalId = null
-
-const checkLanguageChange = () => {
-    const currentLang = localStorage.getItem("til") || "datalotin"
-    if (currentLang !== dat.value) {
-        dat.value = currentLang
-    }
-}
-
-onMounted(() => {
-    intervalId = setInterval(checkLanguageChange, 0)
-})
-
-onUnmounted(() => {
-    if (intervalId) clearInterval(intervalId)
-})
-
 const formattedTitle = computed(() => {
     if (dat.value === 'datalotin') {
         return "To'lov qilinadigan mahsulotlar"

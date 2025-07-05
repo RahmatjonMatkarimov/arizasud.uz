@@ -520,25 +520,6 @@ const uploadCourt = async () => {
     isLoading.value = false
   }
 };
-
-
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem("til") || "datalotin";
-  if (currentLang !== dat.value) {
-    dat.value = currentLang;
-  }
-};
-
-onMounted(() => {
-  intervalId = setInterval(checkLanguageChange, 100);
-  getData();
-});
-
-onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
-});
-
-
 const getData = async () => {
   isLoading.value = true
   try {

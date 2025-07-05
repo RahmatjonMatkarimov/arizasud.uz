@@ -583,6 +583,7 @@ const changeLanguage = (langCode) => {
   inject('dat', data)
   selectedLanguage.value = languages.value.find(lang => lang.code === langCode)
   isLanguageDropdownOpen.value = false
+  window.location.reload()
 }
 
 const toggleLanguageDropdown = () => {

@@ -357,24 +357,11 @@ const dat = ref(localStorage.getItem("til") || "datalotin");
 const selectedFileSize = ref("");
 const toastMessage = ref("");
 const toastType = ref("success");
-
-let intervalId = null;
 let toastTimeout = null;
 
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem("til") || "datalotin";
-  if (currentLang !== dat.value) {
-    dat.value = currentLang;
-  }
-};
 
-onMounted(() => {
-  intervalId = setInterval(checkLanguageChange, 100);
-  handleGet();
-});
 
 onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
   if (toastTimeout) clearTimeout(toastTimeout);
 });
 
@@ -628,6 +615,9 @@ const handleModalSubmit = async () => {
     isLoading.value = false;
   }
 };
+onMounted(() => {
+  handleGet();
+});
 </script>
 
 <style scoped>

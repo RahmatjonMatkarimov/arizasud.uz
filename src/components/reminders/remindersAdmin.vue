@@ -229,14 +229,6 @@ export default {
       }
     };
 
-    // Language Check
-    const checkLanguageChange = () => {
-      const currentLang = localStorage.getItem("til") || "datalotin";
-      if (currentLang !== dat.value) {
-        dat.value = currentLang;
-      }
-    };
-
     // Filtered and Sorted Data
     const filteredData = computed(() => {
       let filtered = data.value;
@@ -313,7 +305,6 @@ export default {
     // Lifecycle
     onMounted(async () => {
       updateTheme();
-      intervalId = setInterval(checkLanguageChange, 100);
 
       if (!userId) {
         console.warn(
@@ -325,11 +316,6 @@ export default {
       }
       await fetchWorkLogs();
     });
-
-    onUnmounted(() => {
-      if (intervalId) clearInterval(intervalId);
-    });
-
     return {
       data,
       dat,

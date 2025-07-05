@@ -207,12 +207,6 @@ const selectedPaymentDetails = ref(null);
 const dat = ref(localStorage.getItem("til") || "datalotin");
 const isDarkMode = ref(localStorage.getItem("theme") === "dark");
 
-let intervalId = null;
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem("til") || "datalotin";
-  if (currentLang !== dat.value) dat.value = currentLang;
-};
-
 const updateLanguage = () => {
   localStorage.setItem("til", dat.value);
 };
@@ -224,16 +218,11 @@ const toggleDarkMode = () => {
 };
 
 onMounted(() => {
-  intervalId = setInterval(checkLanguageChange, 1000);
   fetchClientFiles();
   if (localStorage.getItem("theme") === "dark") {
     isDarkMode.value = true;
     document.documentElement.classList.add("dark");
   }
-});
-
-onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
 });
 
 const fetchClientFiles = async () => {

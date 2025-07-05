@@ -40,10 +40,12 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, inject } from 'vue';
+import { onUnmounted } from 'vue';
 import io from 'socket.io-client';
 import { useRoute } from 'vue-router';
 import { URL } from "@/auth/url.js";
 import axios from "axios";
+import translateText from "@/auth/Translate";
 
 const route = useRoute();
 const id = parseInt(route.params.id);
@@ -52,26 +54,6 @@ const showModal = ref(false);
 const showOptions = ref(null);
 const notificationToDelete = ref(null);
 const dat = ref(localStorage.getItem("til") || "datalotin");
-
-let intervalId = null;
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem("til") || "datalotin";
-  if (currentLang !== dat.value) {
-    dat.value = currentLang;
-  }
-};
-
-onMounted(() => {
-  intervalId = setInterval(checkLanguageChange, 0);
-});
-
-onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
-});
-
-import translateText from "@/auth/Translate";
-import { onUnmounted } from 'vue';
-
 
 function getNotificationsFromLocalStorage() {
   const storedNotifications = localStorage.getItem(`notifications-${id}`);

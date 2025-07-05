@@ -1092,22 +1092,6 @@ import translateText from "@/auth/Translate";
 
 const dat = ref("datalotin")
 const isLoading = inject('isLoading')
-let intervalId = null
-
-const checkLanguageChange = () => {
-    const currentLang = localStorage.getItem("til") || "datalotin"
-    if (currentLang !== dat.value) {
-        dat.value = currentLang
-    }
-}
-
-onMounted(() => {
-    intervalId = setInterval(checkLanguageChange, 0)
-})
-
-onUnmounted(() => {
-    if (intervalId) clearInterval(intervalId)
-})
 const route = useRoute();
 const router = useRouter();
 const warehouses = ref([]);

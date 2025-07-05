@@ -427,15 +427,6 @@ const getDataAndRender = async () => {
 };
 
 const dat = ref(localStorage.getItem('til') || 'datalotin');
-let intervalId = null;
-
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem('til') || 'datalotin';
-  if (currentLang !== dat.value) {
-    dat.value = currentLang;
-  }
-};
-
 // Touch gestures for mobile
 let touchStartX = 0;
 let touchStartY = 0;
@@ -473,7 +464,6 @@ const handleSwipeGesture = () => {
 onMounted(() => {
   initializeTheme();
   getDataAndRender();
-  intervalId = setInterval(checkLanguageChange, 1000);
   window.addEventListener('scroll', handleScroll);
   
   // Add touch event listeners for mobile gestures
@@ -489,7 +479,6 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
   window.removeEventListener('scroll', handleScroll);
   document.removeEventListener('touchstart', handleTouchStart);
   document.removeEventListener('touchend', handleTouchEnd);

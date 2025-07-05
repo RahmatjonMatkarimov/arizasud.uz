@@ -93,12 +93,6 @@ import { inject } from 'vue'
 const router = useRouter()
 const isLoading = inject(`isLoading`)
 const dat = ref(localStorage.getItem('til') || 'datalotin');
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem('til') || 'datalotin';
-  if (currentLang !== dat.value) {
-    dat.value = currentLang;
-  }
-};
 
 const state = reactive({
   tickets: [],
@@ -140,14 +134,9 @@ const createTicket = async () => {
   }
 }
 
-let intervalId = null;
 onMounted(() => {
   fetchTickets()
-  intervalId = setInterval(checkLanguageChange, 0);
 })
-onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
-});
 </script>
 
 <style lang="scss" scoped>

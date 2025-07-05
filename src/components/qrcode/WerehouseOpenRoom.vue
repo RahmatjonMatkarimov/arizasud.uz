@@ -300,22 +300,6 @@ const warehouseId = route.params.id
 const isDark = ref(true) // Default dark mode
 const dat = ref("datalotin")
 const isLoading = inject('isLoading')
-let intervalId = null
-
-const checkLanguageChange = () => {
-    const currentLang = localStorage.getItem("til") || "datalotin"
-    if (currentLang !== dat.value) {
-        dat.value = currentLang
-    }
-}
-
-onMounted(() => {
-    intervalId = setInterval(checkLanguageChange, 0)
-})
-
-onUnmounted(() => {
-    if (intervalId) clearInterval(intervalId)
-})
 // Theme management
 const toggleTheme = () => {
   isDark.value = !isDark.value

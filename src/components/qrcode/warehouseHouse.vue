@@ -669,22 +669,6 @@ const allDeliverers = ref([]);
 
 const dat = ref("datalotin");
 
-let intervalId = null;
-
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem("til") || "datalotin";
-  if (currentLang !== dat.value) {
-    dat.value = currentLang;
-  }
-};
-
-onMounted(() => {
-  intervalId = setInterval(checkLanguageChange, 1000); // Har 1 soniyada tilni tekshirish
-});
-
-onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
-});
 function formatDate(dateStr) {
   if (!dateStr) return 'Belgilanmagan'
   const date = new Date(dateStr)

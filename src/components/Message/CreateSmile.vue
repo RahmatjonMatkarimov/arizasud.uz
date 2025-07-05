@@ -14,22 +14,6 @@ const isLoading = inject('isLoading');
 const isDragging = ref(false);
 
 const dat = ref(localStorage.getItem("til") || "datalotin");
-let intervalId = null;
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem("til") || "datalotin";
-  if (currentLang !== dat.value) {
-    dat.value = currentLang;
-  }
-};
-
-onMounted(() => {
-  intervalId = setInterval(checkLanguageChange, 100);
-});
-
-onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
-});
-
 const handleFileChange = (event) => {
   const selectedFile = event.target.files[0];
   if (selectedFile) {

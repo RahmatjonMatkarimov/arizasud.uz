@@ -12,21 +12,6 @@ const searchStore = useSearchStore()
 const selectedFilePath = ref(null)
 const router = useRouter()
 const dat = ref(localStorage.getItem('til') || 'datalotin');
-
-let intervalId = null;
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem('til') || 'datalotin';
-  if (currentLang !== dat.value) {
-    dat.value = currentLang;
-  }
-};
-onMounted(() => {
-  intervalId = setInterval(checkLanguageChange, 0);
-});
-
-onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
-});
 const Showmodal = ref(false)
 const showChekbox = ref(false)
 const modal = ref(false)

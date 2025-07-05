@@ -513,21 +513,6 @@ import { inject } from "vue";
 
 const dat = ref(localStorage.getItem("til") || "datalotin");
 
-let intervalId = null;
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem("til") || "datalotin";
-  if (currentLang !== dat.value) {
-    dat.value = currentLang;
-  }
-};
-
-onMounted(() => {
-  intervalId = setInterval(checkLanguageChange, 0);
-});
-
-onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
-});
 // Constants
 const API_URL = "https://backend.arizasud.uz";
 const BACKEND_URL = "https://api.backend.arizasud.uz";

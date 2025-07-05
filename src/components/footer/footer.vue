@@ -75,21 +75,4 @@ const updateDisplayedData = () => {
 
 const getImageUrl = (filename) => `${URL}/upload/${filename}`;
 
-let intervalId = null;
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem('til') || 'latin';
-  if (currentLang !== dat.value) {
-    dat.value = currentLang;
-    updateDisplayedData();
-  }
-};
-
-onMounted(() => {
-  fetchData();
-  intervalId = setInterval(checkLanguageChange, 0);
-});
-
-onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
-});
 </script>

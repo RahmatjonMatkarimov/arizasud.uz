@@ -11,21 +11,6 @@ const data = ref([]);
 const router = useRouter();
 const dat = ref(localStorage.getItem("til") || "datalotin");
 const isLoading = inject('isLoading')
-let intervalId = null;
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem("til") || "datalotin";
-  if (currentLang !== dat.value) {
-    dat.value = currentLang;
-  }
-};
-
-onMounted(() => {
-  intervalId = setInterval(checkLanguageChange, 0);
-});
-
-onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
-});
 
 const gotToPath = (id) => {
   router.push('/fileProfile/' + id);

@@ -100,20 +100,10 @@ const getImageUrl = (filename) => `${imageBaseUrl}/${filename}`;
 
 const currentData = computed(() => (dat.value === "datakril" ? datakril.value : data.value));
 
-let intervalId = null;
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem('til') || 'datalotin';
-  if (currentLang !== dat.value) dat.value = currentLang;
-};
-
 onMounted(() => {
   getData();
-  intervalId = setInterval(checkLanguageChange, 500);
 });
 
-onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
-});
 </script>
 
 <style scoped>

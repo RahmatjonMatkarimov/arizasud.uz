@@ -1103,22 +1103,11 @@ watch([successMessage, errorMessage], () => {
   }
 });
 
-// Lifecycle
-let intervalId = null;
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem("til") || "datalotin";
-  if (currentLang !== dat.value) {
-    dat.value = currentLang;
-  }
-};
-
 onMounted(() => {
   getData();
-  intervalId = setInterval(checkLanguageChange, 1000); // Adjusted to 1s for performance
 });
 
 onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
   document.body.style.overflow = "";
 });
 </script>

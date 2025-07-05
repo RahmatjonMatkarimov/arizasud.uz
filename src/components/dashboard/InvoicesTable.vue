@@ -10,21 +10,6 @@ import translateText from '@/auth/Translate';
 import { onUnmounted, ref } from 'vue';
 import { inject, onMounted } from 'vue';
 const dat = ref(localStorage.getItem('til') || 'datalotin');
-
-let intervalId = null;
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem('til') || 'datalotin';
-  if (currentLang !== dat.value) {
-    dat.value = currentLang;
-  }
-};
-onMounted(() => {
-  intervalId = setInterval(checkLanguageChange, 0);
-});
-
-onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
-});
 </script>
 
 <template>

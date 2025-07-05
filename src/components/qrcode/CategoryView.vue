@@ -501,34 +501,6 @@ import { URL } from '@/auth/url';
 
 const dat = ref(localStorage.getItem('til') || 'datalatin');
 
-let intervalId: ReturnType<typeof setInterval> | null = null;
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem('til') || 'datalatin';
-  if (currentLang !== dat.value) {
-    dat.value = currentLang;
-  }
-};
-
-onMounted(() => {
-  intervalId = setInterval(checkLanguageChange, 500);
-
-  // Initialize theme
-  const savedTheme = localStorage.getItem('theme');
-  if (savedTheme) {
-    if (savedTheme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    document.documentElement.classList.add('dark');
-  }
-});
-
-onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
-});
-
 const name = ref('');
 const category = ref([]);
 const router = useRouter();
@@ -676,6 +648,19 @@ const toggleTheme = () => {
 
 onMounted(() => {
   fetchcategory();
+});
+onMounted(() => {
+  // Initialize theme
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme) {
+    if (savedTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.documentElement.classList.add('dark');
+  }
 });
 </script>
 

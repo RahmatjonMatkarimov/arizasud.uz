@@ -38,21 +38,6 @@ import { inject, ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 const dat = ref(localStorage.getItem('til') || 'datalotin');
-
-let intervalId = null;
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem('til') || 'datalotin';
-  if (currentLang !== dat.value) {
-    dat.value = currentLang;
-  }
-};
-onMounted(() => {
-  intervalId = setInterval(checkLanguageChange, 0);
-});
-
-onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
-});
 const router = useRouter()
 const users = ref([])
 const isLoading = inject('isLoading')

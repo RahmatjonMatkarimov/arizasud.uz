@@ -290,23 +290,6 @@ const selectedId = ref(null);
 const editingFileId = ref(null);
 const imageBaseUrl = `${URL}/Uploads`;
 const dat = ref(localStorage.getItem("til") || "datalotin");
-
-let intervalId;
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem("til") || "datalotin";
-  if (currentLang !== dat.value) {
-    dat.value = currentLang;
-  }
-};
-
-onMounted(() => {
-  intervalId = setInterval(checkLanguageChange, 100);
-});
-
-onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
-});
-
 const Navigate = (id) => {
   router.push(`/companyFile-view/${id}`);
 };

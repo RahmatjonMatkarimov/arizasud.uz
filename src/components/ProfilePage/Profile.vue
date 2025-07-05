@@ -90,20 +90,6 @@ const togglePermission = async (permission) => {
 
 onMounted(fetchPermissions);
 const dat = ref(localStorage.getItem("til"));
-let intervalId = null;
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem("til") || "datalotin";
-  if (currentLang !== dat.value) {
-    dat.value = currentLang;
-  }
-};
-onMounted(() => {
-  intervalId = setInterval(checkLanguageChange, 0);
-});
-
-onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
-});
 
 const fetchUserData = async () => {
   isLoading.value = true;

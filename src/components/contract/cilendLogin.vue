@@ -144,16 +144,7 @@ import translateText from '@/auth/Translate';
 // Language management
 const dat = ref(localStorage.getItem("til") || "datalotin");
 
-let intervalId = null;
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem("til") || "datalotin";
-  if (currentLang !== dat.value) {
-    dat.value = currentLang;
-  }
-};
-
 onMounted(() => {
-  intervalId = setInterval(checkLanguageChange, 0);
   
   // Initialize theme
   const savedTheme = localStorage.getItem('theme');

@@ -47,22 +47,6 @@ const id = route.params.id;
 const videoUrl = ref('');
 const isLoading = ref(false);
 
-let intervalId = null;
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem("til") || "datalotin";
-  if (currentLang !== dat.value) {
-    dat.value = currentLang;
-  }
-};
-
-onMounted(() => {
-  intervalId = setInterval(checkLanguageChange, 1000); // 0 dan 1000ms ga o'zgartirildi, resurslarni tejash uchun
-});
-
-onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
-});
-
 const fetchVideoById = async () => {
   try {
     isLoading.value = true;

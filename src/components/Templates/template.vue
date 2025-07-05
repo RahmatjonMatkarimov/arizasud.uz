@@ -155,6 +155,7 @@ const changeLanguage = (langCode) => {
   localStorage.setItem('til', data)
   selectedLanguage.value = languages.value.find(lang => lang.code === langCode)
   isLanguageDropdownOpen.value = false
+  window.location.reload()
 }
 
 const toggleLanguageDropdown = () => {

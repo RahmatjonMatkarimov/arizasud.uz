@@ -254,24 +254,13 @@ const toastMessage = ref("");
 const toastType = ref("success");
 const isLoading = inject('isLoading')
 
-let intervalId = null;
 let toastTimeout = null;
 
-// Language change detection
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem("til") || "datalotin";
-  if (currentLang !== dat.value) {
-    dat.value = currentLang;
-  }
-};
-
 onMounted(() => {
-  intervalId = setInterval(checkLanguageChange, 100);
   fetchRecords();
 });
 
 onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
   if (toastTimeout) clearTimeout(toastTimeout);
 });
 

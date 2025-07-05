@@ -92,14 +92,9 @@ const createTicket = async () => {
   }
 }
 
-let intervalId = null;
 onMounted(() => {
   fetchTickets()
-  intervalId = setInterval(checkLanguageChange, 0);
 })
-onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
-});
 </script>
 <style lang="scss" scoped>
 .container {

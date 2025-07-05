@@ -174,22 +174,6 @@ import translateText from "@/auth/Translate";
 
 const dat = ref(localStorage.getItem("til") || "datalotin");
 const isLoading = inject(`isLoading`);
-let intervalId1 = null;
-
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem("til") || "datalotin";
-  if (currentLang !== dat.value) {
-    dat.value = currentLang;
-  }
-};
-
-onMounted(() => {
-  intervalId1 = setInterval(checkLanguageChange, 0);
-});
-
-onUnmounted(() => {
-  if (intervalId1) clearInterval(intervalId1);
-});
 
 const state = reactive({
   tickets: [],
@@ -280,13 +264,8 @@ const formatDate = (dateString) => {
   });
 };
 
-let intervalId = null;
 onMounted(() => {
   fetchTickets();
-  intervalId = setInterval(checkLanguageChange, 0);
 });
 
-onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
-});
 </script>

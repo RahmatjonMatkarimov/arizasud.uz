@@ -119,20 +119,12 @@ const modalPosition = ref({ top: 0, left: 0 });
 const data = ref(null);
 const dat = ref(localStorage.getItem("til") || "datalotin");
 
-let intervalId = null;
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem("til") || "datalotin";
-  if (currentLang !== dat.value) dat.value = currentLang;
-};
-
 onMounted(() => {
-  intervalId = setInterval(checkLanguageChange, 0);
   window.addEventListener("resize", updateIsMobile);
   fetchClientFiles();
 });
 
 onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
   window.removeEventListener("resize", updateIsMobile);
 });
 

@@ -68,20 +68,8 @@ const goToPath = (item) => {
   }
 };
 
-let intervalId = null;
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem('til') || 'datalotin';
-  if (currentLang !== dat.value) {
-    dat.value = currentLang;
-  }
-};
-
 onMounted(() => {
   getData();
-  intervalId = setInterval(checkLanguageChange, 0);
 });
 
-onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
-});
 </script>

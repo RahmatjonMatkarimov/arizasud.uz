@@ -784,19 +784,9 @@ const showImageCarousel = ref(false);
 const currentImageIndex = ref(0);
 const selectedMonth = ref('all');
 const selectedYear = ref('all');
-
 const dat = ref(localStorage.getItem('til') || 'datalotin');
 
-let intervalId = null;
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem('til') || 'datalotin';
-  if (currentLang !== dat.value) {
-    dat.value = currentLang;
-  }
-};
-
 onMounted(() => {
-  intervalId = setInterval(checkLanguageChange, 1000);
   fetchWarehouse();
   const savedTheme = localStorage.getItem('theme');
   if (savedTheme) {
@@ -806,9 +796,6 @@ onMounted(() => {
   }
 });
 
-onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
-});
 
 const editForm = ref({
   id: null,

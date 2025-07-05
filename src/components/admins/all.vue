@@ -13,21 +13,6 @@ import { Icon } from '@iconify/vue'
 const router = useRouter()
 const dat = ref(localStorage.getItem("til") || "datalotin");
 const isLoading = inject('isLoading')
-let intervalId = null;
-const checkLanguageChange = () => {
-  const currentLang = localStorage.getItem("til") || "datalotin";
-  if (currentLang !== dat.value) {
-    dat.value = currentLang;
-  }
-};
-
-onMounted(() => {
-  intervalId = setInterval(checkLanguageChange, 0);
-});
-
-onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
-});
 const id = parseInt(localStorage.getItem("id"));
 const newId = parseInt(id);
 const data = ref({});

@@ -455,23 +455,7 @@ import translateText from '@/auth/Translate';
 import { fi } from 'date-fns/locale';
 
 const isLoading = inject('isLoading')
-let intervalId = null
 const dat = ref(localStorage.getItem("til") || "datalotin")
-
-const checkLanguageChange = () => {
-    const currentLang = localStorage.getItem("til") || "datalotin"
-    if (currentLang !== dat.value) {
-        dat.value = currentLang
-    }
-}
-
-onMounted(() => {
-    intervalId = setInterval(checkLanguageChange, 0)
-})
-
-onUnmounted(() => {
-    if (intervalId) clearInterval(intervalId)
-})
 // API Configuration
 const API_BASE = `${URL}/file-editor`;
 
