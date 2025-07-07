@@ -298,7 +298,7 @@ const loading = ref(true)
 const error = ref(null)
 const warehouseId = route.params.id
 const isDark = ref(true) // Default dark mode
-const dat = ref("datalotin")
+const dat = ref(localStorage.getItem('til'));
 const isLoading = inject('isLoading')
 // Theme management
 const toggleTheme = () => {

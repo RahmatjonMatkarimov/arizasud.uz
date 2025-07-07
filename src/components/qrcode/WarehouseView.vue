@@ -1090,7 +1090,7 @@ import { URL } from "@/auth/url.js";
 import * as XLSX from "xlsx"; // Import xlsx library
 import translateText from "@/auth/Translate";
 
-const dat = ref("datalotin")
+const dat = ref(localStorage.getItem('til'));
 const isLoading = inject('isLoading')
 const route = useRoute();
 const router = useRouter();

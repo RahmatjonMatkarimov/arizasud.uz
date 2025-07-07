@@ -667,7 +667,7 @@ const myWarehouses = ref([]);
 const allUsers = ref([]);
 const allDeliverers = ref([]);
 
-const dat = ref("datalotin");
+const dat = ref(localStorage.getItem('til'));
 
 function formatDate(dateStr) {
   if (!dateStr) return 'Belgilanmagan'
