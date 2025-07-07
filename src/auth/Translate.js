@@ -2,7 +2,7 @@ const translitMap = {
     // Maxsus harf juftliklari (2 harfli kombinatsiyalar)
     "sh": "ш", "Sh": "Ш", "SH": "Ш",
     "ch": "ч", "Ch": "Ч", "CH": "Ч",
-    "yo": "ё", "Yo": "Ё", "YO": "Ё",
+    "yo": "ё", "Yo": "Ё", "YO": "Ё","yo'": "ё", "Yo'": "Ё", "YO'": "Ё","yoʻ": "ё", "Yoʻ": "Ё", "YOʻ": "Ё",
     "yu": "ю", "Yu": "Ю", "YU": "Ю",
     "ya": "я", "Ya": "Я", "YA": "Я",
     "ye": "е", "Ye": "Е", "YE": "Е",
@@ -14,7 +14,7 @@ const translitMap = {
     "f": "ф", "g": "г", "h": "ҳ",
     "i": "и", "j": "ж", "k": "к", "l": "л", "m": "м", "n": "н", "o": "о",
     "p": "п", "q": "қ", "r": "р", "s": "с", "t": "т", "u": "у", "v": "в",
-    "x": "х", "y": "й", "z": "з", "'": "ъ",
+    "x": "х", "y": "й", "z": "з", "'": "ъ","ʻ": "ъ",
 
     // Bir harfli katta harflar
     // "E": "E", <-- BU YERNI HAM O‘CHIRAMIZ
