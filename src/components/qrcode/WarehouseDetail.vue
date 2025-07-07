@@ -993,7 +993,7 @@ const deleteWarehouseAction = async () => {
   try {
     await axios.delete(`${URL}/warehouse/${warehouse.value.id}`);
     closeDeleteModal();
-    router.push(-1);
+    router.push('/category');
   } catch (err) {
     error.value = err.response?.data?.message || 'Mahsulotni o\'chirishda xatolik yuz berdi';
     console.error('Delete error:', err);
