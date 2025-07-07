@@ -275,31 +275,7 @@ const getData = async () => {
     isLoading.value = false;
   }
 };
-const addbonuses = async (item) => {
-let summa = ref(item.clientFile.ClientPayment[0].TotalSum)
-let paymentID = ref(item.clientFile.ClientPayment[0].id)
-let count = 0
-  arr.value = [...new Set(item.LawyerTaskHistory.map(el => el.lawyerId))];
-  const res = await axios.post(`${URL}/deliverer/workdayIds`, {
-    userIds: arr.value
-  })
-  for (let [key, value] of Object.entries(res.data)) {
-    const res = await axios.post(URL + "/bonus", {
-      userId: parseInt(key),
-      workDayId: parseInt(value),
-      amount: parseFloat(sum3.value),
-      description: item.name,
-    });
-    count++
-  }
-  const response = await axios.put(`${URL}/yurist-tasks/${item.id}`, {
-    btnStatus: true
-  })
 
-    const resp = await axios.put(`${URL}/client-pay/${paymentID.value}`, {
-    netProfit: +summa.value - (+sum3.value * +count)
-  })
-}
 
 const sortes = (item) => {
   const unique = new Map();
@@ -638,6 +614,37 @@ const getTimelineSteps = (history) => {
 const toggleExpand = (id) => {
   expandedDocId.value = expandedDocId.value === id ? null : id;
 };
+
+const addbonuses = async (item) => {
+let summa = ref(item.clientFile.ClientPayment[0].TotalSum)
+let paymentID = ref(item.clientFile.ClientPayment[0].id)
+let count = 0
+  arr.value = [...new Set(item.LawyerTaskHistory.map(el => el.lawyerId))];
+  const res = await axios.post(`${URL}/deliverer/workdayIds`, {
+    userIds: arr.value
+  })
+  for (let [key, value] of Object.entries(res.data)) {
+    const res = await axios.post(URL + "/bonus", {
+      userId: parseInt(key),
+      workDayId: parseInt(value),
+      amount: parseFloat(sum3.value),
+      description: item.name,
+    });
+    count++
+  }
+  const response = await axios.put(`${URL}/yurist-tasks/${item.id}`, {
+    btnStatus: true
+  })
+
+    const resp = await axios.put(`${URL}/client-pay/${paymentID.value}`, {
+    netProfit: +summa.value - (+sum3.value * +count)
+  })
+  // .
+bunus.value = false
+getData()
+getAdmin()
+fetchRecords()
+}
 
 onMounted(() => {
   getData();
