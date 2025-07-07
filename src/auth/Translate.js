@@ -2,7 +2,7 @@ const translitMap = {
     // Maxsus harf juftliklari (2 harfli kombinatsiyalar)
     "sh": "ш", "Sh": "Ш", "SH": "Ш",
     "ch": "ч", "Ch": "Ч", "CH": "Ч",
-    "yo": "ё", "Yo": "Ё", "YO": "Ё","yo'": "ё", "Yo'": "Ё", "YO'": "Ё","yoʻ": "ё", "Yoʻ": "Ё", "YOʻ": "Ё",
+    "yo'": "ё", "Yo'": "Ё", "YO'": "Ё","yo'": "ё", "Yoʻ": "Ё", "YOʻ": "Ё",
     "yu": "ю", "Yu": "Ю", "YU": "Ю",
     "ya": "я", "Ya": "Я", "YA": "Я",
     "ye": "е", "Ye": "Е", "YE": "Е",
