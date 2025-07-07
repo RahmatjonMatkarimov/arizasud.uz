@@ -739,6 +739,7 @@ select:focus {
             <input
               @change="handleImageUpload"
               type="file"
+               accept=".doc,.docx,.pdf"
               class="outline-none p-2 rounded-md transition-all duration-200"
             />
           </div>
@@ -747,6 +748,7 @@ select:focus {
             <input
               @change="handleCkekUpload"
               type="file"
+               accept=".doc,.docx,.pdf"
               class="outline-none p-2 rounded-md transition-all duration-200"
             />
           </div>
@@ -812,6 +814,7 @@ select:focus {
         <input
           @change="handleCkekUpload"
           type="file"
+           accept=".doc,.docx,.pdf"
           class="outline-none p-2 rounded-md transition-all duration-200"
         />
         <div class="flex gap-2">
