@@ -1,49 +1,51 @@
 <template>
-  <div @click="closeModal"  class="fixed inset-0 bg-black bg-opacity-70 flex justify-end z-40">
-    <div @click.stop class="dark:bg-gray-800 bg-gray-200 p-5 w-[500px] max-h-screen overflow-y-auto animate-slide-in-right">
+  <div @click="closeModal" class="fixed inset-0 bg-black bg-opacity-70 flex justify-end z-40">
+    <div @click.stop
+      class="dark:bg-gray-800 bg-gray-200 p-5 w-[500px] max-h-screen overflow-y-auto animate-slide-in-right">
       <div class="flex justify-between items-center mb-4">
-        <h2 class="text-gray-200 animate-fade-in">{{ dat === 'datakril' ? translateText('Bildirishnomalar') : 'Bildirishnomalar' }}</h2>
+        <h2 class="text-gray-200 animate-fade-in">{{ dat === 'datakril' ? translateText('Bildirishnomalar') :
+          'Bildirishnomalar' }}</h2>
         <!-- Notification Type Selector -->
         <div class="flex items-center animate-fade-in">
-          <select 
-            id="notification-type" 
-            v-model="selectedNotificationType" 
-            class="ml-2 p-1 rounded border border-gray-600 dark:bg-gray-600 dark:text-white transition-all duration-300 hover:border-blue-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400"
-          >
-            <option value="socket">{{ dat === 'datakril' ? translateText('Tizim ichida muhim xabarlar') : 'Tizim ichida muhim xabarlar' }}</option>
-            <option v-if="axiosNotifications.length" value="axios">{{ dat === 'datakril' ? translateText('Bugalteriya bildirishnomalar') : 'Bugalteriya bildirishnomalar' }}</option>
+          <select id="notification-type" v-model="selectedNotificationType"
+            class="ml-2 p-1 rounded border border-gray-600 dark:bg-gray-600 dark:text-white transition-all duration-300 hover:border-blue-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <option value="socket">{{ dat === 'datakril' ?
+             translateText('Tizim ichida muhim xabarlar') : 
+            'Tizim ichida muhim xabarlar' }}</option>
+            <option v-if="axiosNotifications.length" value="axios">{{ dat === 'datakril' ? 
+              translateText('Bugalteriya bildirishnomalar') : 
+              'Bugalteriya bildirishnomalar' }}</option>
           </select>
         </div>
-        <button 
-          class="text-4xl -mt-1 dark:text-gray-400 hover:text-gray-300 transition-all duration-300 hover:scale-110 hover:rotate-90 animate-fade-in" 
-          @click="closeModal"
-        >
+        <button
+          class="text-4xl -mt-1 dark:text-gray-400 hover:text-gray-300 transition-all duration-300 hover:scale-110 hover:rotate-90 animate-fade-in"
+          @click="closeModal">
           ×
         </button>
       </div>
 
       <!-- Send Notification -->
-      <div v-if="selectedNotificationType === 'socket'" class="p-4 my-4 rounded dark:bg-gray-700 dark:text-white border-2 border-gray-700 animate-fade-in-up">
-        <h2 class="text-lg font-semibold mb-3">{{ dat === 'datakril' ? translateText('Bildirishnoma yuborish') : 'Bildirishnoma yuborish' }}</h2>
-        <input 
-          v-model="notificationMessage" 
-          type="text" 
-          :placeholder="dat === 'datakril' ? translateText('Bildirishnoma xabari') : 'Bildirishnoma xabari'" 
-          class="border border-gray-600 dark:bg-gray-900 text-white dark:placeholder:text-white p-2 mr-2 rounded w-full placeholder-gray-400 transition-all duration-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-gray-800" 
-        />
-        <button 
-          @click="sendNotification" 
+      <div v-if="selectedNotificationType === 'socket'"
+        class="p-4 my-4 rounded dark:bg-gray-700 dark:text-white border-2 border-gray-700 animate-fade-in-up">
+        <h2 class="text-lg font-semibold mb-3">{{ dat === 'datakril' ? translateText('Bildirishnoma yuborish') :
+          'Bildirishnoma yuborish' }}</h2>
+        <input v-model="notificationMessage" type="text"
+          :placeholder="dat === 'datakril' ? translateText('Bildirishnoma xabari') : 'Bildirishnoma xabari'"
+          class="border border-gray-600 dark:bg-gray-900 text-white dark:placeholder:text-white p-2 mr-2 rounded w-full placeholder-gray-400 transition-all duration-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-gray-800" />
+        <button @click="sendNotification"
           class="bg-blue-500 text-white px-4 py-2 rounded mt-2 hover:bg-blue-600 transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95 flex items-center justify-center"
-          :class="{ 'animate-pulse': isSending }"
-          :disabled="isSending"
-        >
-          <span v-if="!isSending">{{ dat === 'datakril' ? translateText('Hammaga yuborish') : 'Hammaga yuborish' }}</span>
+          :class="{ 'animate-pulse': isSending }" :disabled="isSending">
+          <span v-if="!isSending">{{ dat === 'datakril' ? translateText('Hammaga yuborish') : 'Hammaga yuborish'
+            }}</span>
           <span v-else class="flex items-center">
-            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+              viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              <path class="opacity-75" fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+              </path>
             </svg>
-            Yuborilmoqda...
+            {{ dat === 'datakril' ? translateText(`Yuborilmoqda...`) : `Yuborilmoqda...` }}
           </span>
         </button>
       </div>
@@ -52,46 +54,39 @@
       <div>
         <div v-if="selectedNotificationType === 'socket'">
           <transition-group name="notification" tag="div">
-            <div 
-              v-for="(notification, index) in socketNotifications" 
-              :key="notification.id" 
-            class="p-4 mb-2.5 border dark:text-gray-200 border-gray-600 border-l-4 border-l-blue-400 dark:bg-gray-700 text-gray-700 relative notification-item dark:hover:bg-gray-600 transition-all duration-300 hover:shadow-lg hover:scale-102"
-              :style="{ animationDelay: `${index * 100}ms` }"
-            >
-              <p class="font-medium my-1 ">{{ dat === 'datakril' ? translateText(notification.message) : notification.message }}</p>
+            <div v-for="(notification, index) in socketNotifications" :key="notification.id"
+              class="p-4 mb-2.5 border dark:text-gray-200 border-gray-600 border-l-4 border-l-blue-400 dark:bg-gray-700 text-gray-700 relative notification-item dark:hover:bg-gray-600 transition-all duration-300 hover:shadow-lg hover:scale-102"
+              :style="{ animationDelay: `${index * 100}ms` }">
+              <p class="font-medium my-1 ">{{ dat === 'datakril' ? translateText(notification.message) :
+                notification.message }}</p>
               <p class="text-sm">{{ formatDate(notification.sentAt) }}</p>
-              <button 
-                v-if="!notification.isRead" 
-                @click="markAsRead(notification.id, 'socket')" 
-                class="bg-lime-500 text-black px-2 py-1 absolute bottom-2 right-2 rounded hover:bg-lime-600 transition-all duration-300 hover:scale-105 active:scale-95 animate-bounce-subtle"
-              >
+              <button v-if="!notification.isRead" @click="markAsRead(notification.id, 'socket')"
+                class="bg-lime-500 text-black px-2 py-1 absolute bottom-2 right-2 rounded hover:bg-lime-600 transition-all duration-300 hover:scale-105 active:scale-95 animate-bounce-subtle">
                 {{ dat === 'datakril' ? translateText('Tushundim') : 'Tushundim' }}
               </button>
             </div>
           </transition-group>
+          <div v-if="socketNotifications.length == 0" class="text-center text-gray-400 animate-fade-in">
+            {{ dat === 'datakril' ? translateText('Hozircha bildirishnimalar yoq') : 'Hozircha bildirishnimalar yoq' }}
+          </div>
         </div>
         <div v-else>
           <transition-group name="notification" tag="div">
-            <div 
-              v-for="(notification, index) in axiosNotifications" 
-              :key="notification.id" 
+            <div v-for="(notification, index) in axiosNotifications" :key="notification.id"
               class="p-4 mb-2.5 border border-l-4 border-l-blue-400 dark:text-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 border-gray-600 relative notification-item transition-all duration-300 hover:shadow-lg hover:scale-102"
-              :style="{ animationDelay: `${index * 100}ms` }"
-            >
-              <p class="font-medium my-1">{{ dat === 'datakril' ? translateText(notification.message) : notification.message }}</p>
+              :style="{ animationDelay: `${index * 100}ms` }">
+              <p class="font-medium my-1">{{ dat === 'datakril' ? translateText(notification.message) :
+                notification.message }}</p>
               <p class=" text-sm">{{ formatDate(notification.createdAt) }}</p>
-              <button 
-                v-if="!notification.isRead" 
-                @click="markAsRead(notification.id, 'axios')" 
-                class="bg-lime-500 text-black px-2 py-1 absolute bottom-2 right-2 rounded hover:bg-lime-600 transition-all duration-300 hover:scale-105 active:scale-95 animate-bounce-subtle"
-              >
+              <button v-if="!notification.isRead" @click="markAsRead(notification.id, 'axios')"
+                class="bg-lime-500 text-black px-2 py-1 absolute bottom-2 right-2 rounded hover:bg-lime-600 transition-all duration-300 hover:scale-105 active:scale-95 animate-bounce-subtle">
                 {{ dat === 'datakril' ? translateText('Tushundim') : 'Tushundim' }}
               </button>
             </div>
           </transition-group>
-        </div>
-        <div v-if="selectedNotifications.length === 0" class="text-center text-gray-400 animate-fade-in">
-          {{ dat === 'datakril' ? translateText('Hozircha bildirishnimalar yoq') : 'Hozircha bildirishnimalar yoq' }}
+          <div v-if="axiosNotifications.length == 0" class="text-center text-gray-400 animate-fade-in">
+            {{ dat === 'datakril' ? translateText('Hozircha bildirishnimalar yoq') : 'Hozircha bildirishnimalar yoq' }}
+          </div>
         </div>
       </div>
     </div>
@@ -112,7 +107,7 @@ const socketNotifications = ref([]);
 const axiosNotifications = ref([]);
 const unreadCount = ref(0);
 const notificationMessage = ref('');
-const selectedNotificationType = ref('socket'); // Default to socket notifications
+const selectedNotificationType = ref('socket');
 const isSending = ref(false);
 const isLoading = inject('isLoading')
 
@@ -205,7 +200,7 @@ const fetchAxiosNotifications = async () => {
     }));
   } catch (error) {
     console.error('Error fetching axios notifications:', error);
-  } finally{
+  } finally {
     isLoading.value = false
   }
 };
@@ -219,7 +214,7 @@ const fetchUnreadCount = async () => {
     unreadCount.value = response.data;
   } catch (error) {
     console.error('Error fetching unread count:', error);
-  } finally{
+  } finally {
     isLoading.value = false
   }
 };
@@ -238,7 +233,7 @@ const markAsRead = async (notificationId, type) => {
     await fetchUnreadCount();
   } catch (error) {
     console.error('Error marking notification as read:', error);
-  } finally{
+  } finally {
     isLoading.value = false
   }
 };
@@ -282,6 +277,7 @@ onUnmounted(() => {
     transform: translateX(100%);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
@@ -297,6 +293,7 @@ onUnmounted(() => {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -307,6 +304,7 @@ onUnmounted(() => {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -323,12 +321,19 @@ onUnmounted(() => {
 
 /* Subtle bounce animation for buttons */
 @keyframes bounceSubtle {
-  0%, 20%, 50%, 80%, 100% {
+
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
     transform: translateY(0);
   }
+
   40% {
     transform: translateY(-3px);
   }
+
   60% {
     transform: translateY(-2px);
   }
@@ -410,6 +415,7 @@ onUnmounted(() => {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
