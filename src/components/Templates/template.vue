@@ -17,7 +17,7 @@
               'text-slate-300 hover:text-emerald-400',
             ]" />
           </div>
-          <div class="absolute w-64 -left-24 top-14 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
+          <div class="absolute w-64 -left-24 -bottom-[999999999999999px] group-hover:top-14 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
             <div class="bg-white text-gray-800 text-center py-1 px-2 rounded-md shadow-md">
               {{ dat === 'datakril' ? translateText('Kundalik bajarilgan ishlar') : 'Kundalik bajarilgan ishlar' }}
             </div>
@@ -37,7 +37,7 @@
             class="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1 rounded-full">
             {{ messageCount }}
           </span>
-          <div class="absolute w-32 -left-12 top-14 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div class="absolute w-32 -left-12 -bottom-[999999999999999px] group-hover:top-14 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <div class="bg-white text-gray-800 text-center py-1 px-2 rounded-md shadow-md">
               {{ dat === 'datakril' ? translateText('Xabarlar') : 'Xabarlar' }}
             </div>
@@ -54,7 +54,7 @@
             {{ unreadCount }}
           </span>
           <div
-            class="absolute w-32 -left-12 top-12 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            class="absolute w-32 -left-12 -bottom-[999999999999999px] group-hover:top-14 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <div class="bg-white text-gray-800 text-center py-1 px-2 rounded-md shadow-md">
               {{ dat === 'datakril' ? translateText('Bildirishnomalar') : 'Bildirishnomalar' }}
             </div>

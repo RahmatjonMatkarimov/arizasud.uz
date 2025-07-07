@@ -51,7 +51,7 @@
             class="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full min-w-[18px] text-center shadow-lg">
             {{ messageCount }}
           </span>
-          <div class="absolute w-32 -left-12 top-14 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-30">
+          <div class="absolute -left-6 -bottom-[999999999999999px] group-hover:top-14 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-30">
             <div :class="[
               'text-center py-2 px-3 rounded-lg shadow-xl border',
               // Dark mode
@@ -92,7 +92,7 @@
             class="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full min-w-[18px] text-center shadow-lg">
             {{ unreadCount }}
           </span>
-          <div class="absolute w-36 -left-14 top-14 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-30">
+          <div class="absolute -left-16 -bottom-[999999999999999px] group-hover:top-14 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-30">
             <div :class="[
               'text-center py-2 px-3 rounded-lg shadow-xl border',
               // Dark mode
@@ -128,7 +128,7 @@
               'text-gray-600 hover:text-blue-600'
             ]" />
           </div>
-          <div class="absolute w-64 -left-24 top-14 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-30">
+          <div class="absolute w-64 -left-24 -bottom-[999999999999999px] group-hover:top-14 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 -z-50">
             <div :class="[
               'text-center py-2 px-3 rounded-lg shadow-xl border',
               // Dark mode
