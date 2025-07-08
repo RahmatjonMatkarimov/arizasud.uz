@@ -216,11 +216,7 @@ const fetchAxiosNotifications = async () => {
   try {
     const userId = parseInt(localStorage.getItem('id')) || 1;
     const response = await axios.get(`${URL}/accauntant-notification/user/${userId}`);
-    axiosNotifications.value = response.data.map((n) => ({
-      ...n,
-      sentAt: n.createdAt || n.sentAt,
-      isRead: n.read || false,
-    }));
+    axiosNotifications.value = response.data
   } catch (error) {
     console.error('Error fetching axios notifications:', error);
   } finally {
