@@ -252,7 +252,8 @@ const fetchFiles = async () => {
   isLoading.value = true;
   try {
     const response = await axios.get(`${API_URL}`);
-    if (data.value === "bigAdmin") {
+    const role = ref(localStorage.getItem('role'))
+    if (role.value === "bigAdmin") {
       files.value = response.data
         .filter((item) => item.status == "signaturePending")
         .filter((item) => item.status !== "archive");
