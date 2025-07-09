@@ -41,6 +41,7 @@ const routes = [
       { path: '/salaryChange', component: () => import('@/components/Salery/Salerychange.vue') },
       { path: '/salary', component: () => import('@/components/Salery/index.vue') },
       { path: '/invoices', component: () => import('@/views/Invoices.vue') },
+      { path: '/reminder', component: () => import('@/components/reminders/reminders.vue') },
       { path: '/reports', component: () => import('@/views/Reports.vue') },
       { path: '/link', component: () => import('@/components/dashboard/links.vue') },
       { path: '/profile', component: () => import('@/views/Profile.vue') },

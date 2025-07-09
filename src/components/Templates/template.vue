@@ -7,7 +7,7 @@
         </div>
       </div>
       <div class="flex items-center space-x-4">
-        <div @click="router.push('/reminders')" class="relative cursor-pointer group">
+        <div @click="router.push('/reminder')" class="relative cursor-pointer group">
           <div :class="[
             'p-2 rounded-xl transition-all duration-300 hover:scale-110',
           ]">
