@@ -20,7 +20,7 @@
               <div class="flex flex-col w-full gap-1">
                 <img
                   :src="URL + '/upload/' + item.img"
-                  class="size-[200px] border-2"
+                  class="size-[200px] object-cover border-2"
                   alt="{{ dat === 'datakril' ? translateText('Ishchi rasmi') : 'Ishchi rasmi' }}"
                 />
                 <h1 class="text-md">
