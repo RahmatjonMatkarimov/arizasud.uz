@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
+  <div class="bg-gray-200 dark:bg-gray-800 min-h-screen flex items-center justify-center">
     <div class="flex justify-center p-6">
       <div class="p-4 rounded-lg w-full flex flex-col items-end transition-all duration-300"
         :class="{ 'w-screen h-screen max-w-none rounded-none': isFullScreen }">
