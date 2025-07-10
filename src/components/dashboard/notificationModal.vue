@@ -4,16 +4,6 @@
     <div @click.stop class="dark:bg-gray-800 bg-gray-200 p-5 w-[500px] max-h-screen overflow-y-auto animate-slide-in-right">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-gray-200 animate-fade-in">{{ dat === 'datakril' ? translateText('Bildirishnomalar') : 'Bildirishnomalar' }}</h2>
-        <div class="flex items-center animate-fade-in">
-          <select 
-            id="notification-type" 
-            v-model="selectedNotificationType" 
-            class="ml-2 p-1 rounded border border-gray-600 dark:bg-gray-600 dark:text-white transition-all duration-300 hover:border-blue-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400"
-          >
-            <option value="socket">{{ dat === 'datakril' ? translateText('Tizim ichida muhim xabarlar') : 'Tizim ichida muhim xabarlar' }}</option>
-            <option v-if="axiosNotifications.length" value="axios">{{ dat === 'datakril' ? translateText('Bugalteriya bildirishnomalar') : 'Bugalteriya bildirishnomalar' }}</option>
-          </select>
-        </div>
         <button 
           class="text-4xl -mt-1 dark:text-gray-400 hover:text-gray-300 transition-all duration-300 hover:scale-110 hover:rotate-90 animate-fade-in" 
           @click="closeModal"

@@ -519,11 +519,6 @@ const toggleCheckboxVisibility = () => {
 
 // Initialize dark mode
 onMounted(() => {
-  const savedMode = localStorage.getItem('darkMode');
-  if (savedMode === 'true' || (!savedMode && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-    isDark.value = true;
-    document.documentElement.classList.add('dark');
-  }
   fetchQRCodes(); // Fetch QR codes on mount
   fetchOtherFiles(); // Fetch other files on mount
 });
