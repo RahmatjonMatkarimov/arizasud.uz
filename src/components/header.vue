@@ -1,29 +1,13 @@
 <template>
   <div>
-    <section class="logo-scroller" ref="container">
-      <div class="logo-scroller-content">
-        <div class="logo-scroller-items" role="marquee">
-          <div class="logo-scroller-row" ref="logoRow">
-            <div class="logo-scroller-item">
-              <span>Tizim hozircha sinov tariqasida ishga tushirilgan bo‘lib, hozircha to‘liq fa'oliyat
-                ko‘rsatmayapti.</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
     <!-- Footer Section -->
     <div
-      class="flex mt-10 md:mt-12 justify-between text-white items-center px-3 w-full h-[70px] md:h-[150px] lg:h-[200px] opacity-[88%] relative bg-[#0033FF]">
+      class="flex justify-between text-white items-center px-3 w-full h-[70px] md:h-[150px] lg:h-[200px] opacity-[88%] relative bg-[#0033FF]">
       <div id="particles-js" class="absolute top-0 left-0 w-full h-full"></div>
       <div class="flex items-center">
         <div @click="router.push('/')" class="flex justify-center items-center relative sm:ml-2 sm:mx-10 z-10">
           <img src="/logo1.png" class="w-[170px] md:w-[330px] lg:w-[400px]" alt="Logo" />
         </div>
-        <b
-          class="lg:text-[18px] hidden lg:block 2xl:text-[23px] text-[10px] w-[80%] md:w-[60%] lg:w-[35%] z-0 uppercase">
-          {{ $t('header') }}
-        </b>
       </div>
       <div class="flex mr-2 flex-col lg:mt-10 items-end">
         <div>
@@ -57,10 +41,18 @@
         {{ $t('kabinetga_kirish') }}
       </button>
     </div>
-    <button @click="router.push('/CommonerLogin')"
-      class="absolute md:hidden top-1 text-[12px] lg:text-[16px] right-1 lg:right-4 lg:top-4 bg-[#1c9c32] px-6 py-2 rounded-2xl z-50 hover:bg-[#268a37] duration-500">
-      {{ $t('kabinetga_kirish') }}
-    </button>
+    <section class="logo-scroller" ref="container">
+      <div class="logo-scroller-content">
+        <div class="logo-scroller-items" role="marquee">
+          <div class="logo-scroller-row" ref="logoRow">
+            <div class="logo-scroller-item">
+              <span>{{ translateText(`Tizim hozircha sinov tariqasida ishga tushirilgan bo‘lib, hozircha to‘liq fa'oliyat
+                ko‘rsatmayapti.`) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -71,6 +63,7 @@ import { onMounted, onUnmounted, provide, ref, nextTick } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import gsap from "gsap";
+import translateText from "@/auth/Translate copy";
 
 const router = useRouter();
 const { locale } = useI18n();
@@ -164,6 +157,7 @@ const changeLanguage = (lang) => {
   locale.value = lang;
   localStorage.setItem("til", data);
   searchItems();
+  window.location.reload()
 };
 
 const getData = async () => {
@@ -240,7 +234,7 @@ provide("filteredData", filteredData);
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 10;
+  z-index: -10;
 }
 
 b {
@@ -251,7 +245,6 @@ b {
 .logo-scroller {
   position: absolute;
   width: 100%;
-  top: 0;
   margin: 0 auto;
 }
 
