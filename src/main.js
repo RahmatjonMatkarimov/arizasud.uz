@@ -35,12 +35,19 @@ library.add(
   faBell
 );
 
-// i18n
+function getLocaleFromStorage() {
+  const key = localStorage.getItem('til');
+  return key === 'datalotin' ? 'uzb'
+       : key === 'datakril' ? 'ўзб'
+       : 'uzb';
+}
 const i18n = createI18n({
     legacy: false,
-    locale: 'uzb',
+    locale: getLocaleFromStorage(),
+    fallbackLocale: 'uzb',
     messages: { uzb, ўзб },
 });
+
 
 // IP location tekshirish
 const checkLocation = async () => {
@@ -79,6 +86,7 @@ app.config.errorHandler = (err) => {
     console.error("Xatolik:", err);
     app.provide("globalError", 500); 
 };
+app.component('iconify-icon', Icon);
 app.component('IconifyIcon', Icon);
 // Joylashuvni tekshirib bo‘lgandan keyin mount qilish
 checkLocation().then(() => {

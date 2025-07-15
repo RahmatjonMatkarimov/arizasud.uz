@@ -95,7 +95,7 @@
     <NotificationModal v-if="showModal" @close="closeNotificationModal" />
 
     <!-- Main Layout -->
-    <div class="flex min-h-screen bg-gray-100">
+    <div class="flex min-h-screen">
       <Aside class="fixed left-0 top-0 h-full w-16 transition-all duration-500 ease-in-out z-10" />
       <main :class="['flex-1 mt-[90px] transition-all ml-16 duration-500 ease-in-out']">
         <router-view />

@@ -1,37 +1,39 @@
 <template>
-  <div class="w-full flex flex-col px-[15px] justify-center items-center mt-10">
-    <div class="rounded-2xl w-full relative p-10 mb-16 overflow-hidden bg-gray-200">
+  <div class="w-full flex flex-col px-2 sm:px-4 justify-center items-center mt-6 sm:mt-10">
+    <div class="rounded-2xl w-full relative p-3 sm:p-6 md:p-10 mb-10 sm:mb-16 overflow-hidden bg-gray-200 dark:bg-gray-800">
       <div class="flex relative justify-center">
         <button @click="func()" class="bg-lime-500 md:text-[20px] rounded-lg py-2 absolute top-0 right-2 px-4">barchasini ko'rish</button>
-        <b class="my-10 block text-center text-[30px] sm:[35px] md:text-[40px] uppercase text-[#223B9E]">
+        <b class="my-6 sm:my-10 block text-center text-xl sm:text-2xl md:text-3xl lg:text-4xl uppercase text-[#223B9E] dark:text-blue-300">
           {{ $t('hamkor') }}
         </b>
       </div>
 
-      <div class="flex justify-center flex-wrap gap-4 mx-auto">
-        <div v-if="!asd" v-for="item in data" :key="item.id"
-          class="bg-white border-[#223B9E] flex flex-col justify-start items-center gap-2 border-[5px] break-words w-72 min-h-full rounded-xl relative hover:-translate-y-3 duration-500 hover:shadow-[0px_0px_50px_5px_rgba(255,255,255,1)] p-2">
-          <div class="flex justify-center items-center p-2 h-[160px]">
-            <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="size-fit w-[150px]" />
+      <!-- Flex layout for all cards (not carousel) -->
+      <div class="flex justify-center flex-wrap gap-3 sm:gap-4 md:gap-6 mx-auto" v-if="!asd">
+        <div v-for="item in data" :key="item.id"
+          class="bg-white dark:bg-gray-700 border-2 sm:border-3 md:border-4 border-[#223B9E] dark:border-blue-400 flex flex-col justify-start items-center gap-2 border-solid break-words w-72 min-h-full rounded-xl relative hover:-translate-y-2 duration-300 hover:shadow-lg p-2 sm:p-3 md:p-4 cursor-pointer transition-all">
+          <div class="flex justify-center items-center p-2 h-[120px] sm:h-[160px]">
+            <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="object-cover rounded-md w-[90px] sm:w-[120px] md:w-[150px] h-[90px] sm:h-[120px] md:h-[150px]" />
           </div>
-          <h3 class="text-lg mb-5 font-medium text-center text-black">{{ item.translatedName || item.name }}</h3>
+          <h3 class="text-base sm:text-lg md:text-xl mb-3 sm:mb-5 font-bold text-center text-black dark:text-white capitalize leading-tight px-1">{{ item.translatedName || item.name }}</h3>
           <div v-if="item.isActive"
-            class="bg-blue-200 flex justify-center items-end animate-pulse rounded-[5px] inset-0 w-full absolute h-full">
-            <b class="text-black font-bold text-[20px]">Tez orada</b>
+            class="bg-blue-200 dark:bg-blue-800 flex justify-center items-end animate-pulse rounded-[5px] inset-0 w-full absolute h-full">
+            <b class="text-black dark:text-white font-bold text-sm sm:text-base md:text-lg lg:text-[20px] px-2 text-center">Tez orada</b>
           </div>
         </div>
       </div>
-      <Carousel v-if="asd" :items-to-show="4" :autoplay="1500" :wrap-around="true" :breakpoints="breakpoints" class="p-[20px] w-full">
-        <Slide v-for="item in currentData" :key="item.id" class="">
+      <!-- Carousel layout for all cards -->
+      <Carousel v-if="asd" :items-to-show="4" :autoplay="1500" :wrap-around="true" :breakpoints="breakpoints" class="p-2 sm:p-4 md:p-[20px] w-full">
+        <Slide v-for="item in currentData" :key="item.id">
           <div
-            class="bg-white border-[#223B9E] flex flex-col justify-start items-center gap-2 border-[5px] break-words w-72 min-h-full rounded-xl relative hover:-translate-y-3 duration-500 hover:shadow-[0px_0px_50px_5px_rgba(255,255,255,1)] p-2 mx-2">
-            <div class="flex justify-center items-center p-2 h-[160px]">
-              <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="w-[150px]" />
+            class="bg-white dark:bg-gray-700 border-2 sm:border-3 md:border-4 border-[#223B9E] dark:border-blue-400 flex flex-col justify-start items-center gap-2 border-solid break-words w-[400px] min-h-full rounded-xl relative hover:-translate-y-2 duration-300 hover:shadow-lg p-2 sm:p-3 md:p-4 cursor-pointer transition-all mx-2">
+            <div class="flex justify-center items-center p-2 h-[120px] sm:h-[160px]">
+              <img v-if="item.img" :src="getImageUrl(item.img)" alt="Image" class="object-cover rounded-md w-[90px] sm:w-[120px] md:w-[150px] h-[90px] sm:h-[120px] md:h-[150px]" />
             </div>
-            <h3 class="text-lg mb-5 font-medium text-center text-black">{{ item.translatedName || item.name }}</h3>
+            <h3 class="text-base sm:text-lg md:text-xl mb-3 sm:mb-5 font-bold text-center text-black dark:text-white capitalize leading-tight px-1">{{ item.translatedName || item.name }}</h3>
             <div v-if="item.isActive"
-              class="bg-blue-200 flex justify-center items-end animate-pulse rounded-[5px] inset-0 w-full absolute h-full">
-              <b class="text-black font-bold text-[20px]">Tez orada</b>
+              class="bg-blue-200 dark:bg-blue-800 flex justify-center items-end animate-pulse rounded-[5px] inset-0 w-full absolute h-full">
+              <b class="text-black dark:text-white font-bold text-sm sm:text-base md:text-lg lg:text-[20px] px-2 text-center">Tez orada</b>
             </div>
           </div>
         </Slide>

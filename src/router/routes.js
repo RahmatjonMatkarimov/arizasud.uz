@@ -118,6 +118,8 @@ const routes = [
       { path: '/warehousesHouse', component: () => import('@/components/qrcode/warehouseHouse.vue') },
       { path: '/fileconvert', component: () => import('@/views/fileconvert.vue') },
       { path: '/chiefAccauntant', component: () => import('@/components/admins/chiefAccauntant.vue') },
+      { path: '/JobsAdmin', component: () => import('@/components/main/job/admin.vue') },
+      { path: '/questionsAdmin', component: () => import('@/components/main/questions/admin.vue') },
       {
         path: '/required-items-section',
         name: 'RequiredItemsSectionForm',

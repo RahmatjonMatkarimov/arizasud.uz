@@ -9,24 +9,25 @@
       // Light mode
       'bg-gradient-to-r from-white via-gray-50 to-white border-b border-gray-200/80 backdrop-blur-sm'
     ]">
-        <!-- Search Box -->
-        <div class="relative hidden md:flex items-center">
-          <Icon icon="line-md:search" width="20" height="20" :class="[
-            'absolute left-3',
-            // Dark mode
-            'dark:text-slate-400',
-            // Light mode
-            'text-gray-400'
-          ]" />
-          <input type="search" v-model="searchStore.query" name="search" autocomplete="off" :placeholder="$t('qidiruv')" :class="[
+      <!-- Search Box -->
+      <div class="relative hidden md:flex items-center">
+        <Icon icon="line-md:search" width="20" height="20" :class="[
+          'absolute left-3',
+          // Dark mode
+          'dark:text-slate-400',
+          // Light mode
+          'text-gray-400'
+        ]" />
+        <input type="search" v-model="searchStore.query" name="search" autocomplete="off" :placeholder="$t('qidiruv')"
+          :class="[
             'pl-10 pr-4 py-2.5 border rounded-xl w-48 md:w-64 transition-all duration-300',
             // Dark mode
             'dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200 dark:focus:border-emerald-400 dark:focus:bg-slate-700 dark:placeholder-slate-400 dark:hover:border-slate-500',
             // Light mode
             'border-gray-300 bg-white/80 text-gray-700 focus:border-blue-400 focus:bg-white placeholder-gray-500 hover:border-gray-400 shadow-sm focus:shadow-md '
           ]" />
-        </div>
-      
+      </div>
+
       <div class="flex items-center space-x-6">
         <Dark />
 
@@ -51,7 +52,8 @@
             class="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full min-w-[18px] text-center shadow-lg">
             {{ messageCount }}
           </span>
-          <div class="absolute -left-6 -bottom-[999999999999999px] group-hover:top-14 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-30">
+          <div
+            class="absolute -left-6 -bottom-[999999999999999px] group-hover:top-14 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-30">
             <div :class="[
               'text-center py-2 px-3 rounded-lg shadow-xl border',
               // Dark mode
@@ -70,7 +72,7 @@
             ]"></div>
           </div>
         </div>
-        
+
         <!-- Notifications -->
         <div @click="showNotificationModal" class="relative cursor-pointer group">
           <div :class="[
@@ -92,7 +94,8 @@
             class="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full min-w-[18px] text-center shadow-lg">
             {{ unreadCount }}
           </span>
-          <div class="absolute -left-16 -bottom-[999999999999999px] group-hover:top-14 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-30">
+          <div
+            class="absolute -left-16 -bottom-[999999999999999px] group-hover:top-14 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-30">
             <div :class="[
               'text-center py-2 px-3 rounded-lg shadow-xl border',
               // Dark mode
@@ -111,7 +114,7 @@
             ]"></div>
           </div>
         </div>
-        
+
         <div @click="router.push('/reminders')" class="relative cursor-pointer group">
           <div :class="[
             'p-2 rounded-xl transition-all duration-300 hover:scale-110',
@@ -128,7 +131,8 @@
               'text-gray-600 hover:text-blue-600'
             ]" />
           </div>
-          <div class="absolute w-64 -left-24 -bottom-[999999999999999px] group-hover:top-14 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 -z-50">
+          <div
+            class="absolute w-64 -left-24 -bottom-[999999999999999px] group-hover:top-14 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 -z-50">
             <div :class="[
               'text-center py-2 px-3 rounded-lg shadow-xl border',
               // Dark mode
@@ -147,7 +151,7 @@
             ]"></div>
           </div>
         </div>
-        
+
         <!-- Language Selector -->
         <div class="relative group">
           <div :class="[
@@ -162,7 +166,7 @@
               // Dark mode
               'dark:text-slate-300 dark:hover:text-emerald-400',
               // Light mode
-              'text-gray-600 hover:text-blue-600'  
+              'text-gray-600 hover:text-blue-600'
             ]" />
             <span :class="[
               'text-sm font-medium',
@@ -181,34 +185,37 @@
             'bg-white border-gray-200',
             { 'scale-y-100 opacity-100': isLanguageDropdownOpen, 'scale-y-0 opacity-0': !isLanguageDropdownOpen }
           ]">
-            <div v-for="(lang, index) in languages" :key="index"
-              @click="changeLanguage(lang.code)" :class="[
-                'px-4 py-3 transition-all duration-200 cursor-pointer border-b last:border-b-0',
-                // Dark mode
-                'dark:text-slate-200 dark:hover:bg-emerald-500/20 dark:hover:text-emerald-300 dark:border-slate-700',
-                // Light mode
-                'text-gray-700 hover:bg-blue-50 hover:text-blue-700 border-gray-100'
-              ]">
+            <div v-for="(lang, index) in languages" :key="index" @click="changeLanguage(lang.code)" :class="[
+              'px-4 py-3 transition-all duration-200 cursor-pointer border-b last:border-b-0',
+              // Dark mode
+              'dark:text-slate-200 dark:hover:bg-emerald-500/20 dark:hover:text-emerald-300 dark:border-slate-700',
+              // Light mode
+              'text-gray-700 hover:bg-blue-50 hover:text-blue-700 border-gray-100'
+            ]">
               {{ lang.label }}
             </div>
           </div>
         </div>
-        
-        <div @click="router.push('/profiles')" class="hover:scale-105 border-l-2 border-gray-600 pl-5 flex justify-end items-center gap-4 transition-transform duration-200">
+
+        <div @click="router.push('/profiles')"
+          class="hover:scale-105 border-l-2 border-gray-600 pl-5 flex justify-end items-center gap-4 transition-transform duration-200">
           <div class="flex flex-col items-end">
-            <h1 class="dark:text-gray-200 text-gray-800">{{ dat === 'datakril' ? translateText(`${userInfoLotin.name} ${userInfoLotin.surname} ${userInfoLotin.dadname}`):`${userInfoLotin.name} ${userInfoLotin.surname} ${userInfoLotin.dadname}` }}</h1>
-            <h1 class="dark:text-gray-200/50 to-gray-800/50">{{ dat === 'datakril' ? translateText(userInfoLotin.lavozimi):userInfoLotin.lavozimi }}</h1>
+            <h1 class="dark:text-gray-200 text-gray-800">{{ dat === 'datakril' ? translateText(`${userInfoLotin.name}
+              ${userInfoLotin.surname} ${userInfoLotin.dadname}`) : `${userInfoLotin.name} ${userInfoLotin.surname}
+              ${userInfoLotin.dadname}` }}</h1>
+            <h1 class="dark:text-gray-200/50 to-gray-800/50">{{ dat === 'datakril' ?
+              translateText(userInfoLotin.lavozimi) : userInfoLotin.lavozimi }}</h1>
           </div>
-        <div :class="[
-          'w-[60px] h-[60px] rounded-full overflow-hidden ring-2 transition-all duration-300',
-          // Dark mode
-          'dark:ring-emerald-400/30 dark:hover:ring-emerald-400/60',
-          // Light mode  
-          'ring-blue-400/40 hover:ring-blue-500/70 shadow-lg hover:shadow-xl'
-        ]">
-          <img :src="getProfileImage(userInfoLotin.img)" alt="Profile" class="w-full h-full object-cover" />
+          <div :class="[
+            'w-[60px] h-[60px] rounded-full overflow-hidden ring-2 transition-all duration-300',
+            // Dark mode
+            'dark:ring-emerald-400/30 dark:hover:ring-emerald-400/60',
+            // Light mode  
+            'ring-blue-400/40 hover:ring-blue-500/70 shadow-lg hover:shadow-xl'
+          ]">
+            <img :src="getProfileImage(userInfoLotin.img)" alt="Profile" class="w-full h-full object-cover" />
+          </div>
         </div>
-      </div> 
       </div>
     </header>
 
@@ -226,20 +233,15 @@
         'bg-gradient-to-b from-white via-gray-200 to-white border-gray-200/80 backdrop-blur-sm'
       ]">
         <!-- Toggle Button -->
-        <button 
-          @click="isCollapsed = !isCollapsed" 
-          :class="[
-            'absolute -right-6 top-[100px] w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg ring-2',
-            // Dark mode
-            'dark:bg-gradient-to-r dark:from-emerald-500 dark:to-emerald-600 dark:hover:from-emerald-600 dark:hover:to-emerald-700 dark:ring-emerald-400/30',
-            // Light mode
-            'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 ring-blue-400/40'
-          ]"
-        >
-          <Icon 
-            :icon="isCollapsed ? 'mdi:chevron-right' : 'mdi:chevron-left'" 
-            class="text-white text-lg transition-transform duration-300"
-          />
+        <button @click="isCollapsed = !isCollapsed" :class="[
+          'absolute -right-6 top-[100px] w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg ring-2',
+          // Dark mode
+          'dark:bg-gradient-to-r dark:from-emerald-500 dark:to-emerald-600 dark:hover:from-emerald-600 dark:hover:to-emerald-700 dark:ring-emerald-400/30',
+          // Light mode
+          'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 ring-blue-400/40'
+        ]">
+          <Icon :icon="isCollapsed ? 'mdi:chevron-right' : 'mdi:chevron-left'"
+            class="text-white text-lg transition-transform duration-300" />
         </button>
 
         <!-- Custom Scrollbar Container -->
@@ -252,28 +254,23 @@
         ]">
           <!-- Menu Items -->
           <nav class="space-y-3 pb-6">
-            <div
-              v-for="(item, i) in filteredMenu" 
-              :key="i"
-              @click="router.push(item.to)"
-              :class="[
-                'flex items-center rounded-xl shadow-xl transition-all duration-300 group relative overflow-hidden',
-                isCollapsed ? 'p-3 justify-center' : 'p-4',
-                route.path === item.to 
-                  ? [
-                      // Dark mode active
-                      'dark:bg-gradient-to-r dark:from-emerald-500/20 dark:to-emerald-600/20 dark:text-emerald-300 dark:shadow-lg dark:border dark:border-emerald-500/30',
-                      // Light mode active  
-                      'bg-gradient-to-r from-blue-500/15 to-blue-600/15 text-blue-700 shadow-lg border border-blue-400/40'
-                    ]
-                  : [
-                      // Dark mode inactive
-                      'dark:text-slate-300 dark:hover:text-white dark:hover:bg-gradient-to-r dark:hover:from-slate-700/50 dark:hover:to-slate-600/50 dark:hover:shadow-md',
-                      // Light mode inactive
-                      'text-gray-600 hover:text-gray-800 hover:bg-gradient-to-r hover:from-gray-100/80 hover:to-gray-50/80 hover:shadow-md'
-                    ]
-              ]"
-            >
+            <div v-for="(item, i) in filteredMenu" :key="i" @click="router.push(item.to)" :class="[
+              'flex items-center rounded-xl shadow-xl transition-all duration-300 group relative overflow-hidden',
+              isCollapsed ? 'p-3 justify-center' : 'p-4',
+              route.path === item.to
+                ? [
+                  // Dark mode active
+                  'dark:bg-gradient-to-r dark:from-emerald-500/20 dark:to-emerald-600/20 dark:text-emerald-300 dark:shadow-lg dark:border dark:border-emerald-500/30',
+                  // Light mode active  
+                  'bg-gradient-to-r from-blue-500/15 to-blue-600/15 text-blue-700 shadow-lg border border-blue-400/40'
+                ]
+                : [
+                  // Dark mode inactive
+                  'dark:text-slate-300 dark:hover:text-white dark:hover:bg-gradient-to-r dark:hover:from-slate-700/50 dark:hover:to-slate-600/50 dark:hover:shadow-md',
+                  // Light mode inactive
+                  'text-gray-600 hover:text-gray-800 hover:bg-gradient-to-r hover:from-gray-100/80 hover:to-gray-50/80 hover:shadow-md'
+                ]
+            ]">
               <!-- Background Animation -->
               <div :class="[
                 'absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-300',
@@ -282,7 +279,7 @@
                 // Light mode
                 'from-blue-500/8 to-transparent'
               ]"></div>
-              
+
               <div :class="[
                 'flex items-center justify-center rounded-lg transition-all duration-300 relative z-10',
                 isCollapsed ? 'w-8 h-8' : 'w-10 h-10 mr-4',
@@ -294,22 +291,22 @@
                 <Icon :icon="item.icon" :class="[
                   'transition-colors duration-300',
                   isCollapsed ? 'text-base' : 'text-lg',
-                  route.path === item.to 
+                  route.path === item.to
                     ? [
-                        // Dark mode active
-                        'dark:text-emerald-400',
-                        // Light mode active
-                        'text-blue-600'
-                      ]
+                      // Dark mode active
+                      'dark:text-emerald-400',
+                      // Light mode active
+                      'text-blue-600'
+                    ]
                     : [
-                        // Dark mode inactive
-                        'dark:text-slate-400 dark:group-hover:text-emerald-400',
-                        // Light mode inactive
-                        'text-gray-500 group-hover:text-blue-600'
-                      ]
+                      // Dark mode inactive
+                      'dark:text-slate-400 dark:group-hover:text-emerald-400',
+                      // Light mode inactive
+                      'text-gray-500 group-hover:text-blue-600'
+                    ]
                 ]" />
               </div>
-              
+
               <div v-if="!isCollapsed" class="flex-1 min-w-0 relative z-10">
                 <div class="text-sm font-medium truncate">
                   {{ dat === 'datakril' ? translateText(item.label) : item.label }}
@@ -362,7 +359,7 @@
                 // Light mode
                 'from-purple-500/8 to-transparent'
               ]"></div>
-              
+
               <div :class="[
                 'flex items-center justify-center rounded-lg transition-all duration-300 relative z-10',
                 isCollapsed ? 'w-8 h-8' : 'w-10 h-10 mr-4',
@@ -380,7 +377,7 @@
                   'text-gray-500 group-hover:text-purple-600'
                 ]" />
               </div>
-              
+
               <div v-if="!isCollapsed" class="flex-1 shadow-xl relative z-10">
                 <div class="text-sm font-medium">GitHub</div>
               </div>
@@ -405,9 +402,9 @@
             </div>
           </nav>
         </div>
-        
+
       </aside>
-      
+
       <main :class="[
         'flex-1 mt-[90px] transition-all duration-500 ease-in-out min-h-[calc(100vh-90px)]',
         isCollapsed ? 'ml-20' : 'ml-80'
@@ -487,7 +484,7 @@
   .scrollbar-custom {
     scrollbar-width: none;
   }
-  
+
   .scrollbar-custom::-webkit-scrollbar {
     display: none;
   }
@@ -546,18 +543,20 @@ const menuItems = [
   { to: "/admin-list", label: "Ishchi hodimlar ro'yxati", icon: "mdi:account-group", condition: true },
   { to: "/all-contract", label: "Shartnoma tuzish bo'limi", icon: "mdi:file-document-outline", condition: true },
   { to: "/all-courts", label: "Sud hujjatlari", icon: "mdi:scale-balance", condition: true },
-  { to: "/admin-task", label: "Yangi shartnomalar", icon: "mdi:clipboard-text-outline", condition: localStorage.getItem('role')==='admin' },
-  { to: "/yurist-tasks", label: "Yangi shartnomalar", icon: "mdi:clipboard-text-outline", condition: localStorage.getItem('role')==='yurist' },
-  { to: "/asisstant-task", label: "Yangi shartnomalar", icon: "mdi:clipboard-text-outline", condition: localStorage.getItem('role')==='yuristAssistant' },
-  { to: "/deliverer-task", label: "Yangi shartnomalar", icon: "mdi:clipboard-text-outline", condition: localStorage.getItem('role')==='deliverer' },
+  { to: "/admin-task", label: "Yangi shartnomalar", icon: "mdi:clipboard-text-outline", condition: localStorage.getItem('role') === 'admin' },
+  { to: "/yurist-tasks", label: "Yangi shartnomalar", icon: "mdi:clipboard-text-outline", condition: localStorage.getItem('role') === 'yurist' },
+  { to: "/asisstant-task", label: "Yangi shartnomalar", icon: "mdi:clipboard-text-outline", condition: localStorage.getItem('role') === 'yuristAssistant' },
+  { to: "/deliverer-task", label: "Yangi shartnomalar", icon: "mdi:clipboard-text-outline", condition: localStorage.getItem('role') === 'deliverer' },
   { to: "/remindersAdmin", label: "Ishchilarni bajargan ishlari", icon: "mdi:check-circle-outline", condition: () => data.value?.workDone },
   { to: "/Requirefiles", label: "Imzolanishi kerak boʻlgan fayllar", icon: "mdi:file-sign", condition: () => data.value?.userFiles },
   { to: "/companyFile", label: "Kampaniya fayllari", icon: "mdi:office-building", condition: () => data.value?.companyDocs },
   { to: "/required-items-section", label: "Sayt qo'llanmalari va to'liq ishlashi uchun kerakli fayllar", icon: "mdi:file-cog-outline", condition: true },
   { to: "/category", label: "Kategoriyalar", icon: "mdi:shape-outline", condition: true },
-  { to: "/warehousesHouse", label: "Omborlar", icon: "mdi:warehouse", condition: true }, 
+  { to: "/warehousesHouse", label: "Omborlar", icon: "mdi:warehouse", condition: true },
   { to: "/fileconvert", label: "DOCX → PDF konvertor", icon: "mdi:file-sync-outline", condition: true },
-  { to: "/Dashboard", label: "Bugalteriya", icon: "mdi:chart-line", condition: localStorage.getItem('role') ==='bigAdmin' || localStorage.getItem('role') === 'accauntant'||localStorage.getItem('role') === 'chiefAccauntant' },
+  { to: "/Dashboard", label: "Bugalteriya", icon: "mdi:chart-line", condition: localStorage.getItem('role') === 'bigAdmin' || localStorage.getItem('role') === 'accauntant' || localStorage.getItem('role') === 'chiefAccauntant' },
+  { to: "/JobsAdmin", label: "Vokansiya yaratish", icon: "mdi:briefcase-plus-outline", condition: true },
+  { to: "/questionsAdmin", label: "Savol va Javoblar", icon: "mdi:comment-question-outline", condition: true },
   { to: "/ticketAdmin", label: "Taklif va shikoyatlar", icon: "mdi:credit-card-outline", condition: () => data.value?.ticket },
   { to: "/smile", label: "Stikker qoʻshish", icon: "mdi:emoticon-happy-outline", condition: true },
   { to: "/commaners", label: "Tizimdagi foydalanuvchilar roʻyxati", icon: "mdi:account-multiple", condition: true },
@@ -679,12 +678,12 @@ const fetchUnreadCount = async () => {
     unreadCount.value = response.data
   } catch (error) {
     console.error('Error fetching unread count:', error)
-  } finally{
+  } finally {
   }
 }
 
 const fetchUnreadNotifications = async () => {
-   getUnreadCount()
+  getUnreadCount()
 }
 
 const setupSocketConnection = () => {
@@ -715,10 +714,10 @@ const setupSocketConnection = () => {
     messageCount.value = count
   })
   socket.on('newMessage', () => {
-fetchUnreadMessageCount()
+    fetchUnreadMessageCount()
   })
   socket.on('messageRead', () => {
-fetchUnreadMessageCount()
+    fetchUnreadMessageCount()
   })
   return socket
 }
