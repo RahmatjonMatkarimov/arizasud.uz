@@ -24,7 +24,9 @@
     },
     "data": [
         {
-            "config": false,
+            "config": {
+                "showIdle": false
+            },
             "user": "RahmatjonMatkarimov",
             "dailySessions": [
                 {
@@ -33,16 +35,58 @@
                         {
                             "sessionInfo": {
                                 "id": "740b559c-384d-497e-8998-80c7aaf8127a",
-                                "duration": 741265,
-                                "idle": 3725418,
+                                "duration": 821051,
+                                "idle": 4625424,
                                 "state": "Idle",
                                 "durations": [
+                                    {
+                                        "id": "63c5b610-4640-4a99-a791-e68e70c11027",
+                                        "state": "Idle",
+                                        "begin": 1752576404038,
+                                        "end": 1752576404038,
+                                        "duration": 0
+                                    },
+                                    {
+                                        "id": "0b1e8b93-a3eb-4e97-bd69-39ad34496e88",
+                                        "state": "Ongoing",
+                                        "begin": 1752576403188,
+                                        "end": 1752576404038,
+                                        "duration": 850
+                                    },
+                                    {
+                                        "id": "84a90a6a-2a8b-4126-8db6-68483dc9dd6b",
+                                        "state": "Idle",
+                                        "begin": 1752576219440,
+                                        "end": 1752576403188,
+                                        "duration": 183748
+                                    },
+                                    {
+                                        "id": "1a144d11-45e7-40d6-bc37-478f17b4f238",
+                                        "state": "Ongoing",
+                                        "begin": 1752576216688,
+                                        "end": 1752576219440,
+                                        "duration": 2752
+                                    },
+                                    {
+                                        "id": "6e962501-c57f-452b-a2e6-d68ac9427d28",
+                                        "state": "Idle",
+                                        "begin": 1752576184075,
+                                        "end": 1752576216688,
+                                        "duration": 32613
+                                    },
+                                    {
+                                        "id": "06572d97-85d8-48e6-b136-a4c52ec49605",
+                                        "state": "Ongoing",
+                                        "begin": 1752576107891,
+                                        "end": 1752576184075,
+                                        "duration": 76184
+                                    },
                                     {
                                         "id": "266dde66-a279-49c7-926a-8fdf76761748",
                                         "state": "Idle",
                                         "begin": 1752574832448,
-                                        "end": 1752574832448,
-                                        "duration": 0
+                                        "end": 1752576107891,
+                                        "duration": 1275443
                                     },
                                     {
                                         "id": "336a7adb-6ab2-482d-84c6-fecad0718c8c",
@@ -449,6 +493,105 @@
                                     ".uz/src/components/header.vue",
                                     ".uz/src/router/routes.js",
                                     ".uz/src/components/main/job/user.vue",
+                                    ".uz/src/components/main/job/admin.vue"
+                                ]
+                            },
+                            "actionType": "Idle"
+                        },
+                        {
+                            "sessionInfo": {
+                                "id": "8e9f140e-f188-4ef1-b1ad-c327b55de187",
+                                "duration": 26304,
+                                "idle": 647556,
+                                "state": "Idle",
+                                "durations": [
+                                    {
+                                        "id": "4f990f87-e483-49e2-93eb-9058a933d269",
+                                        "state": "Idle",
+                                        "begin": 1752578635026,
+                                        "end": 1752578635026,
+                                        "duration": 0
+                                    },
+                                    {
+                                        "id": "17db7785-570c-4d23-8cef-477374f1700c",
+                                        "state": "Ongoing",
+                                        "begin": 1752578632368,
+                                        "end": 1752578635026,
+                                        "duration": 2658
+                                    },
+                                    {
+                                        "id": "2dd04950-e23c-4d57-98e9-8646409fe06d",
+                                        "state": "Idle",
+                                        "begin": 1752578411301,
+                                        "end": 1752578632368,
+                                        "duration": 221067
+                                    },
+                                    {
+                                        "id": "9eae13e0-9e7b-4f28-b6ac-78f95e977431",
+                                        "state": "Ongoing",
+                                        "begin": 1752578399847,
+                                        "end": 1752578411301,
+                                        "duration": 11454
+                                    },
+                                    {
+                                        "id": "b7ab3493-e1ca-45c0-9f1a-ac56d9bfa497",
+                                        "state": "Idle",
+                                        "begin": 1752578246753,
+                                        "end": 1752578399847,
+                                        "duration": 153094
+                                    },
+                                    {
+                                        "id": "979ef1cf-c031-47ed-9f93-081c577ac6b6",
+                                        "state": "Ongoing",
+                                        "begin": 1752578245570,
+                                        "end": 1752578246753,
+                                        "duration": 1183
+                                    },
+                                    {
+                                        "id": "464bb26c-d80b-4a19-8242-ef7520e931cd",
+                                        "state": "Idle",
+                                        "begin": 1752578040096,
+                                        "end": 1752578245570,
+                                        "duration": 205474
+                                    },
+                                    {
+                                        "id": "eb1f8c5d-f1e0-48ef-a67d-d9f92071bbe7",
+                                        "state": "Ongoing",
+                                        "begin": 1752578038502,
+                                        "end": 1752578040096,
+                                        "duration": 1594
+                                    },
+                                    {
+                                        "id": "2bf8af42-eb0d-494e-8492-0f5d006980fe",
+                                        "state": "Idle",
+                                        "begin": 1752578037968,
+                                        "end": 1752578038502,
+                                        "duration": 534
+                                    },
+                                    {
+                                        "id": "bacf90fa-c993-4723-85fd-67f91d76e46e",
+                                        "state": "Ongoing",
+                                        "begin": 1752578035416,
+                                        "end": 1752578037968,
+                                        "duration": 2552
+                                    },
+                                    {
+                                        "id": "95777f29-21b3-4058-83aa-c786ededafc6",
+                                        "state": "Idle",
+                                        "begin": 1752577997285,
+                                        "end": 1752578035416,
+                                        "duration": 38131
+                                    },
+                                    {
+                                        "id": "c0b71940-4b86-45a2-8542-e304c31ffa73",
+                                        "state": "Ongoing",
+                                        "begin": 1752577990422,
+                                        "end": 1752577997285,
+                                        "duration": 6863
+                                    }
+                                ],
+                                "filesExt": [
+                                    "",
                                     ".uz/src/components/main/job/admin.vue"
                                 ]
                             },

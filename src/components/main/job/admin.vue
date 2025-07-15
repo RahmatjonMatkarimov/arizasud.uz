@@ -170,11 +170,24 @@
             </div>
             <div class="flex break-words w-full flex-wrap gap-4 mb-4">
               <span class="text-sm break-words w-full font-medium text-gray-700 dark:text-slate-300">
-                {{ translateText(application.fullName) || 'Ariza beruvchi' }}
+                {{ translateText('Ariza beruvchi') }}: {{ translateText(application.fullName) || 'Ariza beruvchi' }}
               </span>
-              <span class="text-sm break-words w-full font-bold text-emerald-600">
-                {{ application.job?.status || 'Holat ko\'rsatilmagan' }}
+              <span class="text-sm break-words w-full font-medium text-gray-700 dark:text-slate-300">
+                {{ translateText('Telefon') }}: {{ application.phone || 'Telefon ko\'rsatilmagan' }}
               </span>
+              <span class="text-sm break-words w-full font-medium text-gray-700 dark:text-slate-300">
+                {{ translateText('Email') }}: {{ application.email || 'Email ko\'rsatilmagan' }}
+              </span>
+              <span class="text-sm break-words w-full font-medium text-gray-700 dark:text-slate-300">
+                {{ translateText('CV') }}: 
+                <a :href="application.cvUrl" target="_blank" class="text-blue-600 hover:underline">
+                  {{ application.cvUrl || 'CV ko\'rsatilmagan' }}
+                </a>
+              </span>
+              <span class="text-sm break-words w-full font-medium text-gray-700 dark:text-slate-300">
+                {{ translateText('Ariza sanasi') }}: {{ formatDate(application.appliedAt) || 'Sana ko\'rsatilmagan' }}
+              </span>
+
             </div>
             <p class="text-sm break-words w-full leading-relaxed text-gray-600 dark:text-slate-400">
               {{ translateText(application.description) || 'Tavsif mavjud emas' }}
@@ -272,6 +285,7 @@ import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 import { URL } from '@/auth/url';
 import translateText from '@/auth/Translate copy';
+
 // Reactive state
 const data = ref([]);
 const userApplications = ref([]);
@@ -295,6 +309,16 @@ const formData = ref({
 const allSelected = computed(() => {
   return data.value.length > 0 && ids.value.length === data.value.length;
 });
+
+// Date formatting function
+const formatDate = (dateString) => {
+  if (!dateString) return 'Sana ko\'rsatilmagan';
+  const date = new Date(dateString);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}.${month}.${year}`;
+};
 
 // Modal functions
 const openModal = (mode, item = null) => {
