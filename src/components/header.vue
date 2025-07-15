@@ -7,11 +7,11 @@
 
       <!-- Logo Section -->
       <div class="flex items-center flex-shrink-0">
-        <div @click="router.push('/')"
+        <router-link to="/"
           class="flex justify-center items-center relative z-10 cursor-pointer transition-transform hover:scale-105 duration-300">
           <img src="/logo1.png" class="w-[100px] sm:w-[140px] md:w-[180px] lg:w-[220px] xl:w-[280px] h-auto"
             alt="Logo" />
-        </div>
+        </router-link>
       </div>
 
       <!-- Mobile Menu Button -->
@@ -21,59 +21,68 @@
       </button>
 
       <!-- Desktop Controls -->
-      <div class="hidden md:flex flex-col items-end justify-center gap-2 sm:gap-3 relative">
-        <!-- Top Row: Login Button -->
-        <div class="flex items-center space-x-3 sm:space-x-4">
-          <!-- Theme Toggle -->
-          <button @click="toggleTheme"
-            class="p-2 rounded-full bg-blue-500 dark:bg-gray-600 hover:bg-blue-400 dark:hover:bg-gray-500 transition-all duration-300 transform hover:scale-110">
-            <Icon :icon="theme === 'light' ? 'mdi:weather-sunny' : 'mdi:weather-night'"
-              class="w-5 h-5 text-white dark:text-gray-100" />
+      <div class="hidden md:flex items-center justify-end gap-4 sm:gap-6 relative">
+        <!-- Navigation Links -->
+        <nav class="flex items-center space-x-4">
+          <router-link to="/questions"
+            class="text-sm font-medium px-3 py-2 rounded-lg hover:bg-white/10 dark:hover:bg-gray-800/20 transition-all duration-300">
+            {{ translateText('Savol va javoblar') }}
+          </router-link>
+          <router-link to="/Vokansiya"
+            class="text-sm font-medium px-3 py-2 rounded-lg hover:bg-white/10 dark:hover:bg-gray-800/20 transition-all duration-300">
+            {{  translateText('Vokansiyalar') }}
+          </router-link>
+        </nav>
+
+        <!-- Theme Toggle -->
+        <button @click="toggleTheme"
+          class="p-2 rounded-full bg-blue-500 dark:bg-gray-600 hover:bg-blue-400 dark:hover:bg-gray-500 transition-all duration-300 transform hover:scale-110">
+          <Icon :icon="theme === 'light' ? 'mdi:weather-sunny' : 'mdi:weather-night'"
+            class="w-5 h-5 text-white dark:text-gray-100" />
+        </button>
+
+        <!-- Language Switcher -->
+        <div class="relative">
+          <button @click="toggleLanguageDropdown"
+            class="flex items-center space-x-2 px-3 py-2 rounded-full bg-white/10 dark:bg-gray-800/20 hover:bg-white/20 dark:hover:bg-gray-800/30 transition-all duration-300 border border-white/20 dark:border-gray-600/30 backdrop-blur-sm">
+            <Icon icon="mdi:translate" class="w-4 h-4 text-white dark:text-gray-100" />
+            <span class="text-sm font-medium text-white dark:text-gray-100">
+              {{ getCurrentLanguageLabel() }}
+            </span>
+            <Icon :icon="languageDropdownOpen ? 'mdi:chevron-up' : 'mdi:chevron-down'"
+              class="w-4 h-4 text-white dark:text-gray-100 transition-transform duration-300" />
           </button>
 
-          <!-- Language Switcher -->
-          <div class="relative">
-            <button @click="toggleLanguageDropdown"
-              class="flex items-center space-x-2 px-3 py-2 rounded-full bg-white/10 dark:bg-gray-800/20 hover:bg-white/20 dark:hover:bg-gray-800/30 transition-all duration-300 border border-white/20 dark:border-gray-600/30 backdrop-blur-sm">
-              <Icon icon="mdi:translate" class="w-4 h-4 text-white dark:text-gray-100" />
-              <span class="text-sm font-medium text-white dark:text-gray-100">
-                {{ getCurrentLanguageLabel() }}
-              </span>
-              <Icon :icon="languageDropdownOpen ? 'mdi:chevron-up' : 'mdi:chevron-down'"
-                class="w-4 h-4 text-white dark:text-gray-100 transition-transform duration-300" />
-            </button>
-
-            <!-- Language Dropdown -->
-            <div v-if="languageDropdownOpen"
-              class="absolute top-full mt-2 right-0 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-600 overflow-hidden min-w-[140px] z-50 backdrop-blur-md">
-              <div v-for="(lang, index) in languages" :key="index" @click="changeLanguage(lang.code)"
-                class="flex items-center space-x-3 px-4 py-3 hover:bg-blue-50 dark:hover:bg-gray-700 cursor-pointer transition-colors duration-200 group"
-                :class="{ 'bg-blue-50 dark:bg-gray-700': isCurrentLanguage(lang.code) }">
-                <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
-                  :class="getFlagStyle(lang.code)">
-                  {{ getFlagEmoji(lang.code) }}
-                </div>
-                <div class="flex flex-col">
-                  <span
-                    class="text-sm font-medium text-gray-800 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-300">
-                    {{ lang.label }}
-                  </span>
-                  <span class="text-xs text-gray-500 dark:text-gray-400">
-                    {{ getLanguageFullName(lang.code) }}
-                  </span>
-                </div>
-                <Icon v-if="isCurrentLanguage(lang.code)" icon="mdi:check"
-                  class="w-4 h-4 text-blue-600 dark:text-blue-300 ml-auto" />
+          <!-- Language Dropdown -->
+          <div v-if="languageDropdownOpen"
+            class="absolute top-full mt-2 right-0 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-600 overflow-hidden min-w-[140px] z-50 backdrop-blur-md">
+            <div v-for="(lang, index) in languages" :key="index" @click="changeLanguage(lang.code)"
+              class="flex items-center space-x-3 px-4 py-3 hover:bg-blue-50 dark:hover:bg-gray-700 cursor-pointer transition-colors duration-200 group"
+              :class="{ 'bg-blue-50 dark:bg-gray-700': isCurrentLanguage(lang.code) }">
+              <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
+                :class="getFlagStyle(lang.code)">
+                {{ getFlagEmoji(lang.code) }}
               </div>
+              <div class="flex flex-col">
+                <span
+                  class="text-sm font-medium text-gray-800 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-300">
+                  {{ lang.label }}
+                </span>
+                <span class="text-xs text-gray-500 dark:text-gray-400">
+                  {{ getLanguageFullName(lang.code) }}
+                </span>
+              </div>
+              <Icon v-if="isCurrentLanguage(lang.code)" icon="mdi:check"
+                class="w-4 h-4 text-blue-600 dark:text-blue-300 ml-auto" />
             </div>
           </div>
-
-          <!-- Login Button -->
-          <button @click="router.push('/CommonerLogin')"
-            class="bg-green-700 dark:bg-green-900 text-sm px-4 py-2 rounded-full hover:bg-green-600 dark:hover:bg-green-700 transition-all duration-300 font-semibold shadow-md transform hover:scale-105">
-            {{ $t('kabinetga_kirish') }}
-          </button>
         </div>
+
+        <!-- Login Button -->
+        <button @click="router.push('/CommonerLogin')"
+          class="bg-green-700 dark:bg-green-900 text-sm px-4 py-2 rounded-full hover:bg-green-600 dark:hover:bg-green-700 transition-all duration-300 font-semibold shadow-md transform hover:scale-105">
+          {{ $t('kabinetga_kirish') }}
+        </button>
 
         <!-- Search Bar -->
         <div class="relative">
@@ -110,6 +119,20 @@
       class="fixed top-[70px] right-0 w-full max-w-sm h-auto bg-white dark:bg-gray-800 shadow-xl z-50 md:hidden transform transition-transform duration-300 ease-in-out"
       :class="mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'">
       <div class="p-4 space-y-4">
+        <!-- Mobile Navigation -->
+        <nav class="flex flex-col space-y-3">
+          <router-link to="/"
+            class="text-gray-800 dark:text-gray-100 font-medium p-3 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 transition-all duration-300"
+            @click="closeMobileMenu">
+            {{ $t('home') }}
+          </router-link>
+          <router-link to="/about"
+            class="text-gray-800 dark:text-gray-100 font-medium p-3 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 transition-all duration-300"
+            @click="closeMobileMenu">
+            {{ $t('about') }}
+          </router-link>
+        </nav>
+
         <!-- Mobile Search -->
         <div class="relative">
           <div
@@ -221,6 +244,7 @@ import { useRouter } from "vue-router";
 import gsap from "gsap";
 import translateText from "@/auth/Translate copy";
 import { Icon } from '@iconify/vue';
+
 const router = useRouter();
 const { locale, t } = useI18n();
 const searchdata = ref([]);
@@ -254,7 +278,6 @@ const toggleLanguageDropdown = () => {
 
 const toggleMobileMenu = () => {
   mobileMenuOpen.value = !mobileMenuOpen.value;
-  // Close other dropdowns when opening mobile menu
   if (mobileMenuOpen.value) {
     languageDropdownOpen.value = false;
     mobileLanguageDropdownOpen.value = false;
@@ -356,7 +379,7 @@ const initiateLogoScroller = async () => {
 
 const goToPath = (value) => {
   const id = value.id;
-  closeMobileMenu(); // Close mobile menu when navigating
+  closeMobileMenu();
 
   if (value?.applications) {
     router.push(`aplications/${id}`);
@@ -410,7 +433,6 @@ const handleClickOutside = (event) => {
   }
 };
 
-// Handle escape key
 const handleEscapeKey = (event) => {
   if (event.key === 'Escape') {
     closeMobileMenu();
@@ -418,7 +440,6 @@ const handleEscapeKey = (event) => {
   }
 };
 
-// Handle resize
 const handleResize = () => {
   if (window.innerWidth >= 768) {
     closeMobileMenu();
@@ -552,7 +573,8 @@ provide("filteredData", filteredData);
 @media (max-width: 768px) {
 
   button,
-  .cursor-pointer {
+  .cursor-pointer,
+  a {
     min-height: 44px;
     min-width: 44px;
   }
@@ -564,4 +586,9 @@ provide("filteredData", filteredData);
     overflow-x: hidden;
   }
 }
-</style>shunda iconlar korinmayabdi
+
+/* Active router-link styling */
+.router-link-active {
+  @apply bg-white/20 dark:bg-gray-800/30 text-blue-200 dark:text-blue-300 font-bold;
+}
+</style>

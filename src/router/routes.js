@@ -26,7 +26,9 @@ const routes = [
   { path: '/PdfOpen/:folder/:filePath', name: 'PdfOdpen', component: () => import('@/views/PdfOpenPage.vue') },
   { path: '/servise/:id', name: 'PdfOpen', component: () => import('@/components/main/servise/servise.vue') },
   { path: '/:catchAll(.*)', component: () => import('@/components/error.vue'), props: { errorCode: 404 } },
-  { path: '/finger', component: () => import('@/components/finger.vue'), props: { errorCode: 404 } },
+  { path: '/finger', component: () => import('@/components/finger.vue') },
+  { path: '/questions', component: () => import('@/components/main/questions/user.vue') },
+  { path: '/Vokansiya', component: () => import('@/components/main/job/user.vue') },
   {
     path: '/ashboard',
     name: 'bugalter',
