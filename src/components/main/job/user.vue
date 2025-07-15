@@ -49,7 +49,7 @@
         <div
           v-for="item in data"
           :key="item.id"
-          @click="PostJobAplications(item.id)"
+          @click="openApplicationModal(item.id)"
           :class="{ 
             'ring-2 ring-blue-500 dark:ring-blue-400': ids.includes(item.id),
             'hover:shadow-lg': !ids.includes(item.id)
@@ -57,24 +57,16 @@
           class="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer border border-gray-200 dark:border-gray-700"
         >
           <div class="p-6">
-            <!-- Job Title -->
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
               {{ item.title }}
             </h3>
-            
-            <!-- Company -->
             <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
               {{ item.company }}
             </p>
-            
-            <!-- Description -->
-            <p class="text-sm text-gray-700 dark:text-gray-300 mb-4 line-clamp-3">
+            <p class="text Smolensk text-gray-700 dark:text-gray-300 mb-4 line-clamp-3">
               {{ item.description }}
             </p>
-            
-            <!-- Footer -->
             <div class="flex items-center justify-between">
-              <!-- Salary -->
               <div class="flex items-center">
                 <svg class="w-4 h-4 text-green-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
@@ -84,8 +76,6 @@
                   ${{ item.salary }}
                 </span>
               </div>
-              
-              <!-- Status -->
               <span 
                 :class="{
                   'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200': item.status === 'active',
@@ -96,8 +86,6 @@
                 {{ item.status === 'active' ? 'Faol' : 'Nofaol' }}
               </span>
             </div>
-            
-            <!-- Created Date -->
             <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
               <div class="flex items-center text-xs text-gray-500 dark:text-gray-400">
                 <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -106,8 +94,6 @@
                 {{ formatDate(item.createdAt) }}
               </div>
             </div>
-            
-            <!-- Applied indicator -->
             <div v-if="ids.includes(item.id)" class="mt-3 flex items-center text-xs text-blue-600 dark:text-blue-400">
               <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
@@ -126,6 +112,88 @@
         <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-white">Hech qanday ish o'rni topilmadi</h3>
         <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Keyinroq qaytib ko'ring yoki sahifani yangilang</p>
       </div>
+
+      <!-- Application Modal -->
+      <div v-if="showModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
+        <div class="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Ishga Murojaat</h3>
+            <button @click="closeModal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">To'liq ism</label>
+              <input
+                v-model="applicationForm.fullName"
+                type="text"
+                class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                required
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+              <input
+                v-model="applicationForm.email"
+                type="email"
+                class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                required
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Telefon</label>
+              <input
+                v-model="applicationForm.phone"
+                type="tel"
+                class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                required
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">CV URL</label>
+              <input
+                v-model="applicationForm.cvUrl"
+                type="url"
+                class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                required
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Qo'shimcha ma'lumot</label>
+              <textarea
+                v-model="applicationForm.description"
+                rows="4"
+                class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+              ></textarea>
+            </div>
+          </div>
+          <div class="mt-6 flex justify-end space-x-3">
+            <button
+              @click="closeModal"
+              class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600"
+            >
+              Bekor qilish
+            </button>
+            <button
+              @click="submitApplication"
+              :disabled="formLoading"
+              class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:bg-blue-400"
+            >
+              <span v-if="formLoading" class="flex items-center">
+                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Yuborilmoqda...
+              </span>
+              <span v-else>Yuborish</span>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -140,6 +208,17 @@ const ids = ref([]);
 const error = ref(null);
 const loading = ref(false);
 const isDark = ref(false);
+const showModal = ref(false);
+const formLoading = ref(false);
+const currentJobId = ref(null);
+
+const applicationForm = ref({
+  fullName: '',
+  email: '',
+  phone: '',
+  cvUrl: '',
+  description: ''
+});
 
 // Theme toggle
 const toggleTheme = () => {
@@ -164,10 +243,10 @@ const initTheme = () => {
 
 // Format date
 const formatDate = (date) => {
-  let years = date?.slice(0, 4)
-  let month = date?.slice(5, 7)
-  let day = date?.slice(8, 10)
-  return `${day}.${month}.${years}`
+  let years = date?.slice(0, 4);
+  let month = date?.slice(5, 7);
+  let day = date?.slice(8, 10);
+  return `${day}.${month}.${years}`;
 };
 
 const getJobs = async () => {
@@ -184,29 +263,46 @@ const getJobs = async () => {
   }
 };
 
-const PostJobAplications = async (id) => {
+const openApplicationModal = (id) => {
+  currentJobId.value = id;
+  showModal.value = true;
+};
+
+const closeModal = () => {
+  showModal.value = false;
+  applicationForm.value = {
+    fullName: '',
+    email: '',
+    phone: '',
+    cvUrl: '',
+    description: ''
+  };
+};
+
+const submitApplication = async () => {
   try {
-    loading.value = true;
+    formLoading.value = true;
     const res = await axios.post(`${URL}/user-applications`, {
-      fullName: 'string',
-      email: 'string',
-      cvUrl: 'string',
-      jobId: parseInt(id),
-      phone: 'string',
-      description: 'string',
+      fullName: applicationForm.value.fullName,
+      email: applicationForm.value.email,
+      cvUrl: applicationForm.value.cvUrl,
+      jobId: parseInt(currentJobId.value),
+      phone: applicationForm.value.phone,
+      description: applicationForm.value.description,
     });
     
-    if (!ids.value.includes(id)) {
-      ids.value.push(id);
+    if (!ids.value.includes(currentJobId.value)) {
+      ids.value.push(currentJobId.value);
     }
     
     await getJobs();
     error.value = null;
+    closeModal();
   } catch (err) {
     error.value = err.response?.data?.message || "Murojaat yuborishda xatolik";
     console.error(err);
   } finally {
-    loading.value = false;
+    formLoading.value = false;
   }
 };
 
