@@ -1092,15 +1092,16 @@ const formatNumberWithDots = (number) => {
   return Number(number).toLocaleString("uz-UZ", { minimumFractionDigits: 0 }).replace(/,/g, ".");
 };
 
-const generateContractId = () => {
-  const now = new Date();
-  const day = String(now.getDate()).padStart(2, "0");
-  const hours = String(now.getHours()).padStart(2, "0");
-  const minutes = String(now.getMinutes()).padStart(2, "0");
-  const seconds = String(now.getSeconds()).padStart(2, "0");
-  const milliseconds = String(now.getMilliseconds()).padStart(3, "0");
-  return `${day}${hours}${minutes}${seconds}${milliseconds}`.slice(-8);
+async function generateContractId() {
+  try {
+    const res = await axios.post(`${URL}/client/increment-contract-id`);
+    return res.data.contractId;
+  } catch (err) {
+    console.error('Contract ID olishda xatolik:', err);
+    return null;
+  }
 };
+
 
 const fetchDistricts = (type) => {
   let target;
@@ -1395,7 +1396,7 @@ return
     data["Today Date"] = formattedDate;
 
     // Generate contract ID
-    formData.contractId = generateContractId();
+    formData.contractId = await generateContractId();
     UniqueID = formData.contractId;
     data["ID"] = formData.contractId;
     data["documentId"] = formData.contractId;
