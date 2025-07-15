@@ -37,7 +37,7 @@
                                 "id": "740b559c-384d-497e-8998-80c7aaf8127a",
                                 "duration": 821051,
                                 "idle": 4625424,
-                                "state": "Idle",
+                                "state": "Ended",
                                 "durations": [
                                     {
                                         "id": "63c5b610-4640-4a99-a791-e68e70c11027",
@@ -501,16 +501,30 @@
                         {
                             "sessionInfo": {
                                 "id": "8e9f140e-f188-4ef1-b1ad-c327b55de187",
-                                "duration": 26304,
-                                "idle": 647556,
+                                "duration": 29313,
+                                "idle": 2447536,
                                 "state": "Idle",
                                 "durations": [
+                                    {
+                                        "id": "0e593b7d-b72f-4b6c-bed7-85d763a63a81",
+                                        "state": "Idle",
+                                        "begin": 1752578658017,
+                                        "end": 1752578658017,
+                                        "duration": 0
+                                    },
+                                    {
+                                        "id": "b8298f5f-cc4c-4f1d-96ea-21213a8982a4",
+                                        "state": "Ongoing",
+                                        "begin": 1752578655008,
+                                        "end": 1752578658017,
+                                        "duration": 3009
+                                    },
                                     {
                                         "id": "4f990f87-e483-49e2-93eb-9058a933d269",
                                         "state": "Idle",
                                         "begin": 1752578635026,
-                                        "end": 1752578635026,
-                                        "duration": 0
+                                        "end": 1752578655008,
+                                        "duration": 19982
                                     },
                                     {
                                         "id": "17db7785-570c-4d23-8cef-477374f1700c",

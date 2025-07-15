@@ -49,7 +49,6 @@
         <div
           v-for="item in data"
           :key="item.id"
-          @click="openApplicationModal(item.id)"
           :class="{ 
             'ring-2 ring-blue-500 dark:ring-blue-400': ids.includes(item.id),
             'hover:shadow-lg': !ids.includes(item.id)
@@ -86,6 +85,7 @@
                 {{ item.status === 'active' ? 'Faol' : 'Nofaol' }}
               </span>
             </div>
+            <button @click="openApplicationModal(item.id)" class="bg-green-600 w-full my-4 py-2 rounded-lg">Murojat qilish</button>
             <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
               <div class="flex items-center text-xs text-gray-500 dark:text-gray-400">
                 <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
