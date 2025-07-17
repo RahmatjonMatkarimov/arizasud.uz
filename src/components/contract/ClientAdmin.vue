@@ -1898,7 +1898,7 @@ function TrimFuc(str) {
             res.value += str[i]
         }        
     }
-    return res
+    return res.value
 }
 
 const submitForm = async () => {
