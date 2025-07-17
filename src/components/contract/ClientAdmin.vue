@@ -1891,6 +1891,15 @@ const handlePayment = async () => {
   }
 };
 
+function TrimFuc(str) {
+    let res = ref('')
+    for (let i = 0; i < str.length; i++) {
+        if (str[i] != ' ') {
+            res.value += str[i]
+        }        
+    }
+    return res
+}
 
 const submitForm = async () => {
   isLoading.value = true;
@@ -1904,7 +1913,7 @@ const submitForm = async () => {
   formDataToSend.append("userCode", formData.userCode || "");
   formDataToSend.append("uniqueCode", formData.uniqueCode || "");
   formDataToSend.append("contractId", String(formData.contractId) || "");
-  formDataToSend.append("phone", formData.phone || "");
+  formDataToSend.append("phone", TrimFuc(formData.phone) || "");
   formDataToSend.append("totalSum", formData.totalSum || 0);
   formDataToSend.append("paidSum", formData.paidSum || 0);
   formDataToSend.append("remainingSum", formData.remainingSum || 0);
