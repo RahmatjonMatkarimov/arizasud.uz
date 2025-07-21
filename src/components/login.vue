@@ -7,16 +7,8 @@
 
       <form @submit.prevent="setData" class="space-y-4 animate-fade-in delay-200">
         <div>
-          <input 
-            v-model="username" 
-            type="text" 
-            placeholder="Foydalanuvchi nomi" 
-            class="input-field" 
-            :class="{ 'border-red-500': usernameError }"
-            minlength="3"
-            maxlength="30"
-            required 
-          />
+          <input v-model="username" type="text" placeholder="Foydalanuvchi nomi" class="input-field"
+            :class="{ 'border-red-500': usernameError }" minlength="3" maxlength="30" required />
           <p v-if="usernameError" class="text-red-500 text-sm mt-1">
             {{ usernameError }}
           </p>
@@ -24,17 +16,11 @@
 
         <div>
           <div class="relative">
-            <input 
-              v-model="password" 
-              :type="showPassword ? 'text' : 'password'" 
-              placeholder="Parol"
-              class="input-field pr-10" 
-              :class="{ 'border-red-500': passwordError }"
-              minlength="6"
-              maxlength="30"
-              required 
-            />
-            <button type="button" @click="showPassword = !showPassword" class="absolute right-3 top-1/2 -translate-y-1/2">
+            <input v-model="password" :type="showPassword ? 'text' : 'password'" placeholder="Parol"
+              class="input-field pr-10" :class="{ 'border-red-500': passwordError }" minlength="6" maxlength="30"
+              required />
+            <button type="button" @click="showPassword = !showPassword"
+              class="absolute right-3 top-1/2 -translate-y-1/2">
               <img :src="showPassword ? '/eyes.png' : '/eye.png'" class="w-5 h-5 opacity-70" />
             </button>
           </div>
@@ -46,11 +32,8 @@
         <input v-model="tell" type="number" placeholder="Telefon raqam" class="input-field" />
         <input v-model="jshshr" type="number" placeholder="JSHSHR" class="input-field" />
 
-        <button 
-          type="submit"
-          :disabled="!isFormValid"
-          class="w-full bg-blue-700 hover:bg-blue-800 active:scale-95 transition-transform text-white py-3 rounded-xl font-semibold shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed"
-        >
+        <button type="submit" :disabled="!isFormValid"
+          class="w-full bg-blue-700 hover:bg-blue-800 active:scale-95 transition-transform text-white py-3 rounded-xl font-semibold shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed">
           Kirish
         </button>
 
@@ -123,12 +106,12 @@ watch(password, (newValue) => {
 
 // Check if form is valid
 const isFormValid = computed(() => {
-  return username.value.length >= USERNAME_MIN_LENGTH && 
-         username.value.length <= USERNAME_MAX_LENGTH &&
-         password.value.length >= PASSWORD_MIN_LENGTH && 
-         password.value.length <= PASSWORD_MAX_LENGTH &&
-         !usernameError.value && 
-         !passwordError.value;
+  return username.value.length >= USERNAME_MIN_LENGTH &&
+    username.value.length <= USERNAME_MAX_LENGTH &&
+    password.value.length >= PASSWORD_MIN_LENGTH &&
+    password.value.length <= PASSWORD_MAX_LENGTH &&
+    !usernameError.value &&
+    !passwordError.value;
 });
 
 const isMobileDevice = () => {
@@ -138,7 +121,7 @@ const isMobileDevice = () => {
 const setData = async () => {
   // Clear previous errors
   error.value = "";
-  
+
   // Final validation before submission
   if (!isFormValid.value) {
     error.value = "Ma'lumotlarni to'g'ri kiriting";
@@ -149,7 +132,7 @@ const setData = async () => {
     error.value = "Telefon orqali tizimga kirish taqiqlangan!";
     return;
   }
-  
+
   try {
     isLoading.value = true;
     const res = await axios.post(url, {
@@ -169,10 +152,20 @@ const setData = async () => {
       if (!role) {
         error.value = "Login yoki parol noto'g'ri.";
         isLoading.value = false;
-      } else if (role) {
+      }
+      else if (role === 'operator') {
+        router.push(`/home`);
+        isLoading.value = false;
+      }
+      else if (role === 'accauntant' || role === 'chiefAccauntant') {
+        router.push(`/Dashboard`);
+        isLoading.value = false;
+      }
+      else if (role !== 'operator' || role !== 'accauntant' || role !== 'chiefAccauntant') {
         router.push(`/admin-list`);
         isLoading.value = false;
-      } else {
+      }
+      else {
         error.value = "Bu tizimga Kirish huquqingiz mavjud emas";
         isLoading.value = false;
       }

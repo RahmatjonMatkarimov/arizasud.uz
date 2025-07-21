@@ -115,7 +115,7 @@
           </div>
         </div>
 
-        <div @click="router.push('/reminders')" class="relative cursor-pointer group">
+        <div @click="router.push('/customers-reminders')" class="relative cursor-pointer group">
           <div :class="[
             'p-2 rounded-xl transition-all duration-300 hover:scale-110',
             // Dark mode
@@ -197,7 +197,7 @@
           </div>
         </div>
 
-        <div @click="router.push('/profiles')"
+        <div @click="router.push('/customers-profiles')"
           class="hover:scale-105 border-l-2 border-gray-600 pl-5 flex justify-end items-center gap-4 transition-transform duration-200">
           <div class="flex flex-col items-end">
             <h1 class="dark:text-gray-200 text-gray-800">{{ dat === 'datakril' ? translateText(`${userInfoLotin.name}
@@ -342,64 +342,6 @@
               </div>
             </div>
 
-            <!-- GitHub -->
-            <div @click="open()" :class="[
-              'flex items-center rounded-xl transition-all duration-300 group cursor-pointer relative overflow-hidden',
-              isCollapsed ? 'p-3 justify-center' : 'p-4',
-              // Dark mode
-              'dark:text-slate-300 dark:hover:text-white dark:hover:bg-gradient-to-r dark:hover:from-slate-700/50 dark:hover:to-slate-600/50 dark:hover:shadow-md',
-              // Light mode
-              'text-gray-600 hover:text-gray-800 hover:bg-gradient-to-r hover:from-purple-50/80 hover:to-indigo-50/80 hover:shadow-md'
-            ]">
-              <!-- Background Animation -->
-              <div :class="[
-                'absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-300',
-                // Dark mode
-                'dark:from-purple-500/10 dark:to-transparent',
-                // Light mode
-                'from-purple-500/8 to-transparent'
-              ]"></div>
-
-              <div :class="[
-                'flex items-center justify-center rounded-lg transition-all duration-300 relative z-10',
-                isCollapsed ? 'w-8 h-8' : 'w-10 h-10 mr-4',
-                // Dark mode
-                'dark:bg-slate-700/50 dark:group-hover:bg-purple-500/20',
-                // Light mode
-                'bg-gray-100/70 group-hover:bg-purple-100/60'
-              ]">
-                <Icon icon="mdi:github" :class="[
-                  'transition-colors duration-300',
-                  isCollapsed ? 'text-base' : 'text-lg',
-                  // Dark mode
-                  'dark:text-slate-400 dark:group-hover:text-purple-400',
-                  // Light mode
-                  'text-gray-500 group-hover:text-purple-600'
-                ]" />
-              </div>
-
-              <div v-if="!isCollapsed" class="flex-1 shadow-xl relative z-10">
-                <div class="text-sm font-medium">GitHub</div>
-              </div>
-
-              <!-- Tooltip for collapsed state -->
-              <div v-if="isCollapsed" :class="[
-                'absolute left-full shadow-xl ml-3 px-3 py-2 text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap pointer-events-none z-20 border',
-                // Dark mode
-                'dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200',
-                // Light mode
-                'bg-white border-gray-200 text-gray-700 shadow-xl'
-              ]">
-                GitHub
-                <div :class="[
-                  'absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent',
-                  // Dark mode
-                  'dark:border-r-slate-800',
-                  // Light mode
-                  'border-r-white'
-                ]"></div>
-              </div>
-            </div>
           </nav>
         </div>
 
@@ -500,11 +442,10 @@ import axios from 'axios'
 import { Icon } from '@iconify/vue'
 import { io } from 'socket.io-client'
 import translateText from '@/auth/Translate'
-import { useSearchStore } from './searchQuary'
+import { useSearchStore } from '@/components/Templates/searchQuary'
 import Dark from '../dark.vue'
 import { URL } from "@/auth/url.js";
 import { useRoute } from "vue-router";
-const isLoading = inject('isLoading')
 
 const router = useRouter()
 const route = useRoute();
@@ -540,29 +481,7 @@ const selectedLanguage = ref(languages.value.find(lang => lang.code === initialL
 
 
 const menuItems = [
-  { to: "/admin-list", label: "Ishchi hodimlar ro'yxati", icon: "mdi:account-group", condition: true },
-  { to: "/all-contract", label: "Shartnoma tuzish bo'limi", icon: "mdi:file-document-outline", condition: true },
-  { to: "/all-courts", label: "Sud hujjatlari", icon: "mdi:scale-balance", condition: true },
-  { to: "/admin-task", label: "Yangi shartnomalar", icon: "mdi:clipboard-text-outline", condition: localStorage.getItem('role') === 'admin' },
-  { to: "/yurist-tasks", label: "Yangi shartnomalar", icon: "mdi:clipboard-text-outline", condition: localStorage.getItem('role') === 'yurist' },
-  { to: "/asisstant-task", label: "Yangi shartnomalar", icon: "mdi:clipboard-text-outline", condition: localStorage.getItem('role') === 'yuristAssistant' },
-  { to: "/deliverer-task", label: "Yangi shartnomalar", icon: "mdi:clipboard-text-outline", condition: localStorage.getItem('role') === 'deliverer' },
-  { to: "/remindersAdmin", label: "Ishchilarni bajargan ishlari", icon: "mdi:check-circle-outline", condition: () => data.value?.workDone },
-  { to: "/Requirefiles", label: "Imzolanishi kerak boʻlgan fayllar", icon: "mdi:file-sign", condition: () => data.value?.userFiles },
-  { to: "/companyFile", label: "Kampaniya fayllari", icon: "mdi:office-building", condition: () => data.value?.companyDocs },
-  { to: "/required-items-section", label: "Sayt qo'llanmalari va to'liq ishlashi uchun kerakli fayllar", icon: "mdi:file-cog-outline", condition: true },
-  { to: "/category", label: "Kategoriyalar", icon: "mdi:shape-outline", condition: true },
-  { to: "/warehousesHouse", label: "Omborlar", icon: "mdi:warehouse", condition: true },
-  { to: "/fileconvert", label: "DOCX → PDF konvertor", icon: "mdi:file-sync-outline", condition: true },
-  { to: "/Dashboard", label: "Bugalteriya", icon: "mdi:chart-line", condition: localStorage.getItem('role') === 'bigAdmin' || localStorage.getItem('role') === 'accauntant' || localStorage.getItem('role') === 'chiefAccauntant' },
-  { to: "/home", label: "Coll-center", icon: "mdi:headset", condition: localStorage.getItem('role') === 'bigAdmin' },
-  { to: "/Customer-Admin", label: "Maslahat olish uchun kelgan murojatlar", icon: "mdi:headset", condition: ()=> data.value?.operatorList },
-  { to: "/JobsAdmin", label: "Vokansiya yaratish", icon: "mdi:briefcase-plus-outline", condition: true },
-  { to: "/questionsAdmin", label: "Savol va Javoblar", icon: "mdi:comment-question-outline", condition: true },
-  { to: "/ticketAdmin", label: "Taklif va shikoyatlar", icon: "mdi:credit-card-outline", condition: () => data.value?.ticket },
-  { to: "/smile", label: "Stikker qoʻshish", icon: "mdi:emoticon-happy-outline", condition: true },
-  { to: "/commaners", label: "Tizimdagi foydalanuvchilar roʻyxati", icon: "mdi:account-multiple", condition: true },
-  { to: "/archive", label: "Arxiv", icon: "mdi:archive-outline", condition: true },
+  { to: "/home", label: "Ishchi hodimlar ro'yxati", icon: "mdi:account-group", condition: true },
 ];
 
 const filteredMenu = computed(() => {
@@ -614,7 +533,7 @@ const getProfileImage = (imgPath) => {
 const navigateToChat = () => {
   if (userId) {
     messageCount.value = 0
-    router.push(`/chat/${userId}`)
+    router.push(`/customers-chat/${userId}`)
   }
 }
 

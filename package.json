@@ -60,7 +60,7 @@
     "particles.js": "^2.0.0",
     "path": "^0.12.7",
     "pdf-lib": "^1.17.1",
-    "pdfjs-dist": "^2.16.105",
+    "pdfjs-dist": "^5.3.93",
     "peerjs": "^1.5.4",
     "pinia": "^3.0.2",
     "pizzip": "^3.1.8",

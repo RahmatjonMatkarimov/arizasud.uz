@@ -30,6 +30,22 @@ const routes = [
   { path: '/questions', component: () => import('@/components/main/questions/user.vue') },
   { path: '/Vokansiya', component: () => import('@/components/main/job/user.vue') },
   {
+    path: '/coll-center',
+    name: 'coll-center',
+    component: () => import('@/components/Customers/customer-layout.vue'),
+    meta: { title: 'coll-center' },
+    children: [
+      { path: '/home', component: () => import('@/components/Customers/customer-home.vue') },
+      { path: '/customers-reminders', component: () => import('@/components/reminders/reminders.vue') },
+      { path: '/customers-profiles', component: () => import('@/views/Profile.vue') },
+      { path: '/customers-chat/:id', component: () => import('@/components/Message/Message.vue') },
+      { path: '/customer-sections/:id', component: () => import('@/components/Customers/customer-sections.vue') },
+      { path: '/customer-files/:id', component: () => import('@/components/Customers/customer-Files.vue') },
+      { path: '/customer-open/:id', component: () => import('@/components/Customers/customer-open.vue') },
+    ],
+    meta: { requiresAuth: true, allowedRoles: ['bigAdmin','operator'] },
+  },
+  {
     path: '/ashboard',
     name: 'bugalter',
     component: () => import('@/components/Templates/template.vue'),
@@ -47,6 +63,7 @@ const routes = [
       { path: '/reports', component: () => import('@/views/Reports.vue') },
       { path: '/link', component: () => import('@/components/dashboard/links.vue') },
       { path: '/profile', component: () => import('@/views/Profile.vue') },
+      { path: '/chats/:id', component: () => import('@/components/Message/Message.vue') },
     ],
     meta: { requiresAuth: true, allowedRoles: ['accauntant','chiefAccauntant', 'bigAdmin'] },
   },
@@ -59,6 +76,8 @@ const routes = [
       { path: '/appealAdmin', component: () => import('@/components/appeal/appealAdmin.vue') },
       { path: '/partners', component: () => import('@/components/sponsor/CardAdmin.vue') },
       { path: '/admins', component: () => import('@/components/admins/AdminCreate.vue') },
+      { path: '/operator', component: () => import('@/components/admins/Operator.vue') },
+      { path: '/Customer-Admin', component: () => import('@/components/Customers/customer-Admin.vue') },
       { path: '/FileAdmin/:id', component: () => import('@/components/main/file/fileaDMIN.vue') },
       { path: '/yurists', component: () => import('@/components/admins/YuristCreate.vue') },
       { path: '/operators', component: () => import('@/components/admins/coll_centerCreate.vue') },
@@ -134,7 +153,7 @@ const routes = [
         props: true
       },
     ],
-    meta: { requiresAuth: true, allowedRoles: ['admin', 'manager','warehouseman','chiefAccauntant', 'yuristAssistant', 'accauntant', 'deliverer', 'yurist', 'bigAdmin'] },
+    meta: { requiresAuth: true, allowedRoles: ['admin', 'manager','warehouseman', 'yuristAssistant', 'deliverer', 'yurist', 'bigAdmin'] },
   },
 ];
 export default routes

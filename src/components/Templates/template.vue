@@ -334,7 +334,7 @@ const getUnreadCount = () => {
 }
 const navigateToChat = () => {
   if (userId) {
-    router.push(`/chat/${userId}`)
+    router.push(`/chats/${userId}`)
     fetchUnreadMessageCount()
     messageCount.value = 0
   }
