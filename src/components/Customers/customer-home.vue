@@ -330,15 +330,6 @@
         </div>
         <p class="text-gray-700 dark:text-gray-300 mb-6">
           {{ translateText('Mijozni keyingi bosqichga o\'tkazishni tasdiqlaysizmi?') }}
-          <br />
-          <span class="font-semibold">{{ selectedCustomerForStatus?.name }} {{ selectedCustomerForStatus?.surname
-            }}</span>
-          <br />
-          {{ translateText('Hozirgi holat') }}: {{ translateText(selectedCustomerForStatus?.status === 'waiting' ?
-            'Kutmoqda' : selectedCustomerForStatus?.status === 'accepted' ? 'Qabul qilingan' : 'Tugallangan') }}
-          <br />
-          {{ translateText('Keyingi holat') }}: {{ translateText(selectedCustomerForStatus?.status === 'waiting' ?
-            'Qabul qilingan' : 'Tugallangan') }}
         </p>
         <div class="flex justify-end gap-4">
           <button @click="updateCustomerStatus"
@@ -719,7 +710,7 @@ export default {
     },
 
     setStatusFilter(status) {
-      this.selectedStatus = this.selectedStatus === status ? '' : status;
+        this.selectedStatus = status;
     },
     formatDate(isoDate) {
       if (!isoDate) return '';
