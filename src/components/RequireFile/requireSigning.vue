@@ -59,9 +59,6 @@ import { useRoute, useRouter } from 'vue-router';
 import { URL } from '@/auth/url';
 import * as pdfjsLib from 'pdfjs-dist';
 import translateText from '@/auth/Translate';
-// Explicitly set the worker source for pdfjs-dist
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
 // Use the imported URL
 const BASE_URL = URL;

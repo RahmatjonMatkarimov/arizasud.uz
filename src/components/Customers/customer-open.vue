@@ -21,7 +21,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import * as pdfjsLib from 'pdfjs-dist';
+
 import { inject } from 'vue';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
@@ -33,8 +33,7 @@ const pdfPages = ref([]);
 const docxFilePath = ref(null); // Store DOCX file path
 const pdf = ref(null); // Store DOCX file path
 
-// Set PDF.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
 
 const id = useRoute().params.id;
 

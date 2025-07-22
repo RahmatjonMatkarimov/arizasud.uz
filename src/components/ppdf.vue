@@ -20,12 +20,9 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import * as pdfjsLib from 'pdfjs-dist'
 import { inject } from 'vue';
 const isLoading = inject('isLoading');
 
-// Worker manzili
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js '
 
 const props = defineProps({
   filePath: {

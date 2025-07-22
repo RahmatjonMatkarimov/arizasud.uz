@@ -55,7 +55,7 @@
                 <!-- More Options Menu -->
                 <div class="relative">
                   <button
-                    @click="toggleMenu(file.id)"
+                    @click.stop="toggleMenu(file.id)"
                     class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
                   >
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -67,13 +67,13 @@
                     class="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-10"
                   >
                     <button
-                      @click="openEditModal(file)"
+                      @click.stop="openEditModal(file)"
                       class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     >
                       {{ translateText('Tahrirlash') }}
                     </button>
                     <button
-                      @click="openDeleteModal(file)"
+                      @click.stop="openDeleteModal(file)"
                       class="block w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     >
                       {{ translateText("O'chirish") }}

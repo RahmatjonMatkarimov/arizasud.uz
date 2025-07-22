@@ -63,12 +63,6 @@
 import axios from "axios";
 import { ref, onMounted, inject } from "vue";
 import { useRoute } from "vue-router";
-import * as pdfjsLib from "pdfjs-dist";
-
-// Explicitly set the worker source
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
-
 // Theme management
 const isDarkMode = ref(false);
 

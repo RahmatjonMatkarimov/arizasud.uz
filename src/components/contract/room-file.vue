@@ -272,13 +272,9 @@
 import { ref, onMounted, onUnmounted, inject } from 'vue';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
-import * as pdfjsLib from 'pdfjs-dist';
 import { URL } from '@/auth/url.js';
 import Header from '../header.vue';
 import translateText from '@/auth/Translate';
-
-// Set the PDF.js worker source
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
 const route = useRoute();
 const id = route.params.id;

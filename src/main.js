@@ -9,7 +9,8 @@ import axios from "axios";
 import { Icon } from '@iconify/vue';
 // ✅ Pinia import va yaratish
 import { createPinia } from 'pinia';
-
+import * as pdfjsLib from 'pdfjs-dist';
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://unpkg.com/pdfjs-dist@5.3.93/build/pdf.worker.mjs';
 // FontAwesome
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';

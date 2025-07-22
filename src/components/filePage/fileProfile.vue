@@ -361,17 +361,12 @@ import { URL1 } from "@/auth/url";
 import axios from "axios";
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
-import * as pdfjsLib from "pdfjs-dist";
 import translateText from "@/auth/Translate";
 import { onUnmounted } from "vue";
 import { inject } from "vue";
 
 const dat = ref(localStorage.getItem("til") || "datalotin");
 
-
-// Set the worker source for pdfjs-dist
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
 
 const API_URL = URL1;
 const data = ref({ videos: [] });
