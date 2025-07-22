@@ -562,6 +562,27 @@ const getUnreadCount = () => {
   socket1.emit('getUnreadCount', userId)
 }
 
+const fetchNotificationsOperator = async () => {
+  try {
+    let count = ref(0)
+    const userId = ref(parseInt(localStorage.getItem('id')) || 1);
+    const response = await axios.get(`${URL}/customers/notifications/${userId.value}`);
+    if (Array.isArray(response.data)) {
+      let newArr = ref([])
+      const newNotifications = response.data.map((n) => ({
+        id: n.id,
+        message: n.message,
+        sentAt: n.createdAt || new Date(),
+        isRead: n.read || false,
+      }));
+      newArr.value = newNotifications.filter((el)=>!el.isRead)  
+      unreadCount.value += newArr.value.length
+    }
+  } catch (error) {
+    console.error('Error fetching notifications:', error);
+  }
+};
+
 onMounted(async () => {
   await fetchUserData()
   await fetchUnreadCount()
@@ -571,6 +592,7 @@ onMounted(async () => {
   watch(messageCount, (newVal) => {
     localStorage.setItem('messageCount', newVal)
   })
+  fetchNotificationsOperator()
 })
 
 onUnmounted(() => {
