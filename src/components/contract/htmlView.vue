@@ -276,8 +276,6 @@ import * as pdfjsLib from 'pdfjs-dist';
 import { URL } from '@/auth/url.js';
 import translateText from '@/auth/Translate';
 
- = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
-
 const route = useRoute();
 const id = route.params.id;
 const id2 = Number(route.params.id2);
