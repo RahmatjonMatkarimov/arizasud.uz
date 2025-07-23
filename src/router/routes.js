@@ -41,6 +41,7 @@ const routes = [
       { path: '/customers-chat/:id', component: () => import('@/components/Message/Message.vue') },
       { path: '/customer-sections/:id', component: () => import('@/components/Customers/customer-sections.vue') },
       { path: '/customer-files/:id', component: () => import('@/components/Customers/customer-Files.vue') },
+      { path: '/customer-sms', component: () => import('@/components/Customers/customer-sms.vue') },
       { path: '/customer-open/:id', component: () => import('@/components/Customers/customer-open.vue') },
     ],
     meta: { requiresAuth: true, allowedRoles: ['bigAdmin','operator'] },

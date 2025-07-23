@@ -42,6 +42,15 @@
               </svg>
               {{ translateText('Yangi mijoz qo\'shish') }}
             </button>
+            <button @click.stop="$router.push('/customer-sms')"
+              class="flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+              :aria-label="translateText('Mijozlarga sms xabar yuborish')">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6">
+                </path>
+              </svg>
+              {{ translateText('Mijozlarga sms xabar yuborish') }}
+            </button>
           </div>
         </div>
       </div>
