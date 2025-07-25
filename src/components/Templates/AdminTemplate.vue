@@ -555,7 +555,7 @@ const menuItems = [
   { to: "/warehousesHouse", label: "Omborlar", icon: "mdi:warehouse", condition: true },
   { to: "/fileconvert", label: "DOCX → PDF konvertor", icon: "mdi:file-sync-outline", condition: true },
   { to: "/Dashboard", label: "Bugalteriya", icon: "mdi:chart-line", condition: localStorage.getItem('role') === 'bigAdmin' || localStorage.getItem('role') === 'accauntant' || localStorage.getItem('role') === 'chiefAccauntant' },
-  { to: "/home", label: "Coll-center", icon: "mdi:headset", condition: localStorage.getItem('role') === 'bigAdmin' },
+  { to: "/main", label: "Coll-center", icon: "mdi:headset", condition: localStorage.getItem('role') === 'bigAdmin' },
   { to: "/Customer-Admin", label: "Maslahat olish uchun kelgan murojatlar", icon: "mdi:headset", condition: ()=> data.value?.operatorList },
   { to: "/JobsAdmin", label: "Vokansiya yaratish", icon: "mdi:briefcase-plus-outline", condition: true },
   { to: "/questionsAdmin", label: "Savol va Javoblar", icon: "mdi:comment-question-outline", condition: true },

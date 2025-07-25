@@ -35,6 +35,7 @@ const routes = [
     component: () => import('@/components/Customers/customer-layout.vue'),
     meta: { title: 'coll-center' },
     children: [
+      { path: '/main', component: () => import('@/components/Customers/customer-statis.vue') },
       { path: '/home', component: () => import('@/components/Customers/customer-home.vue') },
       { path: '/customers-reminders', component: () => import('@/components/reminders/reminders.vue') },
       { path: '/customers-profiles', component: () => import('@/views/Profile.vue') },
@@ -44,7 +45,6 @@ const routes = [
       { path: '/customer-sms', component: () => import('@/components/Customers/customer-sms.vue') },
       { path: '/customer-open/:id', component: () => import('@/components/Customers/customer-open.vue') },
     ],
-    meta: { requiresAuth: true, allowedRoles: ['bigAdmin','operator'] },
   },
   {
     path: '/ashboard',

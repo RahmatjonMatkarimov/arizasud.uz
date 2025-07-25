@@ -2,7 +2,8 @@
   <div>
     <!-- Header -->
     <header :class="[
-      'fixed top-0 z-20 w-full flex justify-between items-center px-6 py-4 h-[90px] shadow-xl transition-all duration-500',
+      'fixed top-0 z-20 flex justify-between items-center px-6 py-4 h-[90px] shadow-xl transition-all duration-500',
+      isCollapsed ? 'left-20 w-[calc(100%-5rem)]' : 'left-80 w-[calc(100%-20rem)]',
       // Dark mode
       'dark:bg-gradient-to-r dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 dark:border-b dark:border-slate-700/50',
       // Light mode
@@ -223,11 +224,132 @@
 
     <!-- Main Layout -->
     <div class="flex min-h-screen">
+      <aside :class="[
+        'fixed top-0 left-0 h-screen shadow-2xl transition-all duration-500 z-30 border-r',
+        isCollapsed ? 'w-20' : 'w-80',
+        // Dark mode
+        'dark:bg-gradient-to-b dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 dark:border-slate-700/50',
+        // Light mode
+        'bg-gradient-to-b from-white via-gray-200 to-white border-gray-200/80 backdrop-blur-sm'
+      ]">
+        <!-- Toggle Button -->
+        <button @click="isCollapsed = !isCollapsed" :class="[
+          'absolute -right-6 top-[100px] w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg ring-2',
+          // Dark mode
+          'dark:bg-gradient-to-r dark:from-emerald-500 dark:to-emerald-600 dark:hover:from-emerald-600 dark:hover:to-emerald-700 dark:ring-emerald-400/30',
+          // Light mode
+          'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 ring-blue-400/40'
+        ]">
+          <Icon :icon="isCollapsed ? 'mdi:chevron-right' : 'mdi:chevron-left'"
+            class="text-white text-lg transition-transform duration-300" />
+        </button>
 
+        <!-- Custom Scrollbar Container -->
+        <div :class="[
+          'mt-4 px-3 h-full overflow-y-auto scrollbar-custom',
+          // Dark mode scrollbar
+          'dark:scrollbar-thumb-slate-600 dark:scrollbar-track-slate-800/30',
+          // Light mode scrollbar
+          'scrollbar-thumb-gray-300 scrollbar-track-gray-100/50'
+        ]">
+          <!-- Menu Items -->
+          <nav class="space-y-3 pb-6">
+            <div v-for="(item, i) in filteredMenu" :key="i" @click="router.push(item.to)" :class="[
+              'flex items-center rounded-xl shadow-xl transition-all duration-300 group relative overflow-hidden',
+              isCollapsed ? 'p-3 justify-center' : 'p-4',
+              route.path === item.to
+                ? [
+                  // Dark mode active
+                  'dark:bg-gradient-to-r dark:from-emerald-500/20 dark:to-emerald-600/20 dark:text-emerald-300 dark:shadow-lg dark:border dark:border-emerald-500/30',
+                  // Light mode active  
+                  'bg-gradient-to-r from-blue-500/15 to-blue-600/15 text-blue-700 shadow-lg border border-blue-400/40'
+                ]
+                : [
+                  // Dark mode inactive
+                  'dark:text-slate-300 dark:hover:text-white dark:hover:bg-gradient-to-r dark:hover:from-slate-700/50 dark:hover:to-slate-600/50 dark:hover:shadow-md',
+                  // Light mode inactive
+                  'text-gray-600 hover:text-gray-800 hover:bg-gradient-to-r hover:from-gray-100/80 hover:to-gray-50/80 hover:shadow-md'
+                ]
+            ]">
+              <!-- Background Animation -->
+              <div :class="[
+                'absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-300',
+                // Dark mode
+                'dark:from-emerald-500/10 dark:to-transparent',
+                // Light mode
+                'from-blue-500/8 to-transparent'
+              ]"></div>
+
+              <div :class="[
+                'flex items-center justify-center rounded-lg transition-all duration-300 relative z-10',
+                isCollapsed ? 'w-8 h-8' : 'w-10 h-10 mr-4',
+                // Dark mode
+                'dark:bg-slate-700/50 dark:group-hover:bg-emerald-500/20',
+                // Light mode
+                'bg-gray-100/70 group-hover:bg-blue-100/60'
+              ]">
+                <Icon :icon="item.icon" :class="[
+                  'transition-colors duration-300',
+                  isCollapsed ? 'text-base' : 'text-lg',
+                  route.path === item.to
+                    ? [
+                      // Dark mode active
+                      'dark:text-emerald-400',
+                      // Light mode active
+                      'text-blue-600'
+                    ]
+                    : [
+                      // Dark mode inactive
+                      'dark:text-slate-400 dark:group-hover:text-emerald-400',
+                      // Light mode inactive
+                      'text-gray-500 group-hover:text-blue-600'
+                    ]
+                ]" />
+              </div>
+
+              <div v-if="!isCollapsed" class="flex-1 min-w-0 relative z-10">
+                <div class="text-sm font-medium truncate">
+                  {{ dat === 'datakril' ? translateText(item.label) : item.label }}
+                </div>
+              </div>
+
+              <!-- Active Indicator -->
+              <div v-if="route.path === item.to" :class="[
+                'absolute right-0 top-1/2 -translate-y-1/2 w-1 h-8 rounded-l-full',
+                isCollapsed ? 'hidden' : '',
+                // Dark mode
+                'dark:bg-gradient-to-b dark:from-emerald-400 dark:to-emerald-600',
+                // Light mode
+                'bg-gradient-to-b from-blue-500 to-blue-600'
+              ]"></div>
+
+              <!-- Tooltip for collapsed state -->
+              <div v-if="isCollapsed" :class="[
+                'absolute left-full ml-3 px-3 py-2 text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap pointer-events-none z-20 border',
+                // Dark mode
+                'dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200',
+                // Light mode
+                'bg-white border-gray-200 text-gray-700 shadow-xl'
+              ]">
+                {{ dat === 'datakril' ? translateText(item.label) : item.label }}
+                <div :class="[
+                  'absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent',
+                  // Dark mode
+                  'dark:border-r-slate-800',
+                  // Light mode
+                  'border-r-white'
+                ]"></div>
+              </div>
+            </div>
+
+          </nav>
+        </div>
+
+      </aside>
 
       <main :class="[
         'flex-1 mt-[90px] transition-all duration-500 ease-in-out min-h-[calc(100vh-90px)]',
-
+        isCollapsed ? 'ml-20' : 'ml-80'
       ]">
         <div class="">
           <router-view />
@@ -359,7 +481,9 @@ const selectedLanguage = ref(languages.value.find(lang => lang.code === initialL
 
 
 const menuItems = [
+  { to: "/main", label: "Bosh sahifa", icon: "mdi:home", condition: true },
   { to: "/home", label: "Ishchi hodimlar ro'yxati", icon: "mdi:account-group", condition: true },
+  { to: "/customers-profiles", label: "Sozlamalar", icon: "mdi:settings", condition: true },
 ];
 
 const filteredMenu = computed(() => {
@@ -562,27 +686,6 @@ const getUnreadCount = () => {
   socket1.emit('getUnreadCount', userId)
 }
 
-const fetchNotificationsOperator = async () => {
-  try {
-    let count = ref(0)
-    const userId = ref(parseInt(localStorage.getItem('id')) || 1);
-    const response = await axios.get(`${URL}/customers/notifications/${userId.value}`);
-    if (Array.isArray(response.data)) {
-      let newArr = ref([])
-      const newNotifications = response.data.map((n) => ({
-        id: n.id,
-        message: n.message,
-        sentAt: n.createdAt || new Date(),
-        isRead: n.read || false,
-      }));
-      newArr.value = newNotifications.filter((el)=>!el.isRead)  
-      unreadCount.value += newArr.value.length
-    }
-  } catch (error) {
-    console.error('Error fetching notifications:', error);
-  }
-};
-
 onMounted(async () => {
   await fetchUserData()
   await fetchUnreadCount()
@@ -592,7 +695,6 @@ onMounted(async () => {
   watch(messageCount, (newVal) => {
     localStorage.setItem('messageCount', newVal)
   })
-  fetchNotificationsOperator()
 })
 
 onUnmounted(() => {

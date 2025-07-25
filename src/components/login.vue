@@ -154,7 +154,7 @@ const setData = async () => {
         isLoading.value = false;
       }
       else if (role === 'operator') {
-        router.push(`/home`);
+        router.push(`/main`);
         isLoading.value = false;
       }
       else if (role === 'accauntant' || role === 'chiefAccauntant') {
