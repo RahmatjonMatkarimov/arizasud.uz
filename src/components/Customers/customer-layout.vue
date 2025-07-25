@@ -482,7 +482,7 @@ const selectedLanguage = ref(languages.value.find(lang => lang.code === initialL
 
 const menuItems = [
   { to: "/main", label: "Bosh sahifa", icon: "mdi:home", condition: true },
-  { to: "/home", label: "Ishchi hodimlar ro'yxati", icon: "mdi:account-group", condition: true },
+  { to: "/home", label: "Mijozlar ro'yxati", icon: "mdi:account-group", condition: true },
   { to: "/customers-profiles", label: "Sozlamalar", icon: "mdi:settings", condition: true },
 ];
 

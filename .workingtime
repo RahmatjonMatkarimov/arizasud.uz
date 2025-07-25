@@ -24,7 +24,9 @@
     },
     "data": [
         {
-            "config": false,
+            "config": {
+                "showIdle": false
+            },
             "user": "RahmatjonMatkarimov",
             "dailySessions": [
                 {
@@ -5777,6 +5779,50 @@
                                     ".uz/src/components/Customers/customer-statis.vue",
                                     ".uz/src/router/routes.js",
                                     ".uz/src/components/Customers/customer-home.vue"
+                                ]
+                            },
+                            "actionType": "Idle"
+                        },
+                        {
+                            "sessionInfo": {
+                                "id": "6825efac-eafd-43ca-bc84-7e02874fdd0c",
+                                "duration": 217290,
+                                "idle": 1214869,
+                                "state": "Idle",
+                                "durations": [
+                                    {
+                                        "id": "ebb9a767-adf3-4f2f-bda9-8fea8d0914eb",
+                                        "state": "Idle",
+                                        "begin": 1753423948636,
+                                        "end": 1753423948636,
+                                        "duration": 0
+                                    },
+                                    {
+                                        "id": "b05667ef-f0f7-4642-bc83-79cf943cd30e",
+                                        "state": "Ongoing",
+                                        "begin": 1753423944692,
+                                        "end": 1753423948636,
+                                        "duration": 3944
+                                    },
+                                    {
+                                        "id": "d2e2240f-fd3b-4ed5-a1f8-307da93e0bf4",
+                                        "state": "Idle",
+                                        "begin": 1753423772447,
+                                        "end": 1753423944692,
+                                        "duration": 172245
+                                    },
+                                    {
+                                        "id": "954e4c75-7c22-4bda-812b-b77ae1dd6db1",
+                                        "state": "Ongoing",
+                                        "begin": 1753423559101,
+                                        "end": 1753423772447,
+                                        "duration": 213346
+                                    }
+                                ],
+                                "filesExt": [
+                                    ".uz/src/components/Templates/AdminTemplate.vue",
+                                    ".uz/src/components/ProfilePage/Profile.vue",
+                                    ".uz/src/components/admins/all.vue"
                                 ]
                             },
                             "actionType": "Idle"
