@@ -34,6 +34,7 @@ const data = ref({
   companyDocs: false,
   carrier: false,
   ticket: false,
+  operator: false,
   operatorList: false,
   workDone: false
 });
@@ -59,6 +60,7 @@ const fetchPermissions = async () => {
         accauntant: false,
         chiefAccauntant: false,
         warehouseman: false,
+        operator: false,
         operatorList: false,
         yuristAssistant: false,
         carrier: false,
@@ -167,7 +169,8 @@ const permissions = [
   { key: "warehouseman", label: "Omborchilar ro'yxatini ko'rish uchun ruxsat" },
   { key: "yuristAssistant", label: "Yurist yordamchilari ro'yxatini ko'rish uchun ruxsat" },
   { key: "carrier", label: "Yetkazib beruvchilar ro'yxatini ko'rish uchun ruxsat" },
-  { key: "operatorList", label: "Coll-centerlar ro'yxatini ko'rish uchun ruxsat" },
+  { key: "operatorList", label: "Maslahat berish uchun ruxsat" },
+  { key: "operator", label: "Operotorlar ro'yxatini ko'rish uchun ruxsat" },
 ];
 
 const info = [
