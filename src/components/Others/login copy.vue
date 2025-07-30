@@ -67,7 +67,7 @@
 import axios from "axios";
 import { ref, onMounted, inject } from "vue";
 import { useRouter } from "vue-router";
-import { URL } from "../auth/url";
+import { URL } from "../../auth/url";
 const isLoading = inject('isLoading');
 const password = ref("");
 const username = ref("");

@@ -5,7 +5,7 @@ import { URL } from '@/auth/url'
 import { ref, inject, onMounted } from 'vue'
 import * as XLSX from 'xlsx'
 import { useRoute, useRouter } from 'vue-router'
-import PDFViewer from '../components/ppdf.vue'
+import PDFViewer from '../components/Others/ppdf.vue'
 import { onUnmounted } from 'vue'
 import { is } from 'date-fns/locale'
 

@@ -15,7 +15,7 @@ import { ref, provide, onMounted, onUnmounted, watch } from 'vue';
 import { userInfo, syncLocalStorageWithToken } from '@/utils/auth'
 import { computed } from 'vue'
 import axios from 'axios';
-import ErrorComponent from '@/components/error.vue';
+import ErrorComponent from '@/components/Others/error.vue';
 import { URL } from './auth/url';
 import ticketModal from './components/ticket/ticketModal.vue';
 

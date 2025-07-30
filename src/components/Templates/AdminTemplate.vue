@@ -501,7 +501,7 @@ import { Icon } from '@iconify/vue'
 import { io } from 'socket.io-client'
 import translateText from '@/auth/Translate'
 import { useSearchStore } from './searchQuary'
-import Dark from '../dark.vue'
+import Dark from '../Others/dark.vue'
 import { URL } from "@/auth/url.js";
 import { useRoute } from "vue-router";
 const isLoading = inject('isLoading')

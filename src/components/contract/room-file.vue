@@ -273,7 +273,7 @@ import { ref, onMounted, onUnmounted, inject } from 'vue';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
 import { URL } from '@/auth/url.js';
-import Header from '../header.vue';
+import Header from '../Others/header.vue';
 import translateText from '@/auth/Translate';
 
 const route = useRoute();

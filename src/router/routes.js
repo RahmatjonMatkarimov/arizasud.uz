@@ -28,7 +28,7 @@ const routes = [
   {
     path: "/FEq8Qt7oKTrvFEq8Qt7oKTrv8YFWGtPL3Yot50diIP9VH_FL6NQIcT08YFWGtPLFEq8Qt7oKTrv8YFWGtPL3Yot50diIP9VH_FL6NQIcT03Yot50diIPFEq8Qt7oKTrv8YFWGtPL3Yot50diIP9VH_FL6NQIcT09VH_FL6NQIcT0",
     name: "login",
-    component: () => import("@/components/login.vue"),
+    component: () => import("@/components/Others/login.vue"),
   },
   {
     path: "/path/:id",
@@ -124,10 +124,10 @@ const routes = [
   },
   {
     path: "/:catchAll(.*)",
-    component: () => import("@/components/error.vue"),
+    component: () => import("@/components/Others/error.vue"),
     props: { errorCode: 404 },
   },
-  { path: "/finger", component: () => import("@/components/finger.vue") },
+  { path: "/finger", component: () => import("@/components/Others/finger.vue") },
   {
     path: "/questions",
     component: () => import("@/components/main/questions/user.vue"),
@@ -163,7 +163,7 @@ const routes = [
         component: () => import("@/components/Message/Message.vue"),
       },
       {
-        path: "/customer-sections/:id",
+        path: "/customer-sections/:id/:status",
         component: () => import("@/components/Customers/customer-sections.vue"),
       },
       {
@@ -364,7 +364,7 @@ const routes = [
       },
       {
         path: "/payment",
-        component: () => import("@/components/payments.vue"),
+        component: () => import("@/components/Others/payments.vue"),
       },
       {
         path: "/obligations/:id",
@@ -534,7 +534,7 @@ const routes = [
         props: true,
       },
     ],
-    meta: { requiresAuth: true, allowedRoles: ['admin', 'manager','warehouseman', 'yuristAssistant', 'deliverer', 'yurist', 'bigAdmin'] },
+    // meta: { requiresAuth: true, allowedRoles: ['admin', 'manager','warehouseman', 'yuristAssistant', 'deliverer', 'yurist', 'bigAdmin'] },
   },
 ];
 export default routes;

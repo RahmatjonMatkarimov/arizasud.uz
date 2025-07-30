@@ -140,7 +140,7 @@
 import axios from 'axios';
 import { ref, inject, computed, watch, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { URL } from '../auth/url';
+import { URL } from '../../auth/url';
 
 const isLoading = inject('isLoading', ref(false));
 const router = useRouter();
@@ -234,7 +234,7 @@ const setData = async () => {
       showFaceModal.value = true;
     }
   } catch (err) {
-    error.value = err.response?.data?.message || "Login yoki parol noto'g'ri.";
+    error.value = "Login yoki parol noto'g'ri.";
   } finally {
     isLoading.value = false;
   }
@@ -350,10 +350,9 @@ const submitFace = async () => {
       }
     }
   } catch (err) {
-    error.value = err.response?.data?.message || 'Yuz tasdiqlashda xatolik';
+    error.value = 'Yuzingiz tasdiqlashdan o\'ta olmadi';
   } finally {
     isLoading.value = false;
-    // Clean up object URL after submission
     if (capturedImage.value && capturedImage.value.url && window.URL && window.URL.revokeObjectURL) {
       window.URL.revokeObjectURL(capturedImage.value.url);
     }

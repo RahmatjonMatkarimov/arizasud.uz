@@ -86,7 +86,7 @@ import { reactive, onMounted, ref, onUnmounted } from 'vue'
 import axios from 'axios'
 import { URL } from '@/auth/url'
 import translateText from '@/auth/Translate'
-import Header from '../header.vue'
+import Header from '../Others/header.vue'
 import { useRouter } from 'vue-router'
 import { inject } from 'vue'
 

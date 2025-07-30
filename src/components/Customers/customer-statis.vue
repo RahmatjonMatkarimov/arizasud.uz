@@ -1,3 +1,4 @@
+```vue
 <template>
   <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
     <!-- Header -->
@@ -24,7 +25,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Status Cards -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-6">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-6 animate-fade-in">
           <div class="flex items-center justify-between">
             <div>
               <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ translateText('Qabul qilingan') }}</h3>
@@ -39,7 +40,7 @@
           </div>
         </div>
 
-        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-6">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-6 animate-fade-in">
           <div class="flex items-center justify-between">
             <div>
               <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ translateText('Yurist zimmasiga otkazilganlar') }}</h3>
@@ -54,7 +55,7 @@
           </div>
         </div>
 
-        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-6">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-6 animate-fade-in">
           <div class="flex items-center justify-between">
             <div>
               <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ translateText('Tugallangan') }}</h3>
@@ -73,7 +74,7 @@
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Chart Section -->
         <div class="lg:col-span-2">
-          <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-6">
+          <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-6 animate-fade-in">
             <div class="flex items-center justify-between mb-6">
               <h3 class="text-xl font-semibold text-gray-900 dark:text-white flex items-center">
                 <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -95,7 +96,7 @@
 
         <!-- Recent Customers -->
         <div class="lg:col-span-1">
-          <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-6">
+          <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-6 animate-fade-in">
             <div class="flex items-center justify-between mb-6">
               <h3 class="text-xl font-semibold text-gray-900 dark:text-white flex items-center">
                 <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -105,37 +106,37 @@
               </h3>
             </div>
             <div class="space-y-4 max-h-96 overflow-y-auto">
-              <div v-for="customer in recentCustomers" :key="customer.id" 
+              <div v-for="app in recentCustomers" :key="app.id" 
                    class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
                 <div class="flex items-start space-x-3">
                   <div class="bg-gradient-to-r from-blue-500 to-purple-500 w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0">
                     <span class="text-white font-semibold text-sm">
-                      {{ getInitials(customer.name) }}
+                      {{ getInitials(app.customerName) }}
                     </span>
                   </div>
                   <div class="flex-1 min-w-0">
                     <h4 class="text-sm font-semibold text-gray-900 dark:text-white truncate">
-                      {{ customer.name }} {{ customer.surname }}
+                      {{ translateText(app.customerName) }} {{ translateText(app.customerSurname) }}
                     </h4>
                     <div class="mt-1 space-y-1">
                       <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
                         <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                         </svg>
-                        {{ customer.phone }}
+                        {{ app.customerPhone }}
                       </div>
                       <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
                         <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                         </svg>
-                        {{ translateText(customer.purpose) }}
+                        {{ translateText(app.purpose) }}
                       </div>
                       <div class="flex items-center justify-between mt-2">
-                        <span :class="getStatusColorClass(customer.status)" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium">
-                          {{ getStatusText(customer.status) }}
+                        <span :class="getStatusColorClass(app.status)" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium">
+                          {{ getStatusText(app.status) }}
                         </span>
                         <span class="text-xs text-gray-500 dark:text-gray-400">
-                          {{ formatDate(customer.endDate) }}
+                          {{ formatDate(app.endDate) }}
                         </span>
                       </div>
                     </div>
@@ -167,44 +168,71 @@ export default {
     const error = ref(null);
     const selectedMonth = ref(new Date().toISOString().slice(0, 7)); // Default to current month (YYYY-MM)
 
-    // Fetch available months from backend or derive from customer data
-const availableMonths = computed(() => {
-  const months = new Set();
-  customers.value.forEach(customer => {
-    if (customer.createdAt) {
-      const month = new Date(customer.createdAt).toISOString().slice(0, 7);
-      months.add(month);
-    }
-  });
+    // Fetch available months from application data
+    const availableMonths = computed(() => {
+      const months = new Set();
+      customers.value.forEach(customer => {
+        customer.CustomerApplications?.forEach(app => {
+          if (app.createdAt) {
+            const month = new Date(app.createdAt).toISOString().slice(0, 7);
+            months.add(month);
+          }
+        });
+      });
 
-  // Map for Uzbek month names
-  const uzbekMonths = [
-    'yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun',
-    'iyul', 'avgust', 'sentyabr', 'oktyabr', 'noyabr', 'dekabr'
-  ];
+      // Map for Uzbek month names
+      const uzbekMonths = [
+        'yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun',
+        'iyul', 'avgust', 'sentyabr', 'oktyabr', 'noyabr', 'dekabr'
+      ];
 
-  return Array.from(months)
-    .sort((a, b) => b.localeCompare(a))
-    .map(month => {
-      const [year, monthNum] = month.split('-').map(Number);
-      const monthName = uzbekMonths[monthNum - 1]; // Get Uzbek month name
-      return {
-        value: month,
-        label: `${year} ${monthName}` // Format as "2025 iyun"
-      };
+      return Array.from(months)
+        .sort((a, b) => b.localeCompare(a))
+        .map(month => {
+          const [year, monthNum] = month.split('-').map(Number);
+          const monthName = uzbekMonths[monthNum - 1];
+          return {
+            value: month,
+            label: `${year} ${monthName}`
+          };
+        });
     });
-});
 
+    // Compute status counts based on CustomerApplications
     const statusCounts = computed(() => {
-      return {
-        accepted: customers.value.filter(c => c.status === 'accepted').length,
-        waiting: customers.value.filter(c => c.status === 'waiting').length,
-        completed: customers.value.filter(c => c.status === 'completed').length
+      const counts = {
+        accepted: 0,
+        waiting: 0,
+        completed: 0
       };
+      customers.value.forEach(customer => {
+        customer.CustomerApplications?.forEach(app => {
+          if (app.status === 'accepted') counts.accepted++;
+          else if (app.status === 'waiting') counts.waiting++;
+          else if (app.status === 'completed') counts.completed++;
+        });
+      });
+      return counts;
     });
 
+    // Compute recent applications (not customers) for the recent customers list
     const recentCustomers = computed(() => {
-      return customers.value
+      const applications = [];
+      customers.value.forEach(customer => {
+        customer.CustomerApplications?.forEach(app => {
+          applications.push({
+            id: app.id,
+            customerName: customer.name || '',
+            customerSurname: customer.surname || '',
+            customerPhone: customer.phone || '',
+            purpose: app.purpose || '',
+            status: app.status || '',
+            endDate: app.endDate || '',
+            createdAt: app.createdAt || app.created_at || new Date().toISOString()
+          });
+        });
+      });
+      return applications
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .slice(0, 5);
     });
@@ -231,14 +259,16 @@ const availableMonths = computed(() => {
         labels.push(day.toString());
       }
 
-      // Count customers by creation date and status for selected month
+      // Count applications by creation date and status for selected month
       customers.value.forEach(customer => {
-        if (customer.createdAt) {
-          const customerDate = new Date(customer.createdAt).toISOString().slice(0, 10);
-          if (customerDate.startsWith(selectedMonth.value) && statusByDate[customerDate]) {
-            statusByDate[customerDate][customer.status] = (statusByDate[customerDate][customer.status] || 0) + 1;
+        customer.CustomerApplications?.forEach(app => {
+          if (app.createdAt) {
+            const appDate = new Date(app.createdAt).toISOString().slice(0, 10);
+            if (appDate.startsWith(selectedMonth.value) && statusByDate[appDate]) {
+              statusByDate[appDate][app.status] = (statusByDate[appDate][app.status] || 0) + 1;
+            }
           }
-        }
+        });
       });
 
       // Convert to arrays for chart
@@ -383,10 +413,18 @@ const availableMonths = computed(() => {
         const response = await axios.get(`${URL}/customers`);
         customers.value = response.data.map(customer => ({
           ...customer,
+          name: customer.name || '',
+          surname: customer.surname || '',
+          phone: customer.phone || '',
           province: customer.province ? String(customer.province) : '',
           district: customer.district ? String(customer.district) : '',
-          endDate: customer.endDate || '',
-          createdAt: customer.createdAt || customer.created_at || new Date().toISOString(),
+          CustomerApplications: customer.CustomerApplications?.map(app => ({
+            ...app,
+            purpose: app.purpose || '',
+            status: app.status || '',
+            endDate: app.endDate || '',
+            createdAt: app.createdAt || app.created_at || new Date().toISOString()
+          })) || []
         }));
       } catch (err) {
         console.error('Error fetching customers:', err);
@@ -477,3 +515,4 @@ const availableMonths = computed(() => {
   }
 }
 </style>
+```

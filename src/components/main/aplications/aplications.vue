@@ -54,7 +54,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import ParticlesHeader from "@/components/header.vue";
+import ParticlesHeader from "@/components/Others/header.vue";
 import { URL } from "../../../auth/url.js";
 
 const dat = ref(localStorage.getItem('til') || 'datalotin');

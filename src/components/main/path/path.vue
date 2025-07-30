@@ -59,7 +59,7 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { URL } from "../../../auth/url.js";
-import Header from "@/components/header.vue";
+import Header from "@/components/Others/header.vue";
 
 const dat = ref(localStorage.getItem('til') || 'datalotin');
 const router = useRouter();

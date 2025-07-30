@@ -337,7 +337,7 @@ import { inject } from 'vue';
 import translateText from '@/auth/Translate';
 import translateTextLotin from '@/auth/lotin';
 import { Icon } from '@iconify/vue';
-import Dark from '../dark.vue';
+import Dark from '../Others/dark.vue';
 
 // User data from localStorage
 const user = ref({

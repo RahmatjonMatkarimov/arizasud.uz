@@ -116,7 +116,7 @@ import { Icon } from '@iconify/vue'
 import { io } from 'socket.io-client'
 import translateText from '@/auth/Translate'
 import { useSearchStore } from './searchQuary'
-import Dark from '../dark.vue'
+import Dark from '../Others/dark.vue'
 
 const { locale } = useI18n()
 const searchStore = useSearchStore()

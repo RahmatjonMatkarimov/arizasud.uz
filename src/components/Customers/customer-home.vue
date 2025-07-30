@@ -1,4 +1,3 @@
-```vue
 <template>
   <div
     class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 transition-all duration-500"
@@ -57,11 +56,31 @@
                   />
                 </svg>
                 <span
-                  >{{ filteredCustomers.length }}
+                  >{{ filteredApplications.length }}
                   {{ translateText("mijoz") }}</span
                 >
               </div>
             </div>
+            <button
+              @click.stop="$router.push('/customer-sms')"
+              class="flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+              :aria-label="translateText('Kerakli mijozlarga SMS yuborish')"
+            >
+              <svg
+                class="w-5 h-5 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                />
+              </svg>
+              {{ translateText("Mijozlarga kerakli SMS xabar yuborish") }}
+            </button>
             <button
               @click.stop="openModal"
               class="flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
@@ -311,7 +330,7 @@
                     d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
                   />
                 </svg>
-                {{ translateText("Telefon") }} *
+                {{ translateText("Telefon raqami") }} *
               </label>
               <input
                 v-model="customer.phone"
@@ -324,34 +343,6 @@
                 :aria-label="
                   translateText('Mijozning telefon raqamini kiriting')
                 "
-              />
-            </div>
-            <!-- User ID -->
-            <div class="form-group">
-              <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-              >
-                <svg
-                  class="w-4 h-4 inline mr-1"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-                {{ translateText("Operator ID") }}
-              </label>
-              <input
-                v-model.number="customer.userId"
-                type="number"
-                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                :placeholder="translateText('Operator ID')"
-                :aria-label="translateText('Operator ID ni kiriting')"
               />
             </div>
             <!-- Purpose -->
@@ -426,7 +417,7 @@
                   :key="option.value"
                   :value="option.value"
                 >
-                  {{ option.label }}
+                  {{ translateText(option.label) }}
                 </option>
               </select>
             </div>
@@ -470,7 +461,7 @@
                   :key="region.id"
                   :value="String(region.id)"
                 >
-                  {{ region.name_uz }}
+                  {{ translateText(region.name_uz) }}
                 </option>
               </select>
             </div>
@@ -506,7 +497,7 @@
                   :key="district.id"
                   :value="String(district.id)"
                 >
-                  {{ district.name_uz }}
+                  {{ translateText(district.name_uz) }}
                 </option>
               </select>
             </div>
@@ -539,7 +530,7 @@
                 :aria-label="translateText('Tugash sanasini kiriting')"
               />
             </div>
-            <!-- Is Paying -->
+            <!-- Payment Status -->
             <div class="form-group">
               <label
                 class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
@@ -557,17 +548,28 @@
                     d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-                {{ translateText("To'lov holati") }}
+                {{ translateText("To'lov holati") }} *
               </label>
-              <input
+              <select
                 v-model="customer.isPaying"
-                type="checkbox"
-                class="w-5 h-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                :aria-label="translateText('To\'lov qilinganmi')"
-              />
+                required
+                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                :aria-label="translateText('To\'lov holatini tanlang')"
+              >
+                <option value="" disabled>
+                  {{ translateText("To'lov holatini tanlang") }}
+                </option>
+                <option value="paid">{{ translateText("To'landi") }}</option>
+                <option value="refused">
+                  {{ translateText("To'lashni rad etdi") }}
+                </option>
+                <option value="will_pay">
+                  {{ translateText("Endi to'lov qiladi") }}
+                </option>
+              </select>
             </div>
             <!-- Payment Due Date -->
-            <div class="form-group">
+            <div class="form-group" v-if="customer.isPaying === 'will_pay'">
               <label
                 class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
               >
@@ -584,11 +586,12 @@
                     d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                   />
                 </svg>
-                {{ translateText("To'lov sanasi") }}
+                {{ translateText("To'lov sanasi") }} *
               </label>
               <input
                 v-model="customer.paymentDueDate"
                 type="datetime-local"
+                :required="customer.isPaying === 'will_pay'"
                 class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                 :aria-label="translateText('To\'lov sanasini kiriting')"
               />
@@ -611,15 +614,15 @@
                     d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                   />
                 </svg>
-                {{ translateText("Fayllar") }}
+                {{ translateText("Fayl Yuklash") }}
               </label>
               <input
                 type="file"
                 multiple
-                accept=".pdf,.docx"
+                accept=".pdf,.docx,.jpg,.png"
                 @change="handleFileChange"
                 class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                :aria-label="translateText('Fayllarni yuklash')"
+                :aria-label="translateText('Chek faylini yuklash')"
               />
               <div
                 v-if="customer.files.length"
@@ -791,7 +794,7 @@
             </svg>
           </button>
         </div>
-        <p class="text-gray-700 dark:text-gray-300 mb-6">{{ errorMessage }}</p>
+        <p class="text-gray-700 dark:text-gray-300 mb-6">{{ translateText(errorMessage) }}</p>
         <div class="flex justify-end">
           <button
             @click="closeErrorModal"
@@ -854,7 +857,7 @@
         <p class="text-gray-700 dark:text-gray-300 mb-6">
           {{
             translateText(
-              "Mijozni keyingi bosqichga o'tkazishni tasdiqlaysizmi?",
+              "Mijozni keyingi bosqichga o'tkazishni tasdiqlaysizmi?"
             )
           }}
         </p>
@@ -923,7 +926,7 @@
                 :key="region.id"
                 :value="String(region.id)"
               >
-                {{ region.name_uz }}
+                {{ translateText(region.name_uz) }}
               </option>
             </select>
           </div>
@@ -946,7 +949,7 @@
                 :key="district.id"
                 :value="String(district.id)"
               >
-                {{ district.name_uz }}
+                {{ translateText(district.name_uz) }}
               </option>
             </select>
           </div>
@@ -997,19 +1000,19 @@
               />
             </svg>
             {{ translateText("Mijozlar ro'yxati") }} ({{
-              filteredCustomers.length
+              filteredApplications.length
             }})
           </h3>
         </div>
         <div
-          v-if="filteredCustomers.length"
+          v-if="filteredApplications.length"
           class="divide-y divide-gray-200 dark:divide-gray-700"
         >
           <div
-            v-for="cust in filteredCustomers"
-            :key="cust.id"
-            @click="$router.push('/customer-sections/' + cust.id)"
-            class="p-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200 relative"
+            v-for="app in filteredApplications"
+            :key="app.id"
+            @click="$router.push('/customer-sections/' + app.customerId + '/' + selectedStatus)"
+            class="p-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200 relative cursor-pointer"
           >
             <div
               class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0"
@@ -1020,14 +1023,14 @@
                     class="bg-gradient-to-r from-blue-500 to-purple-500 w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
                   >
                     <span class="text-white font-semibold text-lg">
-                      {{ cust.name?.charAt(0)?.toUpperCase() || "?" }}
+                      {{ app.customerName?.charAt(0)?.toUpperCase() || "?" }}
                     </span>
                   </div>
                   <div class="flex-1 min-w-0">
                     <h4
                       class="text-lg font-semibold text-gray-900 dark:text-white mb-1"
                     >
-                      {{ cust.name }} {{ cust.surname }}
+                      {{ translateText(app.customerName) }} {{ translateText(app.customerSurname) }}
                     </h4>
                     <div
                       class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 text-sm text-gray-600 dark:text-gray-300"
@@ -1046,7 +1049,7 @@
                             d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
                           />
                         </svg>
-                        {{ cust.phone }}
+                        {{ translateText("Telefon raqami") }}: {{ app.customerPhone }}
                       </div>
                       <div class="flex items-center">
                         <svg
@@ -1068,17 +1071,21 @@
                             d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                           />
                         </svg>
-                        {{
-                          cust.province
+                        {{ translateText("Manzil") }}: {{
+                          app.customerProvince
                             ? regions.find(
-                                (r) => r.id === Number(cust.province),
+                                (r) => r.id === Number(app.customerProvince)
                               )?.name_uz ||
                               translateText("Viloyat ko'rsatilmagan")
                             : translateText("Viloyat ko'rsatilmagan")
                         }}
                         {{
-                          cust.district
-                            ? `, ${districts.find((d) => d.id === Number(cust.district))?.name_uz || translateText("Tuman ko'rsatilmagan")}`
+                          app.customerDistrict
+                            ? translateText(`, ${
+                                districts.find(
+                                  (d) => d.id === Number(app.customerDistrict)
+                                )?.name_uz || "Tuman ko'rsatilmagan"
+                              }`)
                             : ""
                         }}
                       </div>
@@ -1093,24 +1100,6 @@
                             stroke-linecap="round"
                             stroke-linejoin="round"
                             stroke-width="2"
-                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                          />
-                        </svg>
-                        {{
-                          cust.purpose || translateText("Maqsad ko'rsatilmagan")
-                        }}
-                      </div>
-                      <div class="flex items-center">
-                        <svg
-                          class="w-4 h-4 mr-2 text-gray-400"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
                             d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
                           />
                           <path
@@ -1120,95 +1109,10 @@
                             d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                           />
                         </svg>
-                        {{
-                          cust.whereComing
-                            ? whereComingOptions.find(
-                                (option) => option.value === cust.whereComing,
-                              )?.label ||
-                              translateText("Qayerdan kelgan ko'rsatilmagan")
-                            : translateText("Qayerdan kelgan ko'rsatilmagan")
-                        }}
-                      </div>
-                      <div
-                        v-if="cust.endDate"
-                        class="text-sm"
-                        :class="getEndDateColor(cust.endDate)"
-                      >
-                        <svg
-                          class="w-4 h-4 inline mr-1"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          :class="getEndDateColor(cust.endDate)"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                          />
-                        </svg>
-                        {{ formatDateTime(cust.endDate) }}
-                      </div>
-                      <div class="flex items-center">
-                        <svg
-                          class="w-4 h-4 mr-2 text-gray-400"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                        {{
-                          cust.isPaying
-                            ? translateText("To'langan")
-                            : translateText("To'lanmagan")
-                        }}
-                      </div>
-                      <div v-if="cust.paymentDueDate" class="flex items-center">
-                        <svg
-                          class="w-4 h-4 mr-2 text-gray-400"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                          />
-                        </svg>
-                        {{ formatDateTime(cust.paymentDueDate) }}
-                      </div>
-                      <div
-                        v-if="cust.CustomerApplications?.[0]?.Sections?.length"
-                        class="flex items-center"
-                      >
-                        <svg
-                          class="w-4 h-4 mr-2 text-gray-400"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                          />
-                        </svg>
-                        {{
-                          cust.CustomerApplications[0].Sections.filter(
-                            (s) => s.Files?.length,
-                          )
-                            .map((s) => s.Files.map((f) => f.name).join(", "))
-                            .join(", ") || translateText("Fayllar yo'q")
+                        {{ translateText("Qayerdan kelgan") }}: {{
+                          whereComingOptions.find(
+                            (option) => option.value === app.whereComing
+                          )?.label || translateText("Noma'lum")
                         }}
                       </div>
                       <div class="flex items-center">
@@ -1222,23 +1126,22 @@
                             stroke-linecap="round"
                             stroke-linejoin="round"
                             stroke-width="2"
-                            d="M5 13l4 4L19 7"
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                           />
                         </svg>
-                        {{ translateText(cust.status || "accepted") }}
+                        {{ translateText("Qabul qilgan xodim") }}: {{
+                          app.User
+                            ? translateText(`${app.User.name} ${app.User.surname} ${app.User.dadname || ''}`)
+                            : translateText("Noma'lum")
+                        }}
                       </div>
                     </div>
-                    <div
-                      v-if="cust.description"
-                      class="mt-2 text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-800 p-2 rounded"
-                      v-html="sanitizeDescription(cust.description)"
-                    />
                   </div>
                 </div>
               </div>
               <div class="relative flex items-center flex-shrink-0">
                 <button
-                  @click.stop="toggleDropdown(cust.id)"
+                  @click.stop="toggleDropdown(app.id)"
                   class="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200"
                   :aria-label="translateText('Qo\'shimcha amallar')"
                 >
@@ -1257,12 +1160,12 @@
                   </svg>
                 </button>
                 <div
-                  v-if="dropdownOpen === cust.id"
+                  v-if="dropdownOpen === app.id"
                   v-click-outside="closeDropdown"
                   class="absolute right-0 top-10 z-20 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg w-40"
                 >
                   <button
-                    @click.stop="editCustomer(cust)"
+                    @click.stop="editCustomer(app)"
                     class="flex items-center w-full px-4 py-2 text-sm text-gray-800 dark:text-gray-200 hover:bg-blue-100 dark:hover:bg-blue-950 hover:text-blue-600 dark:hover:text-blue-300 transition-colors duration-200"
                     :aria-label="translateText('Mijozni tahrirlash')"
                   >
@@ -1281,14 +1184,14 @@
                     </svg>
                     {{ translateText("Tahrirlash") }}
                   </button>
-                  <button
-                    @click.stop="openStatusModal(cust)"
+                  <!-- <button
+                    @click.stop="openStatusModal(app)"
                     class="flex items-center w-full px-4 py-2 text-sm text-gray-800 dark:text-gray-200 hover:bg-green-100 dark:hover:bg-green-950 hover:text-green-600 dark:hover:text-green-300 transition-colors duration-200"
                     :aria-label="translateText('Keyingi bosqichga o\'tkazish')"
-                    :disabled="cust.status === 'completed'"
+                    :disabled="app.status === 'completed'"
                     :class="{
                       'opacity-50 cursor-not-allowed':
-                        cust.status === 'completed',
+                        app.status === 'completed',
                     }"
                   >
                     <svg
@@ -1305,9 +1208,9 @@
                       />
                     </svg>
                     {{ translateText("Keyingi bosqich") }}
-                  </button>
+                  </button> -->
                   <button
-                    @click.stop="deleteCustomer(cust.id)"
+                    @click.stop="deleteCustomer(app.customerId)"
                     class="flex items-center w-full px-4 py-2 text-sm text-gray-800 dark:text-gray-200 hover:bg-red-100 dark:hover:bg-red-950 hover:text-red-600 dark:hover:text-red-300 transition-colors duration-200"
                     :aria-label="translateText('Mijozni o\'chirish')"
                   >
@@ -1351,7 +1254,7 @@
           <p class="text-gray-500 dark:text-gray-400">
             {{
               translateText(
-                "Birinchi mijozingizni qo'shish uchun yuqoridagi formadan foydalaning",
+                "Birinchi mijozingizni qo'shish uchun yuqoridagi formadan foydalaning"
               )
             }}
           </p>
@@ -1360,7 +1263,6 @@
     </div>
   </div>
 </template>
-```vue
 <script>
 import { ref, computed } from "vue";
 import axios from "axios";
@@ -1369,7 +1271,7 @@ import districtsData from "@/assets/districts.json";
 import DOMPurify from "dompurify";
 import translateText from "@/auth/Translate copy";
 import { URL } from "@/auth/url";
-
+import { useSearchStore } from "@/components/Templates/searchQuary";
 export default {
   name: "MijozlarniBoshqarish",
   directives: {
@@ -1388,20 +1290,23 @@ export default {
     },
   },
   setup() {
+    const searchQuery = useSearchStore();
     const regions = ref(regionsData);
     const districts = ref(districtsData);
     const customers = ref([]);
     const whereComingOptions = ref([
-      { value: "instagram", label: "Instagram" },
-      { value: "facebook", label: "Facebook" },
-      { value: "tanishimdan", label: translateText("Tanishimdan") },
+      { value: "instagram", label: translateText("Instagram") },
+      { value: "facebook", label: translateText("Facebook") },
+      { value: "youtube", label: translateText("Youtube") },
+      { value: "telegram", label: translateText("Telegram") },
+      { value: "tanishi", label: translateText("Tanishi") },
       { value: "boshqa", label: translateText("Boshqa") },
     ]);
     const customer = ref({
       name: "",
       surname: "",
       phone: "",
-      userId: null,
+      userId: Number(localStorage.getItem("id")) || null,
       purpose: "",
       whereComing: "",
       province: "",
@@ -1409,7 +1314,7 @@ export default {
       endDate: "",
       description: "",
       status: "accepted",
-      isPaying: false,
+      isPaying: "",
       paymentDueDate: "",
       files: [],
     });
@@ -1428,69 +1333,90 @@ export default {
     const selectedCustomerForStatus = ref(null);
     const isSubmitting = ref(false);
 
-    const translatedCustomers = computed(() => {
-      return customers.value.map((cust) => ({
-        ...cust,
-        name: cust.name || "",
-        surname: cust.surname || "",
-        userId: cust.userId || null,
-        purpose: cust.CustomerApplications?.[0]?.purpose || "",
-        whereComing: cust.CustomerApplications?.[0]?.whereComing || "",
-        description: cust.CustomerApplications?.[0]?.description || "",
-        province: cust.province ? String(cust.province) : "",
-        district: cust.district ? String(cust.district) : "",
-        endDate: cust.CustomerApplications?.[0]?.endDate || "",
-        isPaying: cust.CustomerApplications?.[0]?.isPaying || false,
-        paymentDueDate: cust.CustomerApplications?.[0]?.paymentDueDate || "",
-        status: cust.CustomerApplications?.[0]?.status || "accepted",
-      }));
-    });
-
-    const filteredCustomers = computed(() => {
-      let filtered = translatedCustomers.value;
-      if (searchRegion.value) {
-        filtered = filtered.filter(
-          (cust) => cust.province === String(searchRegion.value),
-        );
-      }
-      if (searchDistrict.value) {
-        filtered = filtered.filter(
-          (cust) => cust.district === String(searchDistrict.value),
-        );
-      }
-      if (selectedStatus.value) {
-        filtered = filtered.filter(
-          (cust) => cust.status === selectedStatus.value,
-        );
-      }
-      const now = new Date();
-      now.setHours(0, 0, 0, 0);
-      return filtered.sort((a, b) => {
-        const dateA = a.endDate ? new Date(a.endDate) : new Date("9999-12-31");
-        const dateB = b.endDate ? new Date(b.endDate) : new Date("9999-12-31");
-        const diffA = Math.abs(dateA - now);
-        const diffB = Math.abs(dateB - now);
-        return diffA - diffB;
+    const translatedApplications = computed(() => {
+      const appsMap = new Map();
+      customers.value.forEach((cust) => {
+        if (cust.CustomerApplications && Array.isArray(cust.CustomerApplications)) {
+          cust.CustomerApplications.forEach((app) => {
+            const key = `${cust.id}-${app.status}-${cust.phone}`;
+            if (!appsMap.has(key) || (app.createdAt && new Date(app.createdAt) > new Date(appsMap.get(key).createdAt))) {
+              appsMap.set(key, {
+                ...app,
+                customerName: cust.name || "",
+                customerSurname: cust.surname || "",
+                customerPhone: cust.phone || "",
+                customerProvince: cust.province ? String(cust.province) : "",
+                customerDistrict: cust.district ? String(cust.district) : "",
+                customerUserId: cust.userId || null,
+                customerId: cust.id,
+                User: cust.User || null,
+              });
+            }
+          });
+        }
       });
+      return Array.from(appsMap.values());
     });
+const filteredApplications = computed(() => {
+  let filtered = translatedApplications.value;
+
+  // Apply search query filter
+  if (searchQuery.query) {
+    const query = searchQuery.query.toLowerCase().trim();
+    filtered = filtered.filter((app) => {
+      const fullName = `${app.customerName} ${app.customerSurname}`.toLowerCase();
+      const phone = app.customerPhone ? app.customerPhone.replace(/\s/g, '').toLowerCase() : '';
+      return (
+        fullName.includes(query) ||
+        phone.includes(query)
+      );
+    });
+  }
+
+  // Apply region filter
+  if (searchRegion.value) {
+    filtered = filtered.filter(
+      (app) => app.customerProvince === String(searchRegion.value)
+    );
+  }
+
+  // Apply district filter
+  if (searchDistrict.value) {
+    filtered = filtered.filter(
+      (app) => app.customerDistrict === String(searchDistrict.value)
+    );
+  }
+
+  // Apply status filter
+  if (selectedStatus.value) {
+    filtered = filtered.filter((app) => app.status === selectedStatus.value);
+  }
+
+  // Sort by endDate proximity
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+
+  return filtered.sort((a, b) => {
+    const dateA = a.endDate ? new Date(a.endDate) : new Date("9999-12-31");
+    const dateB = b.endDate ? new Date(b.endDate) : new Date("9999-12-31");
+    const diffA = Math.abs(dateA - now);
+    const diffB = Math.abs(dateB - now);
+    return diffA - diffB;
+  });
+});
 
     const filteredDistricts = computed(() => {
       const regionId = Number(customer.value.province || searchRegion.value);
       return districts.value.filter(
-        (district) => Number(district.region_id) === regionId,
+        (district) => Number(district.region_id) === regionId
       );
     });
 
     const statusCounts = computed(() => {
       return {
-        accepted: translatedCustomers.value.filter(
-          (c) => c.status === "accepted",
-        ).length,
-        waiting: translatedCustomers.value.filter((c) => c.status === "waiting")
-          .length,
-        completed: translatedCustomers.value.filter(
-          (c) => c.status === "completed",
-        ).length,
+        accepted: translatedApplications.value.filter((a) => a.status === "accepted").length,
+        waiting: translatedApplications.value.filter((a) => a.status === "waiting").length,
+        completed: translatedApplications.value.filter((a) => a.status === "completed").length,
       };
     });
 
@@ -1514,8 +1440,8 @@ export default {
       showStatusModal,
       selectedCustomerForStatus,
       isSubmitting,
-      translatedCustomers,
-      filteredCustomers,
+      translatedApplications,
+      filteredApplications,
       filteredDistricts,
       statusCounts,
       translateText,
@@ -1544,7 +1470,7 @@ export default {
         }));
       } catch (error) {
         this.errorMessage = translateText(
-          "Mijozlarni yuklashda xatolik yuz berdi!",
+          "Mijozlarni yuklashda xatolik yuz berdi!"
         );
         this.messageType = "error";
         this.showErrorModal = true;
@@ -1562,17 +1488,37 @@ export default {
       const date = new Date(isoDate);
       if (isNaN(date.getTime())) return "";
       return date.toLocaleString("uz-UZ", {
-        day: "2-digit",
-        month: "2-digit",
         year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
         hour: "2-digit",
         minute: "2-digit",
       });
     },
+    formatPhoneNumber(event) {
+      let value = event.target.value.replace(/\D/g, "");
+      if (value.startsWith("998")) {
+        value = value.slice(3);
+      }
+      if (value.length > 9) {
+        value = value.slice(0, 9);
+      }
+      const formatted = value.match(/(\d{0,2})(\d{0,3})(\d{0,2})(\d{0,2})/);
+      if (formatted) {
+        this.customer.phone = `+998 ${formatted[1]}${
+          formatted[2] ? " " + formatted[2] : ""
+        }${formatted[3] ? " " + formatted[3] : ""}${
+          formatted[4] ? " " + formatted[4] : ""
+        }`.trim();
+      }
+    },
+    handleFileChange(event) {
+      this.customer.files = Array.from(event.target.files);
+    },
+    
     openModal() {
+      this.customer.userId = Number(localStorage.getItem("id")) || null;
       this.isModalOpen = true;
-      this.editingCustomer = null;
-      this.resetCustomerForm();
     },
     closeModal() {
       this.isModalOpen = false;
@@ -1584,7 +1530,7 @@ export default {
         name: "",
         surname: "",
         phone: "",
-        userId: null,
+        userId: Number(localStorage.getItem("id")) || null,
         purpose: "",
         whereComing: "",
         province: "",
@@ -1592,64 +1538,68 @@ export default {
         endDate: "",
         description: "",
         status: "accepted",
-        isPaying: false,
+        isPaying: "",
         paymentDueDate: "",
         files: [],
       };
     },
-    updateDistricts() {
-      this.customer.district = "";
-    },
-    handleFileChange(event) {
-      this.customer.files = Array.from(event.target.files);
-    },
     async submitCustomer() {
       this.isSubmitting = true;
-      const formData = new FormData();
-      formData.append("name", this.customer.name);
-      formData.append("surname", this.customer.surname);
-      formData.append("phone", this.customer.phone);
-      if (this.customer.userId) formData.append("userId", this.customer.userId);
-      if (this.customer.province)
-        formData.append("province", this.customer.province);
-      if (this.customer.district)
-        formData.append("district", this.customer.district);
-      formData.append("purpose", this.customer.purpose);
-      formData.append("whereComing", this.customer.whereComing);
-      formData.append("description", this.customer.description);
-      if (this.customer.endDate)
-        formData.append("endDate", this.customer.endDate);
-      formData.append("isPaying", this.customer.isPaying);
-      if (this.customer.paymentDueDate)
-        formData.append("paymentDueDate", this.customer.paymentDueDate);
-      this.customer.files.forEach((file) => {
-        formData.append("files", file);
-      });
-
       try {
+        const formData = new FormData();
+        formData.append("name", this.customer.name);
+        formData.append("surname", this.customer.surname);
+        formData.append("phone", this.customer.phone.split(' ').join(''));
+        formData.append("userId", String(this.customer.userId));
+        formData.append("purpose", this.customer.purpose);
+        formData.append("whereComing", this.customer.whereComing);
+        if (this.customer.province) {
+          formData.append("province", String(this.customer.province));
+        }
+        if (this.customer.district) {
+          formData.append("district", String(this.customer.district));
+        }
+        formData.append("endDate", this.customer.endDate);
+        formData.append("description", this.customer.description);
+        formData.append("status", this.customer.status);
+        formData.append("isPaying", this.customer.isPaying);
+        if (this.customer.isPaying === "will_pay" && this.customer.paymentDueDate) {
+          formData.append("paymentDueDate", this.customer.paymentDueDate);
+        }
+        if (this.customer.files && this.customer.files.length > 0) {
+          this.customer.files.forEach((file) => {
+            formData.append("files", file);
+          });
+        }
+
         if (this.editingCustomer) {
-          const response = await axios.put(
-            `${URL}/customers/${this.editingCustomer.id}`,
+          await axios.put(
+            `${URL}/customers/${this.editingCustomer.customerId}`,
             formData,
-            { headers: { "Content-Type": "multipart/form-data" } },
-          );
-          this.customers = this.customers.map((cust) =>
-            cust.id === this.editingCustomer.id ? response.data : cust,
+            {
+              headers: { "Content-Type": "multipart/form-data" },
+            }
           );
           this.message = translateText("Mijoz muvaffaqiyatli yangilandi!");
         } else {
-          const response = await axios.post(`${URL}/customers`, formData, {
+          await axios.post(`${URL}/customers`, formData, {
             headers: { "Content-Type": "multipart/form-data" },
           });
-          this.customers.push(response.data);
           this.message = translateText("Mijoz muvaffaqiyatli qo'shildi!");
         }
         this.messageType = "success";
+        await this.fetchCustomers();
         this.closeModal();
+        setTimeout(() => {
+          this.message = "";
+        }, 5000);
       } catch (error) {
+        console.error("Submit error:", error.response?.data || error.message);
         this.errorMessage = translateText(
-          error.response?.data?.message || "Xatolik yuz berdi!",
+          error.response?.data?.message ||
+            "Mijozni qo'shish/yangilashda xatolik yuz berdi!"
         );
+        this.messageType = "error";
         this.showErrorModal = true;
         setTimeout(() => {
           this.showErrorModal = false;
@@ -1659,24 +1609,52 @@ export default {
         this.isSubmitting = false;
       }
     },
-    editCustomer(cust) {
-      this.editingCustomer = cust;
-      this.customer = { ...cust };
+    editCustomer(app) {
+      this.editingCustomer = app;
+      this.customer = {
+        name: app.customerName,
+        surname: app.customerSurname,
+        phone: app.customerPhone,
+        userId: app.customerUserId || Number(localStorage.getItem("id")) || null,
+        purpose: app.purpose,
+        whereComing: app.whereComing,
+        province: app.customerProvince,
+        district: app.customerDistrict,
+        endDate: app.endDate
+          ? new Date(app.endDate).toISOString().slice(0, 16)
+          : "",
+        description: app.description,
+        status: app.status,
+        isPaying: app.isPaying,
+        paymentDueDate: app.paymentDueDate
+          ? new Date(app.paymentDueDate).toISOString().slice(0, 16)
+          : "",
+        files: [],
+      };
       this.isModalOpen = true;
     },
     cancelEdit() {
       this.closeModal();
     },
     async deleteCustomer(id) {
+      if (
+        !confirm(translateText("Haqiqatan ham bu mijozni o'chirmoqchimisiz?"))
+      ) {
+        return;
+      }
       try {
         await axios.delete(`${URL}/customers/${id}`);
-        this.customers = this.customers.filter((cust) => cust.id !== id);
         this.message = translateText("Mijoz muvaffaqiyatli o'chirildi!");
         this.messageType = "success";
+        await this.fetchCustomers();
+        setTimeout(() => {
+          this.message = "";
+        }, 5000);
       } catch (error) {
         this.errorMessage = translateText(
-          "Mijozni o'chirishda xatolik yuz berdi!",
+          "Mijozni o'chirishda xatolik yuz berdi!"
         );
+        this.messageType = "error";
         this.showErrorModal = true;
         setTimeout(() => {
           this.showErrorModal = false;
@@ -1690,59 +1668,46 @@ export default {
     closeDropdown() {
       this.dropdownOpen = null;
     },
-    updateFilteredCustomers() {
-      // Trigger computed property update
+    updateDistricts() {
+      this.customer.district = "";
     },
-    openStatusModal(customer) {
-      this.selectedCustomerForStatus = customer;
+    updateFilteredCustomers() {
+      this.customer.district = "";
+    },
+    openStatusModal(app) {
+      this.selectedCustomerForStatus = app;
       this.showStatusModal = true;
     },
     closeStatusModal() {
       this.showStatusModal = false;
       this.selectedCustomerForStatus = null;
     },
-    closeErrorModal() {
-      this.showErrorModal = false;
-      this.errorMessage = "";
-    },
     async updateCustomerStatus() {
       if (!this.selectedCustomerForStatus) return;
       this.isSubmitting = true;
-      const currentStatus = this.selectedCustomerForStatus.status;
-      const nextStatus =
-        currentStatus === "accepted"
-          ? "waiting"
-          : currentStatus === "waiting"
+      try {
+        const newStatus =
+          this.selectedCustomerForStatus.status === "accepted"
+            ? "waiting"
+            : this.selectedCustomerForStatus.status === "waiting"
             ? "completed"
             : "completed";
-
-      try {
-        const applicationId =
-          this.selectedCustomerForStatus.CustomerApplications?.[0]?.id;
-        if (!applicationId) throw new Error("No application found");
         await axios.put(
-          `${URL}/customer-applications/${applicationId}/status`,
-          {
-            status: nextStatus,
-          },
-        );
-        this.customers = this.customers.map((cust) =>
-          cust.id === this.selectedCustomerForStatus.id
-            ? {
-                ...cust,
-                CustomerApplications: [
-                  { ...cust.CustomerApplications[0], status: nextStatus },
-                ],
-              }
-            : cust,
+          `${URL}/customer-applications/${this.selectedCustomerForStatus.id}`,
+          { status: newStatus }
         );
         this.message = translateText("Mijoz holati muvaffaqiyatli yangilandi!");
         this.messageType = "success";
+        await this.fetchCustomers();
         this.closeStatusModal();
+        setTimeout(() => {
+          this.message = "";
+        }, 5000);
       } catch (error) {
         this.errorMessage = translateText(
-          "Holatni yangilashda xatolik yuz berdi!",
+          "Mijoz holatini yangilashda xatolik yuz berdi!"
         );
+        this.messageType = "error";
         this.showErrorModal = true;
         setTimeout(() => {
           this.showErrorModal = false;
@@ -1752,34 +1717,15 @@ export default {
         this.isSubmitting = false;
       }
     },
-    formatPhoneNumber(event) {
-      let value = event.target.value.replace(/[^\d+]/g, "");
-      if (value.startsWith("+998") && value.length <= 12) {
-        const match = value.match(
-          /(\+998)(\d{0,2})(\d{0,3})(\d{0,2})(\d{0,2})/,
-        );
-        if (match) {
-          value = [match[1], match[2], match[3], match[4], match[5]]
-            .filter(Boolean)
-            .join(" ");
-        }
-      }
-      this.customer.phone = value;
-    },
-    sanitizeDescription(description) {
-      return DOMPurify.sanitize(description);
+    closeErrorModal() {
+      this.showErrorModal = false;
+      this.errorMessage = "";
     },
   },
   mounted() {
     this.fetchCustomers();
-    const darkModeMediaQuery = window.matchMedia(
-      "(prefers-color-scheme: dark)",
-    );
-    this.isDarkMode = darkModeMediaQuery.matches;
-    darkModeMediaQuery.addEventListener("change", (e) => {
-      this.isDarkMode = e.matches;
-    });
+    this.setStatusFilter('accepted')
+    this.isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
   },
 };
 </script>
-```

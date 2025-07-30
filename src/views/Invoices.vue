@@ -5,7 +5,7 @@ import { URL } from '@/auth/url'
 import { ref, inject, onMounted, watch, computed, onUnmounted } from 'vue'
 import * as XLSX from 'xlsx'
 import { useRoute, useRouter } from 'vue-router';
-import PDFViewer from '../components/ppdf.vue'
+import PDFViewer from '../components/Others/ppdf.vue'
 import { useSearchStore } from '@/components/Templates/searchQuary'
 import { Icon } from '@iconify/vue'
 const searchStore = useSearchStore()

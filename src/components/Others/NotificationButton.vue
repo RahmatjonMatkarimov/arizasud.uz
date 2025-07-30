@@ -7,7 +7,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { messaging, getToken, onMessage } from './firebase/firebaseInit'
+import { messaging, getToken, onMessage } from '../firebase/firebaseInit'
 
 const token = ref('')
 

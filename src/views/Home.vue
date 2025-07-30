@@ -24,7 +24,7 @@ import Main from "@/components/main/main.vue";
 import Card from "@/components/sponsor/card.vue";
 import Time from "@/components/time/time.vue";
 import Footer from "@/components/footer/footer.vue";
-import Header from "@/components/header.vue";
+import Header from "@/components/Others/header.vue";
 import scaners from "@/components/main/scaners/scaners.vue";
 import { useRouter } from 'vue-router';
 import MainSection from "@/components/main/meinSection.vue";
