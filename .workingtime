@@ -20797,16 +20797,37 @@
                         {
                             "sessionInfo": {
                                 "id": "d08eaffc-4fb8-4df0-8e14-467dd3b22b31",
-                                "duration": 523132,
-                                "idle": 8526316,
-                                "state": "Idle",
+                                "duration": 616464,
+                                "idle": 9426295,
+                                "state": "Ongoing",
                                 "durations": [
+                                    {
+                                        "id": "285eeaba-4856-4533-957f-2514f2ad7248",
+                                        "state": "Ongoing",
+                                        "begin": 1753959137786,
+                                        "end": 1753959137786,
+                                        "duration": 0
+                                    },
+                                    {
+                                        "id": "f1d05ee1-b149-4275-bb74-711351fc103b",
+                                        "state": "Idle",
+                                        "begin": 1753958856399,
+                                        "end": 1753959137785,
+                                        "duration": 281386
+                                    },
+                                    {
+                                        "id": "25866088-2dc4-4757-9758-624a7423232c",
+                                        "state": "Ongoing",
+                                        "begin": 1753958786783,
+                                        "end": 1753958856399,
+                                        "duration": 69616
+                                    },
                                     {
                                         "id": "938caeba-967d-45cf-acfc-8710a05b5ea8",
                                         "state": "Idle",
                                         "begin": 1753957061556,
-                                        "end": 1753957061556,
-                                        "duration": 0
+                                        "end": 1753958786783,
+                                        "duration": 1725227
                                     },
                                     {
                                         "id": "8269ea90-864c-4270-ab81-337297f72c3a",
@@ -21132,10 +21153,11 @@
                                     ".uz/src/components/contract/ClientAdmin.vue",
                                     ".uz/src/router/routes.js",
                                     ".uz/src/App.vue",
-                                    ".uz/src/components/Others/login.vue"
+                                    ".uz/src/components/Others/login.vue",
+                                    ".uz/src/components/contract/fileAdmiin.vue"
                                 ]
                             },
-                            "actionType": "Idle"
+                            "actionType": "Codding"
                         }
                     ]
                 }
