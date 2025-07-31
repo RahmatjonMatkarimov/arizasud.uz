@@ -1,6 +1,6 @@
 <template>
   <div class="mx-auto bg-gray-200 h-[calc(101vh-100px)] dark:bg-gradient-to-br from-gray-900 to-gray-800">
-    <div id="" class="relative flex min-w-full  justify-between h-full">
+    <div id="" class="relative flex min-w-full justify-between h-full">
       <div class="w-full container flex flex-col mx-auto items-center justify-center p-4">
         <div ref="messagesContainer"
           class="min-w-full mb-[50px] h-[calc(100%-100px)] overflow-y-auto p-4 space-y-4 scrollbar-custom">
@@ -75,7 +75,6 @@
                     translateTextLotin(message.content) }}</div>
                   <div v-if="message.attachmentUrl" class="border border-teal-500/30 p-1 relative rounded-md mt-1">
                     <div v-if="isImage(message.attachmentUrl)">
-
                       <div @click="downloadImage(message.attachmentUrl)"
                         class="flex cursor-pointer items-center justify-end gap-1">
                         <Icon icon="line-md:cloud-alt-download-filled-loop" class="text-[#ffff] text-[30px]" />
@@ -183,7 +182,7 @@
           <div v-if="replyTo" class="w-full bg-gray-700/50 p-2 rounded-md mb-2 flex justify-between items-center">
             <div class="flex items-center space-x-1">
               <span class="text-teal-400 font-semibold text-xs">{{ dat === 'datakril' ? 
-              translateText('Javob berilmoqda: ') : 'Javob berilmoqda:' }}</span>
+                translateText('Javob berilmoqda: ') : 'Javob berilmoqda:' }}</span>
               <div class="text-gray-300 text-xs">
                 <template v-if="replyMessages[replyTo]?.content">
                   {{ replyMessages[replyTo].content.substring(0, 40) + (replyMessages[replyTo].content.length > 40 ?
@@ -317,48 +316,43 @@
         {{ dat === 'datakril' ? translateText('Bekor qilish') : 'Bekor qilish' }}
       </button>
     </div>
-<div v-if="showEmojiPicker" 
-
-class="fixed inset-0 z-50"
-@click="showEmojiPicker = false"
->
-
-  <div 
-  class="fixed bottom-[100px] left-[250px] w-[calc(100%-500px)] bg-gray-800/90 shadow-2xl rounded-xl z-50 p-4 flex flex-wrap gap-2 max-h-64 overflow-y-auto scrollbar-custom border border-teal-500/50 backdrop-blur-md">
-  <button v-for="item in smileys" :key="item.id" @click="debouncedSendMessage('smiley', item.id)"
-  class="block rounded-md hover:scale-110 transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
-  :title="dat === 'datakril' ? translateText(`Tabassum ${item.id}`) : `Tabassum ${item.id}`">
-  <img :src="getSmileyUrl(item.filePath)" class="w-12 h-12 rounded-md object-contain"
-  :alt="dat === 'datakril' ? translateText(`Tabassum ${item.id}`) : `Tabassum ${item.id}`" />
-</button>
-</div>
-</div>
-  </div>
-  <button v-if="role === 'bigAdmin'" class="absolute flex items-center gap-2 justify-center   h-16 w-[300px] bg-gray-700/90 hover:bg-gray-600 rounded-bl-2xl top-[93px] z-30 right-[0]"
-    @click="all = true">
-<Icon icon="mdi:broom" class="text-white text-4xl" />
-    <span class="text-white text-[20px]">{{ dat === 'datakril' ? translateText('Chat tarixini tozalash') : 'Chat tarixini tozalash'}}</span> 
-  </button>
-  <div v-if="all" @click.self="all = false"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity">
-    <div
-      class="bg-gray-900 text-white rounded-2xl p-6 shadow-2xl w-80 border border-teal-500/40 animate-fade-in">
-      <h2 class="text-xl font-semibold text-teal-300 mb-4">
-        {{ dat === 'datakril' ? translateText('Xabarlarni o‘chirish') : 'Xabarlarni o‘chirish' }}
-      </h2>
-      <p class="text-md text-gray-300 mb-6">
-        {{ dat === 'datakril' ? translateText('Butun chat xabarlarni o‘chirishga ishonchingiz komilmi ?') :
-        'Butun chat xabarlarni o‘chirishga ishonchingiz komilmi ?' }}
-      </p>
-      <div class="flex justify-end gap-2">
-        <button @click="all = false"
-          class="px-4 py-2 text-md rounded-md border border-gray-500 text-gray-300 hover:bg-gray-700 transition">
-          {{ dat === 'datakril' ? translateText('Bekor qilish') : 'Bekor qilish' }}
+    <div v-if="showEmojiPicker" @click="showEmojiPicker = false" class="fixed inset-0 z-50">
+      <div
+        class="fixed bottom-[100px] left-[250px] w-[calc(100%-500px)] bg-gray-800/90 shadow-2xl rounded-xl z-50 p-4 flex flex-wrap gap-2 max-h-64 overflow-y-auto scrollbar-custom border border-teal-500/50 backdrop-blur-md">
+        <button v-for="item in smileys" :key="item.id" @click="debouncedSendMessage('smiley', item.id)"
+          class="block rounded-md hover:scale-110 transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
+          :title="dat === 'datakril' ? translateText(`Tabassum ${item.id}`) : `Tabassum ${item.id}`">
+          <img :src="getSmileyUrl(item.filePath)" class="w-12 h-12 rounded-md object-contain"
+            :alt="dat === 'datakril' ? translateText(`Tabassum ${item.id}`) : `Tabassum ${item.id}`" />
         </button>
-        <button @click="deleteMessage"
-          class="px-4 py-2 text-md rounded-md bg-red-600 hover:bg-red-700 text-white transition">
-          {{ dat === 'datakril' ? translateText('O‘chirish') : 'O‘chirish' }}
-        </button>
+      </div>
+    </div>
+    <button v-if="role === 'bigAdmin'"
+      class="absolute flex items-center gap-2 justify-center h-16 w-[300px] bg-gray-700/90 hover:bg-gray-600 rounded-bl-2xl top-[93px] z-30 right-[0]"
+      @click="all = true">
+      <Icon icon="mdi:broom" class="text-white text-4xl" />
+      <span class="text-white text-[20px]">{{ dat === 'datakril' ? translateText('Chat tarixini tozalash') : 'Chat tarixini tozalash' }}</span>
+    </button>
+    <div v-if="all" @click.self="all = false"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity">
+      <div class="bg-gray-900 text-white rounded-2xl p-6 shadow-2xl w-80 border border-teal-500/40 animate-fade-in">
+        <h2 class="text-xl font-semibold text-teal-300 mb-4">
+          {{ dat === 'datakril' ? translateText('Xabarlarni o‘chirish') : 'Xabarlarni o‘chirish' }}
+        </h2>
+        <p class="text-md text-gray-300 mb-6">
+          {{ dat === 'datakril' ? translateText('Butun chat xabarlarni o‘chirishga ishonchingiz komilmi ?') :
+            'Butun chat xabarlarni o‘chirishga ishonchingiz komilmi ?' }}
+        </p>
+        <div class="flex justify-end gap-2">
+          <button @click="all = false"
+            class="px-4 py-2 text-md rounded-md border border-gray-500 text-gray-300 hover:bg-gray-700 transition">
+            {{ dat === 'datakril' ? translateText('Bekor qilish') : 'Bekor qilish' }}
+          </button>
+          <button @click="deleteMessage"
+            class="px-4 py-2 text-md rounded-md bg-red-600 hover:bg-red-700 text-white transition">
+            {{ dat === 'datakril' ? translateText('O‘chirish') : 'O‘chirish' }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -381,8 +375,8 @@ const user = ref({
   id: parseInt(localStorage.getItem('id')) || null,
   username: localStorage.getItem('username') || 'TestUser',
 });
-
 const dat = ref(localStorage.getItem('til') || 'datalotin');
+const role = ref(localStorage.getItem('role'));
 
 const socket = ref(null);
 const messages = ref([]);
@@ -414,8 +408,7 @@ const recordingTime = ref(0);
 const recordingInterval = ref(null);
 const messagesContainer = ref(null);
 const isSocketConnected = ref(false);
-const isLoading = inject(`isLoading`)
-const role = ref(localStorage.getItem('role'));
+const isLoading = inject('isLoading');
 
 // Computed property for recording time
 const formattedRecordingTime = computed(() => {
@@ -465,6 +458,7 @@ const closeContextMenu = () => {
   showContextMenuModal.value = false;
   contextMenuMessage.value = null;
 };
+
 const downloadImage = (url) => {
   fetch(url)
     .then((response) => response.blob())
@@ -483,6 +477,7 @@ const downloadImage = (url) => {
       console.error('Image download failed:', error);
     });
 };
+
 // Audio Player Methods
 const audioPlayerMethods = {
   initAudioPlayer(event) {
@@ -652,7 +647,6 @@ const initializeSocket = () => {
     socket.value.off();
   }
 
-
   socket.value = io(URL, {
     path: '/socket.io',
     transports: ['websocket', 'polling'],
@@ -662,11 +656,17 @@ const initializeSocket = () => {
   socket.value.on('connect', () => {
     isSocketConnected.value = true;
     socket.value.emit('join', user.value.id, (response) => {
+      if (response && response.success) {
+        console.log('Joined chat successfully');
+      } else {
+        console.error('Failed to join chat:', response?.error);
+      }
     });
   });
 
   socket.value.on('disconnect', () => {
     isSocketConnected.value = false;
+    console.log('Socket disconnected');
   });
 
   socket.value.on('error', (error) => {
@@ -677,18 +677,16 @@ const initializeSocket = () => {
 
   socket.value.on('newMessage', (message) => {
     if (!messages.value.some((msg) => msg.id === message.id)) {
-      socket.value?.emit('markAsRead', user.value.id);
       messages.value.push(message);
       if (message.replyToMessageId) {
         getOneMessage(message.replyToMessageId);
       }
-
+      socket.value.emit('markAsRead', user.value.id);
       scrollToBottom();
       nextTick(() => setupNewAudioPlayers());
       if (message.senderId !== user.value.id) {
         unreadCount.value++;
       }
-    } else {
     }
   });
 
@@ -722,11 +720,10 @@ const initializeSocket = () => {
 
 // Fallback polling for messages
 const pollMessages = async () => {
-  isLoading.value = true;
   try {
     const response = await axios.get(`${URL}/messages`);
     const newMessages = response.data.filter(
-      (msg) => !messages.value.some((m) => m.id === msg.id)
+      (msg) => !messages.value.some((m) => m.id === msg.id),
     );
     if (newMessages.length > 0) {
       messages.value.push(...newMessages);
@@ -740,7 +737,7 @@ const pollMessages = async () => {
     }
   } catch (error) {
     console.error('Error polling messages:', error.message);
-  } finally { isLoading.value = false }
+  }
 };
 
 // API functions
@@ -761,7 +758,7 @@ const fetchMessages = async () => {
     console.error('Error fetching messages:', error.message, error.response?.data);
     alert('Failed to load messages');
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
 };
 
@@ -772,7 +769,9 @@ const fetchSmileys = async () => {
     smileys.value = response.data;
   } catch (error) {
     console.error('Failed to fetch smileys:', error);
-  } finally { isLoading.value = false }
+  } finally {
+    isLoading.value = false;
+  }
 };
 
 const getOneMessage = async (id) => {
@@ -788,53 +787,101 @@ const getOneMessage = async (id) => {
       };
     } catch (error) {
       console.error(`Failed to fetch reply message ${id}:`, error);
-    } finally { isLoading.value = false }
+    } finally {
+      isLoading.value = false;
+    }
   }
 };
 
 // Send message function
 const sendMessage = async (type, smileyId = null) => {
-  if (type === 'text' && !newMessage.value.trim() && !selectedFile.value && !smileyId) return;
+  // Validate input to prevent empty or invalid messages
+  if (!user.value.id) {
+    alert('Foydalanuvchi ID topilmadi. Iltimos, tizimga kiring.');
+    return;
+  }
 
-  const messageData = {
-    senderId: user.value.id,
-    content: type === 'text' ? newMessage.value.trim() : null,
-    replyToMessageId: replyTo.value || null,
-    file: type === 'file' || type === 'audio' ? selectedFile.value : null,
-    smileyId: type === 'smiley' ? smileyId : null,
-  };
+  if (type === 'text' && !newMessage.value.trim() && !selectedFile.value && !smileyId) {
+    alert('Xabar matni, fayl yoki smiley kiritish kerak.');
+    return;
+  }
+
   isLoading.value = true;
   try {
-    if (!messageData.file) {
-      // For non-file messages (text or smiley), use Socket.IO
-      socket.value.emit('sendMessage', messageData, (response) => {
-        if (!response || !response.success) {
-          console.error('Error sending message:', response?.error || 'Unknown error');
-          alert(response?.error || 'Failed to send message');
-        }
-      });
-    } else {
-      // For file messages, use HTTP POST request
-      const formData = new FormData();
-      formData.append('file', messageData.file);
-      formData.append('senderId', messageData.senderId);
-      if (messageData.content) formData.append('content', messageData.content);
-      if (messageData.smileyId) formData.append('smileyId', messageData.smileyId);
-      if (messageData.replyToMessageId) formData.append('replyToMessageId', messageData.replyToMessageId);
-
-      const response = await axios.post(`${URL}/messages`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-
-      // Immediately add the sent file message to the UI
-      if (!messages.value.some((msg) => msg.id === response.data.id)) {
-        messages.value.push(response.data);
-        if (response.data.replyToMessageId) {
-          getOneMessage(response.data.replyToMessageId);
-        }
-        scrollToBottom();
-        nextTick(() => setupNewAudioPlayers());
+    if (type === 'file' || type === 'audio') {
+      // Handle file or audio messages
+      const file = selectedFile.value;
+      if (!file) {
+        alert('Fayl tanlanmadi');
+        return;
       }
+
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const fileData = reader.result.split(',')[1]; // Extract base64 data
+        const messageData = {
+          data: {
+            senderId: user.value.id,
+            content: newMessage.value.trim() || null, // Allow empty content if file is present
+            replyToMessageId: replyTo.value || null,
+            smileyId: null, // No smiley for file uploads
+          },
+          fileData,
+          fileName: file.name,
+          fileType: file.type,
+        };
+
+        console.log('Sending message:', messageData); // Debug payload
+        socket.value.emit('sendMessage', messageData, (response) => {
+          if (response && response.success) {
+            console.log('Fayl xabari yuborildi:', response.data);
+            if (!messages.value.some((msg) => msg.id === response.data.id)) {
+              messages.value.push(response.data);
+              if (response.data.replyToMessageId) {
+                getOneMessage(response.data.replyToMessageId);
+              }
+              scrollToBottom();
+              nextTick(() => setupNewAudioPlayers());
+            }
+          } else {
+            console.error('Fayl yuborishda xato:', response?.error || 'Noma\'lum xato');
+            alert(response?.error || 'Fayl yuborishda xato yuz berdi');
+          }
+        });
+      };
+      reader.onerror = () => {
+        console.error('Faylni o\'qishda xato');
+        alert('Faylni o\'qishda xato yuz berdi');
+      };
+      reader.readAsDataURL(file);
+    } else {
+      // Handle text or smiley messages
+      const messageData = {
+        data: {
+          senderId: user.value.id,
+          content: type === 'text' ? newMessage.value.trim() : null,
+          replyToMessageId: replyTo.value || null,
+          smileyId: type === 'smiley' ? smileyId : null,
+        },
+      };
+
+      console.log('Sending message:', messageData); // Debug payload
+      socket.value.emit('sendMessage', messageData, (response) => {
+        if (response && response.success) {
+          console.log('Xabar yuborildi:', response.data);
+          if (!messages.value.some((msg) => msg.id === response.data.id)) {
+            messages.value.push(response.data);
+            if (response.data.replyToMessageId) {
+              getOneMessage(response.data.replyToMessageId);
+            }
+            scrollToBottom();
+            nextTick(() => setupNewAudioPlayers());
+          }
+        } else {
+          console.error('Xabar yuborishda xato:', response?.error || 'Noma\'lum xato');
+          alert(response?.error || 'Xabar yuborishda xato yuz berdi');
+        }
+      });
     }
 
     // Reset UI state
@@ -842,11 +889,12 @@ const sendMessage = async (type, smileyId = null) => {
     replyTo.value = null;
     selectedFile.value = null;
     showEmojiPicker.value = false;
-    scrollToBottom();
   } catch (error) {
-    console.error('Error sending message:', error.message);
-    alert('Failed to send message');
-  } finally { isLoading.value = false }
+    console.error('Xabar yuborishda xato:', error.message);
+    alert('Xabar yuborishda xato yuz berdi: ' + error.message);
+  } finally {
+    isLoading.value = false;
+  }
 };
 
 // Debounced sendMessage
@@ -883,12 +931,20 @@ const updateMessage = async () => {
 };
 
 const deleteMessage = async () => {
-  const response = await axios.delete(`${URL}/messages`);
-  if (response.status === 200) {
-    fetchMessages();
-    all.value = false;
+  isLoading.value = true;
+  try {
+    const response = await axios.delete(`${URL}/messages`);
+    if (response.status === 200) {
+      messages.value = [];
+      all.value = false;
+    }
+  } catch (error) {
+    console.error('Error deleting all messages:', error.message);
+    alert('Xabarlarni o\'chirishda xato yuz berdi');
+  } finally {
+    isLoading.value = false;
   }
-}
+};
 
 const confirmDeleteMessage = (messageId) => {
   messageToDelete.value = messageId;
@@ -926,7 +982,8 @@ const handleFileUpload = (event) => {
 
   const validTypes = [
     'image/jpeg', 'image/png', 'image/gif', 'image/webp',
-    'audio/mpeg', 'video/mp4', 'video/webm', 'video/ogg',
+    'audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/aac', 'audio/flac',
+    'video/mp4', 'video/webm', 'video/ogg',
     'application/pdf',
     'application/msword',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -937,7 +994,7 @@ const handleFileUpload = (event) => {
     return;
   }
 
-  if (file.size > 100 * 1024 * 1024) {
+  if (file.size > 10 * 1024 * 1024) {
     alert('File size exceeds 10MB limit');
     return;
   }
@@ -1002,7 +1059,9 @@ const startRecording = async () => {
     alert(errorMessage);
     recording.value = false;
     isClicked.value = false;
-  } finally { isLoading.value = false }
+  } finally {
+    isLoading.value = false;
+  }
 };
 
 const stopRecording = () => {
@@ -1055,6 +1114,9 @@ onMounted(() => {
     if (!e.target.closest('.context-menu')) closeContextMenu();
   });
   setupNewAudioPlayers();
+
+  // Fallback polling if WebSocket fails
+  // pollingInterval = setInterval(pollMessages, 10000);
 });
 
 onUnmounted(() => {
@@ -1063,14 +1125,15 @@ onUnmounted(() => {
     socket.value.off();
   }
   clearInterval(recordingInterval.value);
-  clearInterval(pollingInterval);
+  // clearInterval(pollingInterval);
   mediaRecorder.value?.stream?.getTracks().forEach((track) => track.stop());
   if (messagesContainer.value) {
     messagesContainer.value.removeEventListener('scroll', handleMessagesScroll);
   }
-  document.removeEventListener('click', () => { });
+  document.removeEventListener('click', () => {});
 });
 </script>
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
@@ -1215,7 +1278,6 @@ svg {
   transition: width 0.1s linear;
 }
 
-/* Custom scrollbar for the message container */
 .scrollbar-custom::-webkit-scrollbar {
   width: 6px;
 }
