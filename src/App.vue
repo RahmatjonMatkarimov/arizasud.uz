@@ -1,8 +1,7 @@
 <template>
   <Transition name="fade">
-    <div v-if="showLoading" class="fixed inset-0 flex justify-center items-center bg-black/30 backdrop-blur-lg" style="z-index:9999999999999999;">
+    <div v-if="showLoading" class="fixed inset-0 flex justify-center items-center bg-black/90" style="z-index:9999999999999999;">
     <span class="loader"></span>
-    <!-- <video src="../public/loader_no_bg (1).webm" width="150" loop autoplay muted ></video> -->
     </div>
   </Transition>
   <ticketModal v-if="hidden" />
@@ -36,7 +35,7 @@ watch(isLoading, (newValue) => {
   } else {
     setTimeout(() => {
       showLoading.value = false;
-    }, 0);
+    }, 300);
   }
 });
 
@@ -76,46 +75,56 @@ defineExpose({ fetchData });
   box-sizing: border-box;
 }
 
-/* Fade transition effekti */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.8s ease-in-out;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.fade-enter-to,
-.fade-leave-from {
-  opacity: 1;
-}
-
 .loader {
-  height: 400px;
-  aspect-ratio: 2;
-  border-bottom: 3px solid #0000;
-  background: 
-    linear-gradient(90deg,#fff 50%,#0000 0)
-    -25% 100%/50% 3px repeat-x border-box;
-  position: relative;
-  animation: l3-0 .75s linear infinite;
-}
-.loader:before {
-  content: "";
-  position: absolute;
-  inset: auto 42.5% 0;
-  aspect-ratio: 1;
+  color: #ffffff;
+  font-size: 45px;
+  text-indent: -9999em;
+  overflow: hidden;
+  width: 1em;
+  height: 1em;
   border-radius: 50%;
-  background: #fff;
-  animation: l3-1 .75s cubic-bezier(0,900,1,900) infinite;
+  position: relative;
+  transform: translateZ(0);
+  animation: mltShdSpin 1.7s infinite ease, round 1.7s infinite ease;
 }
-@keyframes l3-0 {
-  to {background-position: -125% 100%}
+
+@keyframes mltShdSpin {
+  0% {
+    box-shadow: 0 -0.83em 0 -0.4em,
+    0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em,
+    0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+  }
+  5%,
+  95% {
+    box-shadow: 0 -0.83em 0 -0.4em, 
+    0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 
+    0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+  }
+  10%,
+  59% {
+    box-shadow: 0 -0.83em 0 -0.4em, 
+    -0.087em -0.825em 0 -0.42em, -0.173em -0.812em 0 -0.44em, 
+    -0.256em -0.789em 0 -0.46em, -0.297em -0.775em 0 -0.477em;
+  }
+  20% {
+    box-shadow: 0 -0.83em 0 -0.4em, -0.338em -0.758em 0 -0.42em,
+     -0.555em -0.617em 0 -0.44em, -0.671em -0.488em 0 -0.46em, 
+     -0.749em -0.34em 0 -0.477em;
+  }
+  38% {
+    box-shadow: 0 -0.83em 0 -0.4em, -0.377em -0.74em 0 -0.42em,
+     -0.645em -0.522em 0 -0.44em, -0.775em -0.297em 0 -0.46em, 
+     -0.82em -0.09em 0 -0.477em;
+  }
+  100% {
+    box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 
+    0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+  }
 }
-@keyframes l3-1 {
-  0%,2% {bottom: 0%}
-  98%,to {bottom:.1%}
+
+@keyframes round {
+  0% { transform: rotate(0deg) }
+  100% { transform: rotate(360deg) }
 }
+ 
 </style>

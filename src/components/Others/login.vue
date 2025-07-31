@@ -66,16 +66,16 @@
     <div
       v-if="showFaceModal"
       @click="showFaceModal = false; stopScanner()"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 dark:bg-gray-800/80"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 bg-gray-800/80"
     >
-      <div @click.stop class="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-2xl max-w-md w-full mx-4 relative">
+      <div @click.stop class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full mx-4 relative">
         <button
           @click="showFaceModal = false; stopScanner()"
-          class="absolute top-4 right-4 text-gray-500 hover:text-red-500 dark:hover:text-red-400 text-3xl font-bold rotate-45"
+          class="absolute top-4 right-4 text-gray-500 hover:text-red-500 text-3xl font-bold rotate-45"
         >
           +
         </button>
-        <h2 class="text-2xl font-semibold text-center text-gray-800 dark:text-white mb-6">
+        <h2 class="text-2xl font-semibold text-center text-gray-800 mb-6">
           Yuzni Skaner Qilish
         </h2>
         <div v-if="isScanning" class="relative w-full max-w-md mx-auto">
@@ -128,7 +128,7 @@
             {{ isLoading.value ? 'Yuklanmoqda...' : 'Tasdiqlash' }}
           </button>
         </div>
-        <p v-if="error" class="text-center text-red-500 dark:text-red-400 mt-2 text-sm">
+        <p v-if="error" class="text-center text-red-500 mt-2 text-sm">
           {{ error }}
         </p>
       </div>

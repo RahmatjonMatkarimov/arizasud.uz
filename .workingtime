@@ -20797,16 +20797,58 @@
                         {
                             "sessionInfo": {
                                 "id": "d08eaffc-4fb8-4df0-8e14-467dd3b22b31",
-                                "duration": 256701,
-                                "idle": 4926393,
+                                "duration": 371657,
+                                "idle": 6726452,
                                 "state": "Idle",
                                 "durations": [
+                                    {
+                                        "id": "50f84b29-cf6d-47ab-bb30-822eee724ccf",
+                                        "state": "Idle",
+                                        "begin": 1753956308778,
+                                        "end": 1753956308778,
+                                        "duration": 0
+                                    },
+                                    {
+                                        "id": "26632b86-cac5-49c0-aa89-dccf2ecc8d87",
+                                        "state": "Ongoing",
+                                        "begin": 1753956288662,
+                                        "end": 1753956308778,
+                                        "duration": 20116
+                                    },
+                                    {
+                                        "id": "910e8977-cda0-45e6-89f2-f025d80f028b",
+                                        "state": "Idle",
+                                        "begin": 1753956243126,
+                                        "end": 1753956288662,
+                                        "duration": 45536
+                                    },
+                                    {
+                                        "id": "69226b82-fb28-44ce-9fca-082d608f8cc3",
+                                        "state": "Ongoing",
+                                        "begin": 1753956189585,
+                                        "end": 1753956243126,
+                                        "duration": 53541
+                                    },
+                                    {
+                                        "id": "c8850ac5-eb1e-4d06-b7cf-42d45251b0c6",
+                                        "state": "Idle",
+                                        "begin": 1753955387988,
+                                        "end": 1753956189585,
+                                        "duration": 801597
+                                    },
+                                    {
+                                        "id": "05ed5191-408c-4ccd-962a-226915f10a96",
+                                        "state": "Ongoing",
+                                        "begin": 1753955346689,
+                                        "end": 1753955387988,
+                                        "duration": 41299
+                                    },
                                     {
                                         "id": "1cfaea43-bda2-4eea-9ecd-7b3f4048f2e4",
                                         "state": "Idle",
                                         "begin": 1753953791164,
-                                        "end": 1753953791164,
-                                        "duration": 0
+                                        "end": 1753955346689,
+                                        "duration": 1555525
                                     },
                                     {
                                         "id": "c7f72f09-2498-449e-9280-f5bc6e3f3453",
@@ -20918,7 +20960,9 @@
                                     ".uz/src/components/contract/lists.vue",
                                     ".uz/src/components/dashboard/clents.vue",
                                     ".uz/src/components/admins/Operator.vue",
-                                    ".uz/src/components/archive/archiveMain.vue"
+                                    ".uz/src/components/archive/archiveMain.vue",
+                                    ".uz/src/components/contract/ClientAdmin.vue",
+                                    ".uz/src/router/routes.js"
                                 ]
                             },
                             "actionType": "Idle"

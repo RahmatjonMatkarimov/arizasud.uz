@@ -179,6 +179,7 @@ const routes = [
         component: () => import("@/components/Customers/customer-open.vue"),
       },
     ],
+    meta: { requiresAuth: true, allowedRoles: ['operator', 'bigAdmin'] },
   },
   {
     path: "/ashboard",
@@ -227,10 +228,10 @@ const routes = [
         component: () => import("@/components/Message/Message.vue"),
       },
     ],
-    // meta: {
-      // requiresAuth: true,
-      // allowedRoles: ["accauntant", "chiefAccauntant", "bigAdmin"],
-    // },
+    meta: {
+      requiresAuth: true,
+      allowedRoles: ["accauntant", "chiefAccauntant", "bigAdmin"],
+    },
   },
   {
     path: "/admin",
@@ -534,7 +535,7 @@ const routes = [
         props: true,
       },
     ],
-    // meta: { requiresAuth: true, allowedRoles: ['admin', 'manager','warehouseman', 'yuristAssistant', 'deliverer', 'yurist', 'bigAdmin'] },
+    meta: { requiresAuth: true, allowedRoles: ['admin', 'manager','warehouseman', 'yuristAssistant', 'deliverer', 'yurist', 'bigAdmin'] },
   },
 ];
 export default routes;
