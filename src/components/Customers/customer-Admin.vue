@@ -105,100 +105,6 @@
         </div>
       </div>
     </header>
-
-    <!-- Status Cards -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <div
-          @click="setStatusFilter('accepted')"
-          :class="{ 'ring-2 ring-blue-500': selectedStatus === 'accepted' }"
-          class="cursor-pointer bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200"
-        >
-          <div class="flex items-center justify-between">
-            <div>
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                {{ translateText("Qabul qilingan") }}
-              </h3>
-              <p class="text-sm text-gray-500 dark:text-gray-400">
-                {{ statusCounts.accepted }} {{ translateText("mijoz") }}
-              </p>
-            </div>
-            <svg
-              class="w-8 h-8 text-green-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-          </div>
-        </div>
-        <div
-          @click="setStatusFilter('waiting')"
-          :class="{ 'ring-2 ring-blue-500': selectedStatus === 'waiting' }"
-          class="cursor-pointer bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200"
-        >
-          <div class="flex items-center justify-between">
-            <div>
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                {{ translateText("Yurist zimmasiga otkazilganlar") }}
-              </h3>
-              <p class="text-sm text-gray-500 dark:text-gray-400">
-                {{ statusCounts.waiting }} {{ translateText("mijoz") }}
-              </p>
-            </div>
-            <svg
-              class="w-8 h-8 text-yellow-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 8v4l1.5 1.5"
-              />
-            </svg>
-          </div>
-        </div>
-        <div
-          @click="setStatusFilter('completed')"
-          :class="{ 'ring-2 ring-blue-500': selectedStatus === 'completed' }"
-          class="cursor-pointer bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200"
-        >
-          <div class="flex items-center justify-between">
-            <div>
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                {{ translateText("Tugallangan") }}
-              </h3>
-              <p class="text-sm text-gray-500 dark:text-gray-400">
-                {{ statusCounts.completed }} {{ translateText("mijoz") }}
-              </p>
-            </div>
-            <svg
-              class="w-8 h-8 text-blue-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Customer Modal -->
     <div
       v-if="isModalOpen"
@@ -1725,7 +1631,6 @@ const filteredApplications = computed(() => {
   mounted() {
     this.fetchCustomers();
     this.setStatusFilter('waiting')
-    this.isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
   },
 };
 </script>

@@ -192,72 +192,98 @@
     </div>
 
     <!-- Region and District Selection Modal -->
-    <div
-      v-if="showRegionModal"
-      class="fixed inset-0 bg-black/70 dark:bg-black/80 flex justify-center items-center z-50 backdrop-blur-sm"
-    >
-      <div class="bg-white/95 dark:bg-gray-800/95 backdrop-blur-3xl p-10 rounded-3xl w-full max-w-lg shadow-2xl relative transform transition-all duration-700 animate-modal-scale border border-white/20 dark:border-gray-700/20">
-        <!-- Animated background -->
-        <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-teal-500/10 rounded-3xl"></div>
-        
-        <button
-          @click="closeRegionModal"
-          class="absolute top-6 right-6 w-10 h-10 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full flex items-center justify-center text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 transition-all duration-300 transform hover:scale-110 hover:rotate-90"
-        >
-          <iconify-icon icon="mdi:close" class="w-6 h-6"></iconify-icon>
-        </button>
+  <div
+    v-if="showRegionModal"
+    class="fixed inset-0 bg-black/70 dark:bg-black/80 flex justify-center items-center z-50 backdrop-blur-sm"
+  >
+    <div class="bg-white/95 dark:bg-gray-800/95 backdrop-blur-3xl p-10 rounded-3xl w-full max-w-2xl shadow-2xl relative transform transition-all duration-700 animate-modal-scale border border-white/20 dark:border-gray-700/20">
+      <!-- Animated background -->
+      <div class="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-indigo-500/10 to-teal-500/10 rounded-3xl"></div>
+      
+      <button
+        @click="closeRegionModal"
+        class="absolute top-6 right-6 w-10 h-10 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 z-50 rounded-full flex items-center justify-center text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 transition-all duration-300 transform hover:scale-110 hover:rotate-90"
+      >
+        <iconify-icon icon="mdi:close" class="w-6 h-6"></iconify-icon>
+      </button>
 
-        <div class="relative z-10">
-          <div class="flex items-center gap-4 mb-8">
-            <div class="w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl flex items-center justify-center shadow-lg">
-              <iconify-icon icon="mdi:office-building" class="w-8 h-8 text-white"></iconify-icon>
-            </div>
-            <h2 class="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent leading-tight">
-              {{ dat === 'datakril' ? translateText('Qarzdorlik uchun to\'lov "YURIST KONSUL KONSALTING" kompaniyasining qaysi filialida amalga oshirilmoqda?') : 'Qarzdorlik uchun to\'lov "YURIST KONSUL KONSALTING" kompaniyasining qaysi filialida amalga oshirilmoqda?' }}
-            </h2>
+      <div class="relative z-10">
+        <div class="flex items-center gap-4 mb-8">
+          <div class="w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
+            <iconify-icon icon="mdi:office-building" class="w-8 h-8 text-white"></iconify-icon>
+          </div>
+          <h2 class="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent leading-tight">
+            {{ dat === 'datakril' ? translateText('Qarzdorlik uchun to\'lov "YURIST KONSUL KONSALTING" kompaniyasining qaysi filialida amalga oshirilmoqda?') : 'Qarzdorlik uchun to\'lov "YURIST KONSUL KONSALTING" kompaniyasining qaysi filialida amalga oshirilmoqda?' }}
+          </h2>
+        </div>
+
+        <div class="flex flex-col gap-6">
+          <div class="relative">
+            <select
+              v-model="ofis"
+              class="w-full p-4 pl-12 pr-12 rounded-2xl bg-white/90 dark:bg-gray-700/90 border border-blue-200 dark:border-blue-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-400/50 dark:focus:ring-blue-500/50 focus:border-blue-400 dark:focus:border-blue-500 appearance-none transition-all duration-300 hover:shadow-lg"
+            >
+              <option class="text-gray-800 dark:text-gray-200" value="" disabled>
+                {{ dat === 'datakril' ? translateText('To\'lov qaysi ofisdan amalga oshirilmoqda') : 'To\'lov qaysi ofisdan amalga oshirilmoqda' }}
+              </option>
+              <option class="text-gray-800 dark:text-gray-200" value="Xorazm viloyati Urganch shaxar 1-son filiali">
+                {{ dat === 'datakril' ? translateText('Xorazm viloyati Urganch shaxar 1-son filiali') : 'Xorazm viloyati Urganch shaxar 1-son filiali' }}
+              </option>
+              <option class="text-gray-800 dark:text-gray-200" value="Xorazm viloyati Xiva shaxar markaziy binosi">
+                {{ dat === 'datakril' ? translateText('Xorazm viloyati Xiva shaxar markaziy binosi') : 'Xorazm viloyati Xiva shaxar markaziy binosi' }}
+              </option>
+            </select>
+            <iconify-icon icon="mdi:office-building" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-500 dark:text-blue-400 w-5 h-5"></iconify-icon>
+            <iconify-icon icon="mdi:chevron-down" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-blue-500 dark:text-blue-400 w-5 h-5"></iconify-icon>
           </div>
 
-          <div class="flex flex-col gap-6">
-            <div class="relative">
-              <select
-                v-model="ofis"
-                class="w-full p-4 pl-12 pr-12 rounded-2xl bg-white/90 dark:bg-gray-700/90 border border-purple-200 dark:border-purple-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-4 focus:ring-purple-400/50 dark:focus:ring-purple-500/50 focus:border-purple-400 dark:focus:border-purple-500 appearance-none transition-all duration-300 hover:shadow-lg"
-              >
-                <option class="text-gray-800 dark:text-gray-200" value="" disabled>
-                  {{ dat === 'datakril' ? translateText('To\'lov qaysi ofisdan amalga oshirilmoqda') : 'To\'lov qaysi ofisdan amalga oshirilmoqda' }}
-                </option>
-                <option class="text-gray-800 dark:text-gray-200" value="Xorazm viloyati Urganch shaxar 1-son filiali">
-                  {{ dat === 'datakril' ? translateText('Xorazm viloyati Urganch shaxar 1-son filiali') : 'Xorazm viloyati Urganch shaxar 1-son filiali' }}
-                </option>
-                <option class="text-gray-800 dark:text-gray-200" value="Xorazm viloyati Xiva shaxar markaziy binosi">
-                  {{ dat === 'datakril' ? translateText('Xorazm viloyati Xiva shaxar markaziy binosi') : 'Xorazm viloyati Xiva shaxar markaziy binosi' }}
-                </option>
-              </select>
-              <iconify-icon icon="mdi:office-building" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-purple-500 dark:text-purple-400 w-5 h-5"></iconify-icon>
-              <iconify-icon icon="mdi:chevron-down" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-purple-500 dark:text-purple-400 w-5 h-5"></iconify-icon>
-            </div>
+          <div class="relative">
+            <select
+              v-model="paymentType"
+              class="w-full p-4 pl-12 pr-12 rounded-2xl bg-white/90 dark:bg-gray-700/90 border border-blue-200 dark:border-blue-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-400/50 dark:focus:ring-blue-500/50 focus:border-blue-400 dark:focus:border-blue-500 appearance-none transition-all duration-300 hover:shadow-lg"
+            >
+              <option value="" disabled>
+                {{ dat === 'datakril' ? translateText("To'lov turini tanlang") : "To'lov turini tanlang" }}
+              </option>
+              <option value="naqt">{{ dat === 'datakril' ? translateText("Naqd pul") : "Naqd pul" }}</option>
+              <option value="bank">{{ dat === 'datakril' ? translateText("Bank orqali") : "Bank orqali" }}</option>
+            </select>
+            <iconify-icon icon="mdi:cash" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-500 dark:text-blue-400 w-5 h-5"></iconify-icon>
+            <iconify-icon icon="mdi:chevron-down" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-blue-500 dark:text-blue-400 w-5 h-5"></iconify-icon>
+          </div>
 
-            <div class="flex justify-end gap-4">
-              <button
-                @click="closeRegionModal"
-                class="px-6 py-3 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-2xl hover:bg-gray-300 dark:hover:bg-gray-700 hover:shadow-lg flex items-center gap-3 font-semibold transition-all duration-300 transform hover:scale-105"
-              >
-                <iconify-icon icon="mdi:close" class="w-5 h-5"></iconify-icon>
-                {{ dat === 'datakril' ? translateText('Yopish') : 'Yopish' }}
-              </button>
-              <button
-                @click="submitRegionSelection"
-                class="group px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl hover:from-purple-700 hover:to-pink-700 hover:shadow-2xl hover:shadow-purple-500/25 flex items-center gap-3 font-semibold transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 relative overflow-hidden"
-              >
-                <div class="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <iconify-icon icon="mdi:send" class="w-5 h-5 relative z-10"></iconify-icon>
-                <span class="relative z-10">{{ dat === 'datakril' ? translateText('Yuborish') : 'Yuborish' }}</span>
-              </button>
-            </div>
+          <div v-if="paymentType === 'bank'" class="relative">
+            <input
+              type="file"
+              @change="handleFileChange"
+              accept=".pdf,.jpg,.jpeg,.png"
+              class="w-full p-4 pl-12 rounded-2xl bg-white/90 dark:bg-gray-700/90 border border-blue-200 dark:border-blue-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-400/50 dark:focus:ring-blue-500/50 focus:border-blue-400 dark:focus:border-blue-500 transition-all duration-300 hover:shadow-lg file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              required
+            />
+            <iconify-icon icon="mdi:file-upload" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-500 dark:text-blue-400 w-5 h-5"></iconify-icon>
+          </div>
+
+          <div class="flex justify-end gap-4">
+            <button
+              @click="closeRegionModal"
+              class="px-6 py-3 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-2xl hover:bg-gray-300 dark:hover:bg-gray-700 hover:shadow-lg flex items-center gap-3 font-semibold transition-all duration-300 transform hover:scale-105"
+            >
+              <iconify-icon icon="mdi:close" class="w-5 h-5"></iconify-icon>
+              {{ dat === 'datakril' ? translateText('Yopish') : 'Yopish' }}
+            </button>
+            <button
+              @click="submitRegionSelection"
+              class="group px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl hover:from-blue-700 hover:to-indigo-700 hover:shadow-2xl hover:shadow-blue-500/25 flex items-center gap-3 font-semibold transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 relative overflow-hidden"
+            >
+              <div class="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <iconify-icon icon="mdi:send" class="w-5 h-5 relative z-10"></iconify-icon>
+              <span class="relative z-10">{{ dat === 'datakril' ? translateText('Yuborish') : 'Yuborish' }}</span>
+            </button>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
     <!-- Payment Modal -->
     <div
@@ -446,80 +472,6 @@
   </div>
 </template>
 
-
-  <style scoped>
-  @keyframes float {
-    0%, 100% { transform: translate(0, 0) rotate(0deg); }
-    33% { transform: translate(30px, -30px) rotate(120deg); }
-    66% { transform: translate(-20px, 20px) rotate(240deg); }
-  }
-  
-  @keyframes float-delayed {
-    0%, 100% { transform: translate(0, 0) rotate(0deg); }
-    33% { transform: translate(-30px, 20px) rotate(-120deg); }
-    66% { transform: translate(20px, -20px) rotate(-240deg); }
-  }
-  
-  @keyframes float-slow {
-    0%, 100% { transform: translate(0, 0) rotate(0deg); }
-    50% { transform: translate(20px, -20px) rotate(180deg); }
-  }
-  
-  @keyframes modal-scale {
-    0% { transform: scale(0.7) rotate(-5deg); opacity: 0; }
-    50% { transform: scale(1.05) rotate(2deg); }
-    100% { transform: scale(1) rotate(0deg); opacity: 1; }
-  }
-  
-  .animate-float {
-    animation: float 20s ease-in-out infinite;
-  }
-  
-  .animate-float-delayed {
-    animation: float-delayed 25s ease-in-out infinite;
-  }
-  
-  .animate-float-slow {
-    animation: float-slow 30s ease-in-out infinite;
-  }
-  
-  .animate-modal-scale {
-    animation: modal-scale 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-  
-  /* Custom scrollbar */
-  ::-webkit-scrollbar {
-    width: 8px;
-  }
-  
-  ::-webkit-scrollbar-track {
-    background: rgba(156, 163, 175, 0.1);
-    border-radius: 10px;
-  }
-  
-  ::-webkit-scrollbar-thumb {
-    background: linear-gradient(to bottom, #6366f1, #8b5cf6);
-    border-radius: 10px;
-  }
-  
-  ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(to bottom, #4f46e5, #7c3aed);
-  }
-  
-  /* Dark mode scrollbar */
-  .dark ::-webkit-scrollbar-track {
-    background: rgba(75, 85, 99, 0.2);
-  }
-  
-  .dark ::-webkit-scrollbar-thumb {
-    background: linear-gradient(to bottom, #4f46e5, #7c3aed);
-  }
-  
-  .dark ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(to bottom, #6366f1, #8b5cf6);
-  }
-  </style>
-
 <script setup>
 import { ref, onMounted, inject, computed, onUnmounted } from 'vue';
 import axios from 'axios';
@@ -556,11 +508,17 @@ const modalPosition = ref({ top: 0, left: 0});
 const selectedRegionForPrint = ref({ regionName: '', districtName: '' });
 const pendingPrint = ref(false);
 const ofis = ref('')
+const paymentType = ref('')
+const checkFile = ref(null)
 
 onMounted(() => {
   fetchClientFiles();
 });
 
+function handleFileChange(event) {
+  checkFile.value = event.target.files[0]
+  console.log(checkFile.value) // Fayllarni ko'rish
+}
 
 const closeRegionModal = () => {
   showRegionModal.value = false;
@@ -572,13 +530,32 @@ ofis.value = ''
   }
 };
 
-const submitRegionSelection = () => {
+const submitRegionSelection = async () => {
   showRegionModal.value = false;
-  
-  if (pendingPrint.value) {
+      if (paymentType.value === 'naqt') {
+    await generateCheckFile();
+    if (pendingPrint.value) {
     pendingPrint.value = false;
     printReceipt();
   }
+    } else if (paymentType.value == 'bank') {
+        isLoading.value = true
+        try {
+          const formData = new FormData();
+          formData.append('check', checkFile.value);
+          formData.append('contractId', String(clientFiles.value[0]?.contractId || ''));
+          formData.append('remainingDebt', String(receiptData.value.remainingDebt));
+
+          await axios.post(`${URL}/client/add-check/${SectionId}`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          });
+        } catch (error) {
+          console.error('Error generating or sending the check file:', error);
+        } finally{
+          isLoading.value = false
+        }
+    }
+
 };
 
 const closePaymentDetailsModal = (event) => {
@@ -687,7 +664,6 @@ isLoading.value = true
       date: formattedDate,
     };
 
-    await generateCheckFile();
     // Open region modal before printing
     showRegionModal.value = true;
     pendingPrint.value = true;

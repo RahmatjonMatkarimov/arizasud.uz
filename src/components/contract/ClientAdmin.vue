@@ -2120,7 +2120,7 @@ const Payments = async() =>{
 }
 
 function handleFileChange(event) {
-  checkFile.value = event.target.files
+  checkFile.value = event.target.files[0]
   console.log(checkFile.value) // Fayllarni ko'rish
 }
 
@@ -2155,7 +2155,7 @@ const submitForm = async () => {
   formDataToSend.append("file", formData.file);
   formDataToSend.append("image1", formData.image);
   formDataToSend.append("image2", formData.documentImage);
-  formDataToSend.append("check", checkFile.value[0])
+  formDataToSend.append("check", checkFile.value)
   formDataToSend.append("fingerImage1", formData.fingerImage);
   formDataToSend.append("fingerImage2", formData.fingerImage1);
   formDataToSend.append("video", formData.video);

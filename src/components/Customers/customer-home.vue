@@ -1725,7 +1725,6 @@ const filteredApplications = computed(() => {
   mounted() {
     this.fetchCustomers();
     this.setStatusFilter('accepted')
-    this.isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
   },
 };
 </script>

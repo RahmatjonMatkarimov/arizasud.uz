@@ -201,6 +201,11 @@ const sections = [
     description: 'Ushbu bo‘limda o‘chirilgan ombor mudirlari ro‘yxati mavjud. Ro‘yxat tarkibida faqat nomlar bo‘lib, boshqa tafsilotlar mavjud emas.'
   },
   { 
+    path: 'operator', 
+    title: 'Operatorlar',
+    description: 'Ushbu bo‘limda o‘chirilgan operatorlar ro‘yxati mavjud. Ro‘yxat tarkibida faqat nomlar bo‘lib, boshqa tafsilotlar mavjud emas.'
+  },
+  { 
     path: 'partners', 
     title: 'Hamkorlar',
     description: 'Bu yerda o‘chirilgan hamkorlar ro‘yxati jamlangan. Har bir hamkor haqida alohida ma’lumotlar mavjud emas.'

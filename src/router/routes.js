@@ -227,10 +227,10 @@ const routes = [
         component: () => import("@/components/Message/Message.vue"),
       },
     ],
-    meta: {
-      requiresAuth: true,
-      allowedRoles: ["accauntant", "chiefAccauntant", "bigAdmin"],
-    },
+    // meta: {
+      // requiresAuth: true,
+      // allowedRoles: ["accauntant", "chiefAccauntant", "bigAdmin"],
+    // },
   },
   {
     path: "/admin",

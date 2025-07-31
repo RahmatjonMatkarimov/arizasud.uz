@@ -148,91 +148,77 @@
         </div>
       </div>
       <!-- Region and District Selection Modal -->
-      <div
-        v-if="showRegionModal"
-        @click="closeRegionModal"
-        class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-      >
-        <div
-          @click.stop
-          class="bg-gray-200 dark:bg-gray-600 p-6 rounded-lg w-full max-w-md shadow-lg relative"
+<div
+  v-if="showRegionModal"
+  class="fixed inset-0 bg-black/50 flex justify-center items-center z-50"
+>
+  <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-md shadow-lg">
+    <button
+      @click="closeRegionModal"
+      class="absolute top-4 right-4 w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100"
+    >
+      <iconify-icon icon="mdi:close" class="w-5 h-5"></iconify-icon>
+    </button>
+
+    <div>
+      <h2 class="text-lg font-semibold mb-4">
+        {{ dat === 'datakril' ? translateText('To\'lov qaysi filialda amalga oshirilmoqda?') : 'To\'lov qaysi filialda amalga oshirilmoqda?' }}
+      </h2>
+
+      <div class="space-y-4">
+        <select
+          v-model="ofis"
+          class="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
+          <option value="" disabled>
+            {{ dat === 'datakril' ? translateText('Ofisni tanlang') : 'Ofisni tanlang' }}
+          </option>
+          <option value="Xorazm viloyati Urganch shaxar 1-son filiali">
+            {{ dat === 'datakril' ? translateText('Xorazm viloyati Urganch shaxar 1-son filiali') : 'Xorazm viloyati Urganch shaxar 1-son filiali' }}
+          </option>
+          <option value="Xorazm viloyati Xiva shaxar markaziy binosi">
+            {{ dat === 'datakril' ? translateText('Xorazm viloyati Xiva shaxar markaziy binosi') : 'Xorazm viloyati Xiva shaxar markaziy binosi' }}
+          </option>
+        </select>
+
+        <select
+          v-model="paymentType"
+          class="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="" disabled>
+            {{ dat === 'datakril' ? translateText("To'lov turini tanlang") : "To'lov turini tanlang" }}
+          </option>
+          <option value="naqt">{{ dat === 'datakril' ? translateText("Naqd pul") : "Naqd pul" }}</option>
+          <option value="bank">{{ dat === 'datakril' ? translateText("Bank orqali") : "Bank orqali" }}</option>
+        </select>
+
+        <div v-if="paymentType === 'bank'">
+          <input
+            type="file"
+            @change="handleFileChange"
+            accept=".pdf,.jpg,.jpeg,.png"
+            class="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <div class="flex justify-end gap-3">
           <button
             @click="closeRegionModal"
-            class="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+            class="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            {{ dat === 'datakril' ? translateText('Yopish') : 'Yopish' }}
           </button>
-          <h2
-            class="text-xl text-center font-semibold dark:text-gray-200 text-gray-800 mb-4"
+          <button
+            @click="submitRegionSelection"
+            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
-            {{
-              dat === "datakril"
-                ? translateText(
-                    'Qarzdorlik uchun to‘lov "YURIST KONSUL KONSALTING" kompaniyasining qaysi filialida amalga oshirilmoqda ? '
-                  )
-                : 'Qarzdorlik uchun to‘lov "YURIST KONSUL KONSALTING" kompaniyasining qaysi filialida amalga oshirilmoqda?'
-            }}
-          </h2>
-          <div class="flex flex-col gap-4">
-            <!-- Region Dropdown -->
-            <select
-              v-model="ofis"
-              required
-              class="p-3 border rounded-lg focus:outline-none text-black bg-white dark:bg-gray-500 dark:text-gray-300 text-[20px] border-black focus:ring-2 focus:ring-blue-500"
-            >
-              <option class="" value="" disabled>
-                {{
-                  dat === "datakril"
-                    ? translateText("To'lov qaysi ofisdan amalga oshirilmoqda")
-                    : "To'lov qaysi ofisdan amalga oshirilmoqda"
-                }}
-              </option>
-              <option class="" value="Xorazm viloyati Urganch shaxar 1-son filiali">
-                {{
-                  dat === "datakril"
-                    ? translateText("Xorazm viloyati Urganch shaxar 1-son filiali")
-                    : "Xorazm viloyati Urganch shaxar 1-son filiali"
-                }}
-              </option>
-              <option class="" value="Xorazm viloyati Xiva shaxar markaziy binosi">
-                {{
-                  dat === "datakril"
-                    ? translateText("Xorazm viloyati Xiva shaxar markaziy binosi")
-                    : "Xorazm viloyati Xiva shaxar markaziy binosi"
-                }}
-              </option>
-            </select>
-            <div class="flex justify-end gap-3">
-              <button
-                @click="closeRegionModal"
-                class="px-4 py-2 bg-gray-300 text-gray-500 rounded-lg hover:bg-gray-400"
-              >
-                {{ dat === "datakril" ? translateText("Yopish") : "Yopish" }}
-              </button>
-              <button
-                @click="submitRegionSelection"
-                class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-              >
-                {{ dat === "datakril" ? translateText("Yuborish") : "Yuborish" }}
-              </button>
-            </div>
-          </div>
+            {{ dat === 'datakril' ? translateText('Yuborish') : 'Yuborish' }}
+          </button>
         </div>
       </div>
+    </div>
+  </div>
+</div>
       <!-- Payment Modal -->
       <div
         v-if="modal"
@@ -364,10 +350,17 @@ const modalPosition = ref({ top: 0, left: 0 });
 const selectedRegionForPrint = ref({ regionName: "", districtName: "" });
 const pendingPrint = ref(false);
 const ofis = ref("");
+const paymentType = ref('')
+const checkFile = ref(null)
 
 onMounted(() => {
   fetchClientFiles();
 });
+
+function handleFileChange(event) {
+  checkFile.value = event.target.files[0]
+  console.log(checkFile.value) // Fayllarni ko'rish
+}
 
 const closeRegionModal = () => {
   showRegionModal.value = false;
@@ -379,13 +372,32 @@ const closeRegionModal = () => {
   }
 };
 
-const submitRegionSelection = () => {
+const submitRegionSelection = async () => {
   showRegionModal.value = false;
-
-  if (pendingPrint.value) {
+      if (paymentType.value === 'naqt') {
+    await generateCheckFile();
+    if (pendingPrint.value) {
     pendingPrint.value = false;
     printReceipt();
   }
+    } else if (paymentType.value == 'bank') {
+        isLoading.value = true
+        try {
+          const formData = new FormData();
+          formData.append('check', checkFile.value);
+          formData.append('contractId', String(clientFiles.value[0]?.contractId || ''));
+          formData.append('remainingDebt', String(receiptData.value.remainingDebt));
+
+          await axios.post(`${URL}/client/add-check/${SectionId.value}`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          });
+        } catch (error) {
+          console.error('Error generating or sending the check file:', error);
+        } finally{
+          isLoading.value = false
+        }
+    }
+
 };
 
 const closePaymentDetailsModal = (event) => {
@@ -492,7 +504,6 @@ isLoading.value = true
     };
     data.value = selectedItem.value.clientSection.clientSectionBody.client;
     SectionId.value = selectedItem.value.clientSection.clientSectionBody.client.id;
-    await generateCheckFile();
     // Open region modal before printing
     showRegionModal.value = true;
     pendingPrint.value = true;
