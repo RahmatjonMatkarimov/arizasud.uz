@@ -1463,29 +1463,29 @@ const saveAndGenerate = async () => {
       return;
     }
 
-    // // Validate images and video
-    // if (!formData.image || !formData.documentImage) {
-    //   errorMessage.value = " Iltimos, ikkala rasmni ham oling (ong va chap)!";
-    //   isWarningModalOpen.value = true;
-    //   return;
-    // }
+    // Validate images and video
+    if (!formData.image || !formData.documentImage) {
+      errorMessage.value = " Iltimos, ikkala rasmni ham oling (ong va chap)!";
+      isWarningModalOpen.value = true;
+      return;
+    }
 
-    // if (!formData.video) {
-    //   errorMessage.value = " Video yozib olish shart!";
-    //   isWarningModalOpen.value = true;
-    //   return;
-    // }
+    if (!formData.video) {
+      errorMessage.value = " Video yozib olish shart!";
+      isWarningModalOpen.value = true;
+      return;
+    }
 
-    // if (!formData.fingerImage) {
-    //   errorMessage.value = "Iltimos barmoq izini skaynerlang";
-    //   isWarningModalOpen.value = true;
-    //   return;
-    // }
-    // if (!formData.fingerImage1) {
-    //   errorMessage.value = "Iltimos barmoq izini skaynerlang";
-    //   isWarningModalOpen.value = true;
-    //   return;
-    // }
+    if (!formData.fingerImage) {
+      errorMessage.value = "Iltimos barmoq izini skaynerlang";
+      isWarningModalOpen.value = true;
+      return;
+    }
+    if (!formData.fingerImage1) {
+      errorMessage.value = "Iltimos barmoq izini skaynerlang";
+      isWarningModalOpen.value = true;
+      return;
+    }
     if (!paymentTuman.value) {
       errorMessage.value = "Iltimos YKK filialini belgilang!";
       isWarningModalOpen.value = true;
